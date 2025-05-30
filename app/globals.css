@@ -29,6 +29,36 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    
+    /* Additional variables for Tailwind config */
+    --primary-50: 210 40% 98%;
+    --primary-100: 210 40% 96%;
+    --primary-200: 214.3 31.8% 91.4%;
+    --primary-300: 213.2 26.8% 83.9%;
+    --primary-400: 215.4 16.3% 66.9%;
+    --primary-500: 222.2 47.4% 11.2%;
+    --primary-600: 222.2 47.4% 11.2%;
+    --primary-700: 222.2 84% 4.9%;
+    --primary-800: 222.2 84% 4.9%;
+    --primary-900: 222.2 84% 4.9%;
+    
+    --neutral-50: 210 40% 98%;
+    --neutral-100: 210 40% 96%;
+    --neutral-200: 214.3 31.8% 91.4%;
+    --neutral-300: 213.2 26.8% 83.9%;
+    --neutral-400: 215.4 16.3% 66.9%;
+    --neutral-500: 215.4 16.3% 46.9%;
+    --neutral-600: 215.4 16.3% 36.9%;
+    --neutral-700: 215.4 16.3% 26.9%;
+    --neutral-800: 222.2 84% 4.9%;
+    --neutral-900: 222.2 84% 4.9%;
+    
+    --verified: 142 76% 36%;
+    --verified-light: 142 76% 96%;
+    --unverified: 38 92% 50%;
+    --unverified-light: 38 92% 95%;
+    --false: 0 84% 60%;
+    --false-light: 0 84% 95%;
   }
 
   .dark {
@@ -56,6 +86,25 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    
+    /* Dark mode additional variables */
+    --primary-50: 222.2 84% 4.9%;
+    --primary-100: 217.2 32.6% 17.5%;
+    --primary-200: 215 20.2% 25.1%;
+    --primary-300: 215 20.2% 35.1%;
+    --primary-400: 215 20.2% 45.1%;
+    --primary-500: 210 40% 98%;
+    --primary-600: 210 40% 98%;
+    --primary-700: 210 40% 98%;
+    --primary-800: 210 40% 98%;
+    --primary-900: 210 40% 98%;
+    
+    --verified: 142 76% 46%;
+    --verified-light: 142 76% 16%;
+    --unverified: 38 92% 60%;
+    --unverified-light: 38 92% 15%;
+    --false: 0 84% 70%;
+    --false-light: 0 84% 15%;
   }
 
   .experimental-dark {
@@ -80,9 +129,7 @@
     --ring: 216 34% 17%;
     --radius: 0.5rem;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
@@ -90,11 +137,20 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  html {
+    color-scheme: light dark;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
 
 @layer components {
-
-  /* Custom scrollbar styles */
   .custom-scrollbar::-webkit-scrollbar {
     @apply w-2;
   }
@@ -111,12 +167,10 @@
     @apply bg-muted-foreground/50;
   }
 
-  /* Loading skeleton */
   .loading-skeleton {
     @apply animate-pulse bg-muted;
   }
 
-  /* Text truncation utilities */
   .line-clamp-1 {
     overflow: hidden;
     display: -webkit-box;
@@ -140,23 +194,10 @@
 }
 
 @layer utilities {
-
-  /* Smooth theme transitions */
   * {
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
   }
 
-  /* Prevent flash of unstyled content */
-  html {
-    color-scheme: light dark;
-  }
-
-  /* Smooth scrolling */
-  html {
-    scroll-behavior: smooth;
-  }
-
-  /* Page transition improvements */
   body {
     overflow-x: hidden;
   }
@@ -173,12 +214,10 @@
     transform: translate3d(0, 0, 0);
   }
 
-  /* Prevent layout shift during transitions */
   .transition-height {
     transition: height 0.3s ease-in-out;
   }
 
-  /* Reduce motion for users who prefer it */
   @media (prefers-reduced-motion: reduce) {
     * {
       animation-duration: 0.01ms !important;
@@ -186,15 +225,4 @@
       transition-duration: 0.01ms !important;
     }
   }
-}
-
-/* Smooth page transitions */
-html {
-  overflow-x: hidden;
-}
-
-/* Optimize font rendering during transitions */
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
