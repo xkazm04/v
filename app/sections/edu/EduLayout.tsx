@@ -20,13 +20,11 @@ export type MilestoneEvent = {
 
 export default function EduLayout() {
   const [selectedEvent, setSelectedEvent] = useState<MilestoneEvent | null>(null);
-  // Initialize with first milestone and first event
   const [activeMilestoneId, setActiveMilestoneId] = useState<string | null>(sampleDiagram.milestones[0].id);
   const [activeEventId, setActiveEventId] = useState<string | null>(sampleDiagram.milestones[0].events[0].id);
   
   const diagram = sampleDiagram;
   
-  // Sort milestones by order
   const sortedMilestones = [...diagram.milestones].sort((a, b) => a.order - b.order);
   
   return (

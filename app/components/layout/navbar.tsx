@@ -1,19 +1,27 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { Menu, Search, Upload, Bell, User, X } from 'lucide-react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
 import { ThemeToggle } from '@/app/components/theme/theme-toggle';
 import { cn } from '@/app/lib/utils';
+import { Menu, Search, Upload, Bell, User, X } from 'lucide-react';
 
 export function Navbar() {
-  const pathname = usePathname();
+  const [isLoading, setIsLoading] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  // Handle navigation loading
+  const handleNavigation = () => {
+    setIsLoading(true);
+    // Reset loading state after a short delay
+    setTimeout(() => setIsLoading(false), 100);
+  };
 
   const isHome = pathname === '/';
 
@@ -26,16 +34,18 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+    >
       <div className="container flex h-14 max-w-screen-2xl items-center">
         <div className="mr-4 flex">
           <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleMobileMenu}>
             <Menu className="h-5 w-5" />
             <span className="sr-only">Toggle menu</span>
           </Button>
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="font-bold text-xl">VideoHub</span>
-          </Link>
         </div>
 
         {/* Desktop Navigation */}
@@ -43,18 +53,34 @@ export function Navbar() {
           <nav className="flex items-center space-x-6 text-sm font-medium">
             <Link 
               href="/" 
+              onClick={handleNavigation}
               className={cn(
-                "transition-colors hover:text-primary", 
+                "relative transition-colors hover:text-primary", 
                 isHome ? "text-primary" : "text-foreground"
               )}
             >
               Home
+              {isHome && (
+                <motion.div
+                  layoutId="navbar-indicator"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                />
+              )}
             </Link>
             <Link 
-              href="/trending" 
-              className="transition-colors hover:text-primary"
+              href="/edu" 
+              onClick={handleNavigation}
+              className="relative transition-colors hover:text-primary"
             >
-              Trending
+              Timeline v1
+              {pathname === '/edu' && (
+                <motion.div
+                  layoutId="navbar-indicator"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                />
+              )}
             </Link>
           </nav>
 
@@ -173,6 +199,17 @@ export function Navbar() {
           </motion.div>
         )}
       </div>
-    </header>
+      
+      {/* Loading indicator */}
+      {isLoading && (
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          exit={{ scaleX: 0 }}
+          className="absolute bottom-0 left-0 h-0.5 w-full bg-primary origin-left"
+          transition={{ duration: 0.3 }}
+        />
+      )}
+    </motion.nav>
   );
 }

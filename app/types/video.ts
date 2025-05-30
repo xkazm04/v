@@ -42,3 +42,10 @@ export type FeedProps = {
   video: VideoMetadata;
   priority?: boolean;
 }
+
+export interface Channel {
+  name: string;
+  avatarUrl: string;
+  verified: boolean;
+  subscribers: number;
+}

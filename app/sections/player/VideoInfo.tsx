@@ -2,21 +2,15 @@
 
 import { useState } from 'react';
 import { VideoMetadata } from '@/app/types/video';
-import { 
-  ThumbsUp, 
-  ThumbsDown, 
-  Share2, 
-  Bookmark, 
-  MoreHorizontal,
-  ChevronDown,
-  ChevronUp,
-  CheckCircle
-} from 'lucide-react';
+import { ChevronDown, ChevronUp, Eye, Calendar } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
-import { Separator } from '@/app/components/ui/separator';
-import { Avatar, AvatarImage, AvatarFallback } from '@/app/components/ui/avatar';
+import { Card, CardContent } from '@/app/components/ui/card';
+import { Badge } from '@/app/components/ui/badge';
 import { formatTimeAgo, formatViewCount } from '@/app/utils/format';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PlayerChannelInfo } from '@/app/components/video/PlayerChannelInfo';
+import { PlayerVideoActions } from '@/app/components/video/PlayerVideoActions';
+import { PlayerStatsPanel } from '@/app/components/video/PlayerStatsPanel';
 
 interface VideoInfoProps {
   video: VideoMetadata;
@@ -25,96 +19,97 @@ interface VideoInfoProps {
 export function VideoInfo({ video }: VideoInfoProps) {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   
+  // Generate avatar URL and mock data since not in original type
+  const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(video.channelName)}&background=random`;
+  const mockSubscribers = Math.floor(Math.random() * 1000000) + 50000;
+  
   return (
-    <div className="space-y-4">
-      <h1 className="text-xl font-bold md:text-2xl">{video.title}</h1>
+    <div className="space-y-6">
+      {/* Video Title */}
+      <div>
+        <h1 className="text-xl font-bold md:text-2xl mb-2">{video.title}</h1>
+        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <Eye className="h-4 w-4" />
+            <span>{formatViewCount(video.views)} views</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Calendar className="h-4 w-4" />
+            <span>{formatTimeAgo(video.uploadDate)}</span>
+          </div>
+          <Badge variant="secondary">{video.category}</Badge>
+        </div>
+      </div>
       
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div className="flex items-center">
-          <Avatar className="h-10 w-10 mr-4">
-            <AvatarImage src={video.channel.avatarUrl} alt={video.channel.name} />
-            <AvatarFallback>{video.channel.name[0]}</AvatarFallback>
-          </Avatar>
-          <div>
-            <div className="flex items-center">
-              <h3 className="font-medium">{video.channel.name}</h3>
-              {video.channel.verified && (
-                <CheckCircle className="h-4 w-4 ml-1 text-verified" />
+      {/* Channel and Actions */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <PlayerChannelInfo 
+          channelName={video.channelName}
+          avatarUrl={avatarUrl}
+          verified={Math.random() > 0.5}
+          subscribers={mockSubscribers}
+        />
+        
+        <PlayerVideoActions 
+          likes={video.likes}
+          onLike={() => console.log('Liked')}
+          onDislike={() => console.log('Disliked')}
+          onShare={() => console.log('Shared')}
+          onSave={() => console.log('Saved')}
+          onReport={() => console.log('Reported')}
+        />
+      </div>
+      
+      {/* Description Card */}
+      <Card>
+        <CardContent className="p-4">
+          <div 
+            className="cursor-pointer"
+            onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+          >
+            <div className="flex justify-between items-start mb-3">
+              <div className="flex flex-wrap gap-2">
+                {video.tags.map(tag => (
+                  <Badge key={tag} variant="outline" className="text-xs">
+                    #{tag}
+                  </Badge>
+                ))}
+              </div>
+              <Button variant="ghost" size="icon" className="shrink-0">
+                {isDescriptionExpanded ? 
+                  <ChevronUp className="h-4 w-4" /> : 
+                  <ChevronDown className="h-4 w-4" />
+                }
+              </Button>
+            </div>
+            
+            <div className={`text-sm ${!isDescriptionExpanded ? 'line-clamp-3' : ''}`}>
+              {video.description}
+            </div>
+            
+            <AnimatePresence>
+              {isDescriptionExpanded && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="mt-4 pt-4 border-t"
+                >
+                  <div className="text-xs text-muted-foreground space-y-1">
+                    <p>Video ID: {video.id}</p>
+                    <p>Duration: {Math.floor(video.duration / 60)}:{(video.duration % 60).toString().padStart(2, '0')}</p>
+                    <p>Upload Date: {new Date(video.uploadDate).toLocaleDateString()}</p>
+                  </div>
+                </motion.div>
               )}
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {formatViewCount(video.channel.subscribers)} subscribers
-            </p>
+            </AnimatePresence>
           </div>
-          <Button className="ml-4 rounded-full" size="sm">
-            Subscribe
-          </Button>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <div className="flex bg-muted rounded-full overflow-hidden">
-            <Button variant="ghost" className="rounded-r-none flex gap-2">
-              <ThumbsUp className="h-5 w-5" />
-              <span>{formatViewCount(video.likes)}</span>
-            </Button>
-            <Separator orientation="vertical" className="h-8 self-center" />
-            <Button variant="ghost" className="rounded-l-none">
-              <ThumbsDown className="h-5 w-5" />
-            </Button>
-          </div>
-          
-          <Button variant="outline" className="flex gap-2">
-            <Share2 className="h-5 w-5" />
-            <span className="hidden sm:inline">Share</span>
-          </Button>
-          
-          <Button variant="outline" className="flex gap-2">
-            <Bookmark className="h-5 w-5" />
-            <span className="hidden sm:inline">Save</span>
-          </Button>
-          
-          <Button variant="outline" size="icon">
-            <MoreHorizontal className="h-5 w-5" />
-          </Button>
-        </div>
-      </div>
-      
-      <div 
-        className="bg-muted p-4 rounded-lg cursor-pointer"
-        onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-      >
-        <div className="flex justify-between items-start">
-          <div className="space-y-1">
-            <p className="text-sm font-medium">
-              {formatViewCount(video.views)} views • {formatTimeAgo(video.uploadDate)}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {video.tags.map(tag => (
-                <span key={tag} className="text-xs bg-card px-2 py-1 rounded-full">
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          </div>
-          <Button variant="ghost" size="icon">
-            {isDescriptionExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-          </Button>
-        </div>
-        
-        <AnimatePresence>
-          {isDescriptionExpanded && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className="mt-4"
-            >
-              <p className="text-sm whitespace-pre-line">{video.description}</p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+        </CardContent>
+      </Card>
+
+      {/* Fact-Check Panel */}
+      <PlayerStatsPanel factCheck={video.factCheck} />
     </div>
   );
 }

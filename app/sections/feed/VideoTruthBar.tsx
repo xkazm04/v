@@ -21,7 +21,7 @@ const VideoTruthBar = ({ factCheck, height, showLabel = true, compact = false }:
             initial={{ width: 0 }}
             animate={{ width: `${factCheck.truthPercentage}%` }}
             transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
-            className={`${colors.truth}`}
+            className="bg-green-500"
           />
           <motion.div 
             initial={{ width: 0 }}
@@ -33,28 +33,28 @@ const VideoTruthBar = ({ factCheck, height, showLabel = true, compact = false }:
             initial={{ width: 0 }}
             animate={{ width: `${factCheck.misleadingPercentage}%` }}
             transition={{ duration: 0.6, delay: 0.4, ease: 'easeOut' }}
-            className={`${colors.misleading}`}
+            className="bg-red-500"
           />
         </div>
       </div>
       
-      {showLabel && (
+      {showLabel && !compact && (
         <motion.div 
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5 }}
           className="flex items-center gap-1"
         >
-          {!compact && getEvaluationIcon(factCheck.evaluation, 'sm')}
+          {getEvaluationIcon(factCheck.evaluation, 'sm')}
           <span className={`text-xs font-medium ${getEvaluationColor(factCheck.evaluation)}`}>
-            {compact ? `${factCheck.truthPercentage}%` : factCheck.evaluation}
+            {factCheck.evaluation}
           </span>
         </motion.div>
       )}
       
-      {!showLabel && (
-        <span className="text-xs font-medium text-muted-foreground">
-          {factCheck.truthPercentage}% truth
+      {compact && (
+        <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">
+          {factCheck.truthPercentage}%
         </span>
       )}
     </div>

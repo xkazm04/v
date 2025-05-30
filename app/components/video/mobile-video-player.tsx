@@ -115,14 +115,6 @@ export function MobileVideoPlayer({ video, autoPlay = true }: MobileVideoPlayerP
         {/* Right side action buttons */}
         <div className="mobile-actions">
           <div className="flex flex-col items-center">
-            <div className="relative h-12 w-12 mb-1">
-              <Image
-                src={video.channel.avatarUrl}
-                alt={video.channel.name}
-                fill
-                className="object-cover rounded-full ring-2 ring-white"
-              />
-            </div>
             <Button 
               variant="ghost" 
               size="sm" 
@@ -167,7 +159,7 @@ export function MobileVideoPlayer({ video, autoPlay = true }: MobileVideoPlayerP
         <div className="absolute bottom-0 left-0 right-0 p-4">
           <h3 className="text-white font-medium text-lg">{video.title}</h3>
           <p className="text-white/80 text-sm mt-1">
-            {video.channel.name} • {formatViewCount(video.views)} views
+             • {formatViewCount(video.views)} views
           </p>
         </div>
       </div>

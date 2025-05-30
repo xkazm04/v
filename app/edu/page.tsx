@@ -1,8 +1,7 @@
-import EduLayout from "@/app/sections/edu/EduLayout";
-
+import EduLayout from "../sections/edu/EduLayout";
 
 const Page = () => {
-    return <EduLayout />
-}
+  return <EduLayout />;
+};
 
 export default Page;
