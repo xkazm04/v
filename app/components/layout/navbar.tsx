@@ -69,12 +69,12 @@ export function Navbar() {
               )}
             </Link>
             <Link 
-              href="/edu" 
+              href="/timeline" 
               onClick={handleNavigation}
               className="relative transition-colors hover:text-primary"
             >
-              Timeline v1
-              {pathname === '/edu' && (
+              Timeline v2
+              {pathname === '/timeline' && (
                 <motion.div
                   layoutId="navbar-indicator"
                   className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
@@ -189,11 +189,11 @@ export function Navbar() {
                 Home
               </Link>
               <Link 
-                href="/edu" 
+                href="/Edu" 
                 className="flex items-center px-4 py-2 text-lg font-medium hover:bg-accent hover:text-accent-foreground rounded-md"
                 onClick={toggleMobileMenu}
               >
-                Edu
+                Timeline
               </Link>
             </nav>
           </motion.div>

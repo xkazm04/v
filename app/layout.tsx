@@ -57,12 +57,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-background font-sans antialiased">
+      <body className="min-h-screen bg-primary-300 font-sans antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
-          themes={['light', 'dark', 'experimental-dark']}
+          themes={['light', 'dark']}
           disableTransitionOnChange={false}
         >
           <div className="relative flex min-h-screen flex-col">

@@ -20,7 +20,6 @@ const SideCat = ({isCollapsed, isActive}: Props) => {
         setMounted(true);
     }, []);
 
-    // Create a safe navigation item component
     const NavItem = ({ href, icon: Icon, label, isActiveRoute }: {
         href: string;
         icon: any;
@@ -69,10 +68,6 @@ const SideCat = ({isCollapsed, isActive}: Props) => {
                     <div className="mt-4 mb-2 px-4">
                         <div className={cn("h-px bg-border", isCollapsed && "mx-auto w-5")} />
                     </div>
-
-                    <NavItem href="/library" icon={History} label="Library" isActiveRoute={isActive('/library')} />
-                    <NavItem href="/liked" icon={ThumbsUp} label="Liked Videos" isActiveRoute={isActive('/liked')} />
-                    <NavItem href="/watch-later" icon={Clock} label="Watch Later" isActiveRoute={isActive('/watch-later')} />
                 </nav>
             </div>
         </ScrollArea>

@@ -111,31 +111,6 @@ export default function SettingsPage() {
                         )}
                       </Label>
                     </div>
-                    
-                    <div className="relative">
-                      <RadioGroupItem 
-                        value="experimental-dark" 
-                        id="theme-experimental" 
-                        className="sr-only peer" 
-                      />
-                      <Label
-                        htmlFor="theme-experimental"
-                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary cursor-pointer transition-all duration-200"
-                      >
-                        <Sparkles className="h-6 w-6 mb-3" />
-                        <div className="space-y-1 text-center">
-                          <p className="text-sm font-medium leading-none">Neon</p>
-                          <p className="text-sm text-muted-foreground">
-                            Vibrant experimental theme
-                          </p>
-                        </div>
-                        {theme === 'experimental-dark' && (
-                          <div className="absolute top-2 right-2">
-                            <Check className="h-4 w-4 text-primary" />
-                          </div>
-                        )}
-                      </Label>
-                    </div>
                   </RadioGroup>
                 </CardContent>
               </Card>
