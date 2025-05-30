@@ -11,8 +11,6 @@ interface VideoTruthBarProps {
 }
 
 const VideoTruthBar = ({ factCheck, height, showLabel = true, compact = false }: VideoTruthBarProps) => {
-  const colors = getProgressBarColors();
-
   return (
     <div className={`flex items-center gap-2 ${compact ? 'mt-1' : 'mt-2'}`}>
       <div className={`flex-1 bg-border/30 rounded-full ${height} overflow-hidden`}>
@@ -21,7 +19,7 @@ const VideoTruthBar = ({ factCheck, height, showLabel = true, compact = false }:
             initial={{ width: 0 }}
             animate={{ width: `${factCheck.truthPercentage}%` }}
             transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
-            className="bg-green-500"
+            className={`bg-chart-3`}
           />
           <motion.div 
             initial={{ width: 0 }}
@@ -33,7 +31,7 @@ const VideoTruthBar = ({ factCheck, height, showLabel = true, compact = false }:
             initial={{ width: 0 }}
             animate={{ width: `${factCheck.misleadingPercentage}%` }}
             transition={{ duration: 0.6, delay: 0.4, ease: 'easeOut' }}
-            className="bg-red-500"
+            className="bg-chart-5"
           />
         </div>
       </div>

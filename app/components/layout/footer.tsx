@@ -10,10 +10,10 @@ export function Footer() {
             href="https://github.com"
             target="_blank"
             rel="noreferrer"
-            className="text-muted-foreground hover:text-foreground"
+            className="flex text-muted-foreground hover:text-foreground"
           >
             <Github className="h-5 w-5" />
-            <span className="sr-only">GitHub</span>
+            <span className="mx-1">GitHub</span>
           </Link>
         </div>
       </div>

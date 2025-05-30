@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex-1 p-4">
+      <div className="flex-1 p-4 bg-primary-300/50">
         <CategoryFilter />
         <FeaturedVideos />
       </div>

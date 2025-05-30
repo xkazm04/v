@@ -3,7 +3,7 @@
 import { FactCheckResult } from '@/app/types/video';
 import { Badge } from '@/app/components/ui/badge';
 import { Progress } from '@/app/components/ui/progress';
-import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
+import { CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { Shield, AlertTriangle, XCircle, CheckCircle, TrendingUp, FileText } from 'lucide-react';
 
 interface FactCheckPanelProps {
@@ -34,7 +34,7 @@ export function PlayerStatsPanel({ factCheck }: FactCheckPanelProps) {
   };
 
   return (
-    <Card className="border-l-4 border-l-primary">
+    <div className="border-l-4 border-l-primary bg-primary-200">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
           <Shield className="h-5 w-5" />
@@ -104,6 +104,6 @@ export function PlayerStatsPanel({ factCheck }: FactCheckPanelProps) {
           </div>
         </div>
       </CardContent>
-    </Card>
+    </div>
   );
 }

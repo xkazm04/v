@@ -1,7 +1,7 @@
 'use client';
 
 import { VideoMetadata } from '@/app/types/video';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import FeedContainer from './FeedContainer';
 import { MOCK_VIDEOS } from '@/app/constants/videos';
 

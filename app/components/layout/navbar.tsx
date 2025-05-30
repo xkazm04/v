@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -75,6 +75,20 @@ export function Navbar() {
             >
               Timeline v2
               {pathname === '/timeline' && (
+                <motion.div
+                  layoutId="navbar-indicator"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                />
+              )}
+            </Link>
+            <Link 
+              href="/dashboard" 
+              onClick={handleNavigation}
+              className="relative transition-colors hover:text-primary"
+            >
+              Dashboard expo
+              {pathname === '/dashboard' && (
                 <motion.div
                   layoutId="navbar-indicator"
                   className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"

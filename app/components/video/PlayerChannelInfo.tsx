@@ -14,7 +14,7 @@ interface ChannelInfoProps {
 
 export function PlayerChannelInfo({ channelName, avatarUrl, verified = false, subscribers = 0 }: ChannelInfoProps) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between bg-background/80 rounded-xl px-2">
       <div className="flex items-center">
         <Avatar className="h-10 w-10 mr-4">
           <AvatarImage src={avatarUrl} alt={channelName} />

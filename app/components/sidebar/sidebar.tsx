@@ -25,7 +25,7 @@ export function Sidebar({ className }: SidebarProps) {
   return (
     <div 
       className={cn(
-        'h-[calc(100vh-3.5rem)] border-r border-border/40 bg-background transition-all duration-300 hidden md:block relative',
+        'h-[calc(100vh-3.5rem)] border-r border-border/40 bg-background/20 transition-all duration-300 hidden md:block relative',
         isCollapsed ? 'w-[80px]' : 'w-[240px]',
         className
       )}
