@@ -1,5 +1,5 @@
-import { VideoGrid } from '@/app/components/video/video-grid';
 import { MOCK_VIDEOS } from '@/app/constants/videos';
+import { VideoGrid } from '../feed/VideoGrid';
 
 export function FeaturedVideos() {
   return (

@@ -1,6 +1,7 @@
 'use client';
 
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { VideoMetadata } from '@/app/types/video';
 import { MOCK_VIDEOS } from '@/app/constants/videos';
 
@@ -8,72 +9,88 @@ interface VideoState {
   videos: VideoMetadata[];
   currentVideo: VideoMetadata | null;
   recentlyWatched: VideoMetadata[];
-  likedVideos: string[]; // video IDs
-  savedVideos: string[]; // video IDs
+  likedVideos: string[];
+  savedVideos: string[];
+  isHydrated: boolean;
   
   // Actions
   setCurrentVideo: (video: VideoMetadata) => void;
   addToRecentlyWatched: (video: VideoMetadata) => void;
   toggleLikedVideo: (videoId: string) => void;
   toggleSavedVideo: (videoId: string) => void;
-  getVideosByCategory: (category: string) => VideoMetadata[];
+  setHydrated: () => void;
 }
 
-export const useVideoStore = create<VideoState>((set, get) => ({
-  videos: MOCK_VIDEOS,
-  currentVideo: null,
-  recentlyWatched: [],
-  likedVideos: [],
-  savedVideos: [],
-  
-  setCurrentVideo: (video) => {
-    set({ currentVideo: video });
-    get().addToRecentlyWatched(video);
-  },
-  
-  addToRecentlyWatched: (video) => {
-    set((state) => {
-      // Remove the video if it's already in the list
-      const filteredList = state.recentlyWatched.filter(v => v.id !== video.id);
-      // Add it to the beginning
-      return {
-        recentlyWatched: [video, ...filteredList].slice(0, 20) // Keep only last 20
-      };
-    });
-  },
-  
-  toggleLikedVideo: (videoId) => {
-    set((state) => {
-      if (state.likedVideos.includes(videoId)) {
-        return {
-          likedVideos: state.likedVideos.filter(id => id !== videoId)
-        };
-      } else {
-        return {
-          likedVideos: [...state.likedVideos, videoId]
-        };
-      }
-    });
-  },
-  
-  toggleSavedVideo: (videoId) => {
-    set((state) => {
-      if (state.savedVideos.includes(videoId)) {
-        return {
-          savedVideos: state.savedVideos.filter(id => id !== videoId)
-        };
-      } else {
-        return {
-          savedVideos: [...state.savedVideos, videoId]
-        };
-      }
-    });
-  },
-  
-  getVideosByCategory: (category) => {
-    if (category === 'All') {
-      return get().videos;
+export const useVideoStore = create<VideoState>()(
+  persist(
+    (set, get) => ({
+      videos: MOCK_VIDEOS,
+      currentVideo: null,
+      recentlyWatched: [],
+      likedVideos: [],
+      savedVideos: [],
+      isHydrated: false,
+      
+      setCurrentVideo: (video) => {
+        set({ currentVideo: video });
+        get().addToRecentlyWatched(video);
+      },
+      
+      addToRecentlyWatched: (video) => {
+        set((state) => {
+          const filteredList = state.recentlyWatched.filter(v => v.id !== video.id);
+          return {
+            recentlyWatched: [video, ...filteredList].slice(0, 20)
+          };
+        });
+      },
+      
+      toggleLikedVideo: (videoId) => {
+        set((state) => {
+          const isLiked = state.likedVideos.includes(videoId);
+          return {
+            likedVideos: isLiked
+              ? state.likedVideos.filter(id => id !== videoId)
+              : [...state.likedVideos, videoId]
+          };
+        });
+      },
+      
+      toggleSavedVideo: (videoId) => {
+        set((state) => {
+          const isSaved = state.savedVideos.includes(videoId);
+          return {
+            savedVideos: isSaved
+              ? state.savedVideos.filter(id => id !== videoId)
+              : [...state.savedVideos, videoId]
+          };
+        });
+      },
+      
+      setHydrated: () => {
+        set({ isHydrated: true });
+      },
+    }),
+    {
+      name: 'video-storage',
+      storage: createJSONStorage(() => {
+        if (typeof window === 'undefined') {
+          return {
+            getItem: () => null,
+            setItem: () => {},
+            removeItem: () => {},
+          };
+        }
+        return localStorage;
+      }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHydrated();
+      },
     }
-    return get().videos.filter(video => video.category === category);
-  }
-}));
+  )
+);
+
+// Hook to check if store is hydrated
+export const useIsHydrated = () => {
+  return useVideoStore((state) => state.isHydrated);
+};

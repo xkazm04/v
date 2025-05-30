@@ -26,8 +26,8 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'VideoHub - Watch and Share Videos',
-  description: 'A modern video platform for watching and sharing content',
+  title: 'TBD',
+  description: 'TBD',
 };
 
 export default function RootLayout({

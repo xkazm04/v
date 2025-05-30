@@ -56,18 +56,6 @@ export function Navbar() {
             >
               Trending
             </Link>
-            <Link 
-              href="/subscriptions" 
-              className="transition-colors hover:text-primary"
-            >
-              Subscriptions
-            </Link>
-            <Link 
-              href="/library" 
-              className="transition-colors hover:text-primary"
-            >
-              Library
-            </Link>
           </nav>
 
           <div className="flex items-center space-x-4">
@@ -175,43 +163,12 @@ export function Navbar() {
                 Home
               </Link>
               <Link 
-                href="/trending" 
+                href="/edu" 
                 className="flex items-center px-4 py-2 text-lg font-medium hover:bg-accent hover:text-accent-foreground rounded-md"
                 onClick={toggleMobileMenu}
               >
-                Trending
+                Edu
               </Link>
-              <Link 
-                href="/subscriptions" 
-                className="flex items-center px-4 py-2 text-lg font-medium hover:bg-accent hover:text-accent-foreground rounded-md"
-                onClick={toggleMobileMenu}
-              >
-                Subscriptions
-              </Link>
-              <Link 
-                href="/library" 
-                className="flex items-center px-4 py-2 text-lg font-medium hover:bg-accent hover:text-accent-foreground rounded-md"
-                onClick={toggleMobileMenu}
-              >
-                Library
-              </Link>
-              <hr className="my-2" />
-              <Button 
-                variant="outline" 
-                className="w-full justify-start"
-                onClick={toggleMobileMenu}
-              >
-                <Upload className="mr-2 h-5 w-5" />
-                Upload Video
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start"
-                onClick={toggleMobileMenu}
-              >
-                <Bell className="mr-2 h-5 w-5" />
-                Notifications
-              </Button>
             </nav>
           </motion.div>
         )}

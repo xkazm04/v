@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from 'react';
 import { VideoMetadata } from '@/app/types/video';
 import { 
   Play, 
-  Pause, 
   Heart, 
   MessageCircle, 
   Share2, 
@@ -15,7 +14,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { Button } from '@/app/components/ui/button';
 import { formatViewCount } from '@/app/utils/format';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 interface MobileVideoPlayerProps {

@@ -1,3 +1,5 @@
+export type LayoutType = 'grid' | 'list' | 'compact';
+
 export interface VideoMetadata {
   id: string;
   title: string;
@@ -7,33 +9,36 @@ export interface VideoMetadata {
   duration: number; // in seconds
   views: number;
   likes: number;
-  dislikes: number;
   uploadDate: string;
-  verified: boolean;
-  channel: Channel;
+  channelName: string;
   category: VideoCategory;
   tags: string[];
+  factCheck: FactCheckResult;
 }
 
-export interface Channel {
-  id: string;
-  name: string;
-  avatarUrl: string;
-  subscribers: number;
-  verified: boolean;
+export interface FactCheckResult {
+  evaluation: 'Fact' | 'Mislead' | 'Lie';
+  truthPercentage: number;
+  neutralPercentage: number;
+  misleadingPercentage: number;
+  totalClaims: number;
+  verifiedClaims: number;
+  sources: number;
+  confidence: number; // 0-100
 }
 
 export type VideoCategory = 
   | 'All'
-  | 'Gaming'
-  | 'Music'
   | 'Technology'
   | 'Science'
   | 'Education'
-  | 'Entertainment'
   | 'News'
-  | 'Sports'
-  | 'Travel'
-  | 'Cooking'
-  | 'Fashion'
-  | 'Art';
+
+export type FeedProps = {
+  imageLoaded: boolean;
+  setImageLoaded: (loaded: boolean) => void;
+  imageError: boolean;
+  setImageError: (error: boolean) => void;
+  video: VideoMetadata;
+  priority?: boolean;
+}

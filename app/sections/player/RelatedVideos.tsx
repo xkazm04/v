@@ -1,5 +1,5 @@
 import { VideoMetadata } from '@/app/types/video';
-import { VideoCard } from '@/app/components/video/video-card';
+import { VideoCard } from '../feed/VideoCard';
 import { MOCK_VIDEOS } from '@/app/constants/videos';
 
 interface RelatedVideosProps {
