@@ -28,8 +28,8 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'FactCheck Pro - Truth in Every Statement',
-  description: 'Advanced fact-checking platform for politicians and public figures',
+  title: 'Vaai',
+  description: 'Dont trust, verify.',
 };
 
 export default function RootLayout({

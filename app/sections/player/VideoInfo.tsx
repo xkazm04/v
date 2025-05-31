@@ -2,27 +2,18 @@
 
 import { useState } from 'react';
 import { VideoMetadata } from '@/app/types/video';
-import { ChevronDown, ChevronUp, Eye, Calendar } from 'lucide-react';
+import { ChevronDown, Eye, Calendar, ExternalLink } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent } from '@/app/components/ui/card';
 import { Badge } from '@/app/components/ui/badge';
 import { formatTimeAgo, formatViewCount } from '@/app/utils/format';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PlayerChannelInfo } from '@/app/components/video/PlayerChannelInfo';
-import { PlayerVideoActions } from '@/app/components/video/PlayerVideoActions';
-import { PlayerStatsPanel } from '@/app/components/video/PlayerStatsPanel';
 
 interface VideoInfoProps {
   video: VideoMetadata;
 }
 
 export function VideoInfo({ video }: VideoInfoProps) {
-  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  
-  // Generate avatar URL and mock data since not in original type
-  const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(video.channelName)}&background=random`;
-  const mockSubscribers = Math.floor(Math.random() * 1000000) + 50000;
-  
   return (
     <div className="space-y-6">
       {/* Video Title */}
@@ -40,76 +31,83 @@ export function VideoInfo({ video }: VideoInfoProps) {
           <Badge variant="secondary">{video.category}</Badge>
         </div>
       </div>
-      
-      {/* Channel and Actions */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <PlayerChannelInfo 
-          channelName={video.channelName}
-          avatarUrl={avatarUrl}
-          verified={Math.random() > 0.5}
-          subscribers={mockSubscribers}
-        />
-        
-        <PlayerVideoActions 
-          likes={video.likes}
-          onLike={() => console.log('Liked')}
-          onDislike={() => console.log('Disliked')}
-          onShare={() => console.log('Shared')}
-          onSave={() => console.log('Saved')}
-          onReport={() => console.log('Reported')}
-        />
-      </div>
-      
-      {/* Description Card */}
-      <Card>
+    
+      {/* Enhanced Description Card */}
+      <div className="border-l-4 border-l-primary bg-primary-100">
         <CardContent className="p-4">
-          <div 
-            className="cursor-pointer"
-            onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-          >
+          <div >
             <div className="flex justify-between items-start mb-3">
               <div className="flex flex-wrap gap-2">
                 {video.tags.map(tag => (
-                  <Badge key={tag} variant="outline" className="text-xs">
+                  <Badge key={tag} variant="outline" className="text-sm hover:bg-accent transition-colors">
                     #{tag}
                   </Badge>
                 ))}
               </div>
-              <Button variant="ghost" size="icon" className="shrink-0">
-                {isDescriptionExpanded ? 
-                  <ChevronUp className="h-4 w-4" /> : 
-                  <ChevronDown className="h-4 w-4" />
-                }
-              </Button>
             </div>
             
-            <div className={`text-sm ${!isDescriptionExpanded ? 'line-clamp-3' : ''}`}>
               {video.description}
-            </div>
-            
+
             <AnimatePresence>
-              {isDescriptionExpanded && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="mt-4 pt-4 border-t"
+                  transition={{ duration: 0.3 }}
+                  className="mt-4 pt-4 border-t space-y-4"
                 >
-                  <div className="text-xs text-muted-foreground space-y-1">
-                    <p>Video ID: {video.id}</p>
-                    <p>Duration: {Math.floor(video.duration / 60)}:{(video.duration % 60).toString().padStart(2, '0')}</p>
-                    <p>Upload Date: {new Date(video.uploadDate).toLocaleDateString()}</p>
+                  {/* Enhanced metadata */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span>Video ID:</span>
+                        <span className="font-mono">{video.id}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Duration:</span>
+                        <span>{Math.floor(video.duration / 60)}:{(video.duration % 60).toString().padStart(2, '0')}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Upload Date:</span>
+                        <span>{new Date(video.uploadDate).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span>Category:</span>
+                        <Badge variant="outline" className="text-sm">{video.category}</Badge>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Fact-Check Status:</span>
+                        <Badge 
+                          variant="outline" 
+                          className={`text-sm ${
+                            video.factCheck.evaluation === 'Fact' ? 'border-green-400 text-green-600' :
+                            video.factCheck.evaluation === 'Mislead' ? 'border-yellow-400 text-yellow-600' :
+                            'border-red-400 text-red-600'
+                          }`}
+                        >
+                          {video.factCheck.evaluation}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Quick Actions */}
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" className="text-sm">
+                      <ExternalLink className="h-3 w-3 mr-1" />
+                      Share Video
+                    </Button>
+                    <Button variant="outline" size="sm" className="text-sm">
+                      Report Issue
+                    </Button>
                   </div>
                 </motion.div>
-              )}
             </AnimatePresence>
           </div>
         </CardContent>
-      </Card>
-
-      {/* Fact-Check Panel */}
-      <PlayerStatsPanel factCheck={video.factCheck} />
+      </div>
     </div>
   );
 }

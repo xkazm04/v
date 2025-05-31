@@ -61,7 +61,7 @@ function WatchPageContent() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex-1 p-4 md:p-6">
+      <div className="flex flex-row justify-center p-4 w-full md:p-6 max-w-[1800px]">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             <VideoPlayer video={video} autoPlay />
