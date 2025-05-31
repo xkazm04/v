@@ -2,8 +2,9 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/app/providers/theme-provider';
-import { Navbar } from '@/app/components/layout/navbar';
+import { Navbar } from '@/app/sections/navbar/navbar';
 import { Footer } from '@/app/components/layout/footer';
+import { BackgroundOverlay } from '@/app/components/layout/BackgroundOverlay';
 import { Toaster } from '@/app/components/ui/sonner';
 import { PageTransition } from '@/app/components/layout/PageTransition';
 
@@ -27,8 +28,8 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'TBD',
-  description: 'TBD',
+  title: 'FactCheck Pro - Truth in Every Statement',
+  description: 'Advanced fact-checking platform for politicians and public figures',
 };
 
 export default function RootLayout({
@@ -57,7 +58,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-primary-300 font-sans antialiased">
+      <body className="min-h-screen bg-primary-300 font-sans antialiased relative">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -65,7 +66,10 @@ export default function RootLayout({
           themes={['light', 'dark']}
           disableTransitionOnChange={false}
         >
-          <div className="relative flex min-h-screen flex-col">
+          {/* Background overlay for color subtones */}
+          <BackgroundOverlay />
+          
+          <div className="relative flex min-h-screen flex-col z-10">
             <Navbar />
             <main className="flex-1">
               <PageTransition>

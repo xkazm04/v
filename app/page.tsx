@@ -4,9 +4,9 @@ import { CategoryFilter } from '@/app/sections/home/CategoryFilter';
 
 export default function Home() {
   return (
-    <div className="flex">
+    <div className="flex relative">
       <Sidebar />
-      <div className="flex-1 p-4 bg-primary-300/50">
+      <div className="flex-1 p-4 relative">
         <CategoryFilter />
         <FeaturedVideos />
       </div>
