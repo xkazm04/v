@@ -4,5 +4,6 @@ export const NAVIGATION_CONFIG = {
     { href: '/timeline', label: 'Timeline', description: '' },
     { href: '/dashboard', label: 'Dashboard', description: '' },
     { href: '/playground', label: 'Playground', description: '' },
+    { href: '/upload', label: 'Upload', description: '' },
   ]
 };

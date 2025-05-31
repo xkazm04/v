@@ -179,7 +179,6 @@ const UnifiedFeedLayout = ({
                 <div className="space-y-2">
                   <VideoTruthBar 
                     factCheck={video.factCheck}
-                    height={config.progressBarHeight}
                     showLabel={layout !== 'compact'}
                     compact={layout === 'compact'}
                   />

@@ -1,20 +1,18 @@
 import { motion } from 'framer-motion';
-import { getEvaluationIcon, getEvaluationColor, getProgressBarColors } from '@/app/helpers/factCheck';
-import { progressVariants } from '@/app/helpers/animation';
+import { getEvaluationIcon, getEvaluationColor } from '@/app/helpers/factCheck';
 import { FactCheckResult } from '@/app/types/video';
 
 interface VideoTruthBarProps {
   factCheck: FactCheckResult;
-  height: string;
   showLabel?: boolean;
   compact?: boolean;
 }
 
-const VideoTruthBar = ({ factCheck, height, showLabel = true, compact = false }: VideoTruthBarProps) => {
+const VideoTruthBar = ({ factCheck, showLabel = true, compact = false }: VideoTruthBarProps) => {
   return (
     <div className={`flex items-center gap-2 ${compact ? 'mt-1' : 'mt-2'}`}>
-      <div className={`flex-1 bg-border/30 rounded-full ${height} overflow-hidden`}>
-        <div className={`flex ${height}`}>
+      <div className={`flex-1 bg-border/30 rounded-full overflow-hidden`}>
+        <div className={`flex`}>
           <motion.div 
             initial={{ width: 0 }}
             animate={{ width: `${factCheck.truthPercentage}%` }}

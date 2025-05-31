@@ -92,7 +92,6 @@ const CompactVideoCard = ({ video, priority = false }: CompactVideoCardProps) =>
             {/* Truth Bar */}
             <VideoTruthBar 
               factCheck={video.factCheck}
-              height="h-1.5"
               showLabel={false}
               compact={true}
             />
