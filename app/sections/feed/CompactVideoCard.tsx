@@ -1,117 +1,69 @@
 'use client';
-
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { VideoMetadata } from '@/app/types/video';
-import { getEvaluationIcon, getEvaluationColor } from '@/app/helpers/factCheck';
-import { formatDuration, formatViewCount, formatTimeAgo } from '@/app/utils/format';
-import { Badge } from '@/app/components/ui/badge';
-import { Eye, Calendar, ThumbsUp } from 'lucide-react';
-import VideoTruthBar from './VideoTruthBar';
-
+import { CompactVideoContent } from '@/app/components/video/compact/CompactVideoContent';
 interface CompactVideoCardProps {
   video: VideoMetadata;
   priority?: boolean;
+  index?: number;
 }
 
-const CompactVideoCard = ({ video, priority = false }: CompactVideoCardProps) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
+const CompactVideoCard = ({ video, priority = false, index = 0 }: CompactVideoCardProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
+  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="group"
+      transition={{ 
+        duration: 0.4,
+        delay: index * 0.05,
+        ease: [0.25, 0.25, 0, 1]
+      }}
+      className="group relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <Link href={`/watch?v=${video.id}`}>
-        <div className="flex gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors duration-200">
-          {/* Thumbnail */}
-          <div className="relative w-32 h-20 flex-shrink-0 rounded-md overflow-hidden bg-muted">
-            {!imageError && (
-              <Image
-                src={video.thumbnailUrl}
-                alt={video.title}
-                fill
-                className={`object-cover transition-all duration-300 ${
-                  imageLoaded ? 'opacity-100' : 'opacity-0'
-                } group-hover:scale-105`}
-                sizes="128px"
-                priority={priority}
-                onLoad={() => setImageLoaded(true)}
-                onError={() => setImageError(true)}
-              />
-            )}
+        <motion.div
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.2 }}
+          className="relative p-4 rounded-2xl transition-all duration-300 cursor-pointer overflow-hidden"
+          style={{
+            background: `
+              linear-gradient(135deg, 
+                rgba(30, 41, 59, 0.4) 0%,
+                rgba(51, 65, 85, 0.6) 50%,
+                rgba(30, 41, 59, 0.4) 100%
+              )
+            `,
+            backdropFilter: 'blur(10px)',
+            border: isHovered ? '1px solid rgba(148, 163, 184, 0.3)' : '1px solid rgba(71, 85, 105, 0.2)'
+          }}
+        >
+          {/* Background Glow Effect */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isHovered ? 0.1 : 0 }}
+            transition={{ duration: 0.3 }}
+            className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-emerald-500/10 rounded-2xl"
+          />
+          
+          {/* Main Content */}
+          <div className="relative flex gap-4">
+
             
-            {!imageLoaded && !imageError && (
-              <div className="absolute inset-0 bg-muted animate-pulse" />
-            )}
-            
-            {/* Duration Badge */}
-            <div className="absolute bottom-1 right-1 bg-black/80 text-white text-xs px-1.5 py-0.5 rounded font-medium">
-              {formatDuration(video.duration)}
-            </div>
-            
-            {/* Fact Check Badge */}
-            <div className="absolute top-1 left-1 flex items-center gap-1 bg-background/90 text-foreground text-xs px-1.5 py-0.5 rounded backdrop-blur-sm border border-border/30">
-              {getEvaluationIcon(video.factCheck.evaluation, 'sm')}
-            </div>
+            <CompactVideoContent 
+              video={video}
+              isHovered={isHovered}
+            />
           </div>
           
-          {/* Content */}
-          <div className="flex-1 min-w-0 space-y-2">
-            {/* Title */}
-            <h4 className="font-medium text-sm line-clamp-2 leading-tight group-hover:text-primary transition-colors">
-              {video.title}
-            </h4>
-            
-            {/* Channel */}
-            <p className="text-xs text-muted-foreground font-medium">
-              {video.channelName}
-            </p>
-            
-            {/* Stats Row */}
-            <div className="flex items-center gap-3 text-xs text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Eye className="h-3 w-3" />
-                <span>{formatViewCount(video.views)}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <ThumbsUp className="h-3 w-3" />
-                <span>{formatViewCount(video.likes)}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
-                <span>{formatTimeAgo(video.uploadDate)}</span>
-              </div>
-            </div>
-            
-            {/* Truth Bar */}
-            <VideoTruthBar 
-              factCheck={video.factCheck}
-              showLabel={false}
-              compact={true}
-            />
-            
-            {/* Bottom Row */}
-            <div className="flex items-center justify-between">
-              <Badge variant="outline" className="text-xs px-2 py-0">
-                {video.category}
-              </Badge>
-              <div className="flex items-center gap-1 text-xs">
-                <span className={`font-medium ${getEvaluationColor(video.factCheck.evaluation)}`}>
-                  {video.factCheck.evaluation}
-                </span>
-                <span className="text-muted-foreground">
-                  ({video.factCheck.confidence}%)
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+        </motion.div>
       </Link>
     </motion.div>
   );

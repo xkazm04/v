@@ -3,21 +3,18 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Sidebar } from '@/app/components/sidebar/sidebar';
-import { VideoPlayer } from '@/app/sections/player/VideoPlayer';
-import { MobileVideoPlayer } from '@/app/components/video/mobile-video-player';
 import { VideoInfo } from '@/app/sections/player/VideoInfo';
 import { RelatedVideos } from '@/app/sections/player/RelatedVideos';
 import { MOCK_VIDEOS } from '@/app/constants/videos';
 import { VideoMetadata } from '@/app/types/video';
-import { useMediaQuery } from '@/app/hooks/use-media-query';
 import { LoadingScreen } from '@/app/components/layout/LoadingScreen';
+import YtPlayer from '../sections/player/YtPlayer';
 
 function WatchPageContent() {
   const searchParams = useSearchParams();
   const videoId = searchParams.get('v');
   const [video, setVideo] = useState<VideoMetadata | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const isMobile = useMediaQuery('(max-width: 768px)');
   
   useEffect(() => {
     const loadVideo = async () => {
@@ -54,17 +51,13 @@ function WatchPageContent() {
     );
   }
   
-  if (isMobile) {
-    return <MobileVideoPlayer video={video} />;
-  }
-  
   return (
     <div className="flex">
       <Sidebar />
       <div className="flex flex-row justify-center p-4 w-full md:p-6 max-w-[1800px]">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <VideoPlayer video={video} autoPlay />
+          <div className="lg:col-span-2 space-y-6 max-w-[700px]">
+            <YtPlayer />
             <VideoInfo video={video} />
           </div>
           <div className="lg:col-span-1">

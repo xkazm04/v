@@ -14,6 +14,7 @@ export interface VideoMetadata {
   category: VideoCategory;
   tags: string[];
   factCheck: FactCheckResult;
+  youtubeId: string; // YouTube video ID
 }
 
 export interface FactCheckResult {
