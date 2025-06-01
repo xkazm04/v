@@ -5,8 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/app/components/ui/button';
 import { ThemeToggle } from '@/app/components/theme/theme-toggle';
 import { cn } from '@/app/lib/utils';
-import { Menu, Upload, Bell, User} from 'lucide-react';
+import { Menu, Upload, Bell, User, Settings } from 'lucide-react';
 import { useNavigation } from '@/app/hooks/useNavigation';
+import { useAuth } from '@/app/hooks/useAuth';
+import { AuthButtons } from '@/app/components/auth/AuthButtons';
 import NavMobileOverlay from './NavMobileOverlay';
 import { navAnim } from '@/app/components/animations/variants/navVariants';
 import { NAVIGATION_CONFIG } from '@/app/config/navItems';
@@ -23,6 +25,8 @@ export function Navbar() {
     isActivePath
   } = useNavigation();
 
+  const { user, profile, loading: authLoading } = useAuth();
+
   useEffect(() => {
     if (isMobileMenuOpen) {
       toggleMobileMenu();
@@ -30,13 +34,13 @@ export function Navbar() {
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  // Action button configurations
-  const actionButtons = [
+  // Action button configurations - only show for authenticated users
+  const actionButtons = user ? [
     {
       key: 'upload',
       icon: Upload,
       label: 'Upload',
-      onClick: () => console.log('Upload clicked'),
+      onClick: () => console.log('Navigate to upload'),
       showOnDesktop: true,
       showOnMobile: false,
       badge: null
@@ -51,16 +55,16 @@ export function Navbar() {
       badge: 3 // Example notification count
     },
     {
-      key: 'user',
-      icon: User,
-      label: 'User Profile',
-      onClick: () => console.log('User clicked'),
+      key: 'settings',
+      icon: Settings,
+      label: 'Settings',
+      onClick: () => console.log('Navigate to settings'),
       showOnDesktop: true,
       showOnMobile: true,
       badge: null,
       className: 'rounded-full'
     }
-  ];
+  ] : [];
 
   const renderNavLink = (item: typeof NAVIGATION_CONFIG.mainNav[0], isMobile = false) => {
     const isActive = isActivePath(item.href);
@@ -109,7 +113,23 @@ export function Navbar() {
     );
   };
 
+  const UserProfileDisplay = () => {
+    if (!user || !profile) return null;
 
+    return (
+      <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-secondary/50">
+        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+          <User className="h-4 w-4 text-primary" />
+        </div>
+        <div className="hidden sm:block">
+          <p className="text-sm font-medium text-foreground">
+            {profile.full_name || 'User'}
+          </p>
+          <p className="text-xs text-muted-foreground">{profile.email}</p>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <motion.nav
@@ -143,7 +163,7 @@ export function Navbar() {
             className="flex items-center space-x-2 group"
           >
             <div className="font-bold text-xl text-foreground group-hover:text-primary transition-colors">
-              TBD title
+              FactChecker
             </div>
           </Link>
         </div>
@@ -155,20 +175,35 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center space-x-2">
-            {/* Action Buttons */}
-            <div className="flex items-center space-x-1">
-              {actionButtons.map(config => renderActionButton(config))}
-              <ThemeToggle />
-            </div>
+            {/* User Profile or Auth Buttons */}
+            {user ? (
+              <div className="flex items-center space-x-2">
+                <UserProfileDisplay />
+                {/* Action Buttons for authenticated users */}
+                <div className="flex items-center space-x-1">
+                  {actionButtons.map(config => renderActionButton(config))}
+                </div>
+              </div>
+            ) : (
+              <AuthButtons variant="outline" size="sm" />
+            )}
+            <ThemeToggle />
           </div>
         </div>
 
         {/* Mobile Actions */}
         <div className="flex-1 flex justify-end items-center space-x-2 md:hidden">
-          {actionButtons
-            .filter(config => config.showOnMobile)
-            .slice(0, 2) // Limit mobile buttons
-            .map(config => renderActionButton(config, false))}
+          {user ? (
+            <>
+              {actionButtons
+                .filter(config => config.showOnMobile)
+                .slice(0, 1) // Limit mobile buttons more aggressively
+                .map(config => renderActionButton(config, false))}
+              <AuthButtons variant="ghost" size="sm" />
+            </>
+          ) : (
+            <AuthButtons variant="outline" size="sm" />
+          )}
           <ThemeToggle />
         </div>
       </div>
@@ -183,12 +218,12 @@ export function Navbar() {
             //@ts-expect-error Ignore
             renderActionButton={renderActionButton}
           />
-          )}
+        )}
       </AnimatePresence>
 
       {/* Loading Indicator */}
       <AnimatePresence>
-        {isLoading && (
+        {(isLoading || authLoading) && (
           <motion.div
             variants={navAnim.loading}
             initial="initial"
