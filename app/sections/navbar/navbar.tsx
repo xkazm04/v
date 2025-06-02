@@ -1,19 +1,37 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/app/components/ui/button';
 import { ThemeToggle } from '@/app/components/theme/theme-toggle';
 import { cn } from '@/app/lib/utils';
-import { Menu, Upload, Bell, User, Settings } from 'lucide-react';
+import { Menu, Upload, Bell, User, LogOut, Settings } from 'lucide-react';
 import { useNavigation } from '@/app/hooks/useNavigation';
 import { useAuth } from '@/app/hooks/useAuth';
-import { AuthButtons } from '@/app/components/auth/AuthButtons';
 import NavMobileOverlay from './NavMobileOverlay';
 import { navAnim } from '@/app/components/animations/variants/navVariants';
 import { NAVIGATION_CONFIG } from '@/app/config/navItems';
 import { renderActionButton } from './NavActionButton';
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/app/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/app/components/ui/alert-dialog';
+import { AuthButtons } from '@/app/components/auth/AuthButtons';
+import { Loader2 } from 'lucide-react';
 
 export function Navbar() {
   const {
@@ -25,7 +43,8 @@ export function Navbar() {
     isActivePath
   } = useNavigation();
 
-  const { user, profile, loading: authLoading } = useAuth();
+  const { user, profile, loading: authLoading, signOut } = useAuth();
+  const [logoutLoading, setLogoutLoading] = useState(false);
 
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -34,13 +53,24 @@ export function Navbar() {
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
+  const handleLogout = async () => {
+    try {
+      setLogoutLoading(true);
+      await signOut();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    } finally {
+      setLogoutLoading(false);
+    }
+  };
+
   // Action button configurations - only show for authenticated users
   const actionButtons = user ? [
     {
       key: 'upload',
       icon: Upload,
       label: 'Upload',
-      onClick: () => console.log('Navigate to upload'),
+      onClick: () => console.log('Upload clicked'),
       showOnDesktop: true,
       showOnMobile: false,
       badge: null
@@ -53,16 +83,6 @@ export function Navbar() {
       showOnDesktop: true,
       showOnMobile: false,
       badge: 3 // Example notification count
-    },
-    {
-      key: 'settings',
-      icon: Settings,
-      label: 'Settings',
-      onClick: () => console.log('Navigate to settings'),
-      showOnDesktop: true,
-      showOnMobile: true,
-      badge: null,
-      className: 'rounded-full'
     }
   ] : [];
 
@@ -131,6 +151,76 @@ export function Navbar() {
     );
   };
 
+  // User profile dropdown component
+  const UserProfileDropdown = () => {
+    if (!user) {
+      return <AuthButtons variant="ghost" size="sm" />;
+    }
+
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="relative">
+            <User className="h-5 w-5" />
+            <span className="sr-only">User menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56">
+          <div className="px-2 py-1.5">
+            <p className="text-sm font-medium">{user.email}</p>
+          </div>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href="/settings" className="flex items-center gap-2">
+              <Settings className="h-4 w-4" />
+              Settings
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <DropdownMenuItem 
+                onSelect={(e) => e.preventDefault()}
+                className="flex items-center gap-2 text-destructive focus:text-destructive cursor-pointer"
+              >
+                <LogOut className="h-4 w-4" />
+                Sign Out
+              </DropdownMenuItem>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Sign Out Confirmation</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to sign out? You&apos;ll need to sign in again to access your account.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleLogout}
+                  disabled={logoutLoading}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  {logoutLoading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      Signing Out...
+                    </>
+                  ) : (
+                    <>
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sign Out
+                    </>
+                  )}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  };
+
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
@@ -175,36 +265,23 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center space-x-2">
-            {/* User Profile or Auth Buttons */}
-            {user ? (
-              <div className="flex items-center space-x-2">
-                <UserProfileDisplay />
-                {/* Action Buttons for authenticated users */}
-                <div className="flex items-center space-x-1">
-                  {actionButtons.map(config => renderActionButton(config))}
-                </div>
-              </div>
-            ) : (
-              <AuthButtons variant="outline" size="sm" />
-            )}
-            <ThemeToggle />
+            {/* Action Buttons */}
+            <div className="flex items-center space-x-1">
+              {actionButtons.map(config => renderActionButton(config))}
+              <ThemeToggle />
+              <UserProfileDropdown />
+            </div>
           </div>
         </div>
 
         {/* Mobile Actions */}
         <div className="flex-1 flex justify-end items-center space-x-2 md:hidden">
-          {user ? (
-            <>
-              {actionButtons
-                .filter(config => config.showOnMobile)
-                .slice(0, 1) // Limit mobile buttons more aggressively
-                .map(config => renderActionButton(config, false))}
-              <AuthButtons variant="ghost" size="sm" />
-            </>
-          ) : (
-            <AuthButtons variant="outline" size="sm" />
-          )}
+          {actionButtons
+            .filter(config => config.showOnMobile)
+            .slice(0, 2) // Limit mobile buttons
+            .map(config => renderActionButton(config, false))}
           <ThemeToggle />
+          <UserProfileDropdown />
         </div>
       </div>
 
