@@ -13,80 +13,8 @@ interface YtPlayerProps {
   autoPlay?: boolean;
 }
 
-// Sample video data with fact-check information
-const defaultVideos: VideoMetadata[] = [
-  {
-    id: '1',
-    title: 'PSY - GANGNAM STYLE (강남스타일) M/V',
-    channelName: 'officialpsy',
-    videoUrl: 'https://www.youtube.com/watch?v=9bZkp7q19f0',
-    youtubeId: '9bZkp7q19f0',
-    thumbnailUrl: 'https://img.youtube.com/vi/9bZkp7q19f0/maxresdefault.jpg',
-    duration: 252,
-    views: 5000000000,
-    likes: 25000000,
-    uploadDate: '2012-07-15T00:00:00Z',
-    category: 'All',
-    factCheck: {
-      evaluation: 'Lie',
-      confidence: 95,
-    }
-  },
-  {
-    id: '2',
-    title: 'Luis Fonsi - Despacito ft. Daddy Yankee',
-    channelName: 'LuisFonsiVEVO',
-    videoUrl: 'https://www.youtube.com/watch?v=kJQP7kiw5Fk',
-    youtubeId: 'kJQP7kiw5Fk',
-    thumbnailUrl: 'https://img.youtube.com/vi/kJQP7kiw5Fk/maxresdefault.jpg',
-    duration: 282,
-    views: 8000000000,
-    likes: 50000000,
-    uploadDate: '2017-01-12T00:00:00Z',
-    category: 'All',
-    factCheck: {
-      evaluation: 'Lie',
-      confidence: 78,
-    }
-  },
-  {
-    id: '3',
-    title: 'Queen - Bohemian Rhapsody (Official Video Remastered)',
-    channelName: 'Queen Official',
-    videoUrl: 'https://www.youtube.com/watch?v=fJ9rUzIMcZQ',
-    youtubeId: 'fJ9rUzIMcZQ',
-    thumbnailUrl: 'https://img.youtube.com/vi/fJ9rUzIMcZQ/maxresdefault.jpg',
-    duration: 355,
-    views: 2000000000,
-    likes: 15000000,
-    uploadDate: '2008-08-01T00:00:00Z',
-    category: 'All',
-    factCheck: {
-      evaluation: 'Lie',
-      confidence: 92,
-    }
-  },
-  {
-    id: '4',
-    title: 'Rick Astley - Never Gonna Give You Up',
-    channelName: 'RickAstleyVEVO',
-    videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    youtubeId: 'dQw4w9WgXcQ',
-    thumbnailUrl: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-    duration: 213,
-    views: 1400000000,
-    likes: 16000000,
-    uploadDate: '2009-10-24T00:00:00Z',
-    category: 'All',
-    factCheck: {
-      evaluation: 'Lie',
-      confidence: 67,
-    }
-  }
-];
-
 export default function YtPlayer({ 
-  videos = defaultVideos, 
+  videos, 
   initialIndex = 0, 
   autoPlay = false 
 }: YtPlayerProps) {

@@ -1,19 +1,17 @@
 'use client';
 
-import { useProfile } from '@/hooks/useProfile';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { RefreshCw, User, MapPin, Building, Calendar, MessageSquare } from 'lucide-react';
+import { User, MapPin, Building, Calendar, MessageSquare, Badge } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { useProfile } from '@/app/hooks/useProfile';
 
 interface ProfileDashboardProps {
   profileId: string;
 }
 
 const ProfileDashboard: React.FC<ProfileDashboardProps> = ({ profileId }) => {
-  const { profile, isLoading, error, isError, refetch } = useProfile(profileId);
+  const { profile, isLoading, error, isError } = useProfile(profileId);
 
   if (isLoading) {
     return (
@@ -45,14 +43,6 @@ const ProfileDashboard: React.FC<ProfileDashboardProps> = ({ profileId }) => {
               <div className="text-red-600 text-lg font-semibold">
                 {error || 'Profile not found'}
               </div>
-              <Button
-                onClick={() => refetch()}
-                variant="outline"
-                className="border-red-300 text-red-700 hover:bg-red-100"
-              >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Try Again
-              </Button>
             </div>
           </CardContent>
         </Card>
@@ -83,13 +73,6 @@ const ProfileDashboard: React.FC<ProfileDashboardProps> = ({ profileId }) => {
       <Card>
         <CardContent className="pt-6">
           <div className="flex items-start space-x-6">
-            <Avatar className="w-20 h-20">
-              <AvatarImage src={profile.avatar_url} alt={profile.name} />
-              <AvatarFallback className="text-lg font-semibold">
-                {getInitials(profile.name)}
-              </AvatarFallback>
-            </Avatar>
-            
             <div className="flex-1 space-y-3">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">{profile.name}</h1>
@@ -98,27 +81,19 @@ const ProfileDashboard: React.FC<ProfileDashboardProps> = ({ profileId }) => {
               
               <div className="flex flex-wrap gap-2">
                 {profile.country && (
-                  <Badge variant="secondary" className="flex items-center gap-1">
+                  <Badge className="flex items-center gap-1">
                     <MapPin className="w-3 h-3" />
                     {profile.country.toUpperCase()}
                   </Badge>
                 )}
                 {profile.party && (
-                  <Badge variant="outline" className="flex items-center gap-1">
+                  <Badge className="flex items-center gap-1">
                     <Building className="w-3 h-3" />
                     {profile.party}
                   </Badge>
                 )}
               </div>
             </div>
-
-            <Button
-              onClick={() => refetch()}
-              variant="outline"
-              size="sm"
-            >
-              <RefreshCw className="w-4 h-4" />
-            </Button>
           </div>
         </CardContent>
       </Card>

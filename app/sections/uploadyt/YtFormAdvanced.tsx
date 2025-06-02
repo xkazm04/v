@@ -1,7 +1,7 @@
 import { VideoProcessingRequest } from "@/app/types/processing";
 
 type Props = {
-    handleInputChange: (field: string, value: any) => void;
+    handleInputChange: (field: keyof VideoProcessingRequest, value: string | boolean) => void;
     formData: VideoProcessingRequest;
     isProcessing: boolean;
 }

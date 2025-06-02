@@ -39,16 +39,6 @@ export function VideoInfo({ video }: VideoInfoProps) {
       <div className="border-l-4 border-l-primary bg-primary-100">
         <CardContent className="p-4">
           <div >
-            <div className="flex justify-between items-start mb-3">
-              <div className="flex flex-wrap gap-2">
-                {video.tags.map(tag => (
-                  <Badge key={tag} variant="outline" className="text-sm hover:bg-accent transition-colors">
-                    #{tag}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-
             {video.description}
 
             <AnimatePresence>

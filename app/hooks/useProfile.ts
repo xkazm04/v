@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { ProfileApiService } from '@/lib/services/profile-api';
-import { Profile } from '@/types/profile';
+import { Profile } from '../types/profile';
 
 interface UseProfileResult {
   profile: Profile | undefined;

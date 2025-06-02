@@ -18,7 +18,7 @@ export interface VideoMetadata {
 }
 
 export interface FactCheckResult {
-  evaluation?: 'Fact' | 'Mislead' | 'Lie';
+  evaluation?: 'Fact' | 'Mislead' | 'Lie' | 'Unverified';
   truthPercentage?: number;
   neutralPercentage?: number;
   misleadingPercentage?: number;
