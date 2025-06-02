@@ -8,7 +8,7 @@ import type { ExpertOpinion } from './types';
 import { EXPERT_ICONS, EXPERT_COLORS } from './types';
 
 interface ExpertPanelProps {
-  experts: ExpertOpinion;
+  experts?: ExpertOpinion;
   isLoading?: boolean;
 }
 
@@ -27,7 +27,7 @@ const EXPERT_DESCRIPTIONS = {
 };
 
 export function ExpertPanel({ experts, isLoading = false }: ExpertPanelProps) {
-  const expertEntries = Object.entries(experts).filter(([_, opinion]) => opinion);
+  const expertEntries = Object.entries(experts || {}).filter(([_, opinion]) => opinion);
 
   return (
     <motion.div

@@ -4,40 +4,28 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
-import { ExternalLink, Calendar, User, MessageSquare, TrendingUp, CheckCircle2 } from 'lucide-react';
+import { Badge } from '../../components/ui/badge';
+import { 
+  ExternalLink, 
+  Calendar, 
+  User, 
+  MessageSquare, 
+  TrendingUp, 
+  CheckCircle2,
+  Search
+} from 'lucide-react';
 import { StatusBadge } from './StatusBadge';
 import { ExpertPanel } from './ExpertPanel';
-import type { ResearchResponse, ExpertOpinion } from './types';
+import { ResourceAnalysisCard } from './ResourceAnalysisCard';
+import type { ResearchResponse } from './types';
+import { PLACEHOLDER_RESULT } from '@/app/constants/research_placeholder';
+import { getCategoryColor, getCategoryIcon, getCountryName } from '@/app/helpers/researchResultHelpers';
 
 interface ResearchResultsProps {
   result: ResearchResponse | null;
   isLoading: boolean;
 }
 
-const PLACEHOLDER_RESULT: ResearchResponse = {
-  request: {
-    statement: "Loading statement analysis...",
-    source: "Analyzing source...",
-    context: "Processing context...",
-    datetime: new Date().toISOString()
-  },
-  valid_sources: "Calculating... (across multiple sources)",
-  verdict: "Analyzing statement for factual accuracy and verifying claims against reliable sources...",
-  status: "UNVERIFIABLE",
-  correction: "Preparing corrected information if needed...",
-  resources: [
-    "Gathering verification sources...",
-    "Compiling research references...", 
-    "Collecting authoritative links..."
-  ],
-  experts: {
-    critic: "Investigating potential hidden elements and examining the statement for gaps in information...",
-    devil: "Exploring alternative perspectives and considering minority viewpoints that may challenge the consensus...",
-    nerd: "Compiling statistical data and analyzing numerical claims for accuracy and context...",
-    psychic: "Evaluating psychological motivations and potential manipulation tactics behind the statement..."
-  },
-  processed_at: new Date().toISOString()
-};
 
 export function ResearchResults({ result, isLoading }: ResearchResultsProps) {
   // Show placeholder message when no research has been initiated
@@ -56,6 +44,7 @@ export function ResearchResults({ result, isLoading }: ResearchResultsProps) {
 
   // Use actual result or placeholder data when loading
   const displayResult = result || PLACEHOLDER_RESULT;
+  const CategoryIcon = getCategoryIcon(displayResult.category);
   
   return (
     <motion.div
@@ -71,39 +60,69 @@ export function ResearchResults({ result, isLoading }: ResearchResultsProps) {
             <CardTitle className="text-xl flex-1">
               {isLoading ? 'Processing Fact-Check...' : 'Fact-Check Results'}
             </CardTitle>
-            <StatusBadge status={displayResult.status} />
-            
+            <div className="flex items-center gap-2">
+              <StatusBadge status={displayResult.status} />
+              {displayResult.is_duplicate && (
+                <Badge variant="outline" className="text-xs">
+                  Cached Result
+                </Badge>
+              )}
+            </div>
           </div>
           
-          {/* Request Metadata */}
+          {/* Request Metadata with Enhanced Info */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="flex flex-wrap gap-4 text-sm text-neutral-300 pt-2"
+            className="space-y-3"
           >
-            {displayResult.request.source && (
+            {/* Primary metadata row */}
+            <div className="flex flex-wrap gap-4 text-sm text-neutral-300">
+              {displayResult.request.source && (
+                <div className="flex items-center gap-1">
+                  <User className="h-4 w-4" />
+                  <span className={isLoading ? 'animate-pulse' : ''}>
+                    {displayResult.request.source}
+                  </span>
+                </div>
+              )}
               <div className="flex items-center gap-1">
-                <User className="h-4 w-4" />
+                <Calendar className="h-4 w-4" />
+                <span>{new Date(displayResult.request.datetime).toLocaleDateString()}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <TrendingUp className="h-4 w-4" />
                 <span className={isLoading ? 'animate-pulse' : ''}>
-                  {displayResult.request.source}
+                  {displayResult.valid_sources}
                 </span>
               </div>
-            )}
-            <div className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              <span>{new Date(displayResult.request.datetime).toLocaleDateString()}</span>
             </div>
-            <div className="flex items-center gap-1">
-              <TrendingUp className="h-4 w-4" />
-              <span className={isLoading ? 'animate-pulse' : ''}>
-                {displayResult.valid_sources}
-              </span>
+
+            {/* Enhanced metadata row */}
+            <div className="flex flex-wrap gap-3">
+              {displayResult.country && (
+                <Badge variant="outline" className="text-xs">
+                  {getCountryName(displayResult.country)}
+                </Badge>
+              )}
+              {displayResult.category && (
+                <Badge className={`text-xs ${getCategoryColor(displayResult.category)}`}>
+                  <CategoryIcon className="h-3 w-3 mr-1" />
+                  {displayResult.category.charAt(0).toUpperCase() + displayResult.category.slice(1)}
+                </Badge>
+              )}
+              {displayResult.research_method && !isLoading && (
+                <Badge variant="outline" className="text-xs">
+                  <Search className="h-3 w-3 mr-1" />
+                  {displayResult.research_method}
+                </Badge>
+              )}
             </div>
           </motion.div>
         </CardHeader>
         
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           {/* Original Statement */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -153,39 +172,71 @@ export function ResearchResults({ result, isLoading }: ResearchResultsProps) {
             </motion.div>
           )}
 
-          {/* Resources */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="space-y-3"
-          >
-            <h4 className="font-semibold">Verification Sources</h4>
-            <div className="grid gap-2">
-              {displayResult.resources.map((resource, index) => (
-                <motion.div
-                  key={`${resource}-${index}`}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.7 + index * 0.1 }}
-                >
-                  <Button
-                    variant="outline"
-                    className={`w-full justify-start h-auto p-3 text-left ${isLoading ? 'opacity-60 cursor-not-allowed animate-pulse' : ''}`}
-                    onClick={isLoading ? undefined : () => {
-                      if (resource.startsWith('http')) {
-                        window.open(resource, '_blank');
-                      }
-                    }}
-                    disabled={isLoading}
+          {/* Enhanced Resource Analysis */}
+          {(displayResult.resources_agreed || displayResult.resources_disagreed) && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="space-y-4"
+            >
+              <h4 className="font-semibold">Source Analysis</h4>
+              <div className="grid gap-4 md:grid-cols-2">
+                {displayResult.resources_agreed && (
+                  <ResourceAnalysisCard
+                    title="Supporting Sources"
+                    resourceAnalysis={displayResult.resources_agreed}
+                    type="supporting"
+                    isLoading={isLoading}
+                  />
+                )}
+                {displayResult.resources_disagreed && (
+                  <ResourceAnalysisCard
+                    title="Contradicting Sources"
+                    resourceAnalysis={displayResult.resources_disagreed}
+                    type="contradicting"
+                    isLoading={isLoading}
+                  />
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Legacy Resources (if new structure not available) */}
+          {(!displayResult.resources_agreed && !displayResult.resources_disagreed && displayResult.resources) && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="space-y-3"
+            >
+              <h4 className="font-semibold">Verification Sources</h4>
+              <div className="grid gap-2">
+                {displayResult.resources.map((resource, index) => (
+                  <motion.div
+                    key={`${resource}-${index}`}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.7 + index * 0.1 }}
                   >
-                    <ExternalLink className="h-4 w-4 mr-2 flex-shrink-0" />
-                    <span className="truncate">{resource}</span>
-                  </Button>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+                    <Button
+                      variant="outline"
+                      className={`w-full justify-start h-auto p-3 text-left ${isLoading ? 'opacity-60 cursor-not-allowed animate-pulse' : ''}`}
+                      onClick={isLoading ? undefined : () => {
+                        if (resource.startsWith('http')) {
+                          window.open(resource, '_blank');
+                        }
+                      }}
+                      disabled={isLoading}
+                    >
+                      <ExternalLink className="h-4 w-4 mr-2 flex-shrink-0" />
+                      <span className="truncate">{resource}</span>
+                    </Button>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
         </CardContent>
       </div>
 

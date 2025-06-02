@@ -151,9 +151,9 @@ export const VideoCardThumbnail = memo(function VideoCardThumbnail({
             shadow-lg text-xs font-semibold
           "
         >
-          {getEvaluationIcon(video.factCheck.evaluation, 'sm')}
-          <span className={getEvaluationColor(video.factCheck.evaluation)}>
-            {video.factCheck.evaluation}
+          {getEvaluationIcon(video.factCheck.evaluation || 'Unknown', 'sm')}
+          <span className={getEvaluationColor(video.factCheck.evaluation || 'Unknown')}>
+            {video.factCheck.evaluation || 'Unknown'}
           </span>
         </motion.div>
 

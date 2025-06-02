@@ -26,13 +26,10 @@ const defaultVideos: VideoMetadata[] = [
     views: 5000000000,
     likes: 25000000,
     uploadDate: '2012-07-15T00:00:00Z',
-    category: 'Music',
+    category: 'All',
     factCheck: {
-      evaluation: 'True',
+      evaluation: 'Lie',
       confidence: 95,
-      truthPercentage: 85,
-      neutralPercentage: 10,
-      liePercentage: 5
     }
   },
   {
@@ -46,13 +43,10 @@ const defaultVideos: VideoMetadata[] = [
     views: 8000000000,
     likes: 50000000,
     uploadDate: '2017-01-12T00:00:00Z',
-    category: 'Music',
+    category: 'All',
     factCheck: {
-      evaluation: 'Misleading',
+      evaluation: 'Lie',
       confidence: 78,
-      truthPercentage: 60,
-      neutralPercentage: 25,
-      liePercentage: 15
     }
   },
   {
@@ -66,13 +60,10 @@ const defaultVideos: VideoMetadata[] = [
     views: 2000000000,
     likes: 15000000,
     uploadDate: '2008-08-01T00:00:00Z',
-    category: 'Music',
+    category: 'All',
     factCheck: {
-      evaluation: 'True',
+      evaluation: 'Lie',
       confidence: 92,
-      truthPercentage: 90,
-      neutralPercentage: 8,
-      liePercentage: 2
     }
   },
   {
@@ -86,13 +77,10 @@ const defaultVideos: VideoMetadata[] = [
     views: 1400000000,
     likes: 16000000,
     uploadDate: '2009-10-24T00:00:00Z',
-    category: 'Music',
+    category: 'All',
     factCheck: {
-      evaluation: 'False',
+      evaluation: 'Lie',
       confidence: 67,
-      truthPercentage: 30,
-      neutralPercentage: 20,
-      liePercentage: 50
     }
   }
 ];
@@ -118,7 +106,7 @@ export default function YtPlayer({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -132,7 +120,7 @@ export default function YtPlayer({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Mode Indicator */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -164,7 +152,7 @@ export default function YtPlayer({
             autoPlay={autoPlay}
           />
         ) : (
-          <div key="desktop" className="min-h-screen flex items-center justify-center p-6">
+          <div key="desktop" className="flex items-center justify-center p-6">
             <YouTubeDesktopPlayer
               videos={videos}
               initialIndex={initialIndex}

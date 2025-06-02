@@ -4,8 +4,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 import DashSpeakerProfile from '@/app/sections/dashboard/DashSpeakerProfile';
-import DashHistory from '@/app/sections/dashboard/DashHistory';
-import DashAnalytics from '@/app/sections/dashboard/DashAnalytics';
 import DashTruthTrend from '@/app/sections/dashboard/DashTruthTrend';
 import DashBreakdown from '@/app/sections/dashboard/DashBreakdown';
 import DashScore from '@/app/sections/dashboard/DashScore';
@@ -82,12 +80,11 @@ const DashboardLayout = () => {
             transition={{ delay: 0.3 }}
             className="space-y-6"
           >
-            <DashAnalytics speaker={selectedSpeaker} timeRange={timeRange} />
             <DashTruthTrend speaker={selectedSpeaker} timeRange={timeRange} />
             <DashBreakdown speaker={selectedSpeaker} />
           </motion.div>
 
-          {/* Right Column - Activity & History */}
+          {/* Right Column - Activity */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -95,7 +92,7 @@ const DashboardLayout = () => {
             className="space-y-6"
           >
             <DashActivity speaker={selectedSpeaker} />
-            <DashHistory speaker={selectedSpeaker} />
+            {/* Remove DashHistory - functionality now in DashTruthTrend */}
           </motion.div>
         </div>
 

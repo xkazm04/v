@@ -36,7 +36,7 @@ export const NewsCardHeader = memo(function NewsCardHeader({
       variants={headerVariants}
       initial="hidden"
       animate="visible"
-      className="absolute top-0 left-0 right-0 z-20 p-3 flex justify-between items-start"
+      className="absolute top-0 -right-5 z-20 flex justify-between items-start"
     >
 
       {/* Right side - Status Badges */}
@@ -47,7 +47,7 @@ export const NewsCardHeader = memo(function NewsCardHeader({
             initial={{ scale: 0, rotate: -12 }}
             animate={{ scale: 1, rotate: 0 }}
             className="">
-            <FakeStamp width={150} height={50}/>
+            <FakeStamp width={100} height={30} color={'#d11919'}/>
           </motion.div>
         )}
         

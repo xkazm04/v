@@ -24,7 +24,7 @@ type Props = {
 
 
 const VControlPanel = ({ isAnimating, setIsAnimating, setResult, setShowVContent, setShowImpact, dotX, dotY, fillProgress, spawnParticles, trailOpacity, leftX, rightX, centerX, floorY, dotYPos, setEnergyPulse }: Props) => {
-    const particleIntervalRef = useRef<NodeJS.Timeout>();
+    const particleIntervalRef = useRef<NodeJS.Timeout>(null);
     const triggerGesture = (truthValue: 'true' | 'false') => {
         if (isAnimating) return;
 

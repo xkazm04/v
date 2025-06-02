@@ -1,8 +1,9 @@
 'use client';
+
 import { memo, useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { NewsCard } from './NewsCard';
+import { motion } from 'framer-motion';
 import { NewsArticle } from '@/app/types/article';
+import { NewsCard } from './NewsCard';
 
 interface NewsGridProps {
   articles: NewsArticle[];
@@ -45,32 +46,40 @@ const NewsGrid = memo(function NewsGrid({
   const getGridCols = () => {
     const colsMap = {
       2: 'grid-cols-1 sm:grid-cols-2',
-      3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-5',
-      4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 xl:grid-cols-7',
-      5: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9'
+      3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
+      4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+      5: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
     };
     return colsMap[columns] || colsMap[4];
   };
 
   const gapClass = layout === 'compact' ? 'gap-3' : 'gap-4 md:gap-6';
 
+  if (visibleArticles.length === 0) {
+    return (
+      <div className="text-center py-12 text-gray-500">
+        No more articles to display
+      </div>
+    );
+  }
+
   return (
     <motion.div
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className={`grid ${getGridCols()} ${gapClass} ${className}`}
+      className={`
+        grid ${getGridCols()} ${gapClass} ${className}
+      `}
     >
-      <AnimatePresence mode="popLayout">
-        {visibleArticles.map((article) => (
-          <NewsCard
-            key={article.id}
-            article={article}
-            layout={layout}
-            onRead={handleArticleRead}
-          />
-        ))}
-      </AnimatePresence>
+      {visibleArticles.map((article) => (
+        <NewsCard
+          key={article.id}
+          article={article}
+          layout={layout}
+          onRead={handleArticleRead}
+        />
+      ))}
     </motion.div>
   );
 });

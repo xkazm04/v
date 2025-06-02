@@ -146,9 +146,9 @@ const UnifiedFeedLayout = ({
                   shadow-sm
                 "
               >
-                {getEvaluationIcon(video.factCheck.evaluation, layout === 'compact' ? 'sm' : 'md')}
+                {getEvaluationIcon(video.factCheck.evaluation || 'Unknown', layout === 'compact' ? 'sm' : 'md')}
                 {layout !== 'compact' && (
-                  <span className={`font-semibold ${getEvaluationColor(video.factCheck.evaluation)}`}>
+                  <span className={`font-semibold ${getEvaluationColor(video.factCheck.evaluation || 'Unknown')}`}>
                     {video.factCheck.evaluation}
                   </span>
                 )}

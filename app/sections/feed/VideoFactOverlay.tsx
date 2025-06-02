@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
-import { FileText, Users, Shield, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react';
+import {  Users, Shield, CheckCircle } from 'lucide-react';
 import { FactCheckResult } from '@/app/types/video';
 import { getEvaluationIcon, getEvaluationColor, getProgressBarColors } from '@/app/helpers/factCheck';
-import { overlayVariants, progressVariants } from '@/app/helpers/animation';
+import { overlayVariants } from '@/app/helpers/animation';
 
 interface VideoFactOverlayProps {
   factCheck: FactCheckResult;
@@ -72,8 +72,8 @@ const VideoFactOverlay = ({ factCheck, overlayType }: VideoFactOverlayProps) => 
           {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              {getEvaluationIcon(factCheck.evaluation, 'md')}
-              <span className={`font-bold ${getEvaluationColor(factCheck.evaluation)}`}>
+              {getEvaluationIcon(factCheck.evaluation || 'Unknown', 'md')}
+              <span className={`font-bold ${getEvaluationColor(factCheck.evaluation || 'Unknown')}`}>
                 {factCheck.evaluation}
               </span>
             </div>
@@ -88,12 +88,12 @@ const VideoFactOverlay = ({ factCheck, overlayType }: VideoFactOverlayProps) => 
           {/* Progress Bars */}
           <div className="space-y-2">
             <ProgressBar 
-              percentage={factCheck.truthPercentage} 
+              percentage={factCheck.truthPercentage || 0}
               color={colors.truth}
               label="Truth"
             />
             <ProgressBar 
-              percentage={factCheck.misleadingPercentage} 
+              percentage={factCheck.misleadingPercentage || 0} 
               color={colors.misleading}
               label="Misleading"
             />
@@ -133,10 +133,10 @@ const VideoFactOverlay = ({ factCheck, overlayType }: VideoFactOverlayProps) => 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className={`p-2 rounded-lg ${factCheck.evaluation === 'Fact' ? 'bg-verified/20' : factCheck.evaluation === 'Mislead' ? 'bg-unverified/20' : 'bg-false/20'}`}>
-                {getEvaluationIcon(factCheck.evaluation, 'lg')}
+                {getEvaluationIcon(factCheck.evaluation || 'Unknown', 'lg')}
               </div>
               <div>
-                <span className={`text-lg font-bold ${getEvaluationColor(factCheck.evaluation)}`}>
+                <span className={`text-lg font-bold ${getEvaluationColor(factCheck.evaluation || 'Unknown')}`}>
                   {factCheck.evaluation}
                 </span>
                 <p className="text-xs text-muted-foreground">
@@ -159,17 +159,17 @@ const VideoFactOverlay = ({ factCheck, overlayType }: VideoFactOverlayProps) => 
             <h4 className="text-sm font-semibold text-foreground">Truth Breakdown</h4>
             <div className="space-y-2">
               <ProgressBar 
-                percentage={factCheck.truthPercentage} 
+                percentage={factCheck.truthPercentage || 0}
                 color={colors.truth}
                 label="Factual Content"
               />
               <ProgressBar 
-                percentage={factCheck.neutralPercentage} 
+                percentage={factCheck.neutralPercentage || 0}
                 color="bg-neutral-400"
                 label="Neutral/Unclear"
               />
               <ProgressBar 
-                percentage={factCheck.misleadingPercentage} 
+                percentage={factCheck.misleadingPercentage || 0}
                 color={colors.misleading}
                 label="Misleading Content"
               />
@@ -188,7 +188,7 @@ const VideoFactOverlay = ({ factCheck, overlayType }: VideoFactOverlayProps) => 
           <StatCard
             icon={<Users className="h-4 w-4 text-primary" />}
             label="Sources"
-            value={factCheck.sources}
+            value={factCheck.sources || 0}
             accent="bg-primary/20"
           />
         </div>
