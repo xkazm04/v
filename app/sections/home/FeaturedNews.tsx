@@ -1,5 +1,5 @@
 'use client';
-import { useNews } from '@/hooks/useNews';
+import { useNews } from '@/app/hooks/useNews';
 import { NewsGrid } from '../feed/NewsGrid';
 import { motion } from 'framer-motion';
 

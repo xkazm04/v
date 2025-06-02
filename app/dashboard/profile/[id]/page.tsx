@@ -1,4 +1,4 @@
-import ProfileDashboard from '@/components/profile/ProfileDashboard';
+import ProfileDashboard from "@/app/components/dashboard/ProfileDashboard";
 
 interface ProfilePageProps {
   params: Promise<{

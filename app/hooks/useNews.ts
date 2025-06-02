@@ -46,7 +46,7 @@ export function useNews({
         params.set('offset', offset.toString());
       }
 
-      const response = await fetch(`/api/news?${params}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/news?${params}`);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
