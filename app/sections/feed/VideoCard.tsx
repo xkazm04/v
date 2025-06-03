@@ -1,6 +1,5 @@
 'use client';
 
-import { VideoMetadata } from '@/app/types/video';
 import { memo, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import CompactVideoCard from './CompactVideoCard';
@@ -9,8 +8,11 @@ import { VideoCardThumbnail } from '@/app/components/video/VideoCardThumbnail';
 import { VideoCardContent } from '@/app/components/video/VideoCardContent';
 import { VideoCardFooter } from '@/app/components/video/VideoCardFooter';
 
+import { transformVideoToMetadata } from '@/app/utils/videoTransform';
+import { Video } from '@/app/types/video_api';
+
 interface VideoCardProps {
-  video: VideoMetadata;
+  video: Video
   layout?: 'grid' | 'list' | 'compact';
   priority?: boolean;
   className?: string;
@@ -60,11 +62,14 @@ const VideoCard = memo(function VideoCard({
   });
   const [showOverlay, setShowOverlay] = useState(false);
 
+  // Transform API video data to component format
+  const videoMetadata = useMemo(() => transformVideoToMetadata(video), [video]);
+  
   const config = useMemo(() => LAYOUT_CONFIGS[layout as keyof typeof LAYOUT_CONFIGS], [layout]);
 
   // Use compact component for compact layout
   if (layout === 'compact') {
-    return <CompactVideoCard video={video} priority={priority} />;
+    return <CompactVideoCard video={videoMetadata} priority={priority} />;
   }
 
   const handleImageLoad = () => setImageState(prev => ({ ...prev, loaded: true }));
@@ -107,9 +112,9 @@ const VideoCard = memo(function VideoCard({
         before:opacity-0 before:transition-opacity before:duration-300
         hover:before:opacity-100
       `}>
-        {/* Header (badges, overlays) */}
+        {/* Header */}
         <VideoCardHeader 
-          video={video}
+          video={videoMetadata}
           showOverlay={showOverlay}
           layout={layout}
         />
@@ -118,7 +123,7 @@ const VideoCard = memo(function VideoCard({
         <div className={config.direction === 'horizontal' ? 'flex gap-4 p-5' : 'block'}>
           {/* Thumbnail */}
           <VideoCardThumbnail
-            video={video}
+            video={videoMetadata}
             layout={layout}
             priority={priority}
             imageState={imageState}
@@ -130,7 +135,7 @@ const VideoCard = memo(function VideoCard({
 
           {/* Content */}
           <VideoCardContent
-            video={video}
+            video={videoMetadata}
             layout={layout}
             className={config.contentClass}
           />
@@ -138,7 +143,7 @@ const VideoCard = memo(function VideoCard({
 
         {/* Footer */}
         <VideoCardFooter
-          video={video}
+          video={videoMetadata}
           layout={layout}
         />
 

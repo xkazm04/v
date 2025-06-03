@@ -39,10 +39,9 @@ const NewsCard = memo(function NewsCard({
 
   const handleLeftClick = useCallback(() => {
     setIsRead(true);
-    // Delay the callback to allow exit animation
     setTimeout(() => {
       onRead?.(article.id);
-    }, 500); // Longer delay to match exit animation
+    }, 500); 
   }, [article.id, onRead]);
 
   const handleRightClick = useCallback((e: React.MouseEvent) => {
