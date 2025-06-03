@@ -18,8 +18,8 @@ export async function createUserProfile(user: AuthUser): Promise<UserProfile | n
       .select()
       .single();
 
-    if (error) {
-      console.error('Error creating user profile:', error);
+    if (!data) {
+      console.log('Error creating user profile:', error);
       return null;
     }
 
@@ -38,8 +38,9 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
       .eq('id', userId)
       .single();
 
-    if (error) {
-      console.error('Error fetching user profile:', error);
+    console.log('Fetching user profile for ID:', data);
+    if (!data) {
+      console.log('Error fetching user profile:', error);
       return null;
     }
 
@@ -51,7 +52,7 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
 }
 
 export async function updateUserProfile(
-  userId: string, 
+  userId: string,
   updates: Partial<Pick<UserProfile, 'theme' | 'color' | 'notifications' | 'full_name'>>
 ): Promise<UserProfile | null> {
   try {
