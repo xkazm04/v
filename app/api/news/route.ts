@@ -199,7 +199,7 @@ class NewsAPI {
         name: research.source || 'Unknown Source',
         logoUrl: undefined
       },
-      category: research.category || 'General',
+      category: 'General',
       datePublished: research.statement_date || research.processed_at,
       truthScore: statusToScore[research.status],
       isBreaking: research.status === 'FALSE' || research.status === 'MISLEADING',

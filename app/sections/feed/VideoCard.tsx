@@ -20,7 +20,7 @@ interface VideoCardProps {
 
 const LAYOUT_CONFIGS = {
   grid: {
-    containerClass: 'block w-full max-w-sm',
+    containerClass: 'block w-full',
     thumbnailClass: 'aspect-video mb-4',
     contentClass: 'space-y-3',
     direction: 'vertical'

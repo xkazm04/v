@@ -4,8 +4,6 @@ import { VideoMetadata } from '@/app/types/video';
 import { memo } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import VideoTruthBar from '@/app/sections/feed/VideoTruthBar';
-
 interface VideoCardContentProps {
   video: VideoMetadata;
   layout: 'grid' | 'list';
@@ -59,16 +57,7 @@ export const VideoCardContent = memo(function VideoCardContent({
         `}>
           {video.channelName}
         </p>
-        
-        {/* Truth Bar */}
-        <div className="mb-4">
-          <VideoTruthBar 
-            factCheck={video.factCheck}
-            showLabel={true}
-            compact={false}
-          />
-        </div>
-        
+      
         {/* Description for List Layout */}
         {layout === 'list' && (
           <p className="
