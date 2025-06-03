@@ -4,12 +4,10 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Speaker } from '@/app/constants/speakers';
 import { 
-  BadgeCheckIcon, 
   TrendingUpIcon, 
   TrendingDownIcon, 
   MinusIcon,
   MapPin,
-  Calendar,
   Users,
   MessageSquare
 } from 'lucide-react';
@@ -56,7 +54,8 @@ const DashSpeakerProfile = ({ speaker }: SpeakerProfileProps) => {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="relative bg-gradient-to-br from-indigo-50 via-white to-purple-50/50 dark:from-slate-900 dark:via-indigo-950/50 dark:to-purple-950/30 rounded-3xl p-8 shadow-2xl overflow-hidden"
+      className="relative bg-radial from-white/10 via-white/20 to-white/30 dark:bg-radial dark:from-slate-800/10 dark:via-slate-900/20 dark:to-slate-950/30 rounded-3xl shadow-lg border border-white/20 dark:border-gray-700/20 backdrop-blur-sm
+  p-8 overflow-hidden"
     >
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 opacity-10">
@@ -91,21 +90,6 @@ const DashSpeakerProfile = ({ speaker }: SpeakerProfileProps) => {
                 height={96}
                 className="w-full h-full object-cover"
               />
-            </div>
-            
-            {/* Status indicators */}
-            {speaker.verified && (
-              <div className="absolute -top-1 -right-1 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                <BadgeCheckIcon className="w-5 h-5 text-white" />
-              </div>
-            )}
-            
-            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
-              <div className="bg-white dark:bg-gray-800 rounded-full px-3 py-1 shadow-lg border border-gray-200 dark:border-gray-700">
-                <span className="text-xs font-bold text-primary">
-                  {speaker.reliabilityScore}
-                </span>
-              </div>
             </div>
           </div>
           
@@ -185,23 +169,6 @@ const DashSpeakerProfile = ({ speaker }: SpeakerProfileProps) => {
             </div>
           </motion.div>
         </div>
-
-        {/* Social Media Section */}
-        {Object.keys(speaker.socialMedia).length > 0 && (
-          <div className="pt-6 border-t border-white/20 dark:border-gray-700/20">
-            <div className="flex flex-wrap gap-2">
-              {Object.entries(speaker.socialMedia).map(([platform, handle]) => (
-                <motion.span
-                  key={platform}
-                  whileHover={{ scale: 1.05 }}
-                  className="text-xs bg-gradient-to-r from-primary/20 to-purple-500/20 text-primary border border-primary/30 px-3 py-2 rounded-full font-medium shadow-sm backdrop-blur-sm"
-                >
-                  {handle}
-                </motion.span>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </motion.div>
   );

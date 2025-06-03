@@ -3,6 +3,7 @@ import { FeaturedVideos } from '@/app/sections/home/FeaturedVideos';
 import { CategoryFilter } from '@/app/sections/home/CategoryFilter';
 import { Divider } from './components/ui/divider';
 import FeaturedNews from './sections/home/FeaturedNews';
+import FeedHeader from './sections/feed/FeedHeader';
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
       <Sidebar />
       <div className="flex-1 p-4 relative">
         <CategoryFilter />
+        <FeedHeader />
         <FeaturedVideos />
         <Divider />
         <FeaturedNews />

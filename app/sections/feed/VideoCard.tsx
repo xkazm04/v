@@ -3,13 +3,14 @@
 import { memo, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import CompactVideoCard from './CompactVideoCard';
-import { VideoCardHeader } from '@/app/components/video/VideoCardHeader';
+
 import { VideoCardThumbnail } from '@/app/components/video/VideoCardThumbnail';
 import { VideoCardContent } from '@/app/components/video/VideoCardContent';
 import { VideoCardFooter } from '@/app/components/video/VideoCardFooter';
 
 import { transformVideoToMetadata } from '@/app/utils/videoTransform';
 import { Video } from '@/app/types/video_api';
+import { VideoCardHeader } from '@/app/components/video/VideoCardHeader';
 
 interface VideoCardProps {
   video: Video
@@ -113,7 +114,7 @@ const VideoCard = memo(function VideoCard({
         hover:before:opacity-100
       `}>
         {/* Header */}
-        <VideoCardHeader 
+        <VideoCardHeader
           video={videoMetadata}
           showOverlay={showOverlay}
           layout={layout}
