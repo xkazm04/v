@@ -1,17 +1,37 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/app/components/ui/button';
 import { ThemeToggle } from '@/app/components/theme/theme-toggle';
 import { cn } from '@/app/lib/utils';
-import { Menu, Upload, Bell, User} from 'lucide-react';
+import { Menu, Upload, Bell, User, LogOut, Settings } from 'lucide-react';
 import { useNavigation } from '@/app/hooks/useNavigation';
+import { useAuth } from '@/app/hooks/useAuth';
 import NavMobileOverlay from './NavMobileOverlay';
 import { navAnim } from '@/app/components/animations/variants/navVariants';
 import { NAVIGATION_CONFIG } from '@/app/config/navItems';
 import { renderActionButton } from './NavActionButton';
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/app/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/app/components/ui/alert-dialog';
+import { AuthButtons } from '@/app/components/auth/AuthButtons';
+import { Loader2 } from 'lucide-react';
 
 export function Navbar() {
   const {
@@ -23,6 +43,9 @@ export function Navbar() {
     isActivePath
   } = useNavigation();
 
+  const { user, profile, loading: authLoading, signOut } = useAuth();
+  const [logoutLoading, setLogoutLoading] = useState(false);
+
   useEffect(() => {
     if (isMobileMenuOpen) {
       toggleMobileMenu();
@@ -30,8 +53,19 @@ export function Navbar() {
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  // Action button configurations
-  const actionButtons = [
+  const handleLogout = async () => {
+    try {
+      setLogoutLoading(true);
+      await signOut();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    } finally {
+      setLogoutLoading(false);
+    }
+  };
+
+  // Action button configurations - only show for authenticated users
+  const actionButtons = user ? [
     {
       key: 'upload',
       icon: Upload,
@@ -49,18 +83,8 @@ export function Navbar() {
       showOnDesktop: true,
       showOnMobile: false,
       badge: 3 // Example notification count
-    },
-    {
-      key: 'user',
-      icon: User,
-      label: 'User Profile',
-      onClick: () => console.log('User clicked'),
-      showOnDesktop: true,
-      showOnMobile: true,
-      badge: null,
-      className: 'rounded-full'
     }
-  ];
+  ] : [];
 
   const renderNavLink = (item: typeof NAVIGATION_CONFIG.mainNav[0], isMobile = false) => {
     const isActive = isActivePath(item.href);
@@ -109,7 +133,93 @@ export function Navbar() {
     );
   };
 
+  const UserProfileDisplay = () => {
+    if (!user || !profile) return null;
 
+    return (
+      <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-secondary/50">
+        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+          <User className="h-4 w-4 text-primary" />
+        </div>
+        <div className="hidden sm:block">
+          <p className="text-sm font-medium text-foreground">
+            {profile.full_name || 'User'}
+          </p>
+          <p className="text-xs text-muted-foreground">{profile.email}</p>
+        </div>
+      </div>
+    );
+  };
+
+  // User profile dropdown component
+  const UserProfileDropdown = () => {
+    if (!user) {
+      return <AuthButtons variant="ghost" size="sm" />;
+    }
+
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="relative">
+            <User className="h-5 w-5" />
+            <span className="sr-only">User menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56">
+          <div className="px-2 py-1.5">
+            <p className="text-sm font-medium">{user.email}</p>
+          </div>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href="/settings" className="flex items-center gap-2">
+              <Settings className="h-4 w-4" />
+              Settings
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <DropdownMenuItem 
+                onSelect={(e) => e.preventDefault()}
+                className="flex items-center gap-2 text-destructive focus:text-destructive cursor-pointer"
+              >
+                <LogOut className="h-4 w-4" />
+                Sign Out
+              </DropdownMenuItem>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Sign Out Confirmation</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to sign out? You&apos;ll need to sign in again to access your account.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleLogout}
+                  disabled={logoutLoading}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  {logoutLoading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      Signing Out...
+                    </>
+                  ) : (
+                    <>
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sign Out
+                    </>
+                  )}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  };
 
   return (
     <motion.nav
@@ -143,7 +253,7 @@ export function Navbar() {
             className="flex items-center space-x-2 group"
           >
             <div className="font-bold text-xl text-foreground group-hover:text-primary transition-colors">
-              TBD title
+              FactChecker
             </div>
           </Link>
         </div>
@@ -159,6 +269,7 @@ export function Navbar() {
             <div className="flex items-center space-x-1">
               {actionButtons.map(config => renderActionButton(config))}
               <ThemeToggle />
+              <UserProfileDropdown />
             </div>
           </div>
         </div>
@@ -170,6 +281,7 @@ export function Navbar() {
             .slice(0, 2) // Limit mobile buttons
             .map(config => renderActionButton(config, false))}
           <ThemeToggle />
+          <UserProfileDropdown />
         </div>
       </div>
 
@@ -183,12 +295,12 @@ export function Navbar() {
             //@ts-expect-error Ignore
             renderActionButton={renderActionButton}
           />
-          )}
+        )}
       </AnimatePresence>
 
       {/* Loading Indicator */}
       <AnimatePresence>
-        {isLoading && (
+        {(isLoading || authLoading) && (
           <motion.div
             variants={navAnim.loading}
             initial="initial"

@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/app/providers/theme-provider';
+import { AuthProvider } from '@/app/hooks/useAuth';
 import { Navbar } from '@/app/sections/navbar/navbar';
 import { Footer } from '@/app/components/layout/footer';
 import { BackgroundOverlay } from '@/app/components/layout/BackgroundOverlay';
@@ -28,7 +29,7 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Vaai',
+  title: 'FactChecker',
   description: 'Dont trust, verify.',
 };
 
@@ -66,19 +67,21 @@ export default function RootLayout({
           themes={['light', 'dark']}
           disableTransitionOnChange={false}
         >
-          {/* Background overlay for color subtones */}
-          <BackgroundOverlay />
-          
-          <div className="relative flex min-h-screen flex-col z-10">
-            <Navbar />
-            <main className="flex-1">
-              <PageTransition>
-                {children}
-              </PageTransition>
-            </main>
-            <Footer />
-          </div>
-          <Toaster />
+          <AuthProvider>
+            {/* Background overlay for color subtones */}
+            <BackgroundOverlay />
+            
+            <div className="relative flex min-h-screen flex-col z-10">
+              <Navbar />
+              <main className="flex-1">
+                <PageTransition>
+                  {children}
+                </PageTransition>
+              </main>
+              <Footer />
+            </div>
+            <Toaster />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
