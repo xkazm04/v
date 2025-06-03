@@ -52,31 +52,6 @@ export const VideoCardFooter = memo(function VideoCardFooter({
       >
         {video.category}
       </motion.span>
-      
-      {/* Confidence Score */}
-      <div className="flex items-center gap-2 text-xs">
-        <div className="
-          flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg
-          bg-slate-100 dark:bg-slate-800
-          border border-slate-200/60 dark:border-slate-700/60
-        ">
-          <div className={`
-            w-2 h-2 rounded-full
-            ${video.factCheck.confidence >= 80 
-              ? 'bg-green-500' 
-              : video.factCheck.confidence >= 60 
-                ? 'bg-yellow-500' 
-                : 'bg-red-500'
-            }
-          `} />
-          <span className="font-semibold text-slate-700 dark:text-slate-300">
-            {video.factCheck.confidence}%
-          </span>
-          <span className="text-slate-500 dark:text-slate-400">
-            confidence
-          </span>
-        </div>
-      </div>
     </motion.div>
   );
 });

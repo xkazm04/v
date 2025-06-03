@@ -12,20 +12,20 @@ export interface VideoMetadata {
   uploadDate: string;
   channelName: string;
   category: VideoCategory;
-  tags: string[];
+  tags?: string[];
   factCheck: FactCheckResult;
   youtubeId: string; // YouTube video ID
 }
 
 export interface FactCheckResult {
-  evaluation: 'Fact' | 'Mislead' | 'Lie';
-  truthPercentage: number;
-  neutralPercentage: number;
-  misleadingPercentage: number;
-  totalClaims: number;
-  verifiedClaims: number;
-  sources: number;
-  confidence: number; // 0-100
+  evaluation?: 'Fact' | 'Mislead' | 'Lie' | 'Unverified';
+  truthPercentage?: number;
+  neutralPercentage?: number;
+  misleadingPercentage?: number;
+  totalClaims?: number;
+  verifiedClaims?: number;
+  sources?: number;
+  confidence?: number; // 0-100
 }
 
 export type VideoCategory = 

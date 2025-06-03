@@ -3,7 +3,41 @@ export interface ResearchRequest {
   source: string;
   context: string;
   datetime: string;
-  statement_date?: string; // New field - ISO date string (YYYY-MM-DD)
+  statement_date?: string;
+  country?: string; // ISO country code
+  category?: StatementCategory;
+}
+
+export type StatementCategory = 
+  | 'politics'
+  | 'economy'
+  | 'environment'
+  | 'military'
+  | 'healthcare'
+  | 'education'
+  | 'technology'
+  | 'social'
+  | 'international'
+  | 'other';
+
+export interface ResourceReference {
+  url: string;
+  title: string;
+  category: 'mainstream' | 'governance' | 'academic' | 'medical' | 'other';
+  country: string;
+  credibility: 'high' | 'medium' | 'low';
+}
+
+export interface ResourceAnalysis {
+  total: string; // e.g., "85%"
+  count: number;
+  mainstream: number;
+  governance: number;
+  academic: number;
+  medical: number;
+  other: number;
+  major_countries: string[];
+  references: ResourceReference[];
 }
 
 export interface ExpertOpinion {
@@ -19,11 +53,16 @@ export interface ResearchResponse {
   verdict: string;
   status: 'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE' | 'UNVERIFIABLE';
   correction?: string;
-  resources: string[];
+  country?: string; // ISO country code
+  category?: StatementCategory;
+  resources_agreed?: ResourceAnalysis;
+  resources_disagreed?: ResourceAnalysis;
+  resources?: string[]; // Legacy field for backwards compatibility
   experts: ExpertOpinion;
   processed_at: string;
   database_id?: string;
-  is_duplicate?: boolean; // New field to indicate duplicates
+  is_duplicate?: boolean;
+  research_method?: string;
 }
 
 export const STATUS_COLORS = {

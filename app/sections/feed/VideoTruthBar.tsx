@@ -41,8 +41,8 @@ const VideoTruthBar = ({ factCheck, showLabel = true, compact = false }: VideoTr
           transition={{ delay: 0.5 }}
           className="flex items-center gap-1"
         >
-          {getEvaluationIcon(factCheck.evaluation, 'sm')}
-          <span className={`text-xs font-medium ${getEvaluationColor(factCheck.evaluation)}`}>
+          {getEvaluationIcon(factCheck.evaluation || 'Unverified', 'sm')}
+          <span className={`text-xs font-medium ${getEvaluationColor(factCheck.evaluation || 'Unverified')}`}>
             {factCheck.evaluation}
           </span>
         </motion.div>

@@ -3,12 +3,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { VideoMetadata } from '@/app/types/video';
 import { PlayerTimeline } from '@/app/sections/player/PlayerTimeline';
-import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import { useState } from 'react';
 
 interface YouTubeDesktopPlayerProps {
-  videos: VideoMetadata[];
+  videos?: VideoMetadata[];
   initialIndex?: number;
   autoPlay?: boolean;
 }
@@ -21,7 +21,7 @@ export function YouTubeDesktopPlayer({
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [showControls, setShowControls] = useState(true);
 
-  const currentVideo = videos[currentIndex];
+  const currentVideo = videos?.[currentIndex];
 
   const handlePrevious = () => {
     if (currentIndex > 0) {
@@ -30,6 +30,7 @@ export function YouTubeDesktopPlayer({
   };
 
   const handleNext = () => {
+    if (!videos || videos.length === 0) return;
     if (currentIndex < videos.length - 1) {
       setCurrentIndex(currentIndex + 1);
     }
@@ -48,6 +49,7 @@ export function YouTubeDesktopPlayer({
       transition={{ duration: 0.5 }}
       className="w-full max-w-6xl mx-auto"
     >
+     {videos && currentVideo && <>
       {/* Main Player Container */}
       <div 
         className="relative bg-black rounded-2xl overflow-hidden shadow-2xl"
@@ -189,7 +191,7 @@ export function YouTubeDesktopPlayer({
         transition={{ delay: 0.5 }}
         className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
       >
-        {videos.map((video, index) => (
+        {videos && videos.map((video, index) => (
           <motion.div
             key={video.id}
             whileHover={{ scale: 1.02 }}
@@ -225,6 +227,7 @@ export function YouTubeDesktopPlayer({
           </motion.div>
         ))}
       </motion.div>
+      </>}
     </motion.div>
   );
 }

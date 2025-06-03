@@ -14,7 +14,7 @@ interface CompactVideoContentProps {
 }
 
 export function CompactVideoContent({ video, isHovered }: CompactVideoContentProps) {
-  const evaluationColor = getEvaluationColor(video.factCheck.evaluation);
+  const evaluationColor = getEvaluationColor(video.factCheck.evaluation || 'Neutral');
   
   return (
     <div className="flex-1 min-w-0 space-y-3">

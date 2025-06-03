@@ -119,7 +119,11 @@ export function PlayerTimeline({
               </motion.button>
 
               <PlayerTimelineExp
-                factCheck={factCheck}
+                factCheck={{
+                  truthPercentage: factCheck.truthPercentage ?? 0,
+                  confidence: factCheck.confidence ?? 0,
+                  sources: factCheck.sources ?? 0
+                }}
                 mockTimelineData={timelineSegments}
                 onSeekToTimestamp={(timestamp) => {
                   onSeekToTimestamp?.(timestamp);

@@ -1,3 +1,50 @@
+export type ExpertOpinion = {
+  critic?: string;
+  devil?: string;
+  nerd?: string;
+  psychic?: string;
+};
+
+export type ResourceReference = {
+  url: string;
+  title: string;
+  category: 'mainstream' | 'governance' | 'academic' | 'medical' | 'other';
+  country: string;
+  credibility: 'high' | 'medium' | 'low';
+};
+
+export type ResourceAnalysis = {
+  total: string; // e.g., "85%"
+  count: number;
+  mainstream: number;
+  governance: number;
+  academic: number;
+  medical: number;
+  other: number;
+  major_countries: string[];
+  references: ResourceReference[];
+};
+
+export type ResearchResult = {
+  id: string;
+  statement: string;
+  source: string;
+  context: string;
+  request_datetime: string;
+  statement_date?: string;
+  valid_sources: string;
+  verdict: string;
+  status: 'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE' | 'UNVERIFIABLE';
+  correction?: string;
+  experts: ExpertOpinion;
+  resources_agreed?: ResourceAnalysis;
+  resources_disagreed?: ResourceAnalysis;
+  processed_at: string;
+  created_at: string;
+  updated_at: string;
+  resources?: string[]; // Legacy URLs from view
+};
+
 export type NewsArticle = {
   id: string;
   headline: string;
@@ -11,140 +58,62 @@ export type NewsArticle = {
   isBreaking: boolean;
   publishedAt: string;
   factCheck: {
-    evaluation: string; // e.g., "True", "Mostly True", "Mixed", "Mostly False", "False"
+    evaluation: 'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE' | 'UNVERIFIABLE';
     confidence: number; // Percentage as a number (0-100)
+    verdict: string;
+    experts?: ExpertOpinion;
+    resources_agreed?: ResourceAnalysis;
+    resources_disagreed?: ResourceAnalysis;
   };
-  citation: string; 
+  citation: string;
   summary: string;
+  statementDate?: string;
+  researchId?: string; // Link to research_results table
 };
 
-export const mockedArticles: NewsArticle[] = [
-  {
-    id: "1",
-    headline: "Breaking News: Major Event Unfolds",
-    source: { name: "News Source 1", logoUrl: "https://example.com/logo1.png" },
-    category: "World",
-    datePublished: new Date().toISOString(),
-    truthScore: 0.95,
-    isBreaking: true,
-    publishedAt: new Date().toISOString(),
-    factCheck: {
-      evaluation: "True",
-      confidence: 100
+// Utility function to convert ResearchResult to NewsArticle
+export function convertResearchToNews(research: ResearchResult): NewsArticle {
+  const statusToScore = {
+    'TRUE': 0.9,
+    'PARTIALLY_TRUE': 0.7,
+    'MISLEADING': 0.4,
+    'FALSE': 0.1,
+    'UNVERIFIABLE': 0.5
+  };
+
+  const statusToConfidence = {
+    'TRUE': 95,
+    'PARTIALLY_TRUE': 75,
+    'MISLEADING': 65,
+    'FALSE': 90,
+    'UNVERIFIABLE': 30
+  };
+
+  return {
+    id: research.id,
+    headline: research.statement.length > 100 
+      ? research.statement.substring(0, 97) + '...'
+      : research.statement,
+    source: {
+      name: research.source || 'Unknown Source',
+      logoUrl: undefined
     },
-    citation: "Source citation details here",
-    summary: "A major event has just occurred, shaking the foundations of our understanding."
-  },
-  {
-    id: "2",
-    headline: "Technology Advances in 2023",
-    source: { name: "Tech News", logoUrl: "https://example.com/logo2.png" },
-    category: "Technology",
-    datePublished: new Date().toISOString(),
-    truthScore: 0.85,
-    isBreaking: false,
-    publishedAt: new Date().toISOString(),
+    category: 'Fact Check',
+    datePublished: research.statement_date || research.processed_at,
+    truthScore: statusToScore[research.status],
+    isBreaking: research.status === 'FALSE' || research.status === 'MISLEADING',
+    publishedAt: research.processed_at,
     factCheck: {
-      evaluation: "Mostly True",
-      confidence: 90
+      evaluation: research.status,
+      confidence: statusToConfidence[research.status],
+      verdict: research.verdict,
+      experts: research.experts,
+      resources_agreed: research.resources_agreed,
+      resources_disagreed: research.resources_disagreed
     },
-    citation: "Source citation details here",
-    summary: "This year has seen significant advancements in technology, changing how we live and work."
-  },
-    {
-    id: "3",
-    headline: "Breaking News: Major Event Unfolds",
-    source: { name: "News Source 1", logoUrl: "https://example.com/logo1.png" },
-    category: "World",
-    datePublished: new Date().toISOString(),
-    truthScore: 0.95,
-    isBreaking: true,
-    publishedAt: new Date().toISOString(),
-    factCheck: {
-      evaluation: "True",
-      confidence: 100
-    },
-    citation: "Source citation details here",
-    summary: "A major event has just occurred, shaking the foundations of our understanding."
-  },
-  {
-    id: "4",
-    headline: "Technology Advances in 2023",
-    source: { name: "Tech News", logoUrl: "https://example.com/logo2.png" },
-    category: "Technology",
-    datePublished: new Date().toISOString(),
-    truthScore: 0.85,
-    isBreaking: false,
-    publishedAt: new Date().toISOString(),
-    factCheck: {
-      evaluation: "Mostly True",
-      confidence: 90
-    },
-    citation: "Source citation details here",
-    summary: "This year has seen significant advancements in technology, changing how we live and work."
-  },
-    {
-    id: "5",
-    headline: "Breaking News: Major Event Unfolds",
-    source: { name: "News Source 1", logoUrl: "https://example.com/logo1.png" },
-    category: "World",
-    datePublished: new Date().toISOString(),
-    truthScore: 0.95,
-    isBreaking: true,
-    publishedAt: new Date().toISOString(),
-    factCheck: {
-      evaluation: "True",
-      confidence: 100
-    },
-    citation: "Source citation details here",
-    summary: "A major event has just occurred, shaking the foundations of our understanding."
-  },
-  {
-    id: "6",
-    headline: "Technology Advances in 2023",
-    source: { name: "Tech News", logoUrl: "https://example.com/logo2.png" },
-    category: "Technology",
-    datePublished: new Date().toISOString(),
-    truthScore: 0.85,
-    isBreaking: false,
-    publishedAt: new Date().toISOString(),
-    factCheck: {
-      evaluation: "Mostly True",
-      confidence: 90
-    },
-    citation: "Source citation details here",
-    summary: "This year has seen significant advancements in technology, changing how we live and work."
-  },
-    {
-    id: "7",
-    headline: "Breaking News: Major Event Unfolds",
-    source: { name: "News Source 1", logoUrl: "https://example.com/logo1.png" },
-    category: "World",
-    datePublished: new Date().toISOString(),
-    truthScore: 0.95,
-    isBreaking: true,
-    publishedAt: new Date().toISOString(),
-    factCheck: {
-      evaluation: "True",
-      confidence: 100
-    },
-    citation: "Source citation details here",
-    summary: "A major event has just occurred, shaking the foundations of our understanding."
-  },
-  {
-    id: "8",
-    headline: "Technology Advances in 2023",
-    source: { name: "Tech News", logoUrl: "https://example.com/logo2.png" },
-    category: "Technology",
-    datePublished: new Date().toISOString(),
-    truthScore: 0.85,
-    isBreaking: false,
-    publishedAt: new Date().toISOString(),
-    factCheck: {
-      evaluation: "Mostly True",
-      confidence: 90
-    },
-    citation: "Source citation details here",
-    summary: "This year has seen significant advancements in technology, changing how we live and work."
-  }
-];
+    citation: research.source || '',
+    summary: research.verdict,
+    statementDate: research.statement_date,
+    researchId: research.id
+  };
+}

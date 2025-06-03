@@ -49,7 +49,7 @@ const VGesture = () => {
   const dotXSpring = useSpring(dotX, springConfig);
   const dotYSpring = useSpring(dotY, springConfig);
 
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number>(null);
 
   const centerX = 50;
   const floorY = 85;

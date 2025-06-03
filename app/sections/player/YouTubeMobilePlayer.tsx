@@ -8,7 +8,7 @@ import { ChevronUp, ChevronDown, MoreVertical } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 
 interface YouTubeMobilePlayerProps {
-  videos: VideoMetadata[];
+  videos?: VideoMetadata[];
   initialIndex?: number;
   autoPlay?: boolean;
 }
@@ -42,7 +42,7 @@ export function YouTubeMobilePlayer({
     if (!isDragging) return;
     
     const threshold = 100;
-    
+    if (!videos || videos.length === 0) return;
     if (Math.abs(dragOffset) > threshold) {
       if (dragOffset < 0 && currentIndex < videos.length - 1) {
         setCurrentIndex(currentIndex + 1);
@@ -54,7 +54,7 @@ export function YouTubeMobilePlayer({
     setIsDragging(false);
     setDragOffset(0);
     setDragStart(0);
-  }, [isDragging, dragOffset, currentIndex, videos.length]);
+  }, [isDragging, dragOffset, currentIndex]);
 
   // Mouse events
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -116,7 +116,7 @@ export function YouTubeMobilePlayer({
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {videos.map((video, index) => (
+        {videos && videos.map((video, index) => (
           <div
             key={video.id}
             className="w-full h-screen flex-shrink-0 relative bg-black"
@@ -210,7 +210,7 @@ export function YouTubeMobilePlayer({
       </div>
 
       {/* Timeline Overlay */}
-      <AnimatePresence>
+      {videos && <AnimatePresence>
         {showTimeline && (
           <motion.div
             initial={{ y: "100%" }}
@@ -236,7 +236,7 @@ export function YouTubeMobilePlayer({
             </Button>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>}
     </div>
   );
 }
