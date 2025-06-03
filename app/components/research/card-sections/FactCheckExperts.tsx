@@ -71,18 +71,18 @@ export function FactCheckExperts({ factCheck }: FactCheckExpertsProps) {
       {/* Header with auto-cycle indicator */}
       <div className="flex-shrink-0 mb-2">
         <div className="flex items-center justify-between">
-          <h4 className="text-sm font-semibold text-slate-300">Expert Perspectives</h4>
+          <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300">Expert Perspectives</h4>
           <div className="flex items-center gap-2">
             {isAutoCycling && (
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                className="w-3 h-3 rounded-full border border-blue-400 border-t-transparent"
+                className="w-3 h-3 rounded-full border border-blue-500 dark:border-blue-400 border-t-transparent"
               />
             )}
             <button
               onClick={() => setIsAutoCycling(!isAutoCycling)}
-              className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+              className="text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
             >
               {isAutoCycling ? 'Manual' : 'Auto'}
             </button>
@@ -106,7 +106,7 @@ export function FactCheckExperts({ factCheck }: FactCheckExpertsProps) {
                   scale: 1,
                   borderColor: isActive 
                     ? `${expert.color}80` 
-                    : 'rgba(71, 85, 105, 0.4)'
+                    : 'rgba(148, 163, 184, 0.4)'
                 }}
                 transition={{ 
                   delay: 1.3 + index * 0.1,
@@ -117,13 +117,19 @@ export function FactCheckExperts({ factCheck }: FactCheckExpertsProps) {
                 className="p-2 rounded-lg transition-all duration-200 text-center relative"
                 style={{
                   background: isActive 
-                    ? `${expert.color}20` 
-                    : 'rgba(51, 65, 85, 0.3)',
+                    ? `${expert.color}15` 
+                    : 'rgba(248, 250, 252, 0.8)', // Light mode: very light gray
                   border: `1px solid ${isActive 
                     ? `${expert.color}60` 
-                    : 'rgba(71, 85, 105, 0.4)'
+                    : 'rgba(148, 163, 184, 0.4)'
                   }`,
-                  cursor: isAvailable ? 'pointer' : 'not-allowed'
+                  cursor: isAvailable ? 'pointer' : 'not-allowed',
+                  // Dark mode overrides
+                  ...(typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches && {
+                    background: isActive 
+                      ? `${expert.color}20` 
+                      : 'rgba(51, 65, 85, 0.3)',
+                  })
                 }}
                 whileHover={isAvailable ? { scale: 1.05 } : {}}
                 whileTap={isAvailable ? { scale: 0.95 } : {}}
@@ -143,7 +149,7 @@ export function FactCheckExperts({ factCheck }: FactCheckExpertsProps) {
                   className="w-3 h-3 mx-auto mb-1" 
                   style={{ color: expert.color }}
                 />
-                <div className="text-xs text-slate-300 truncate">
+                <div className="text-xs text-slate-700 dark:text-slate-300 truncate">
                   {expert.label}
                 </div>
               </motion.button>
@@ -161,11 +167,9 @@ export function FactCheckExperts({ factCheck }: FactCheckExpertsProps) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.4 }}
-                className="p-3 rounded-lg h-full flex flex-col"
-                style={{
-                  background: 'rgba(51, 65, 85, 0.3)',
-                  border: '1px solid rgba(71, 85, 105, 0.4)'
-                }}
+                className="p-3 rounded-lg h-full flex flex-col
+                         bg-white/90 dark:bg-slate-800/30 
+                         border border-slate-200/60 dark:border-slate-700/40"
               >
                 {/* Expert label */}
                 <div className="flex items-center gap-2 mb-2">
@@ -191,7 +195,7 @@ export function FactCheckExperts({ factCheck }: FactCheckExpertsProps) {
                 
                 {/* Opinion text */}
                 <div className="flex-1 overflow-y-auto">
-                  <p className="text-sm text-slate-200 leading-relaxed">
+                  <p className="text-sm text-slate-800 dark:text-slate-200 leading-relaxed">
                     {factCheck.experts[activeExpert as keyof typeof factCheck.experts]}
                   </p>
                 </div>

@@ -44,16 +44,16 @@ function WatchPageContent() {
     return <LoadingScreen />;
   }
   
-  if (!video) {
-    return (
-      <div className="flex h-[calc(100vh-3.5rem)] items-center justify-center">
-        <div className="text-center space-y-4">
-          <h2 className="text-2xl font-semibold">Video not found</h2>
-          <p className="text-muted-foreground">The video you're looking for doesn't exist.</p>
-        </div>
-      </div>
-    );
-  }
+  // if (!video) {
+  //   return (
+  //     <div className="flex h-[calc(100vh-3.5rem)] items-center justify-center">
+  //       <div className="text-center space-y-4">
+  //         <h2 className="text-2xl font-semibold">Video not found</h2>
+  //         <p className="text-muted-foreground">The video you're looking for doesn't exist.</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
   
   return (
     <div className="flex relative">

@@ -140,7 +140,7 @@ export function FactCheckOverlay({ isVideoPlaying, videoCurrentTime, className }
       setTimeout(() => {
         setAnimationPhase('card');
         setShowCard(true);
-      }, 2000);
+      }, 500);
       
       // Notification disappears after 4 seconds (when card is fully visible)
       setTimeout(() => {
@@ -152,7 +152,7 @@ export function FactCheckOverlay({ isVideoPlaying, videoCurrentTime, className }
       setTimeout(() => {
         setShowCard(false);
         setAnimationPhase('idle');
-      }, 14000);
+      }, 10000);
       
     }, Math.random() * 15000 + 15000); // New fact-check every 15-30 seconds
 
@@ -178,29 +178,6 @@ export function FactCheckOverlay({ isVideoPlaying, videoCurrentTime, className }
 
       {/* Content Container */}
       <div className="relative z-10 h-full flex flex-col">
-        {/* Notification Area */}
-        <div className="flex-shrink-0 mb-4">
-          <AnimatePresence>
-            {showNotification && activeFactCheck && (
-              <FactCheckNotification 
-                factCheck={activeFactCheck}
-                onDismiss={() => {
-                  setShowNotification(false);
-                  if (!showCard) setAnimationPhase('idle');
-                }}
-                onClick={() => {
-                  if (!showCard) {
-                    setShowCard(true);
-                    setAnimationPhase('card');
-                  }
-                }}
-                animationPhase={animationPhase}
-              />
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Card Area */}
         <div className="flex-1">
           <AnimatePresence>
             {showCard && activeFactCheck && (

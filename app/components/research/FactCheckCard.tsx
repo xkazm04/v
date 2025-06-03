@@ -9,6 +9,7 @@ import { FactCheckCorrection } from "./card-sections/FactCheckCorrection";
 import { FactCheckSources } from "./card-sections/FactCheckSources";
 import { FactCheckExperts } from "./card-sections/FactCheckExperts";
 import { getStatusConfig } from "./utils/statusConfig";
+import StampText from "../ui/Decorative/StampText";
 
 interface FactCheckCardProps {
   factCheck: LLMResearchResponse;
@@ -36,8 +37,8 @@ const containerVariants = {
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: { duration: 0.6, ease: "easeOut" }
   }
@@ -71,7 +72,7 @@ export function FactCheckCard({ factCheck, onDismiss, onExpertToggle, animationP
       >
         {/* Header - Appears first */}
         <motion.div variants={sectionVariants} className="flex-shrink-0">
-          <FactCheckHeader 
+          <FactCheckHeader
             factCheck={factCheck}
             config={config}
             onDismiss={onDismiss}
@@ -81,8 +82,12 @@ export function FactCheckCard({ factCheck, onDismiss, onExpertToggle, animationP
         {/* Content - Each section appears with 1s delay */}
         <div className="flex flex-col gap-2 p-5 min-h-0">
           {/* Analysis Section - Appears second (1s after header) */}
-          <motion.div variants={sectionVariants} className="row-span-1">
+          <motion.div variants={sectionVariants} className="relative row-span-1">
             <FactCheckAnalysis factCheck={factCheck} config={config} />
+            <StampText
+              stampText={factCheck.status}
+              config={config}
+            />
           </motion.div>
 
           {/* Correction Section - Appears third (2s after header) */}
@@ -91,10 +96,9 @@ export function FactCheckCard({ factCheck, onDismiss, onExpertToggle, animationP
               <FactCheckCorrection correction={factCheck.correction} />
             </motion.div>
           )}
-
           {/* Sources Section - Appears fourth (3s after header) */}
-          <motion.div 
-            variants={sectionVariants} 
+          <motion.div
+            variants={sectionVariants}
             className={factCheck.correction ? "row-span-1" : "row-span-2"}
           >
             <FactCheckSources factCheck={factCheck} config={config} />

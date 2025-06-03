@@ -1,7 +1,9 @@
 "use client";
 
+import { colors } from "@/app/constants/colors";
 import { motion } from "framer-motion";
 import { Shield, Activity } from "lucide-react";
+import { useTheme } from "next-themes"; // If you're using next-themes
 
 interface FactCheckBackgroundProps {
   factCheckCount: number;
@@ -9,19 +11,15 @@ interface FactCheckBackgroundProps {
 }
 
 export function FactCheckBackground({ factCheckCount, isActive }: FactCheckBackgroundProps) {
+  const { theme } = useTheme(); // Optional: if using theme context
+  
+  const currentColors = colors[theme === 'dark' ? 'dark' : 'light'];
+
   return (
     <motion.div
       className="absolute inset-0 rounded-xl overflow-hidden"
       style={{
-        background: isActive 
-          ? `linear-gradient(135deg, 
-              rgba(15, 23, 42, 0.95) 0%,
-              rgba(30, 41, 59, 0.98) 100%
-            )`
-          : `linear-gradient(135deg, 
-              rgba(71, 85, 105, 0.1) 0%,
-              rgba(100, 116, 139, 0.15) 100%
-            )`,
+        background: isActive ? currentColors.active : currentColors.inactive,
         transition: 'all 0.5s ease'
       }}
       transition={{
@@ -50,14 +48,14 @@ export function FactCheckBackground({ factCheckCount, isActive }: FactCheckBackg
             }}
             className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
             style={{
-              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1))',
-              border: '1px solid rgba(59, 130, 246, 0.2)'
+              background: currentColors.iconBg,
+              border: `1px solid ${currentColors.iconBorder}`
             }}
           >
-            <Shield className="w-8 h-8 text-blue-400" />
+            <Shield className="w-8 h-8" style={{ color: '#3b82f6' }} />
           </motion.div>
           
-          <h3 className="text-lg font-semibold mb-2 text-slate-300">
+          <h3 className="text-lg font-semibold mb-2" style={{ color: currentColors.text }}>
             Monitor
           </h3>
           
@@ -65,9 +63,9 @@ export function FactCheckBackground({ factCheckCount, isActive }: FactCheckBackg
             <div 
               className="px-3 py-1 rounded-full text-xs font-medium"
               style={{
-                background: 'rgba(59, 130, 246, 0.1)',
-                border: '1px solid rgba(59, 130, 246, 0.3)',
-                color: '#3b82f6'
+                background: currentColors.badgeBg,
+                border: `1px solid ${currentColors.badgeBorder}`,
+                color: currentColors.badgeText
               }}
             >
               {factCheckCount} statement{factCheckCount !== 1 ? 's' : ''} checked
@@ -81,11 +79,9 @@ export function FactCheckBackground({ factCheckCount, isActive }: FactCheckBackg
         <motion.div
           className="absolute inset-0 rounded-xl"
           style={{
-            background: `linear-gradient(45deg, 
-              transparent, 
-              rgba(59, 130, 246, 0.1), 
-              transparent
-            )`,
+            background: theme === 'dark' 
+              ? `linear-gradient(45deg, transparent, rgba(59, 130, 246, 0.1), transparent)`
+              : `linear-gradient(45deg, transparent, rgba(59, 130, 246, 0.08), transparent)`,
             backgroundSize: '200% 200%'
           }}
           animate={{
