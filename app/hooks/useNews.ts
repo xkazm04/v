@@ -23,7 +23,7 @@ export function useNews({
   onlyFactChecked = false,
   breaking = false,
   autoRefresh = false,
-  refreshInterval = 30000 // 30 seconds
+  refreshInterval = 300000 
 }: UseNewsOptions = {}): UseNewsReturn {
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,7 +46,7 @@ export function useNews({
         params.set('offset', offset.toString());
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/news?${params}`);
+      const response = await fetch(`/news?${params}`);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

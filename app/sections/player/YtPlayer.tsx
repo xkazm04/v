@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { VideoMetadata } from '@/app/types/video';
 import { YouTubeDesktopPlayer } from './YouTubeDesktopPlayer';
 import { YouTubeMobilePlayer } from './YouTubeMobilePlayer';
-import { Monitor, Smartphone } from 'lucide-react';
 
 interface YtPlayerProps {
   videos?: VideoMetadata[];
@@ -49,27 +48,6 @@ export default function YtPlayer({
 
   return (
     <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Mode Indicator */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="fixed top-4 left-4 z-50 bg-black/80 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/20"
-      >
-        <div className="flex items-center gap-2 text-white text-sm font-medium">
-          {isMobile ? (
-            <>
-              <Smartphone className="w-4 h-4" />
-              Mobile Mode
-            </>
-          ) : (
-            <>
-              <Monitor className="w-4 h-4" />
-              Desktop Mode
-            </>
-          )}
-        </div>
-      </motion.div>
-
       {/* Player Content */}
       <AnimatePresence mode="wait">
         {isMobile ? (

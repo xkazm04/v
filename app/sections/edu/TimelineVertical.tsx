@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { sampleDiagram } from './sampleData';
 import TimelineVerMilestone from './TimelineVerMilestone';
 import TimelineVerModal from './TimelineVerModal';
+import { LogoBg } from '@/app/components/icons/logo';
+import { LogoBgBlack } from '@/app/components/icons/logo_black';
 
 export type MilestoneEvent = {
   id: string;
@@ -90,7 +92,7 @@ export default function TimelineVertical() {
              style={{ height: `${totalHeight}px` }}></div>
         
         {/* Radial glow from center */}
-        <div className="absolute left-1/2 top-1/2 w-[800px] h-[800px] bg-gradient-radial from-primary/3 via-primary/1 to-transparent rounded-full transform -translate-x-1/2 -translate-y-1/2 opacity-40"></div>
+        <div className="absolute left-1/2 bottom-0 w-[800px] h-[800px] bg-gradient-radial from-primary/3 via-primary/1 to-transparent rounded-full transform -translate-x-1/2 -translate-y-1/2 opacity-30"></div>
         
         {/* Subtle grid pattern */}
         <div 
@@ -128,7 +130,10 @@ export default function TimelineVertical() {
           />
         ))}
       </div>
-
+      <div className='opacity-5 -top-10 absolute inset-0 pointer-events-none'>
+        {/* <LogoBg /> */}
+        <LogoBgBlack />
+      </div>
       {/* Header */}
       <div className="relative z-10 px-4 sm:px-8 py-12">
         <motion.div 
