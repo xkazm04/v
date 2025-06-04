@@ -9,12 +9,14 @@ interface FeaturedNewsProps {
   limit?: number;
   showBreaking?: boolean;
   autoRefresh?: boolean;
+  selectedCategory?: string;
 }
 
 const FeaturedNews = ({ 
   limit = 20, 
   showBreaking = false,
-  autoRefresh = true 
+  autoRefresh = true,
+  selectedCategory = 'all'
 }: FeaturedNewsProps) => {
   const { 
     articles, 
@@ -27,7 +29,9 @@ const FeaturedNews = ({
     breaking: showBreaking,
     onlyFactChecked: true,
     autoRefresh,
+    categoryFilter: selectedCategory === 'all' ? undefined : selectedCategory,
   });
+  console.log('FeaturedNews articles:', articles);
 
   // Loading skeleton
   const LoadingSkeleton = () => (
@@ -88,10 +92,13 @@ const FeaturedNews = ({
         <div className="w-6 h-6 bg-slate-400 dark:bg-slate-600 rounded" />
       </div>
       <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
-        No fact-checks available
+        {selectedCategory === 'all' ? 'No fact-checks available' : `No ${selectedCategory} fact-checks available`}
       </h3>
       <p className="text-slate-600 dark:text-slate-400">
-        Check back later for the latest fact-checks.
+        {selectedCategory === 'all' 
+          ? 'Check back later for the latest fact-checks.'
+          : `Try selecting a different category or check back later for ${selectedCategory} fact-checks.`
+        }
       </p>
     </motion.div>
   );
@@ -108,13 +115,38 @@ const FeaturedNews = ({
     return <EmptyState />;
   }
 
+  // Get category display name
+  const getCategoryDisplayName = () => {
+    if (selectedCategory === 'all') return 'Recent Fact Checks';
+    const categoryLabels: Record<string, string> = {
+      politics: 'Politics',
+      economy: 'Economy', 
+      environment: 'Environment',
+      military: 'Military',
+      healthcare: 'Healthcare',
+      education: 'Education',
+      technology: 'Technology',
+      social: 'Social',
+      international: 'International',
+      other: 'Other'
+    };
+    return `${categoryLabels[selectedCategory] || selectedCategory} Fact Checks`;
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-          {showBreaking ? 'Breaking Fact Checks' : 'Recent Fact Checks'}
-        </h2>
+        <div>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+            {showBreaking ? 'Breaking Fact Checks' : getCategoryDisplayName()}
+          </h2>
+          {selectedCategory !== 'all' && (
+            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+              Showing fact-checks from the {selectedCategory} category
+            </p>
+          )}
+        </div>
         <motion.button
           onClick={() => refreshNews()}
           disabled={loading}

@@ -1,8 +1,15 @@
-
 import { VideoMetadata } from '@/app/types/video';
 import { Video } from '../types/video_api';
 
-export function transformVideoToMetadata(video: Video): VideoMetadata {
+export function transformVideoToMetadata(video: Video | VideoMetadata): VideoMetadata {
+  // If it's already VideoMetadata, return as-is
+  if ('youtubeId' in video && 'factCheck' in video) {
+    return video as VideoMetadata;
+  }
+  
+  // Transform API Video to VideoMetadata
+  const apiVideo = video as Video;
+
   // Generate YouTube-style URL if it's a YouTube video
   const getVideoUrl = (video: Video) => {
     if (video.source === 'youtube' && video.video_url.includes('watch?v=')) {
@@ -32,59 +39,54 @@ export function transformVideoToMetadata(video: Video): VideoMetadata {
 
   // Transform fact check data
   const getFactCheck = (video: Video) => {
-    let evaluation: 'Verified' | 'False' | 'Misleading' | 'Partial' | 'Unknown' = 'Unknown';
+    let evaluation: 'Fact' | 'Mislead' | 'Lie' | 'Unverified' = 'Unverified';
     
     if (video.verdict) {
       const verdict = video.verdict.toLowerCase();
       if (verdict.includes('true') || verdict.includes('verified') || verdict.includes('accurate')) {
-        evaluation = 'Verified';
+        evaluation = 'Fact';
       } else if (verdict.includes('false') || verdict.includes('incorrect') || verdict.includes('debunked')) {
-        evaluation = 'False';
+        evaluation = 'Lie';
       } else if (verdict.includes('misleading') || verdict.includes('deceptive')) {
-        evaluation = 'Misleading';
-      } else if (verdict.includes('partial') || verdict.includes('mixed')) {
-        evaluation = 'Partial';
+        evaluation = 'Mislead';
       }
     }
 
     return {
       evaluation,
-      truthfulness: getScore(evaluation),
-      transparency: Math.min(85 + Math.random() * 15, 100), // Mock transparency score
-      research_quality: video.researched ? Math.min(80 + Math.random() * 20, 100) : 50,
-      overall_score: getOverallScore(evaluation, video.researched)
+      truthPercentage: getScore(evaluation),
+      neutralPercentage: Math.floor(Math.random() * 20) + 5,
+      misleadingPercentage: Math.floor(Math.random() * 15) + 5,
+      totalClaims: Math.floor(Math.random() * 15) + 5,
+      verifiedClaims: Math.floor(Math.random() * 10) + 3,
+      sources: Math.floor(Math.random() * 20) + 5,
+      confidence: apiVideo.researched ? Math.min(80 + Math.random() * 20, 100) : 50
     };
   };
 
   const getScore = (evaluation: string) => {
     switch (evaluation) {
-      case 'Verified': return Math.min(85 + Math.random() * 15, 100);
-      case 'Partial': return Math.min(60 + Math.random() * 25, 85);
-      case 'Misleading': return Math.min(20 + Math.random() * 30, 50);
-      case 'False': return Math.random() * 20;
+      case 'Fact': return Math.min(80 + Math.random() * 20, 100);
+      case 'Mislead': return Math.min(40 + Math.random() * 30, 70);
+      case 'Lie': return Math.random() * 25;
       default: return 50;
     }
   };
 
-  const getOverallScore = (evaluation: string, researched: boolean) => {
-    const baseScore = getScore(evaluation);
-    return researched ? baseScore : Math.max(baseScore * 0.7, 30);
-  };
-
   return {
-    id: getVideoId(video),
-    title: video.title || 'Untitled Video',
-    description: video.verdict || 'No description available',
-    thumbnailUrl: getThumbnailUrl(video),
-    duration: video.duration_seconds || 0,
+    id: getVideoId(apiVideo),
+    title: apiVideo.title || 'Untitled Video',
+    description: apiVideo.verdict || 'No description available',
+    thumbnailUrl: getThumbnailUrl(apiVideo),
+    videoUrl: getVideoUrl(apiVideo),
+    duration: apiVideo.duration_seconds || 0,
     views: Math.floor(Math.random() * 1000000) + 10000, // Mock views
     likes: Math.floor(Math.random() * 10000) + 100, // Mock likes
-    uploadDate: video.created_at,
-    channelName: video.speaker_name || 'Unknown Speaker',
-    channelAvatar: '/api/placeholder/avatar',
-    category: video.source.charAt(0).toUpperCase() + video.source.slice(1),
-    factCheck: getFactCheck(video),
-    tags: [video.source, video.language_code || 'unknown'].filter(Boolean),
-    url: getVideoUrl(video)
+    uploadDate: apiVideo.created_at,
+    channelName: apiVideo.speaker_name || 'Unknown Speaker',
+    category: (apiVideo.source.charAt(0).toUpperCase() + apiVideo.source.slice(1)) as any,
+    factCheck: getFactCheck(apiVideo),
+    tags: [apiVideo.source, apiVideo.language_code || 'unknown'].filter(Boolean),
+    youtubeId: getVideoId(apiVideo)
   };
 }

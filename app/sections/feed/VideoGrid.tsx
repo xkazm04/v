@@ -7,6 +7,8 @@ import { useVideos, useInfiniteVideos } from '@/app/hooks/useVideos';
 import { Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { VideoFilters } from '@/app/types/video_api';
+import { VideoMetadata } from '@/app/types/video';
+import { Video } from '@/app/types/video_api';
 
 interface VideoGridProps {
   columns?: 1 | 2 | 3 | 4;
@@ -15,6 +17,7 @@ interface VideoGridProps {
   height?: number;
   filters?: VideoFilters;
   infinite?: boolean;
+  videos?: VideoMetadata[] | Video[]; // Fix type to be union of both
 }
 
 const VideoGrid = memo(function VideoGrid({ 
@@ -23,10 +26,14 @@ const VideoGrid = memo(function VideoGrid({
   virtualized = false,
   height = 600,
   filters = {},
-  infinite = false
+  infinite = false,
+  videos: propVideos // Add videos prop with alias
 }: VideoGridProps) {
   const [mounted, setMounted] = useState(false);
   const [screenSize, setScreenSize] = useState({ width: 1024, height: 768 });
+
+  // Only use API hooks if no videos provided as props
+  const shouldFetchFromAPI = !propVideos;
 
   // Use either infinite query or regular query based on props
   const {
@@ -34,7 +41,7 @@ const VideoGrid = memo(function VideoGrid({
     isLoading: regularLoading,
     error: regularError,
     refetch: regularRefetch
-  } = useVideos(filters, { enabled: !infinite });
+  } = useVideos(shouldFetchFromAPI ? filters : {});
 
   const {
     data: infiniteData,
@@ -44,16 +51,16 @@ const VideoGrid = memo(function VideoGrid({
     hasNextPage,
     isFetchingNextPage,
     refetch: infiniteRefetch
-  } = useInfiniteVideos(filters, { enabled: infinite });
+  } = useInfiniteVideos(shouldFetchFromAPI ? filters : {});
 
-  // Determine which data to use
-  const videos = infinite 
-    ? infiniteData?.pages.flat() || []
-    : regularData || [];
+  // Determine which data to use - prioritize prop videos
+  const videos: (VideoMetadata | Video)[] = propVideos || (infinite 
+    ? (infiniteData?.pages.flat() as Video[]) || []
+    : (regularData as Video[]) || []);
   
-  const isLoading = infinite ? infiniteLoading : regularLoading;
-  const error = infinite ? infiniteError : regularError;
-  const refetch = infinite ? infiniteRefetch : regularRefetch;
+  const isLoading = shouldFetchFromAPI ? (infinite ? infiniteLoading : regularLoading) : false;
+  const error = shouldFetchFromAPI ? (infinite ? infiniteError : regularError) : null;
+  const refetch = shouldFetchFromAPI ? (infinite ? infiniteRefetch : regularRefetch) : () => {};
 
   useEffect(() => {
     setMounted(true);

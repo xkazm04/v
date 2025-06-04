@@ -180,4 +180,72 @@ export class ResearchApiService {
       };
     }
   }
+
+  /**
+   * Search research results with advanced filters
+   */
+  static async searchResearch({
+    searchText,
+    statusFilter,
+    countryFilter,
+    categoryFilter,
+    sourceFilter,
+    limitCount = 50,
+    offsetCount = 0,
+    useAdmin = false
+  }: {
+    searchText?: string;
+    statusFilter?: string;
+    countryFilter?: string;
+    categoryFilter?: string;
+    sourceFilter?: string;
+    limitCount?: number;
+    offsetCount?: number;
+    useAdmin?: boolean;
+  } = {}): Promise<{ data: ResearchResult[]; error?: string }> {
+    try {
+      const client = useAdmin ? supabaseAdmin : supabase;
+      
+      // Build query with filters
+      let query = client
+        .from('research_results_with_resources')
+        .select('*');
+
+      // Apply filters
+      if (searchText) {
+        query = query.or(`statement.ilike.%${searchText}%,verdict.ilike.%${searchText}%,source.ilike.%${searchText}%`);
+      }
+      
+      if (statusFilter) {
+        query = query.eq('status', statusFilter);
+      }
+      
+      if (countryFilter) {
+        query = query.eq('country', countryFilter);
+      }
+      
+      if (categoryFilter) {
+        query = query.eq('category', categoryFilter);
+      }
+      
+      if (sourceFilter) {
+        query = query.ilike('source', `%${sourceFilter}%`);
+      }
+
+      // Apply pagination and ordering
+      const { data, error } = await query
+        .order('processed_at', { ascending: false })
+        .range(offsetCount, offsetCount + limitCount - 1);
+
+      if (error) throw error;
+
+      return { data: data || [] };
+    } catch (error) {
+      console.error('Error searching research:', error);
+      return {
+        data: [],
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
+  }
 }

@@ -1,12 +1,58 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 
 import { VideoFilters } from '../types/video_api';
-import { videoAPI } from '../api/videos/videos';
+
+// Update to use local API routes instead of external API
+const LOCAL_API_BASE = '/api';
+
+async function searchVideosLocal(
+  searchText?: string,
+  sourceFilter?: string,
+  researchedFilter?: boolean,
+  speakerFilter?: string,
+  languageFilter?: string,
+  categoriesFilter?: string,
+  limitCount: number = 50,
+  offsetCount: number = 0
+) {
+  const params = new URLSearchParams();
+  
+  if (searchText) params.append('search_text', searchText);
+  if (sourceFilter) params.append('source_filter', sourceFilter);
+  if (researchedFilter !== undefined) params.append('researched_filter', String(researchedFilter));
+  if (speakerFilter) params.append('speaker_filter', speakerFilter);
+  if (languageFilter) params.append('language_filter', languageFilter);
+  if (categoriesFilter) params.append('categories_filter', categoriesFilter);
+  params.append('limit_count', String(limitCount));
+  params.append('offset_count', String(offsetCount));
+
+  const response = await fetch(`${LOCAL_API_BASE}/videos?${params.toString()}`);
+  if (!response.ok) {
+    throw new Error(`Video search failed: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+async function getVideosLocal(filters: VideoFilters = {}) {
+  const params = new URLSearchParams();
+  
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      params.append(key, String(value));
+    }
+  });
+
+  const response = await fetch(`${LOCAL_API_BASE}/videos?${params.toString()}`);
+  if (!response.ok) {
+    throw new Error(`Video fetch failed: ${response.statusText}`);
+  }
+  return response.json();
+}
 
 export const useVideos = (filters: VideoFilters = {}) => {
   return useQuery({
     queryKey: ['videos', filters],
-    queryFn: () => videoAPI.getVideos(filters),
+    queryFn: () => getVideosLocal(filters),
     staleTime: 5 * 60 * 1000, // 5 minutes
     refetchOnWindowFocus: false,
   });
@@ -16,10 +62,11 @@ export const useInfiniteVideos = (filters: Omit<VideoFilters, 'offset'> = {}) =>
   return useInfiniteQuery({
     queryKey: ['videos', 'infinite', filters],
     queryFn: ({ pageParam = 0 }) => 
-      videoAPI.getVideos({ ...filters, offset: pageParam }),
-    getNextPageParam: (lastPage, pages) => {
+      getVideosLocal({ ...filters, offset: pageParam as number }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage: any, pages) => {
       const limit = filters.limit || 50;
-      return lastPage.length === limit ? pages.length * limit : undefined;
+      return (lastPage as any[]).length === limit ? pages.length * limit : undefined;
     },
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
@@ -29,7 +76,13 @@ export const useInfiniteVideos = (filters: Omit<VideoFilters, 'offset'> = {}) =>
 export const useVideoWithTimestamps = (videoId: string) => {
   return useQuery({
     queryKey: ['video', videoId, 'timestamps'],
-    queryFn: () => videoAPI.getVideoWithTimestamps(videoId),
+    queryFn: async () => {
+      const response = await fetch(`${LOCAL_API_BASE}/videos/${videoId}/timestamps`);
+      if (!response.ok) {
+        throw new Error(`Video timestamps fetch failed: ${response.statusText}`);
+      }
+      return response.json();
+    },
     enabled: !!videoId,
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
@@ -38,7 +91,13 @@ export const useVideoWithTimestamps = (videoId: string) => {
 export const useVideoStats = () => {
   return useQuery({
     queryKey: ['videos', 'stats'],
-    queryFn: () => videoAPI.getVideoStats(),
+    queryFn: async () => {
+      const response = await fetch(`${LOCAL_API_BASE}/videos/stats`);
+      if (!response.ok) {
+        throw new Error(`Video stats fetch failed: ${response.statusText}`);
+      }
+      return response.json();
+    },
     staleTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
@@ -50,7 +109,7 @@ export const useSearchVideos = (
   researchedFilter?: boolean,
   speakerFilter?: string,
   languageFilter?: string,
-  categoriesFilter?: string, // New parameter
+  categoriesFilter?: string,
   limitCount: number = 50,
   offsetCount: number = 0
 ) => {
@@ -63,17 +122,17 @@ export const useSearchVideos = (
       researchedFilter, 
       speakerFilter, 
       languageFilter,
-      categoriesFilter, // Include in query key
+      categoriesFilter,
       limitCount,
       offsetCount
     ],
-    queryFn: () => videoAPI.searchVideos(
+    queryFn: () => searchVideosLocal(
       searchText,
       sourceFilter,
       researchedFilter,
       speakerFilter,
       languageFilter,
-      categoriesFilter, // Pass to API
+      categoriesFilter,
       limitCount,
       offsetCount
     ),
@@ -85,7 +144,13 @@ export const useSearchVideos = (
 export const useAvailableCategories = () => {
   return useQuery({
     queryKey: ['videos', 'categories'],
-    queryFn: () => videoAPI.getAvailableCategories(),
+    queryFn: async () => {
+      const response = await fetch(`${LOCAL_API_BASE}/videos/categories`);
+      if (!response.ok) {
+        throw new Error(`Video categories fetch failed: ${response.statusText}`);
+      }
+      return response.json();
+    },
     staleTime: 30 * 60 * 1000, // 30 minutes
     refetchOnWindowFocus: false,
   });

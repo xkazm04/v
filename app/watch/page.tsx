@@ -65,7 +65,6 @@ function WatchPageContent() {
           <div className="lg:col-span-2 xl:col-span-3 space-y-6">
             <YtPlayer 
               videos={MOCK_VIDEOS}
-              onPlayStateChange={setIsVideoPlaying}
             />  
           </div>
           
