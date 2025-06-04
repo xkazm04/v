@@ -7,7 +7,7 @@ import { Button } from '@/app/components/ui/button';
 import { ThemeToggle } from '@/app/components/theme/theme-toggle';
 import { SearchBar } from '@/app/components/search/SearchBar';
 import { cn } from '@/app/lib/utils';
-import { Menu, Upload, Bell, User, LogOut, Settings } from 'lucide-react';
+import { Menu, Upload, Bell } from 'lucide-react';
 import { useNavigation } from '@/app/hooks/useNavigation';
 import { useAuth } from '@/app/hooks/useAuth';
 import { usePathname, useRouter } from 'next/navigation';
@@ -15,41 +15,24 @@ import NavMobileOverlay from './NavMobileOverlay';
 import { navAnim } from '@/app/components/animations/variants/navVariants';
 import { NAVIGATION_CONFIG } from '@/app/config/navItems';
 import { renderActionButton } from './NavActionButton';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/app/components/ui/dropdown-menu';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/app/components/ui/alert-dialog';
-import { AuthButtons } from '@/app/components/auth/AuthButtons';
-import { Loader2 } from 'lucide-react';
+import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import UserProfileDropdown from './UserProfileDropdown';
 
 export function Navbar() {
-  const { 
-    isLoading, 
-    isSearchOpen, 
-    toggleSearch, 
-    isMobileMenuOpen, 
+  const {
+    isLoading,
+    isSearchOpen,
+    toggleSearch,
+    isMobileMenuOpen,
     toggleMobileMenu,
-    handleNavigation 
+    handleNavigation
   } = useNavigation();
-  
+
   const { user, profile, signOut, loading: authLoading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const [logoutLoading, setLogoutLoading] = useState(false);
+  const { colors, getColors, mounted } = useLayoutTheme();
 
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -106,6 +89,12 @@ export function Navbar() {
     }
   ] : [];
 
+  if (!mounted) {
+    return null; // Prevent hydration mismatch
+  }
+
+  const navbarColors = getColors('navbar');
+
   const renderNavLink = (item: typeof NAVIGATION_CONFIG.mainNav[0], isMobile = false) => {
     const isActive = isActivePath(item.href);
 
@@ -117,20 +106,32 @@ export function Navbar() {
         className={cn(
           'relative group transition-all duration-200',
           isMobile
-            ? 'flex flex-col px-4 py-3 text-base font-medium hover:bg-accent/50 rounded-lg'
-            : 'text-sm font-medium hover:text-primary px-1 py-2',
-          isActive && !isMobile ? 'text-primary' : 'text-foreground hover:text-primary'
+            ? 'flex flex-col px-4 py-3 text-base font-medium rounded-lg'
+            : 'text-sm font-medium px-1 py-2'
         )}
+        style={{
+          color: isActive && !isMobile 
+            ? colors.primary 
+            : navbarColors.foreground
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = navbarColors.muted || '';
+          e.currentTarget.style.color = colors.primary;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = 'transparent';
+          e.currentTarget.style.color = navbarColors.foreground;
+        }}
       >
-        <span className={cn(
-          'transition-colors',
-          isMobile && 'text-foreground group-hover:text-accent-foreground'
-        )}>
+        <span className="transition-colors">
           {item.label}
         </span>
 
         {isMobile && item.description && (
-          <span className="text-xs text-muted-foreground mt-1 line-clamp-1">
+          <span 
+            className="text-xs mt-1 line-clamp-1"
+            style={{ color: navbarColors.muted }}
+          >
             {item.description}
           </span>
         )}
@@ -138,88 +139,20 @@ export function Navbar() {
         {!isMobile && isActive && (
           <motion.div
             layoutId="navbar-indicator"
-            className="absolute -bottom-2 left-0 right-0 h-0.5 bg-primary rounded-full"
+            className="absolute -bottom-2 left-0 right-0 h-0.5 rounded-full"
+            style={{ backgroundColor: colors.primary }}
             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
           />
         )}
 
         {!isMobile && (
           <motion.div
-            className="absolute -bottom-2 left-0 right-0 h-0.5 bg-primary/30 rounded-full opacity-0 group-hover:opacity-100"
+            className="absolute -bottom-2 left-0 right-0 h-0.5 rounded-full opacity-0 group-hover:opacity-100"
+            style={{ backgroundColor: `${colors.primary}50` }}
             transition={{ duration: 0.2 }}
           />
         )}
       </Link>
-    );
-  };
-
-  // User profile dropdown component
-  const UserProfileDropdown = () => {
-    if (!user) {
-      return <AuthButtons variant="ghost" size="sm" />;
-    }
-
-    return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="relative">
-            <User className="h-5 w-5" />
-            <span className="sr-only">User menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56">
-          <div className="px-2 py-1.5">
-            <p className="text-sm font-medium">{user.email}</p>
-          </div>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <Link href="/settings" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" />
-              Settings
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <DropdownMenuItem 
-                onSelect={(e) => e.preventDefault()}
-                className="flex items-center gap-2 text-destructive focus:text-destructive cursor-pointer"
-              >
-                <LogOut className="h-4 w-4" />
-                Sign Out
-              </DropdownMenuItem>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Sign Out Confirmation</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Are you sure you want to sign out? You&apos;ll need to sign in again to access your account.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleLogout}
-                  disabled={logoutLoading}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                >
-                  {logoutLoading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      Signing Out...
-                    </>
-                  ) : (
-                    <>
-                      <LogOut className="h-4 w-4 mr-2" />
-                      Sign Out
-                    </>
-                  )}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </DropdownMenuContent>
-      </DropdownMenu>
     );
   };
 
@@ -228,7 +161,13 @@ export function Navbar() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80"
+      className="sticky top-0 z-50 w-full border-b backdrop-blur-xl"
+      style={{
+        backgroundColor: `${navbarColors.background}f0`,
+        borderColor: navbarColors.border,
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)'
+      }}
     >
       <div className="container flex h-16 max-w-screen-2xl items-center">
         {/* Mobile Menu Button */}
@@ -241,6 +180,17 @@ export function Navbar() {
               'transition-transform duration-200',
               isMobileMenuOpen && 'rotate-90'
             )}
+            style={{
+              color: navbarColors.foreground
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = navbarColors.muted || '';
+              e.currentTarget.style.color = colors.primary;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = navbarColors.foreground;
+            }}
           >
             <Menu className="h-5 w-5" />
             <span className="sr-only">Toggle menu</span>
@@ -254,7 +204,18 @@ export function Navbar() {
             onClick={handleNavigation}
             className="flex items-center space-x-2 group"
           >
-            <div className="font-bold pl-2 text-xl text-foreground group-hover:text-primary transition-colors">
+            <div 
+              className="font-bold pl-2 text-xl transition-colors"
+              style={{
+                color: navbarColors.foreground
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = colors.primary;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = navbarColors.foreground;
+              }}
+            >
               Verify
             </div>
           </Link>
@@ -268,7 +229,7 @@ export function Navbar() {
 
           {/* Search Bar */}
           <div className="flex-1 max-w-md mx-8">
-            <SearchBar 
+            <SearchBar
               onResultSelect={handleSearchResultSelect}
               placeholder="Search news and videos..."
             />
@@ -279,7 +240,11 @@ export function Navbar() {
             <div className="flex items-center space-x-1">
               {actionButtons.map(config => renderActionButton(config))}
               <ThemeToggle />
-              <UserProfileDropdown />
+              <UserProfileDropdown
+                user={user}
+                handleLogout={handleLogout}
+                logoutLoading={logoutLoading}
+              />
             </div>
           </div>
         </div>
@@ -291,7 +256,11 @@ export function Navbar() {
             .slice(0, 2) // Limit mobile buttons
             .map(config => renderActionButton(config, false))}
           <ThemeToggle />
-          <UserProfileDropdown />
+          <UserProfileDropdown
+            user={user}
+            handleLogout={handleLogout}
+            logoutLoading={logoutLoading}
+          />
         </div>
 
         {/* Mobile Menu Search */}
@@ -302,22 +271,25 @@ export function Navbar() {
               animate="open"
               exit="closed"
               variants={navAnim.search.mobile}
-              className="absolute top-full left-0 right-0 bg-background border-b border-border p-4 md:hidden"
+              className="absolute top-full left-0 right-0 border-b p-4 md:hidden"
+              style={{
+                backgroundColor: navbarColors.background,
+                borderColor: navbarColors.border
+              }}
             >
-              <SearchBar 
+              <SearchBar
                 onResultSelect={handleSearchResultSelect}
                 placeholder="Search news and videos..."
               />
             </motion.div>
           )}
         </AnimatePresence>
-
       </div>
 
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <NavMobileOverlay 
+          <NavMobileOverlay
             toggleMobileMenu={toggleMobileMenu}
             actionButtons={actionButtons}
             renderNavLink={renderNavLink}
@@ -335,7 +307,10 @@ export function Navbar() {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="absolute bottom-0 left-0 h-0.5 w-full bg-gradient-to-r from-primary via-primary/80 to-primary origin-left"
+            className="absolute bottom-0 left-0 h-0.5 w-full origin-left"
+            style={{
+              background: `linear-gradient(90deg, ${colors.primary}, ${colors.primary}cc, ${colors.primary})`
+            }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
           />
         )}

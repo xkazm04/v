@@ -9,6 +9,7 @@ import { cn } from '@/app/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import SideCat from './SideCat';
 import { useViewport } from '@/app/hooks/useViewport';
+import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 
 interface SidebarProps {
   className?: string;
@@ -19,6 +20,7 @@ export function Sidebar({ className }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { width } = useViewport();
+  const { colors, sidebarColors, isDark, mounted: themeReady } = useLayoutTheme();
 
   useEffect(() => {
     setMounted(true);
@@ -30,13 +32,21 @@ export function Sidebar({ className }: SidebarProps) {
 
   const isActive = (path: string) => pathname === path;
 
+  if (!mounted || !themeReady) {
+    return null; // Prevent hydration mismatch
+  }
+
   return (
     <motion.div 
       className={cn(
-        'h-[calc(100vh-3.5rem)] border-r border-border/40 bg-background/95 backdrop-blur-sm transition-all duration-300 hidden md:block relative overflow-hidden',
+        'h-[calc(100vh-3.5rem)] border-r backdrop-blur-sm transition-all duration-300 hidden md:block relative overflow-hidden sidebar-scroll',
         isCollapsed ? 'w-[80px]' : 'w-[280px]',
         className
       )}
+      style={{
+        backgroundColor: `${sidebarColors.background}f5`, // Add slight transparency
+        borderColor: sidebarColors.border
+      }}
       initial={{ x: -20, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.3 }}
@@ -44,33 +54,51 @@ export function Sidebar({ className }: SidebarProps) {
       {/* Enhanced background with subtle patterns */}
       <div className="absolute inset-0">
         {/* Base gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50/50 to-white dark:from-gray-900 dark:via-gray-800/50 dark:to-gray-900" />
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: isDark 
+              ? `linear-gradient(135deg, ${sidebarColors.background} 0%, ${colors.muted} 50%, ${sidebarColors.background} 100%)`
+              : `linear-gradient(135deg, ${sidebarColors.background} 0%, ${colors.background} 50%, ${sidebarColors.background} 100%)`
+          }}
+        />
         
         {/* Subtle dot pattern overlay */}
         <div 
-          className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]"
+          className="absolute inset-0"
           style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)`,
-            backgroundSize: '20px 20px'
+            backgroundImage: `radial-gradient(circle at 1px 1px, ${sidebarColors.muted} 1px, transparent 0)`,
+            backgroundSize: '20px 20px',
+            opacity: isDark ? 0.05 : 0.02
           }}
         />
         
         {/* Subtle vertical accent line */}
-        <div className="absolute right-0 top-0 w-px h-full bg-gradient-to-b from-transparent via-blue-500/20 to-transparent" />
+        <div 
+          className="absolute right-0 top-0 w-px h-full"
+          style={{
+            background: `linear-gradient(to bottom, transparent, ${colors.primary}33, transparent)`
+          }}
+        />
       </div>
 
       {/* Main content */}
       <div className="relative z-10 h-full flex flex-col">
         {/* Main navigation content */}
-        {width > 1000 && <div className="flex-1 overflow-hidden">
-          <SideCat 
-            isCollapsed={isCollapsed}
-            isActive={isActive}
-          />
-        </div>}
+        {width > 1000 && (
+          <div className="flex-1 overflow-hidden">
+            <SideCat 
+              isCollapsed={isCollapsed}
+              isActive={isActive}
+            />
+          </div>
+        )}
 
         {/* Bottom controls */}
-        <div className="border-t border-border/30 p-3">
+        <div 
+          className="border-t p-3"
+          style={{ borderColor: `${sidebarColors.border}80` }}
+        >
           <div className="flex items-center justify-between">
             {/* Settings button */}
             <motion.div
@@ -80,7 +108,19 @@ export function Sidebar({ className }: SidebarProps) {
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="rounded-full hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-200 dark:hover:from-gray-800 dark:hover:to-gray-700 transition-all duration-200"
+                className="rounded-full transition-all duration-200 hover:bg-opacity-80"
+                style={{
+                  color: sidebarColors.muted,
+                  backgroundColor: 'transparent'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = sidebarColors.hover || '';
+                  e.currentTarget.style.color = sidebarColors.foreground;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = sidebarColors.muted;
+                }}
                 asChild
               >
                 <Link href="/settings">
@@ -98,7 +138,19 @@ export function Sidebar({ className }: SidebarProps) {
                 variant="ghost" 
                 size="icon" 
                 onClick={toggleSidebar}
-                className="rounded-full hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100 dark:hover:from-blue-900/30 dark:hover:to-purple-900/30 transition-all duration-200"
+                className="rounded-full transition-all duration-200"
+                style={{
+                  color: sidebarColors.muted,
+                  backgroundColor: 'transparent'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = `${colors.primary}15`;
+                  e.currentTarget.style.color = colors.primary;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = sidebarColors.muted;
+                }}
               >
                 <motion.div
                   animate={{ rotate: isCollapsed ? 0 : 180 }}
@@ -124,7 +176,10 @@ export function Sidebar({ className }: SidebarProps) {
                 transition={{ duration: 0.2 }}
                 className="mt-2 text-center"
               >
-                <span className="text-xs text-muted-foreground">
+                <span 
+                  className="text-xs"
+                  style={{ color: sidebarColors.muted }}
+                >
                   Click to collapse
                 </span>
               </motion.div>
@@ -135,7 +190,11 @@ export function Sidebar({ className }: SidebarProps) {
 
       {/* Hover glow effect */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `linear-gradient(90deg, ${colors.primary}08, ${colors.accent}05)`,
+          opacity: 0
+        }}
         whileHover={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
       />

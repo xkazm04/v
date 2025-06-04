@@ -1,163 +1,167 @@
 'use client';
 
-import { memo, useState, useMemo } from 'react';
+import { memo, useState } from 'react';
 import { motion } from 'framer-motion';
-import CompactVideoCard from './CompactVideoCard';
-
-import { VideoCardThumbnail } from '@/app/components/video/VideoCardThumbnail';
-import { VideoCardContent } from '@/app/components/video/VideoCardContent';
-import { VideoCardFooter } from '@/app/components/video/VideoCardFooter';
-
-import { transformVideoToMetadata } from '@/app/utils/videoTransform';
-import { Video } from '@/app/types/video_api';
 import { VideoMetadata } from '@/app/types/video';
+import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import { cn } from '@/app/lib/utils';
 import { VideoCardHeader } from '@/app/components/video/VideoCardHeader';
+import { VideoCardThumbnail } from '@/app/components/video/VideoCardThumbnail';
+import { VideoCardFooter } from '@/app/components/video/VideoCardFooter';
+import { VideoCardContent } from '@/app/components/video/VideoCardContent';
 
 interface VideoCardProps {
-  video: Video | VideoMetadata;
-  layout?: 'grid' | 'list' | 'compact';
+  video: VideoMetadata;
+  layout?: 'grid' | 'list';
   priority?: boolean;
   className?: string;
 }
 
-const LAYOUT_CONFIGS = {
-  grid: {
-    containerClass: 'block w-full',
-    thumbnailClass: 'aspect-video mb-4',
-    contentClass: 'space-y-3',
-    direction: 'vertical'
-  },
-  list: {
-    containerClass: 'flex gap-4 w-full max-w-2xl',
-    thumbnailClass: 'w-80 h-48 flex-shrink-0',
-    contentClass: 'flex-1 min-w-0 py-1',
-    direction: 'horizontal'
-  }
-} as const;
-
 const cardVariants = {
-  hidden: { 
-    opacity: 0, 
-    y: 20,
-    scale: 0.96
-  },
+  hidden: { opacity: 0, y: 20, scale: 0.95 },
   visible: { 
     opacity: 1, 
-    y: 0,
+    y: 0, 
     scale: 1,
     transition: {
       duration: 0.4,
-      ease: [0.25, 0.46, 0.45, 0.94]
+      ease: 'easeOut'
+    }
+  },
+  hover: {
+    y: -4,
+    scale: 1.02,
+    transition: {
+      duration: 0.2,
+      ease: 'easeOut'
     }
   }
 };
 
-const VideoCard = memo(function VideoCard({ 
-  video, 
-  layout = 'grid', 
+export const VideoCard = memo(function VideoCard({
+  video,
+  layout = 'grid',
   priority = false,
-  className = ''
+  className
 }: VideoCardProps) {
-  const [imageState, setImageState] = useState({
-    loaded: false,
-    error: false
-  });
+  const { cardColors, colors, mounted, isDark } = useLayoutTheme();
+  const [imageState, setImageState] = useState({ loaded: false, error: false });
+  const [isHovered, setIsHovered] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
 
-  // Transform API video data to component format
-  const videoMetadata = useMemo(() => transformVideoToMetadata(video), [video]);
-  
-  const config = useMemo(() => LAYOUT_CONFIGS[layout as keyof typeof LAYOUT_CONFIGS], [layout]);
-
-  // Use compact component for compact layout
-  if (layout === 'compact') {
-    return <CompactVideoCard video={videoMetadata} priority={priority} />;
+  if (!mounted) {
+    return null;
   }
 
   const handleImageLoad = () => setImageState(prev => ({ ...prev, loaded: true }));
   const handleImageError = () => setImageState(prev => ({ ...prev, error: true }));
-  const handleMouseEnter = () => setShowOverlay(true);
-  const handleMouseLeave = () => setShowOverlay(false);
 
   return (
     <motion.article
+      className={cn(
+        "relative overflow-hidden rounded-xl group cursor-pointer",
+        "border backdrop-blur-sm transition-all duration-300",
+        layout === 'grid' ? "flex flex-col" : "flex flex-row h-32",
+        className
+      )}
+      style={{
+        backgroundColor: `${cardColors.background}f8`,
+        borderColor: cardColors.border,
+        boxShadow: `0 2px 8px ${cardColors.shadow}`
+      }}
       variants={cardVariants}
       initial="hidden"
       animate="visible"
-      className={`
-        group cursor-pointer select-none outline-none
-        ${config.containerClass}
-        ${className}
-      `}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      whileHover={{ 
-        y: -2,
-        transition: { duration: 0.2, ease: 'easeOut' }
+      whileHover="hover"
+      onHoverStart={() => {
+        setIsHovered(true);
+        setShowOverlay(true);
       }}
-      whileTap={{ 
-        scale: 0.98,
-        transition: { duration: 0.1 }
+      onHoverEnd={() => {
+        setIsHovered(false);
+        setShowOverlay(false);
       }}
     >
-      {/* Card Container with Glass Effect */}
-      <div className={`
-        relative h-full overflow-hidden
-        bg-gradient-to-br from-slate-50/90 to-white/95 dark:from-slate-900/90 dark:to-slate-800/95
-        backdrop-blur-xl border border-slate-200/60 dark:border-slate-700/60
-        rounded-2xl shadow-sm
-        transition-all duration-300 ease-out
-        hover:shadow-xl hover:shadow-slate-900/10 dark:hover:shadow-black/20
-        hover:border-slate-300/80 dark:hover:border-slate-600/80
-        before:absolute before:inset-0 before:rounded-2xl
-        before:bg-gradient-to-br before:from-white/20 before:to-transparent
-        before:opacity-0 before:transition-opacity before:duration-300
-        hover:before:opacity-100
-      `}>
-        {/* Header */}
-        <VideoCardHeader
-          video={videoMetadata}
-          showOverlay={showOverlay}
-          layout={layout}
+      {/* Enhanced background effects */}
+      <div className="absolute inset-0">
+        {/* Subtle grain texture */}
+        <div 
+          className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, ${colors.foreground} 1px, transparent 0)`,
+            backgroundSize: '20px 20px'
+          }}
+        />
+        
+        {/* Hover gradient */}
+        <motion.div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(135deg, ${colors.primary}10, ${colors.accent}05)`
+          }}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
         />
 
-        {/* Main Content Area */}
-        <div className={config.direction === 'horizontal' ? 'flex gap-4 p-5' : 'block'}>
-          {/* Thumbnail */}
-          <VideoCardThumbnail
-            video={videoMetadata}
-            layout={layout}
-            priority={priority}
-            imageState={imageState}
-            onImageLoad={handleImageLoad}
-            onImageError={handleImageError}
-            showOverlay={showOverlay}
-            className={config.thumbnailClass}
+        {/* Border glow on hover */}
+        {isHovered && (
+          <motion.div
+            className="absolute inset-0 rounded-xl"
+            style={{
+              boxShadow: `inset 0 0 0 1px ${colors.primary}40, 0 0 20px ${colors.primary}20`
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
           />
-
-          {/* Content */}
-          <VideoCardContent
-            video={videoMetadata}
-            layout={layout}
-            className={config.contentClass}
-          />
-        </div>
-
-        {/* Footer */}
-        <VideoCardFooter
-          video={videoMetadata}
-          layout={layout}
-        />
-
-        {/* Subtle ambient glow effect */}
-        <div className="
-          absolute inset-0 rounded-2xl opacity-0 
-          bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5
-          group-hover:opacity-100 transition-opacity duration-500 pointer-events-none
-        " />
+        )}
       </div>
+
+      {/* Header with badges */}
+      <VideoCardHeader
+        video={video}
+        showOverlay={showOverlay}
+        layout={layout}
+      />
+
+      {/* Thumbnail */}
+      <div className={layout === 'grid' ? "aspect-video" : "w-40 flex-shrink-0"}>
+        <VideoCardThumbnail
+          video={video}
+          layout={layout}
+          priority={priority}
+          imageState={imageState}
+          onImageLoad={handleImageLoad}
+          onImageError={handleImageError}
+          showOverlay={showOverlay}
+          className="w-full h-full"
+        />
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-col flex-1 relative z-10">
+        <VideoCardContent
+          video={video}
+          layout={layout}
+          className={`flex-1 ${isDark ? 'bg-gray-900' : 'bg-gray-100'}`}
+        />
+      </div>
+
+      {/* Shine effect on hover */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `linear-gradient(45deg, transparent 30%, ${colors.primary}10 50%, transparent 70%)`
+        }}
+        animate={{
+          x: isHovered ? ['0%', '100%'] : '0%',
+          opacity: isHovered ? [0, 0.5, 0] : 0
+        }}
+        transition={{
+          duration: 0.6,
+          ease: 'easeInOut'
+        }}
+      />
     </motion.article>
   );
 });
-
-export { VideoCard };

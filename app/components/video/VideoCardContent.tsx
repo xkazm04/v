@@ -1,9 +1,12 @@
 'use client';
 
 import { VideoMetadata } from '@/app/types/video';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import { cn } from '@/app/lib/utils';
+
 interface VideoCardContentProps {
   video: VideoMetadata;
   layout: 'grid' | 'list';
@@ -18,8 +21,18 @@ const contentVariants = {
     transition: {
       delay: 0.1,
       duration: 0.4,
-      ease: 'easeOut'
+      ease: 'easeOut',
+      staggerChildren: 0.05
     }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.3 }
   }
 };
 
@@ -28,44 +41,79 @@ export const VideoCardContent = memo(function VideoCardContent({
   layout,
   className
 }: VideoCardContentProps) {
+  const { colors, mounted } = useLayoutTheme();
+  const [isHovered, setIsHovered] = useState(false);
   const isGrid = layout === 'grid';
+
+  if (!mounted) {
+    return null;
+  }
   
   return (
     <motion.div
       variants={contentVariants}
       initial="hidden"
       animate="visible"
-      className={`${className} ${isGrid ? 'p-5 pt-0' : ''}`}
+      className={cn(className, isGrid ? 'p-5 pt-0' : '')}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <Link href={`/watch?v=${video.id}`} className="block">
+      <Link href={`/watch?v=${video.id}`} className="block group">
         {/* Title */}
-        <h3 className={`
-          font-bold text-slate-900 dark:text-slate-100 leading-tight mb-3
-          line-clamp-2 transition-colors duration-200
-          group-hover:text-blue-600 dark:group-hover:text-blue-400
-          ${isGrid ? 'text-sm' : 'text-lg'}
-        `}>
+        <motion.h3 
+          variants={itemVariants}
+          className={cn(
+            "font-bold leading-tight mb-3 py-2 line-clamp-2 transition-all duration-200",
+            isGrid ? 'text-sm' : 'text-lg'
+          )}
+          style={{
+            color: isHovered ? colors.primary : colors.foreground
+          }}
+          whileHover={{ letterSpacing: '0.01em' }}
+          transition={{ duration: 0.2 }}
+        >
           {video.title}
-        </h3>
+        </motion.h3>
         
         {/* Channel Name */}
-        <p className={`
-          font-medium text-slate-600 dark:text-slate-400 mb-3
-          transition-colors duration-200
-          group-hover:text-slate-800 dark:group-hover:text-slate-200
-          ${isGrid ? 'text-sm' : 'text-base'}
-        `}>
+        <motion.p 
+          variants={itemVariants}
+          className={cn(
+            "font-medium mb-3 transition-colors duration-200",
+            isGrid ? 'text-sm' : 'text-base'
+          )}
+          style={{
+            color: isHovered ? colors.foreground : colors.mutedForeground
+          }}
+        >
           {video.channelName}
-        </p>
+        </motion.p>
       
         {/* Description for List Layout */}
         {layout === 'list' && (
-          <p className="
-            text-sm text-slate-600 dark:text-slate-400 leading-relaxed
-            line-clamp-3 mb-4
-          ">
+          <motion.p 
+            variants={itemVariants}
+            className="text-sm leading-relaxed line-clamp-3 mb-4"
+            style={{ color: colors.mutedForeground }}
+          >
             {video.description}
-          </p>
+          </motion.p>
+        )}
+
+        {/* Enhanced metadata for grid layout */}
+        {layout === 'grid' && (
+          <motion.div 
+            variants={itemVariants}
+            className="flex items-center gap-2 text-xs"
+            style={{ color: colors.mutedForeground }}
+          >
+            <span>{video.views.toLocaleString()} views</span>
+            <div 
+              className="w-1 h-1 rounded-full"
+              style={{ backgroundColor: colors.border }}
+            />
+            <span>{new Date(video.uploadDate).toLocaleDateString()}</span>
+          </motion.div>
         )}
       </Link>
     </motion.div>

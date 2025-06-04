@@ -1,6 +1,5 @@
 import { Skeleton } from "../skeleton";
 
-// Skeleton components for smooth loading states
 export function FilterLayoutSkeleton() {
   return (
     <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg p-4 mb-6">
@@ -22,9 +21,8 @@ export function FilterLayoutSkeleton() {
 
 export function FeedHeaderSkeleton() {
   return (
-    <div className="mb-6">
-      <Skeleton className="h-8 w-48 mb-2" />
-      <Skeleton className="h-4 w-96" />
+    <div className="mb-6 min-h-[400px]">
+           <></>
     </div>
   );
 }

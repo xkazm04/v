@@ -1,40 +1,156 @@
-import {  AlertTriangle, CheckCircle, XCircle } from "lucide-react";
-export const colors = {
-    light: {
-      active: `linear-gradient(135deg, 
-        rgba(255, 255, 255, 0.95) 0%,
-        rgba(248, 250, 252, 0.98) 100%
-      )`,
-      inactive: `linear-gradient(135deg, 
-        rgba(248, 250, 252, 0.6) 0%,
-        rgba(241, 245, 249, 0.7) 100%
-      )`,
-      text: 'rgb(51, 65, 85)',
-      textSecondary: 'rgb(100, 116, 139)',
-      iconBg: 'linear-gradient(135deg, rgba(239, 246, 255, 0.8), rgba(243, 232, 255, 0.6))',
-      iconBorder: 'rgba(59, 130, 246, 0.3)',
-      badgeBg: 'rgba(239, 246, 255, 0.8)',
-      badgeBorder: 'rgba(59, 130, 246, 0.3)',
-      badgeText: 'rgb(29, 78, 216)'
+import { AlertTriangle, CheckCircle, XCircle } from "lucide-react";
+
+// Define proper types for color configurations
+interface ComponentColors {
+  background: string;
+  foreground: string;
+  border: string;
+  muted: string;
+  hover?: string;
+  active?: string;
+  accent?: string;
+}
+
+interface OverlayColors {
+  backdrop: string;
+  blur: string;
+  background?: string;
+  foreground?: string;
+}
+
+interface CardColors {
+  background: string;
+  foreground: string;
+  border: string;
+  shadow: string;
+}
+
+interface ThemeColors {
+  primary: string;
+  secondary: string;
+  accent: string;
+  background: string;
+  foreground: string;
+  muted: string;
+  mutedForeground: string;
+  border: string;
+  input: string;
+  ring: string;
+  navbar: ComponentColors;
+  sidebar: ComponentColors;
+  card: CardColors;
+  overlay: OverlayColors;
+}
+
+export const colors: { light: ThemeColors; dark: ThemeColors } = {
+  light: {
+    // Existing colors
+    primary: '#3b82f6',
+    secondary: '#64748b', 
+    accent: '#f59e0b',
+    background: '#fefefe',
+    foreground: '#0f172a',
+    muted: '#f1f5f9',
+    mutedForeground: '#64748b',
+    border: '#e2e8f0',
+    input: '#ffffff',
+    ring: '#3b82f6',
+    
+    // Layout-specific colors
+    navbar: {
+      background: 'hsl(45 25% 94%)', // Aged cream paper
+      foreground: 'hsl(0 0% 8%)', // Deep black ink
+      border: 'hsl(35 8% 75%)', // Subtle newsprint lines
+      accent: 'hsl(25 85% 35%)', // Classic red ink
+      muted: 'hsl(40 12% 88%)', // Light sepia tone
     },
-    dark: {
-      active: `linear-gradient(135deg, 
-        rgba(15, 23, 42, 0.95) 0%,
-        rgba(30, 41, 59, 0.98) 100%
-      )`,
-      inactive: `linear-gradient(135deg, 
-        rgba(71, 85, 105, 0.1) 0%,
-        rgba(100, 116, 139, 0.15) 100%
-      )`,
-      text: 'rgb(203, 213, 225)',
-      textSecondary: 'rgb(148, 163, 184)',
-      iconBg: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1))',
-      iconBorder: 'rgba(59, 130, 246, 0.2)',
-      badgeBg: 'rgba(59, 130, 246, 0.1)',
-      badgeBorder: 'rgba(59, 130, 246, 0.3)',
-      badgeText: 'rgb(96, 165, 250)'
+    sidebar: {
+      background: 'hsl(42 20% 96%)', // Slightly whiter paper
+      foreground: 'hsl(0 0% 8%)',
+      border: 'hsl(35 8% 75%)',
+      hover: 'hsl(40 12% 88%)',
+      active: 'hsl(35 15% 85%)',
+      muted: 'hsl(0 0% 35%)',
+    },
+    card: {
+      background: 'hsl(42 20% 96%)',
+      foreground: 'hsl(0 0% 8%)',
+      border: 'hsl(35 8% 75%)',
+      shadow: 'rgba(0, 0, 0, 0.1)',
+    },
+    overlay: {
+      backdrop: 'rgba(0, 0, 0, 0.5)',
+      blur: 'rgba(15, 23, 42, 0.8)',
+      background: 'hsl(45 25% 94%)',
+      foreground: 'hsl(0 0% 8%)',
     }
-  };
+  },
+  dark: {
+    // Existing colors
+    primary: '#60a5fa',
+    secondary: '#94a3b8',
+    accent: '#fbbf24', 
+    background: '#0f172a',
+    foreground: '#f8fafc',
+    muted: '#1e293b',
+    mutedForeground: '#94a3b8',
+    border: '#334155',
+    input: '#1e293b',
+    ring: '#60a5fa',
+    
+    // Layout-specific colors for dark mode
+    navbar: {
+      background: 'hsl(222.2 84% 4.9%)',
+      foreground: 'hsl(210 40% 98%)',
+      border: 'hsl(217.2 32.6% 17.5%)',
+      accent: 'hsl(210 40% 98%)',
+      muted: 'hsl(215 20.2% 65.1%)',
+    },
+    sidebar: {
+      background: 'hsl(222.2 84% 4.9%)',
+      foreground: 'hsl(210 40% 98%)',
+      border: 'hsl(217.2 32.6% 17.5%)',
+      hover: 'hsl(217.2 32.6% 17.5%)',
+      active: 'hsl(215 20.2% 25.1%)',
+      muted: 'hsl(215 20.2% 65.1%)',
+    },
+    card: {
+      background: 'hsl(222.2 84% 4.9%)',
+      foreground: 'hsl(210 40% 98%)',
+      border: 'hsl(217.2 32.6% 17.5%)',
+      shadow: 'rgba(0, 0, 0, 0.3)',
+    },
+    overlay: {
+      backdrop: 'rgba(0, 0, 0, 0.7)',
+      blur: 'rgba(15, 23, 42, 0.9)',
+      background: 'hsl(222.2 84% 4.9%)',
+      foreground: 'hsl(210 40% 98%)',
+    }
+  }
+};
+
+// Updated utility functions with proper typing
+export const getThemeColors = (theme: 'light' | 'dark'): ThemeColors => colors[theme];
+
+export const getLayoutColors = (
+  theme: 'light' | 'dark', 
+  component: 'navbar' | 'sidebar' | 'card' | 'overlay'
+): ComponentColors | CardColors | OverlayColors => {
+  return colors[theme][component];
+};
+
+// Enhanced getter functions for specific component types
+export const getNavbarColors = (theme: 'light' | 'dark'): ComponentColors => 
+  colors[theme].navbar;
+
+export const getSidebarColors = (theme: 'light' | 'dark'): ComponentColors => 
+  colors[theme].sidebar;
+
+export const getCardColors = (theme: 'light' | 'dark'): CardColors => 
+  colors[theme].card;
+
+export const getOverlayColors = (theme: 'light' | 'dark'): OverlayColors => 
+  colors[theme].overlay;
 
 export const statusColorConfig = {
     light: {

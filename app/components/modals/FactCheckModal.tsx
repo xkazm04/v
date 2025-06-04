@@ -4,6 +4,8 @@ import { memo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NewsArticle, ResourceReference } from '@/app/types/article';
 import { X, ExternalLink, Globe, Building, GraduationCap, Heart } from 'lucide-react';
+import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import { cn } from '@/app/lib/utils';
 
 interface FactCheckModalProps {
   isOpen: boolean;
@@ -59,17 +61,6 @@ const overlayVariants = {
   exit: { opacity: 0 }
 };
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'TRUE': return 'text-green-600 bg-green-50 border-green-200';
-    case 'FALSE': return 'text-red-600 bg-red-50 border-red-200';
-    case 'MISLEADING': return 'text-orange-600 bg-orange-50 border-orange-200';
-    case 'PARTIALLY_TRUE': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-    case 'UNVERIFIABLE': return 'text-gray-600 bg-gray-50 border-gray-200';
-    default: return 'text-gray-600 bg-gray-50 border-gray-200';
-  }
-};
-
 const getCategoryIcon = (category: string) => {
   switch (category) {
     case 'mainstream': return Globe;
@@ -80,20 +71,13 @@ const getCategoryIcon = (category: string) => {
   }
 };
 
-const getCredibilityColor = (credibility: string) => {
-  switch (credibility) {
-    case 'high': return 'text-green-600 bg-green-100';
-    case 'medium': return 'text-yellow-600 bg-yellow-100';
-    case 'low': return 'text-red-600 bg-red-100';
-    default: return 'text-gray-600 bg-gray-100';
-  }
-};
-
 export const FactCheckModal = memo(function FactCheckModal({
   isOpen,
   onClose,
   article
 }: FactCheckModalProps) {
+  const { colors, cardColors, overlayColors, mounted, isDark } = useLayoutTheme();
+
   const handleBackdropClick = useCallback((e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -106,6 +90,48 @@ export const FactCheckModal = memo(function FactCheckModal({
     }
   }, [onClose]);
 
+  // Theme-aware status colors
+  const getStatusColor = (status: string) => {
+    const baseColors = {
+      TRUE: isDark ? '#22c55e' : '#16a34a',
+      FALSE: isDark ? '#ef4444' : '#dc2626',
+      MISLEADING: isDark ? '#f59e0b' : '#d97706',
+      PARTIALLY_TRUE: isDark ? '#3b82f6' : '#2563eb',
+      UNVERIFIABLE: isDark ? '#8b5cf6' : '#7c3aed'
+    };
+
+    const backgrounds = {
+      TRUE: isDark ? 'rgba(34, 197, 94, 0.1)' : 'rgba(220, 252, 231, 0.8)',
+      FALSE: isDark ? 'rgba(239, 68, 68, 0.1)' : 'rgba(254, 226, 226, 0.8)',
+      MISLEADING: isDark ? 'rgba(245, 158, 11, 0.1)' : 'rgba(254, 243, 199, 0.8)',
+      PARTIALLY_TRUE: isDark ? 'rgba(59, 130, 246, 0.1)' : 'rgba(219, 234, 254, 0.8)',
+      UNVERIFIABLE: isDark ? 'rgba(139, 92, 246, 0.1)' : 'rgba(237, 233, 254, 0.8)'
+    };
+
+    const borders = {
+      TRUE: isDark ? 'rgba(34, 197, 94, 0.3)' : 'rgba(34, 197, 94, 0.2)',
+      FALSE: isDark ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.2)',
+      MISLEADING: isDark ? 'rgba(245, 158, 11, 0.3)' : 'rgba(245, 158, 11, 0.2)',
+      PARTIALLY_TRUE: isDark ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.2)',
+      UNVERIFIABLE: isDark ? 'rgba(139, 92, 246, 0.3)' : 'rgba(139, 92, 246, 0.2)'
+    };
+
+    return {
+      color: baseColors[status as keyof typeof baseColors] || baseColors.UNVERIFIABLE,
+      background: backgrounds[status as keyof typeof backgrounds] || backgrounds.UNVERIFIABLE,
+      border: borders[status as keyof typeof borders] || borders.UNVERIFIABLE
+    };
+  };
+
+  const getCredibilityColor = (credibility: string) => {
+    const colors = {
+      high: isDark ? { color: '#22c55e', bg: 'rgba(34, 197, 94, 0.15)' } : { color: '#16a34a', bg: 'rgba(34, 197, 94, 0.1)' },
+      medium: isDark ? { color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.15)' } : { color: '#d97706', bg: 'rgba(245, 158, 11, 0.1)' },
+      low: isDark ? { color: '#ef4444', bg: 'rgba(239, 68, 68, 0.15)' } : { color: '#dc2626', bg: 'rgba(239, 68, 68, 0.1)' }
+    };
+    return colors[credibility as keyof typeof colors] || colors.medium;
+  };
+
   const ResourceList = ({ resources, title }: { 
     resources?: ResourceReference[], 
     title: string 
@@ -114,46 +140,83 @@ export const FactCheckModal = memo(function FactCheckModal({
 
     return (
       <div className="space-y-3">
-        <h4 className="font-semibold text-slate-700 dark:text-slate-300">{title}</h4>
+        <h4 
+          className="font-semibold"
+          style={{ color: colors.foreground }}
+        >
+          {title}
+        </h4>
         <div className="space-y-2">
           {resources.map((resource, index) => {
             const IconComponent = getCategoryIcon(resource.category);
+            const credibilityColors = getCredibilityColor(resource.credibility);
+            
             return (
-              <div
+              <motion.div
                 key={index}
-                className="flex items-start space-x-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg"
+                className="flex items-start space-x-3 p-3 rounded-lg transition-all duration-200"
+                style={{
+                  backgroundColor: colors.muted,
+                  border: `1px solid ${colors.border}`
+                }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                whileHover={{ 
+                  scale: 1.01,
+                  boxShadow: `0 4px 12px ${cardColors.shadow}`
+                }}
               >
-                <IconComponent className="w-4 h-4 mt-0.5 text-slate-500" />
+                <IconComponent 
+                  className="w-4 h-4 mt-0.5" 
+                  style={{ color: colors.mutedForeground }}
+                />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-2 mb-1">
                     <a
                       href={resource.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm font-medium text-blue-600 hover:text-blue-800 flex items-center space-x-1"
+                      className="text-sm font-medium flex items-center space-x-1 transition-colors duration-200 hover:underline"
+                      style={{ color: colors.primary }}
                     >
                       <span className="truncate">{resource.title}</span>
                       <ExternalLink className="w-3 h-3 flex-shrink-0" />
                     </a>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className="text-xs text-slate-500 uppercase">
+                    <span 
+                      className="text-xs uppercase"
+                      style={{ color: colors.mutedForeground }}
+                    >
                       {resource.category}
                     </span>
-                    <span className="w-1 h-1 rounded-full bg-slate-300" />
-                    <span className="text-xs text-slate-500 uppercase">
+                    <span 
+                      className="w-1 h-1 rounded-full"
+                      style={{ backgroundColor: colors.border }}
+                    />
+                    <span 
+                      className="text-xs uppercase"
+                      style={{ color: colors.mutedForeground }}
+                    >
                       {resource.country}
                     </span>
-                    <span className="w-1 h-1 rounded-full bg-slate-300" />
-                    <span className={`
-                      text-xs px-2 py-0.5 rounded-full font-medium
-                      ${getCredibilityColor(resource.credibility)}
-                    `}>
+                    <span 
+                      className="w-1 h-1 rounded-full"
+                      style={{ backgroundColor: colors.border }}
+                    />
+                    <span 
+                      className="text-xs px-2 py-0.5 rounded-full font-medium"
+                      style={{
+                        color: credibilityColors.color,
+                        backgroundColor: credibilityColors.bg
+                      }}
+                    >
                       {resource.credibility}
                     </span>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -161,11 +224,17 @@ export const FactCheckModal = memo(function FactCheckModal({
     );
   };
 
+  if (!mounted) {
+    return null;
+  }
+
+  const statusColors = getStatusColor(article.factCheck.evaluation);
+
   return (
     <AnimatePresence>
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-scroll"
           onKeyDown={handleKeyDown}
           tabIndex={-1}
         >
@@ -176,7 +245,8 @@ export const FactCheckModal = memo(function FactCheckModal({
             animate="visible"
             exit="exit"
             onClick={handleBackdropClick}
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 backdrop-blur-sm"
+            style={{ backgroundColor: overlayColors.backdrop }}
           />
 
           {/* Modal */}
@@ -185,31 +255,54 @@ export const FactCheckModal = memo(function FactCheckModal({
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="
-              relative w-full max-w-4xl max-h-[90vh] overflow-hidden
-              bg-white dark:bg-slate-900 rounded-xl shadow-2xl
-              border border-slate-200 dark:border-slate-700
-            "
+            className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-xl shadow-2xl"
+            style={{
+              backgroundColor: cardColors.background,
+              border: `1px solid ${cardColors.border}`,
+              boxShadow: `0 25px 50px -12px ${cardColors.shadow}`
+            }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-700">
+            <div 
+              className="flex items-center justify-between p-6 border-b"
+              style={{ borderColor: cardColors.border }}
+            >
               <div className="flex items-center space-x-3">
-                <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
+                <h2 
+                  className="text-xl font-bold"
+                  style={{ color: cardColors.foreground }}
+                >
                   Fact Check Details
                 </h2>
-                <div className={`
-                  px-3 py-1 rounded-full text-sm font-semibold border
-                  ${getStatusColor(article.factCheck.evaluation)}
-                `}>
+                <motion.div 
+                  className="px-3 py-1 rounded-full text-sm font-semibold border"
+                  style={{
+                    color: statusColors.color,
+                    backgroundColor: statusColors.background,
+                    borderColor: statusColors.border
+                  }}
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
+                >
                   {article.factCheck.evaluation}
-                </div>
+                </motion.div>
               </div>
-              <button
+              <motion.button
                 onClick={onClose}
-                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                className="p-2 rounded-lg transition-all duration-200"
+                style={{
+                  color: colors.mutedForeground,
+                  backgroundColor: 'transparent'
+                }}
+                whileHover={{ 
+                  scale: 1.1,
+                  backgroundColor: colors.muted,
+                  color: colors.foreground
+                }}
+                whileTap={{ scale: 0.95 }}
               >
                 <X className="w-5 h-5" />
-              </button>
+              </motion.button>
             </div>
 
             {/* Content */}
@@ -217,99 +310,205 @@ export const FactCheckModal = memo(function FactCheckModal({
               <div className="p-6 space-y-6">
                 
                 {/* Statement */}
-                <div>
-                  <h3 className="font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  <h3 
+                    className="font-semibold mb-2"
+                    style={{ color: colors.foreground }}
+                  >
                     Statement
                   </h3>
-                  <blockquote className="text-lg text-slate-900 dark:text-slate-100 leading-relaxed p-4 bg-slate-50 dark:bg-slate-800 rounded-lg border-l-4 border-blue-500">
+                  <blockquote 
+                    className="text-lg leading-relaxed p-4 rounded-lg border-l-4"
+                    style={{
+                      color: cardColors.foreground,
+                      backgroundColor: colors.muted,
+                      borderLeftColor: colors.primary
+                    }}
+                  >
                     "{article.headline}"
                   </blockquote>
-                </div>
+                </motion.div>
 
                 {/* Source and Date */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <motion.div 
+                  className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
                   <div>
-                    <h4 className="font-semibold text-slate-700 dark:text-slate-300 mb-1">Source</h4>
-                    <p className="text-slate-600 dark:text-slate-400">{article.source.name}</p>
+                    <h4 
+                      className="font-semibold mb-1"
+                      style={{ color: colors.foreground }}
+                    >
+                      Source
+                    </h4>
+                    <p style={{ color: colors.mutedForeground }}>
+                      {article.source.name}
+                    </p>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-slate-700 dark:text-slate-300 mb-1">Date</h4>
-                    <p className="text-slate-600 dark:text-slate-400">
+                    <h4 
+                      className="font-semibold mb-1"
+                      style={{ color: colors.foreground }}
+                    >
+                      Date
+                    </h4>
+                    <p style={{ color: colors.mutedForeground }}>
                       {formatSafeDate(article.publishedAt)}
                     </p>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Verdict */}
-                <div>
-                  <h3 className="font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <h3 
+                    className="font-semibold mb-2"
+                    style={{ color: colors.foreground }}
+                  >
                     Verdict
                   </h3>
-                  <p className="text-slate-900 dark:text-slate-100">
+                  <p style={{ color: cardColors.foreground }}>
                     {article.factCheck.verdict}
                   </p>
                   {article.factCheck.evaluation === 'FALSE' && (
-                    <div className="mt-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-                      <p className="text-red-800 dark:text-red-200 font-medium">
+                    <motion.div 
+                      className="mt-3 p-3 rounded-lg border"
+                      style={{
+                        backgroundColor: statusColors.background,
+                        borderColor: statusColors.border
+                      }}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.4 }}
+                    >
+                      <p 
+                        className="font-medium"
+                        style={{ color: statusColors.color }}
+                      >
                         This statement has been fact-checked and found to be false.
                       </p>
-                    </div>
+                    </motion.div>
                   )}
-                </div>
+                </motion.div>
 
                 {/* Expert Opinions */}
                 {article.factCheck.experts && (
-                  <div>
-                    <h3 className="font-semibold text-slate-700 dark:text-slate-300 mb-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    <h3 
+                      className="font-semibold mb-4"
+                      style={{ color: colors.foreground }}
+                    >
                       Expert Analysis
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {article.factCheck.experts.critic && (
-                        <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                          <h4 className="font-medium text-red-600 dark:text-red-400 mb-2">
+                        <motion.div 
+                          className="p-4 rounded-lg"
+                          style={{ backgroundColor: colors.muted }}
+                          whileHover={{ scale: 1.02 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <h4 
+                            className="font-medium mb-2"
+                            style={{ color: isDark ? '#ef4444' : '#dc2626' }}
+                          >
                             🔍 Critical Analysis
                           </h4>
-                          <p className="text-sm text-slate-700 dark:text-slate-300">
+                          <p 
+                            className="text-sm"
+                            style={{ color: colors.foreground }}
+                          >
                             {article.factCheck.experts.critic}
                           </p>
-                        </div>
+                        </motion.div>
                       )}
                       {article.factCheck.experts.nerd && (
-                        <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                          <h4 className="font-medium text-blue-600 dark:text-blue-400 mb-2">
+                        <motion.div 
+                          className="p-4 rounded-lg"
+                          style={{ backgroundColor: colors.muted }}
+                          whileHover={{ scale: 1.02 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <h4 
+                            className="font-medium mb-2"
+                            style={{ color: isDark ? '#3b82f6' : '#2563eb' }}
+                          >
                             📊 Statistical Context
                           </h4>
-                          <p className="text-sm text-slate-700 dark:text-slate-300">
+                          <p 
+                            className="text-sm"
+                            style={{ color: colors.foreground }}
+                          >
                             {article.factCheck.experts.nerd}
                           </p>
-                        </div>
+                        </motion.div>
                       )}
                       {article.factCheck.experts.devil && (
-                        <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                          <h4 className="font-medium text-purple-600 dark:text-purple-400 mb-2">
+                        <motion.div 
+                          className="p-4 rounded-lg"
+                          style={{ backgroundColor: colors.muted }}
+                          whileHover={{ scale: 1.02 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <h4 
+                            className="font-medium mb-2"
+                            style={{ color: isDark ? '#8b5cf6' : '#7c3aed' }}
+                          >
                             😈 Devil's Advocate
                           </h4>
-                          <p className="text-sm text-slate-700 dark:text-slate-300">
+                          <p 
+                            className="text-sm"
+                            style={{ color: colors.foreground }}
+                          >
                             {article.factCheck.experts.devil}
                           </p>
-                        </div>
+                        </motion.div>
                       )}
                       {article.factCheck.experts.psychic && (
-                        <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                          <h4 className="font-medium text-orange-600 dark:text-orange-400 mb-2">
+                        <motion.div 
+                          className="p-4 rounded-lg"
+                          style={{ backgroundColor: colors.muted }}
+                          whileHover={{ scale: 1.02 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <h4 
+                            className="font-medium mb-2"
+                            style={{ color: isDark ? '#f59e0b' : '#d97706' }}
+                          >
                             🧠 Psychological Analysis
                           </h4>
-                          <p className="text-sm text-slate-700 dark:text-slate-300">
+                          <p 
+                            className="text-sm"
+                            style={{ color: colors.foreground }}
+                          >
                             {article.factCheck.experts.psychic}
                           </p>
-                        </div>
+                        </motion.div>
                       )}
                     </div>
-                  </div>
+                  </motion.div>
                 )}
 
                 {/* Resource Analysis */}
-                <div className="space-y-6">
+                <motion.div 
+                  className="space-y-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
                   <ResourceList 
                     resources={article.factCheck.resources_agreed?.references}
                     title={`Supporting Sources (${article.factCheck.resources_agreed?.total || '0%'})`}
@@ -318,7 +517,7 @@ export const FactCheckModal = memo(function FactCheckModal({
                     resources={article.factCheck.resources_disagreed?.references}
                     title={`Contradicting Sources (${article.factCheck.resources_disagreed?.total || '0%'})`}
                   />
-                </div>
+                </motion.div>
               </div>
             </div>
           </motion.div>

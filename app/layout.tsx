@@ -5,7 +5,6 @@ import { ThemeProvider } from '@/app/providers/theme-provider';
 import { QueryProvider } from '@/app/providers/query-provider';
 import { AuthProvider } from '@/app/hooks/useAuth';
 import { Navbar } from '@/app/sections/navbar/navbar';
-import { BackgroundOverlay } from '@/app/components/layout/BackgroundOverlay';
 import { Toaster } from '@/app/components/ui/sonner';
 import { PageTransition } from '@/app/components/layout/PageTransition';
 
@@ -65,13 +64,8 @@ export default function RootLayout({
             attribute="class"
             defaultTheme="system"
             enableSystem
-            themes={['light', 'dark']}
-            disableTransitionOnChange={false}
           >
             <AuthProvider>
-              {/* Background overlay for color subtones */}
-              <BackgroundOverlay />
-              
               <div className="relative flex min-h-screen flex-col z-10">
                 <Navbar />
                 <main className="flex-1">
