@@ -2,16 +2,14 @@
 
 import { memo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { VideoMetadata } from '@/app/types/video';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
-import { VideoCardHeader } from '@/app/components/video/VideoCardHeader';
 import { VideoCardThumbnail } from '@/app/components/video/VideoCardThumbnail';
-import { VideoCardFooter } from '@/app/components/video/VideoCardFooter';
 import { VideoCardContent } from '@/app/components/video/VideoCardContent';
+import { Video } from '@/app/types/video_api';
 
 interface VideoCardProps {
-  video: VideoMetadata;
+  video: Video;
   layout?: 'grid' | 'list';
   priority?: boolean;
   className?: string;
@@ -45,16 +43,12 @@ export const VideoCard = memo(function VideoCard({
   className
 }: VideoCardProps) {
   const { cardColors, colors, mounted, isDark } = useLayoutTheme();
-  const [imageState, setImageState] = useState({ loaded: false, error: false });
   const [isHovered, setIsHovered] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
 
   if (!mounted) {
     return null;
   }
-
-  const handleImageLoad = () => setImageState(prev => ({ ...prev, loaded: true }));
-  const handleImageError = () => setImageState(prev => ({ ...prev, error: true }));
 
   return (
     <motion.article
@@ -117,22 +111,11 @@ export const VideoCard = memo(function VideoCard({
         )}
       </div>
 
-      {/* Header with badges */}
-      <VideoCardHeader
-        video={video}
-        showOverlay={showOverlay}
-        layout={layout}
-      />
 
       {/* Thumbnail */}
       <div className={layout === 'grid' ? "aspect-video" : "w-40 flex-shrink-0"}>
         <VideoCardThumbnail
           video={video}
-          layout={layout}
-          priority={priority}
-          imageState={imageState}
-          onImageLoad={handleImageLoad}
-          onImageError={handleImageError}
           showOverlay={showOverlay}
           className="w-full h-full"
         />

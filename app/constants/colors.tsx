@@ -40,6 +40,16 @@ interface ThemeColors {
   sidebar: ComponentColors;
   card: CardColors;
   overlay: OverlayColors;
+  active?: string;
+  inactive?: string;
+  iconBg?: string;
+  iconBorder?: string;
+  text?: string;
+  textMuted?: string;
+  badge?: string;
+  badgeText?: string;
+  badgeBorder?: string;
+  badgeBg?: string;
 }
 
 export const colors: { light: ThemeColors; dark: ThemeColors } = {

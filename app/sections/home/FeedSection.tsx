@@ -2,7 +2,6 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { VideoGrid } from '../feed/VideoGrid';
-import { NewsGrid } from '../news/NewsGrid';
 import { AdvancedFilters } from '@/app/components/filters/AdvancedFilters';
 import { CategoryFilter } from '../feed/CategoryFilter';
 import { Button } from '@/app/components/ui/button';
@@ -163,10 +162,13 @@ export function FeedSection({ className }: FeedSectionProps) {
 
         {/* Category Filter - Top Level */}
         <CategoryFilter
+          className="w-full"
+          //@ts-expect-error Ignore
           selectedCategory={filters.category}
           onCategoryChange={handleCategoryChange}
           showCounts={true}
-          className="w-full"
+          showAnimation={true}
+          pendingSelection={null}
         />
       </motion.div>
 
@@ -234,11 +236,7 @@ export function FeedSection({ className }: FeedSectionProps) {
                   <h2 className="text-xl font-semibold">Latest News</h2>
                   <Button variant="ghost" size="sm">View All</Button>
                 </div>
-                <NewsGrid 
-                  filters={newsFilters}
-                  layout="grid"
-                  showFilters={false}
-                />
+                News
               </div>
             </TabsContent>
 
@@ -252,11 +250,7 @@ export function FeedSection({ className }: FeedSectionProps) {
             </TabsContent>
 
             <TabsContent value="news" className="mt-6">
-              <NewsGrid 
-                filters={newsFilters}
-                layout="grid"
-                showFilters={false}
-              />
+              News
             </TabsContent>
           </Tabs>
         </motion.div>

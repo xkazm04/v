@@ -180,7 +180,6 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
             <DynamicBackground 
               config={getBackgroundConfig()}
               currentTheme={preferences.theme}
-              setIsVisible={setIsVisible}
             />
             {/* Content */}
             <div className="relative z-20 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm">

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { newsService } from '@/app/lib/services/news-service';
+// import { fetchNewsStats, fetchAvailableCategories } from '@/app/lib/services/news-service';
 
 export async function GET(request: NextRequest) {
   try {
@@ -35,19 +36,29 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Optional: Add other HTTP methods if needed
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    // Handle POST requests if needed
-    // Example: Create news, update news, etc.
-    
-    return NextResponse.json({ message: 'POST endpoint not implemented yet' }, { status: 501 });
-  } catch (error) {
-    console.error('News API POST error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' }, 
-      { status: 500 }
-    );
-  }
-}
+
+// export async function GET(request: NextRequest) {
+//   try {
+//     const stats = await fetchNewsStats();
+//     return NextResponse.json(stats);
+//   } catch (error) {
+//     console.error('News Stats API error:', error);
+//     return NextResponse.json(
+//       { error: 'Failed to fetch news statistics' }, 
+//       { status: 500 }
+//     );
+//   }
+// }
+
+// export async function GET(request: NextRequest) {
+//   try {
+//     const categories = await fetchAvailableCategories();
+//     return NextResponse.json(categories);
+//   } catch (error) {
+//     console.error('Categories API error:', error);
+//     return NextResponse.json(
+//       { error: 'Failed to fetch categories' }, 
+//       { status: 500 }
+//     );
+//   }
+// }

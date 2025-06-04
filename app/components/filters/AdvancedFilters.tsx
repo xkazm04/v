@@ -4,12 +4,11 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { Badge } from '@/app/components/ui/badge';
-import { Separator } from '@/app/components/ui/separator';
 import { Filter, X, RotateCcw } from 'lucide-react';
 import { cn } from '@/app/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CategoryFilter } from '@/app/sections/feed/CategoryFilter';
 import { CountryFilter, COUNTRIES } from '@/app/components/filters/CountryFilter';
+import { Divider } from '../ui/divider';
 
 const STATEMENT_CATEGORIES = [
   { value: 'all', label: 'All Categories' },
@@ -210,16 +209,6 @@ export function AdvancedFilters({
               </CardHeader>
               
               <CardContent className="space-y-6">
-                {/* Category Filter */}
-                <div>
-                  <h4 className="text-sm font-medium mb-3">Category</h4>
-                  <CategoryFilter
-                    selectedCategory={filters.category}
-                    onCategoryChange={(category) => updateFilter('category', category)}
-                  />
-                </div>
-
-                <Separator />
 
                 {/* Country Filter */}
                 <div>
@@ -229,7 +218,7 @@ export function AdvancedFilters({
                   />
                 </div>
 
-                <Separator />
+                 <Divider />
 
                 {/* Status Filter */}
                 <div>
@@ -254,7 +243,7 @@ export function AdvancedFilters({
                   </div>
                 </div>
 
-                <Separator />
+                 <Divider />
 
                 {/* Source Filter */}
                 {showForNewsAndVideos && (
@@ -276,7 +265,7 @@ export function AdvancedFilters({
                       </div>
                     </div>
 
-                    <Separator />
+                    <Divider />
                   </>
                 )}
 

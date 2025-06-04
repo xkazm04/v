@@ -1,45 +1,26 @@
 'use client';
 
-import { VideoMetadata } from '@/app/types/video';
 import { memo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { formatDuration } from '@/app/utils/format';
-import VideoFactOverlay from '@/app/sections/feed/VideoFactOverlay';
-import { VideoThumbnailPlaceholder } from './VideoThumbnailPlaceholder';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
-import { badgeVariants, playButtonVariants, shimmerVariants } from '../animations/variants/cardVariants';
+import { playButtonVariants,  } from '../animations/variants/cardVariants';
+import { Video } from '@/app/types/video_api';
 
 interface VideoCardThumbnailProps {
-  video: VideoMetadata;
-  layout: 'grid' | 'list';
-  priority: boolean;
-  imageState: { loaded: boolean; error: boolean };
-  onImageLoad: () => void;
-  onImageError: () => void;
+  video: Video
   showOverlay: boolean;
   className?: string;
 }
 
-
-
 export const VideoCardThumbnail = memo(function VideoCardThumbnail({
   video,
-  layout,
-  priority,
-  imageState,
-  onImageLoad,
-  onImageError,
   showOverlay,
   className
 }: VideoCardThumbnailProps) {
   const { colors, mounted } = useLayoutTheme();
   
-  // Check if this is a placeholder URL
-  const isPlaceholder = video.thumbnailUrl.includes('/api/placeholder/');
-
   if (!mounted) {
     return null;
   }
@@ -53,93 +34,7 @@ export const VideoCardThumbnail = memo(function VideoCardThumbnail({
         className="relative w-full h-full transition-all duration-300"
         style={{ backgroundColor: colors.muted }}
       >
-        {/* Use placeholder component if no real thumbnail */}
-        {isPlaceholder ? (
-          <VideoThumbnailPlaceholder 
-            title={video.title}
-            source={video.category}
-            className="w-full h-full"
-          />
-        ) : (
-          <>
-            {/* Real Image */}
-            {!imageState.error && (
-              <Image
-                src={video.thumbnailUrl}
-                alt={video.title}
-                fill
-                className={cn(
-                  "object-cover transition-all duration-500 ease-out",
-                  imageState.loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105',
-                  "group-hover:scale-110"
-                )}
-                sizes={
-                  layout === 'grid' 
-                    ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    : "320px"
-                }
-                priority={priority}
-                onLoad={onImageLoad}
-                onError={onImageError}
-              />
-            )}
-            
-            {/* Loading Shimmer */}
-            {!imageState.loaded && !imageState.error && (
-              <div 
-                className="absolute inset-0 overflow-hidden"
-                style={{ backgroundColor: colors.muted }}
-              >
-                <motion.div
-                  variants={shimmerVariants}
-                  initial="initial"
-                  animate="animate"
-                  className="absolute inset-0"
-                  style={{
-                    background: `linear-gradient(90deg, transparent, ${colors.background}40, transparent)`
-                  }}
-                />
-              </div>
-            )}
 
-            {/* Error State - fallback to placeholder */}
-            {imageState.error && (
-              <VideoThumbnailPlaceholder 
-                title={video.title}
-                source={video.category}
-                className="w-full h-full"
-              />
-            )}
-          </>
-        )}
-
-        {/* Fact Check Overlay */}
-        <AnimatePresence>
-          {showOverlay && (
-            <VideoFactOverlay 
-              factCheck={video.factCheck}
-              overlayType="full"
-            />
-          )}
-        </AnimatePresence>
-
-        {/* Duration Badge */}
-        <motion.div 
-          variants={badgeVariants}
-          initial="hidden"
-          animate="visible"
-          className="absolute bottom-3 rounded-xl right-3 z-10 px-2.5 py-1.5 text-xs font-semibold border shadow-lg backdrop-blur-sm"
-          style={{
-            backgroundColor: `${colors.background}e6`, // 90% opacity
-            color: colors.foreground,
-            borderColor: colors.border
-          }}
-        >
-          {formatDuration(video.duration)}
-        </motion.div>
-
-        {/* Play Button Overlay - only show if not using placeholder */}
-        {!isPlaceholder && (
           <motion.div
             className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             style={{ backgroundColor: `${colors.background}20` }}
@@ -162,7 +57,6 @@ export const VideoCardThumbnail = memo(function VideoCardThumbnail({
               </svg>
             </motion.div>
           </motion.div>
-        )}
 
         {/* Gradient Overlay for Better Text Readability */}
         <div 

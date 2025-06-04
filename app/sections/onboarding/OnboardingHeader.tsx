@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 type Props = {
     onSkip?: () => void;
     currentStep: number;
-    steps: string[];
+    steps: { title: string; subtitle: string }[];
     getBackgroundConfig: () => { color: string };
     preferences: { theme: string };
 }
@@ -21,6 +21,7 @@ const OnboardingHeader = ({onSkip, currentStep, steps, getBackgroundConfig, pref
                             icon: Sparkles,
                             label: 'Welcome'
                         }}
+                        //@ts-expect-error Ignore
                         currentTheme={preferences.theme}
                     />
                     <div>

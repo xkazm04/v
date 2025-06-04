@@ -112,11 +112,7 @@ export function AuthButtons({
           style={{
             backgroundColor: variant === 'default' ? colors.primary : 'transparent',
             color: variant === 'default' ? colors.background : colors.foreground,
-            borderColor: colors.border,
-            ':hover': {
-              backgroundColor: variant === 'default' ? colors.accent : colors.muted,
-              borderColor: colors.primary
-            }
+            borderColor: colors.border
           }}
         >
           {authLoading === 'signout' && (

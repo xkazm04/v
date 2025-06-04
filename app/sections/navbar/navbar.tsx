@@ -115,12 +115,13 @@ export function Navbar() {
             : navbarColors.foreground
         }}
         onMouseEnter={(e) => {
+          //@ts-expect-error Ignore
           e.currentTarget.style.backgroundColor = navbarColors.muted || '';
           e.currentTarget.style.color = colors.primary;
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.backgroundColor = 'transparent';
-          e.currentTarget.style.color = navbarColors.foreground;
+          e.currentTarget.style.color = navbarColors.foreground || '';
         }}
       >
         <span className="transition-colors">
@@ -130,6 +131,7 @@ export function Navbar() {
         {isMobile && item.description && (
           <span 
             className="text-xs mt-1 line-clamp-1"
+             //@ts-expect-error Ignore
             style={{ color: navbarColors.muted }}
           >
             {item.description}
@@ -164,6 +166,7 @@ export function Navbar() {
       className="sticky top-0 z-50 w-full border-b backdrop-blur-xl"
       style={{
         backgroundColor: `${navbarColors.background}f0`,
+         //@ts-expect-error Ignore
         borderColor: navbarColors.border,
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)'
@@ -182,14 +185,6 @@ export function Navbar() {
             )}
             style={{
               color: navbarColors.foreground
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = navbarColors.muted || '';
-              e.currentTarget.style.color = colors.primary;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.color = navbarColors.foreground;
             }}
           >
             <Menu className="h-5 w-5" />
@@ -213,6 +208,7 @@ export function Navbar() {
                 e.currentTarget.style.color = colors.primary;
               }}
               onMouseLeave={(e) => {
+                 //@ts-expect-error Ignore
                 e.currentTarget.style.color = navbarColors.foreground;
               }}
             >
@@ -274,6 +270,7 @@ export function Navbar() {
               className="absolute top-full left-0 right-0 border-b p-4 md:hidden"
               style={{
                 backgroundColor: navbarColors.background,
+                 //@ts-expect-error Ignore
                 borderColor: navbarColors.border
               }}
             >

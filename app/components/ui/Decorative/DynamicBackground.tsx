@@ -9,7 +9,7 @@ type Props = {
         stampOpacity: string;
     };
     currentTheme: 'light' | 'dark';
-    setIsVisible: (visible: boolean) => void;
+    setIsVisible?: (visible: boolean) => void;
 }
 
 const DynamicBackground = ({ config, currentTheme, setIsVisible }: Props) => {
@@ -24,7 +24,7 @@ const DynamicBackground = ({ config, currentTheme, setIsVisible }: Props) => {
         setParticlePositions(particles);
 
         // Trigger entrance animation
-        const timer = setTimeout(() => setIsVisible(true), 100);
+        const timer = setTimeout(() => setIsVisible?.(true), 100);
         return () => clearTimeout(timer);
     }, []);
     return <div className="absolute inset-0">

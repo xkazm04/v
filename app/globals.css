@@ -127,14 +127,6 @@
     --false: 0 84% 70%;
     --false-light: 0 84% 15%;
   }
-  
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
 
   html {
     color-scheme: light dark;
@@ -352,26 +344,6 @@
   .horizontal-scroll::-webkit-scrollbar-thumb:hover {
     background: var(--scrollbar-thumb-hover);
     height: 8px;
-  }
-
-  /* ===============================================
-     LEGACY SCROLLBAR STYLES (for compatibility)
-     =============================================== */
-  
-  .custom-scrollbar::-webkit-scrollbar {
-    @apply w-2;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-background;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/30 rounded-full;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/50;
   }
 
   /* ===============================================

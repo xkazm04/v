@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";  
 import { cn } from "@/app/lib/utils";
 import { Category } from "./CategoryFilter";
-import { EnhancedBadge } from "@/app/components/ui/enhanced-badge";
 import { colors } from "@/app/constants/colors";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -211,16 +210,15 @@ const CategoryItem = ({
                             whileHover={{ scale: 1.05 }}
                             transition={{ duration: 0.2 }}
                         >
-                            <EnhancedBadge 
-                                variant="outline"
+                            <div
+                                style={getBadgeStyles()}
                                 className={cn(
-                                    "text-xs h-6 px-2 font-medium border transition-all duration-300",
+                                    "inline-flex items-center justify-center text-xs h-6 px-2 font-medium border rounded-md transition-all duration-300",
                                     isSelected && "shadow-sm"
                                 )}
-                                style={getBadgeStyles()}
                             >
                                 {category.count > 999 ? '999+' : category.count}
-                            </EnhancedBadge>
+                            </div>
                         </motion.div>
                     )}
                 

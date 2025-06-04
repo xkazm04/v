@@ -4,9 +4,8 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { Textarea } from '../../components/ui/textarea';
 import { Label } from '../../components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Search, Loader2, Calendar } from 'lucide-react';
 import type { ResearchRequest } from './types';
 
@@ -56,7 +55,7 @@ export function ResearchForm({ onSubmit, isLoading }: ResearchFormProps) {
               <Label htmlFor="statement" className="text-base font-medium">
                 Statement to Fact-Check *
               </Label>
-              <Textarea
+              <textarea
                 id="statement"
                 placeholder="Enter the statement you want to fact-check..."
                 value={formData.statement}
@@ -71,7 +70,7 @@ export function ResearchForm({ onSubmit, isLoading }: ResearchFormProps) {
                 <Label htmlFor="source" className="text-base font-medium">
                   Source
                 </Label>
-                <Textarea
+                <textarea
                   id="source"
                   placeholder="Who said this or where did it come from?"
                   value={formData.source}
@@ -83,7 +82,7 @@ export function ResearchForm({ onSubmit, isLoading }: ResearchFormProps) {
                 <Label htmlFor="context" className="text-base font-medium">
                   Context
                 </Label>
-                <Textarea
+                <textarea
                   id="context"
                   placeholder="When and where was this said?"
                   value={formData.context}

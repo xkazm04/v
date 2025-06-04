@@ -3,7 +3,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { VideoMetadata } from '@/app/types/video';
-import { MOCK_VIDEOS } from '@/app/constants/videos';
 
 interface VideoState {
   videos: VideoMetadata[];
@@ -24,7 +23,7 @@ interface VideoState {
 export const useVideoStore = create<VideoState>()(
   persist(
     (set, get) => ({
-      videos: MOCK_VIDEOS,
+      videos: [],
       currentVideo: null,
       recentlyWatched: [],
       likedVideos: [],

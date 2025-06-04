@@ -6,7 +6,6 @@ import { updateUserProfile } from '@/app/lib/database';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
-import { Switch } from '@/app/components/ui/switch';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { Loader2, Save, User, LogOut, Shield } from 'lucide-react';
 import { toast } from 'sonner';
@@ -136,24 +135,6 @@ export function ProfileSettings({ className = '' }: ProfileSettingsProps) {
             </div>
           </div>
 
-          {/* Preferences */}
-          <div className="space-y-4">
-            <h4 className="text-sm font-medium">Preferences</h4>
-            
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="notifications">Email Notifications</Label>
-                <p className="text-xs text-muted-foreground">
-                  Receive notifications about new content and updates
-                </p>
-              </div>
-              <Switch
-                id="notifications"
-                checked={formData.notifications}
-                onCheckedChange={(checked) => handleInputChange('notifications', checked)}
-              />
-            </div>
-          </div>
 
           {/* Actions */}
           <div className="flex justify-end pt-4">

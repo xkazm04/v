@@ -1,14 +1,14 @@
 'use client';
 
-import { VideoMetadata } from '@/app/types/video';
 import { memo, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
+import { Video } from '@/app/types/video_api';
 
 interface VideoCardContentProps {
-  video: VideoMetadata;
+  video: Video;
   layout: 'grid' | 'list';
   className?: string;
 }
@@ -86,19 +86,9 @@ export const VideoCardContent = memo(function VideoCardContent({
             color: isHovered ? colors.foreground : colors.mutedForeground
           }}
         >
-          {video.channelName}
+          {video.source}
         </motion.p>
       
-        {/* Description for List Layout */}
-        {layout === 'list' && (
-          <motion.p 
-            variants={itemVariants}
-            className="text-sm leading-relaxed line-clamp-3 mb-4"
-            style={{ color: colors.mutedForeground }}
-          >
-            {video.description}
-          </motion.p>
-        )}
 
         {/* Enhanced metadata for grid layout */}
         {layout === 'grid' && (
@@ -107,12 +97,12 @@ export const VideoCardContent = memo(function VideoCardContent({
             className="flex items-center gap-2 text-xs"
             style={{ color: colors.mutedForeground }}
           >
-            <span>{video.views.toLocaleString()} views</span>
+            {/* <span>{video.views.toLocaleString()} views</span> */}
             <div 
               className="w-1 h-1 rounded-full"
               style={{ backgroundColor: colors.border }}
             />
-            <span>{new Date(video.uploadDate).toLocaleDateString()}</span>
+            <span>{new Date(video.created_at).toLocaleDateString()}</span>
           </motion.div>
         )}
       </Link>

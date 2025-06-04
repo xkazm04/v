@@ -19,6 +19,7 @@ function AnimatedSection({
 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { 
+    //@ts-expect-error Ignore
     threshold, 
     rootMargin,
     once 

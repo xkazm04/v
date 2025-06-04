@@ -7,7 +7,6 @@ import { useVideos, useInfiniteVideos } from '@/app/hooks/useVideos';
 import { Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { VideoFilters } from '@/app/types/video_api';
-import { VideoMetadata } from '@/app/types/video';
 import { Video } from '@/app/types/video_api';
 
 interface VideoGridProps {
@@ -17,7 +16,7 @@ interface VideoGridProps {
   height?: number;
   filters?: VideoFilters;
   infinite?: boolean;
-  videos?: VideoMetadata[] | Video[]; // Fix type to be union of both
+  videos?: Video[];
 }
 
 const VideoGrid = memo(function VideoGrid({ 
@@ -54,7 +53,7 @@ const VideoGrid = memo(function VideoGrid({
   } = useInfiniteVideos(shouldFetchFromAPI ? filters : {});
 
   // Determine which data to use - prioritize prop videos
-  const videos: (VideoMetadata | Video)[] = propVideos || (infinite 
+  const videos: (Video)[] = propVideos || (infinite 
     ? (infiniteData?.pages.flat() as Video[]) || []
     : (regularData as Video[]) || []);
   

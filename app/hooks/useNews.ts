@@ -1,5 +1,5 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { NewsFilters } from '../api/news/route';
+import { NewsFilters } from '../lib/services/news-service';
 
 // Update to use local API routes instead of external API
 const LOCAL_API_BASE = '/api';

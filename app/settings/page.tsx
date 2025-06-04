@@ -6,7 +6,6 @@ import {
   TabsContent
 } from '@/app/components/ui/tabs';
 import SetApearance from '../sections/settings/SetApearance';
-import SetNotifications from '../sections/settings/SetNotifications';
 import { ProfileSettings } from '@/app/components/profile/ProfileSettings';
 
 export default function SettingsPage() {  
@@ -26,7 +25,6 @@ export default function SettingsPage() {
             <TabsList className="grid grid-cols-3 md:grid-cols-4 lg:w-[600px]">
               <TabsTrigger value="profile">Profile</TabsTrigger>
               <TabsTrigger value="appearance">Appearance</TabsTrigger>
-              <TabsTrigger value="notifications">Notifications</TabsTrigger>
             </TabsList>
             
             <TabsContent value="profile">
@@ -34,7 +32,6 @@ export default function SettingsPage() {
             </TabsContent>
             
             <SetApearance />
-            <SetNotifications />
           </Tabs>
         </div>
       </div>

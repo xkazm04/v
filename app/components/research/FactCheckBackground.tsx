@@ -2,7 +2,7 @@
 
 import { colors } from "@/app/constants/colors";
 import { motion } from "framer-motion";
-import { Shield, Activity } from "lucide-react";
+import { Shield } from "lucide-react";
 import { useTheme } from "next-themes"; // If you're using next-themes
 
 interface FactCheckBackgroundProps {

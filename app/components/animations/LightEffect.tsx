@@ -1,7 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const LightEffect = ({ children }) => {
+type Props = {
+  children: React.ReactNode;
+}
+
+const LightEffect = ({ children }: Props) => {
   const flickerVariants = {
     animate: {
       opacity: [1, 0.2, 0.8, 0.1, 0.1, 0.1, 0.1, 0.1, 1, 1, 1, 0.2, 0.8, 1, 1, 1, 0.1, 0.8, 1],

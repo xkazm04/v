@@ -62,7 +62,6 @@ export function ThemeProvider({
 
   return (
     <NextThemeProvider
-      attribute={attribute}
       defaultTheme={defaultTheme}
       enableSystem={enableSystem}
     >
