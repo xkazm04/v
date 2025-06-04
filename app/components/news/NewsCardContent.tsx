@@ -10,6 +10,22 @@ type Props = {
   };
 }
 
+// Safe date formatting function
+const formatSafeDate = (dateString: string): string => {
+  if (!dateString) return 'No date';
+  
+  try {
+    const date = new Date(dateString);
+    // Check if the date is valid
+    if (isNaN(date.getTime())) {
+      return 'Invalid date';
+    }
+    return date.toLocaleDateString();
+  } catch (error) {
+    return 'Invalid date';
+  }
+};
+
 const NewsCardContent = ({isCompact, article}: Props) => {
   return <>
     <div className="relative z-10 flex flex-col h-full justify-between p-4">
@@ -36,7 +52,7 @@ const NewsCardContent = ({isCompact, article}: Props) => {
           </span>
           <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600" />
           <span className="text-xs text-slate-500 dark:text-slate-400">
-            {new Date(article.publishedAt).toLocaleDateString()}
+            {formatSafeDate(article.publishedAt)}
           </span>
         </div>
       </div>

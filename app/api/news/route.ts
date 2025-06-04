@@ -1,4 +1,6 @@
-import { NewsArticle, ResearchResult } from '@/app/types/article';
+import { NewsArticle, ResearchResult, convertResearchToNews } from '@/app/types/article';
+import { NextRequest, NextResponse } from 'next/server';
+import { ResearchApiService } from '@/lib/services/research-api';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -84,7 +86,7 @@ class NewsAPI {
     sourceFilter?: string,
     limitCount: number = 50,
     offsetCount: number = 0
-  ) {
+  ): Promise<ResearchResult[]> {
     const params = new URLSearchParams();
     
     if (searchText) params.append('search_text', searchText);
@@ -95,7 +97,7 @@ class NewsAPI {
     params.append('limit_count', String(limitCount));
     params.append('offset_count', String(offsetCount));
 
-    return this.request(`/news/search/advanced?${params.toString()}`);
+    return this.request<ResearchResult[]>(`/research/search/advanced?${params.toString()}`);
   }
 
   async getNewsStats(): Promise<NewsStats> {
@@ -173,51 +175,69 @@ class NewsAPI {
     return results.map(this.convertToNewsArticle);
   }
 
-  private convertToNewsArticle(research: ResearchResult): NewsArticle {
-    const statusToScore = {
-      'TRUE': 0.9,
-      'PARTIALLY_TRUE': 0.7,
-      'MISLEADING': 0.4,
-      'FALSE': 0.1,
-      'UNVERIFIABLE': 0.5
-    };
-
-    const statusToConfidence = {
-      'TRUE': 95,
-      'PARTIALLY_TRUE': 75,
-      'MISLEADING': 65,
-      'FALSE': 90,
-      'UNVERIFIABLE': 30
-    };
-
-    return {
-      id: research.id,
-      headline: research.statement.length > 100 
-        ? research.statement.substring(0, 97) + '...'
-        : research.statement,
-      source: {
-        name: research.source || 'Unknown Source',
-        logoUrl: undefined
-      },
-      category: 'General',
-      datePublished: research.statement_date || research.processed_at,
-      truthScore: statusToScore[research.status],
-      isBreaking: research.status === 'FALSE' || research.status === 'MISLEADING',
-      publishedAt: research.processed_at,
-      factCheck: {
-        evaluation: research.status,
-        confidence: statusToConfidence[research.status],
-        verdict: research.verdict,
-        experts: research.experts,
-        resources_agreed: research.resources_agreed,
-        resources_disagreed: research.resources_disagreed
-      },
-      citation: research.source || '',
-      summary: research.verdict,
-      statementDate: research.statement_date,
-      researchId: research.id
-    };
+  // Use the existing utility function instead of duplicate code
+  convertToNewsArticle(research: ResearchResult): NewsArticle {
+    return convertResearchToNews(research);
   }
 }
 
 export const newsAPI = new NewsAPI();
+
+// Add GET handler for both search and general news fetching
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    
+    // Check if this is a search request or general news request
+    const searchText = searchParams.get('search_text');
+    const statusFilter = searchParams.get('status_filter');
+    const countryFilter = searchParams.get('country_filter'); 
+    const categoryFilter = searchParams.get('category_filter');
+    const sourceFilter = searchParams.get('source_filter');
+    const limitCount = parseInt(searchParams.get('limit_count') || '50');
+    const offsetCount = parseInt(searchParams.get('offset_count') || '0');
+
+    // Check for general news parameters
+    const limit = parseInt(searchParams.get('limit') || '20');
+    const onlyFactChecked = searchParams.get('only_fact_checked') === 'true';
+    const breaking = searchParams.get('breaking') === 'true';
+
+    // If it's a search request (has search parameters)
+    if (searchText || statusFilter || countryFilter || categoryFilter || sourceFilter) {
+      const filters = {
+        searchText: searchText || undefined,
+        statusFilter: statusFilter || undefined,
+        countryFilter: countryFilter || undefined,
+        categoryFilter: categoryFilter || undefined,
+        sourceFilter: sourceFilter || undefined,
+        limitCount,
+        offsetCount
+      };
+
+      const result = await ResearchApiService.searchResearch(filters);
+
+      if (result.error) {
+        return NextResponse.json({ error: result.error }, { status: 500 });
+      }
+
+      // Convert raw research results to NewsArticle format using the utility function
+      const articles = (result.data || []).map((research: ResearchResult) => 
+        convertResearchToNews(research)
+      );
+
+      return NextResponse.json(articles);
+    }
+
+    // Otherwise, it's a general news request
+    const articles = await newsAPI.getRecentNews({
+      limit,
+      onlyFactChecked,
+      breaking
+    });
+
+    return NextResponse.json(articles);
+  } catch (error) {
+    console.error('News API error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}

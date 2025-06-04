@@ -1,13 +1,16 @@
 'use client';
+
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/app/components/ui/button';
 import { ThemeToggle } from '@/app/components/theme/theme-toggle';
+import { SearchBar } from '@/app/components/search/SearchBar';
 import { cn } from '@/app/lib/utils';
 import { Menu, Upload, Bell, User, LogOut, Settings } from 'lucide-react';
 import { useNavigation } from '@/app/hooks/useNavigation';
 import { useAuth } from '@/app/hooks/useAuth';
+import { usePathname, useRouter } from 'next/navigation';
 import NavMobileOverlay from './NavMobileOverlay';
 import { navAnim } from '@/app/components/animations/variants/navVariants';
 import { NAVIGATION_CONFIG } from '@/app/config/navItems';
@@ -34,16 +37,18 @@ import { AuthButtons } from '@/app/components/auth/AuthButtons';
 import { Loader2 } from 'lucide-react';
 
 export function Navbar() {
-  const {
-    isLoading,
-    isMobileMenuOpen,
-    pathname,
-    handleNavigation,
+  const { 
+    isLoading, 
+    isSearchOpen, 
+    toggleSearch, 
+    isMobileMenuOpen, 
     toggleMobileMenu,
-    isActivePath
+    handleNavigation 
   } = useNavigation();
-
-  const { user, profile, loading: authLoading, signOut } = useAuth();
+  
+  const { user, profile, signOut, loading: authLoading } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
   const [logoutLoading, setLogoutLoading] = useState(false);
 
   useEffect(() => {
@@ -52,6 +57,13 @@ export function Navbar() {
     }
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
+  const isActivePath = (href: string) => {
+    if (href === '/') {
+      return pathname === '/';
+    }
+    return pathname.startsWith(href);
+  };
 
   const handleLogout = async () => {
     try {
@@ -64,13 +76,21 @@ export function Navbar() {
     }
   };
 
+  const handleSearchResultSelect = (result: any, type: 'news' | 'video') => {
+    if (type === 'news') {
+      router.push(`/research/${result.id}`);
+    } else if (type === 'video') {
+      router.push(`/watch?v=${result.id}`);
+    }
+  };
+
   // Action button configurations - only show for authenticated users
   const actionButtons = user ? [
     {
       key: 'upload',
       icon: Upload,
       label: 'Upload',
-      onClick: () => console.log('Upload clicked'),
+      onClick: () => router.push('/upload'),
       showOnDesktop: true,
       showOnMobile: false,
       badge: null
@@ -130,24 +150,6 @@ export function Navbar() {
           />
         )}
       </Link>
-    );
-  };
-
-  const UserProfileDisplay = () => {
-    if (!user || !profile) return null;
-
-    return (
-      <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-secondary/50">
-        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-          <User className="h-4 w-4 text-primary" />
-        </div>
-        <div className="hidden sm:block">
-          <p className="text-sm font-medium text-foreground">
-            {profile.full_name || 'User'}
-          </p>
-          <p className="text-xs text-muted-foreground">{profile.email}</p>
-        </div>
-      </div>
     );
   };
 
@@ -264,6 +266,14 @@ export function Navbar() {
             {NAVIGATION_CONFIG.mainNav.map(item => renderNavLink(item))}
           </nav>
 
+          {/* Search Bar */}
+          <div className="flex-1 max-w-md mx-8">
+            <SearchBar 
+              onResultSelect={handleSearchResultSelect}
+              placeholder="Search news and videos..."
+            />
+          </div>
+
           <div className="flex items-center space-x-2">
             {/* Action Buttons */}
             <div className="flex items-center space-x-1">
@@ -283,6 +293,25 @@ export function Navbar() {
           <ThemeToggle />
           <UserProfileDropdown />
         </div>
+
+        {/* Mobile Menu Search */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial="closed"
+              animate="open"
+              exit="closed"
+              variants={navAnim.search.mobile}
+              className="absolute top-full left-0 right-0 bg-background border-b border-border p-4 md:hidden"
+            >
+              <SearchBar 
+                onResultSelect={handleSearchResultSelect}
+                placeholder="Search news and videos..."
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
       </div>
 
       {/* Mobile Menu Overlay */}

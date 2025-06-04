@@ -32,27 +32,33 @@ export const NewsCardHeader = memo(function NewsCardHeader({
   const isRecent = Date.now() - new Date(article.publishedAt).getTime() < 3600000; // 1 hour
   
   return (
-    <motion.div
-      variants={headerVariants}
-      initial="hidden"
-      animate="visible"
-      className="absolute top-0 -right-5 z-20 flex justify-between items-start"
-    >
-
-      {/* Right side - Status Badges */}
-      <div className="flex gap-2">
-        {/* Breaking News Badge */}
-        {isBreaking && (
+    <>
+      {/* Fake Badge - positioned outside card boundaries */}
+      {isBreaking && (
+        <motion.div
+          variants={headerVariants}
+          initial="hidden"
+          animate="visible"
+          className="absolute top-0 -right-5 z-20"
+        >
           <motion.div
             initial={{ scale: 0, rotate: -12 }}
             animate={{ scale: 1, rotate: 0 }}
-            className="">
+            className=""
+          >
             <FakeStamp width={100} height={30} color={'#d11919'}/>
           </motion.div>
-        )}
-        
-        {/* Recent Badge */}
-        {isRecent && !isBreaking && (
+        </motion.div>
+      )}
+      
+      {/* NEW Badge - positioned within card boundaries */}
+      {isRecent && !isBreaking && (
+        <motion.div
+          variants={headerVariants}
+          initial="hidden"
+          animate="visible"
+          className="absolute top-2 right-2 z-20"
+        >
           <div className="
             px-2 py-1 rounded-full text-xs font-semibold
             bg-gradient-to-r from-blue-500/90 to-indigo-500/90
@@ -60,8 +66,8 @@ export const NewsCardHeader = memo(function NewsCardHeader({
           ">
             NEW
           </div>
-        )}
-      </div>
-    </motion.div>
+        </motion.div>
+      )}
+    </>
   );
 });

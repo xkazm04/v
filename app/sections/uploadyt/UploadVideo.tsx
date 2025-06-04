@@ -76,7 +76,7 @@ const UploadVideo: React.FC = () => {
       setStatementResults([]);
       setFinalResult(null);
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/yt/process-video`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}yt/process-video`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

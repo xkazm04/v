@@ -11,6 +11,22 @@ interface FactCheckModalProps {
   article: NewsArticle;
 }
 
+// Safe date formatting function
+const formatSafeDate = (dateString: string): string => {
+  if (!dateString) return 'No date';
+  
+  try {
+    const date = new Date(dateString);
+    // Check if the date is valid
+    if (isNaN(date.getTime())) {
+      return 'Invalid date';
+    }
+    return date.toLocaleDateString();
+  } catch (error) {
+    return 'Invalid date';
+  }
+};
+
 const modalVariants = {
   hidden: { 
     opacity: 0,
@@ -219,7 +235,7 @@ export const FactCheckModal = memo(function FactCheckModal({
                   <div>
                     <h4 className="font-semibold text-slate-700 dark:text-slate-300 mb-1">Date</h4>
                     <p className="text-slate-600 dark:text-slate-400">
-                      {new Date(article.publishedAt).toLocaleDateString()}
+                      {formatSafeDate(article.publishedAt)}
                     </p>
                   </div>
                 </div>

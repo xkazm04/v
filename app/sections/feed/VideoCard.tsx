@@ -10,10 +10,11 @@ import { VideoCardFooter } from '@/app/components/video/VideoCardFooter';
 
 import { transformVideoToMetadata } from '@/app/utils/videoTransform';
 import { Video } from '@/app/types/video_api';
+import { VideoMetadata } from '@/app/types/video';
 import { VideoCardHeader } from '@/app/components/video/VideoCardHeader';
 
 interface VideoCardProps {
-  video: Video
+  video: Video | VideoMetadata;
   layout?: 'grid' | 'list' | 'compact';
   priority?: boolean;
   className?: string;
