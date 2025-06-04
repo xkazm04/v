@@ -5,7 +5,6 @@ import { ThemeProvider } from '@/app/providers/theme-provider';
 import { QueryProvider } from '@/app/providers/query-provider';
 import { AuthProvider } from '@/app/hooks/useAuth';
 import { Navbar } from '@/app/sections/navbar/navbar';
-import { Footer } from '@/app/components/layout/footer';
 import { BackgroundOverlay } from '@/app/components/layout/BackgroundOverlay';
 import { Toaster } from '@/app/components/ui/sonner';
 import { PageTransition } from '@/app/components/layout/PageTransition';
@@ -30,7 +29,7 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'FactChecker',
+  title: 'V',
   description: 'Dont trust, verify.',
 };
 
@@ -80,7 +79,6 @@ export default function RootLayout({
                     {children}
                   </PageTransition>
                 </main>
-                <Footer />
               </div>
               <Toaster />
             </AuthProvider>

@@ -254,8 +254,8 @@ export function Navbar() {
             onClick={handleNavigation}
             className="flex items-center space-x-2 group"
           >
-            <div className="font-bold text-xl text-foreground group-hover:text-primary transition-colors">
-              FactChecker
+            <div className="font-bold pl-2 text-xl text-foreground group-hover:text-primary transition-colors">
+              Verify
             </div>
           </Link>
         </div>

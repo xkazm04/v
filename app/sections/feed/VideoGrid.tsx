@@ -86,44 +86,7 @@ const VideoGrid = memo(function VideoGrid({
     return columns;
   }, [columns, layout, mounted, screenSize.width]);
 
-  const getGridCols = () => {
-    switch (actualColumns) {
-      case 1:
-        return 'grid-cols-1';
-      case 2:
-        return 'grid-cols-1 sm:grid-cols-2';
-      case 3:
-        return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3';
-      case 4:
-        return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4';
-      default:
-        return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3';
-    }
-  };
 
-  // Loading skeleton
-  const LoadingSkeleton = () => (
-    <div className={`grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6`}>
-      {Array.from({ length: 6 }).map((_, index) => (
-        <motion.div 
-          key={index}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.1 }}
-          className="animate-pulse"
-        >
-          <div className="aspect-video bg-slate-200 dark:bg-slate-800 rounded-lg mb-3" />
-          <div className="space-y-2 p-4">
-            <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-3/4" />
-            <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded w-1/2" />
-            <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded w-2/3" />
-          </div>
-        </motion.div>
-      ))}
-    </div>
-  );
-
-  // Error state
   const ErrorState = () => (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -167,11 +130,6 @@ const VideoGrid = memo(function VideoGrid({
       </p>
     </motion.div>
   );
-
-  // Show loading during initial mount
-  if (!mounted || isLoading) {
-    return <LoadingSkeleton />;
-  }
 
   // Show error state
   if (error) {

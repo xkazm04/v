@@ -2,11 +2,10 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { useTheme } from "next-themes"; // If you're using next-themes
+import { useTheme } from "next-themes"; 
 import FeedHeaderContent from "./FeedHeaderContent";
 import DynamicBackground from "@/app/components/ui/Decorative/DynamicBackground";
 import { statusColorConfig } from "@/app/constants/colors";
-
 interface StatementOfDayProps {
     className?: string;
 }
@@ -24,7 +23,7 @@ const mockStatement = {
 };
 
 const FeedHeader = ({ className = "" }: StatementOfDayProps) => {
-    const { theme } = useTheme(); 
+    const { theme } = useTheme();
     const [isVisible, setIsVisible] = useState(false);
     const currentTheme = theme === 'light' ? 'light' : 'dark';
     const config = statusColorConfig[currentTheme][mockStatement.status];
@@ -63,7 +62,7 @@ const FeedHeader = ({ className = "" }: StatementOfDayProps) => {
             variants={containerVariants}
             initial="hidden"
             animate={isVisible ? "visible" : "hidden"}
-            className={`relative overflow-hidden rounded-3xl min-h-[400px] ${className}`}
+            className={`relative overflow-hidden rounded-3xl max-w-[2000px] min-h-[300px] ${className}`}
         >
             {/* Dynamic Background with Animated Pattern */}
             <DynamicBackground

@@ -45,11 +45,10 @@ export const VideoCardHeader = memo(function VideoCardHeader({
             className="
               absolute top-4 right-4 z-30
               px-2 py-1 rounded-full text-xs font-bold
-              bg-gradient-to-r from-orange-500 to-red-500
               text-white shadow-lg
             "
           >
-            🔥 Trending
+            🔥
           </motion.div>
         )}
       </AnimatePresence>

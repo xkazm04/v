@@ -147,16 +147,6 @@ const FeaturedNews = ({
             </p>
           )}
         </div>
-        <motion.button
-          onClick={() => refreshNews()}
-          disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-          {loading ? 'Refreshing...' : 'Refresh'}
-        </motion.button>
       </div>
 
       {/* News Grid */}

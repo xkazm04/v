@@ -4,7 +4,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { VideoGrid } from '../feed/VideoGrid';
 import { NewsGrid } from '../news/NewsGrid';
 import { AdvancedFilters } from '@/app/components/filters/AdvancedFilters';
-import { CategoryFilter } from './CategoryFilter';
+import { CategoryFilter } from '../feed/CategoryFilter';
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/tabs';

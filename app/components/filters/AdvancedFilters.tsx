@@ -8,8 +8,18 @@ import { Separator } from '@/app/components/ui/separator';
 import { Filter, X, RotateCcw } from 'lucide-react';
 import { cn } from '@/app/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CategoryFilter, STATEMENT_CATEGORIES } from '@/app/sections/home/CategoryFilter';
+import { CategoryFilter } from '@/app/sections/feed/CategoryFilter';
 import { CountryFilter, COUNTRIES } from '@/app/components/filters/CountryFilter';
+
+const STATEMENT_CATEGORIES = [
+  { value: 'all', label: 'All Categories' },
+  { value: 'politics', label: 'Politics' },
+  { value: 'health', label: 'Health' },
+  { value: 'environment', label: 'Environment' },
+  { value: 'economy', label: 'Economy' },
+  { value: 'technology', label: 'Technology' },
+  { value: 'social', label: 'Social Issues' },
+]
 
 interface FilterState {
   category: string;
