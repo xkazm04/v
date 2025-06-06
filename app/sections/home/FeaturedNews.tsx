@@ -1,37 +1,88 @@
 'use client';
 
+import { useState, useCallback, useMemo } from 'react';
 import { useNews } from '@/app/hooks/useNews';
 import { NewsGrid } from '../feed/NewsGrid';
-import { motion } from 'framer-motion';
-import { RefreshCw, AlertCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { RefreshCw, AlertCircle, Filter, ChevronUp, ChevronDown } from 'lucide-react';
+import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import { Button } from '@/app/components/ui/button';
 
 interface FeaturedNewsProps {
   limit?: number;
   showBreaking?: boolean;
   autoRefresh?: boolean;
-  selectedCategory?: string;
+  showCategoryFilter?: boolean;
+  allowMultipleCategories?: boolean;
 }
 
 const FeaturedNews = ({ 
   limit = 20, 
   showBreaking = false,
   autoRefresh = true,
-  selectedCategory = 'all'
+  showCategoryFilter = true,
+  allowMultipleCategories = false
 }: FeaturedNewsProps) => {
+  const { colors, isDark } = useLayoutTheme();
+  
+  // State management for categories and UI
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [isFilterCollapsed, setIsFilterCollapsed] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Prepare filter for useNews hook
+  const newsFilters = useMemo(() => {
+    const filters: any = {
+      limit,
+      breaking: showBreaking,
+      onlyFactChecked: true,
+      autoRefresh,
+    };
+
+    // Add category filter based on selection
+    if (selectedCategories.length > 0) {
+      // Use the first selected category for now
+      filters.categoryFilter = selectedCategories[0];
+    }
+
+    return filters;
+  }, [selectedCategories, limit, showBreaking, autoRefresh]);
+
+  // Fetch news with dynamic filters
   const { 
     articles, 
     loading, 
     error, 
-    refreshNews, 
-    hasMore
-  } = useNews({
-    limit,
-    breaking: showBreaking,
-    onlyFactChecked: true,
-    autoRefresh,
-    categoryFilter: selectedCategory === 'all' ? undefined : selectedCategory,
-  });
-  console.log('FeaturedNews articles:', articles);
+    refreshNews
+  } = useNews(newsFilters);
+
+
+  // Manual refresh handler
+  const handleRefresh = useCallback(() => {
+    refreshNews();
+    setRefreshKey(prev => prev + 1);
+  }, [refreshNews]);
+
+  // Get category display name
+  const getCategoryDisplayName = useCallback(() => {
+    if (selectedCategories.length === 0) return 'Media articles';
+    if (selectedCategories.length === 1) {
+      const categoryLabels: Record<string, string> = {
+        politics: 'Politics',
+        economy: 'Economy', 
+        environment: 'Environment',
+        military: 'Military',
+        healthcare: 'Healthcare',
+        education: 'Education',
+        technology: 'Technology',
+        social: 'Social',
+        international: 'International',
+        other: 'Other'
+      };
+      return `${categoryLabels[selectedCategories[0]] || selectedCategories[0]} Fact Checks`;
+    }
+    return `${selectedCategories.length} Categories Selected`;
+  }, [selectedCategories]);
 
   // Loading skeleton
   const LoadingSkeleton = () => (
@@ -44,11 +95,31 @@ const FeaturedNews = ({
           transition={{ delay: index * 0.1 }}
           className="animate-pulse"
         >
-          <div className="bg-slate-200 dark:bg-slate-800 rounded-lg h-48 mb-4" />
+          <div 
+            className="rounded-lg h-48 mb-4" 
+            style={{ 
+              background: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(226, 232, 240, 0.5)' 
+            }}
+          />
           <div className="space-y-2">
-            <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-3/4" />
-            <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded w-1/2" />
-            <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded w-2/3" />
+            <div 
+              className="h-4 rounded w-3/4" 
+              style={{ 
+                background: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(226, 232, 240, 0.5)' 
+              }}
+            />
+            <div 
+              className="h-3 rounded w-1/2" 
+              style={{ 
+                background: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(226, 232, 240, 0.5)' 
+              }}
+            />
+            <div 
+              className="h-3 rounded w-2/3" 
+              style={{ 
+                background: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(226, 232, 240, 0.5)' 
+              }}
+            />
           </div>
         </motion.div>
       ))}
@@ -63,15 +134,25 @@ const FeaturedNews = ({
       className="text-center py-12"
     >
       <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-      <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
+      <h3 
+        className="text-lg font-semibold mb-2"
+        style={{ color: colors.foreground }}
+      >
         Failed to load news
       </h3>
-      <p className="text-slate-600 dark:text-slate-400 mb-4">
+      <p 
+        className="mb-4"
+        style={{ color: colors.mutedForeground }}
+      >
         {error || 'Something went wrong while fetching news.'}
       </p>
       <motion.button
-        onClick={() => refreshNews()}
-        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        onClick={handleRefresh}
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-colors"
+        style={{
+          background: colors.primary,
+          color: 'white'
+        }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
@@ -88,89 +169,185 @@ const FeaturedNews = ({
       animate={{ opacity: 1, y: 0 }}
       className="text-center py-12"
     >
-      <div className="w-12 h-12 bg-slate-200 dark:bg-slate-800 rounded-lg mx-auto mb-4 flex items-center justify-center">
-        <div className="w-6 h-6 bg-slate-400 dark:bg-slate-600 rounded" />
+      <div 
+        className="w-12 h-12 rounded-lg mx-auto mb-4 flex items-center justify-center"
+        style={{ background: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(226, 232, 240, 0.5)' }}
+      >
+        <div 
+          className="w-6 h-6 rounded" 
+          style={{ background: isDark ? 'rgba(148, 163, 184, 0.6)' : 'rgba(148, 163, 184, 0.4)' }}
+        />
       </div>
-      <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
-        {selectedCategory === 'all' ? 'No fact-checks available' : `No ${selectedCategory} fact-checks available`}
+      <h3 
+        className="text-lg font-semibold mb-2"
+        style={{ color: colors.foreground }}
+      >
+        {selectedCategories.length === 0 
+          ? 'No fact-checks available' 
+          : `No ${getCategoryDisplayName().toLowerCase()} available`
+        }
       </h3>
-      <p className="text-slate-600 dark:text-slate-400">
-        {selectedCategory === 'all' 
+      <p style={{ color: colors.mutedForeground }}>
+        {selectedCategories.length === 0 
           ? 'Check back later for the latest fact-checks.'
-          : `Try selecting a different category or check back later for ${selectedCategory} fact-checks.`
+          : 'Try selecting different categories or check back later.'
         }
       </p>
     </motion.div>
   );
 
-  if (loading && articles.length === 0) {
-    return <LoadingSkeleton />;
-  }
-
-  if (error) {
-    return <ErrorState />;
-  }
-
-  if (articles.length === 0) {
-    return <EmptyState />;
-  }
-
-  // Get category display name
-  const getCategoryDisplayName = () => {
-    if (selectedCategory === 'all') return 'Recent Fact Checks';
-    const categoryLabels: Record<string, string> = {
-      politics: 'Politics',
-      economy: 'Economy', 
-      environment: 'Environment',
-      military: 'Military',
-      healthcare: 'Healthcare',
-      education: 'Education',
-      technology: 'Technology',
-      social: 'Social',
-      international: 'International',
-      other: 'Other'
-    };
-    return `${categoryLabels[selectedCategory] || selectedCategory} Fact Checks`;
-  };
-
   return (
     <div className="space-y-6">
+      {/* Category Filter - Only show if successfully loaded */}
+      {showCategoryFilter && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {/* Filter Toggle for Mobile */}
+          <div className="md:hidden mb-4">
+            <Button
+              variant="outline"
+              onClick={() => setIsFilterCollapsed(!isFilterCollapsed)}
+              className="w-full justify-between"
+              style={{
+                background: isDark ? 'rgba(30, 41, 59, 0.5)' : 'rgba(248, 250, 252, 0.8)',
+                borderColor: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(226, 232, 240, 0.6)',
+                color: colors.foreground
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <Filter className="h-4 w-4" />
+                <span>Categories</span>
+                {selectedCategories.length > 0 && (
+                  <span 
+                    className="text-xs px-2 py-1 rounded-full"
+                    style={{
+                      background: colors.primary + '20',
+                      color: colors.primary
+                    }}
+                  >
+                    {selectedCategories.length}
+                  </span>
+                )}
+              </div>
+              {isFilterCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+            </Button>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Rest of the component remains the same... */}
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+          <motion.h2 
+            className="text-2xl font-bold"
+            style={{ color: colors.foreground }}
+            key={selectedCategories.join('-')} // Re-animate on category change
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
             {showBreaking ? 'Breaking Fact Checks' : getCategoryDisplayName()}
-          </h2>
-          {selectedCategory !== 'all' && (
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-              Showing fact-checks from the {selectedCategory} category
-            </p>
+          </motion.h2>
+          {selectedCategories.length > 0 && (
+            <motion.p 
+              className="text-sm mt-1"
+              style={{ color: colors.mutedForeground }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              {selectedCategories.length === 1 
+                ? `Showing fact-checks from the ${selectedCategories[0]} category`
+                : `Showing fact-checks from ${selectedCategories.length} selected categories`
+              }
+            </motion.p>
           )}
         </div>
+
+        {/* Refresh Button */}
+        <motion.button
+          onClick={handleRefresh}
+          disabled={loading}
+          className="p-2 rounded-lg transition-all duration-200"
+          style={{
+            background: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(148, 163, 184, 0.2)',
+            border: `1px solid ${isDark ? 'rgba(71, 85, 105, 0.4)' : 'rgba(148, 163, 184, 0.3)'}`,
+            color: colors.mutedForeground
+          }}
+          whileHover={{
+            scale: 1.05,
+            background: isDark ? 'rgba(71, 85, 105, 0.4)' : 'rgba(148, 163, 184, 0.3)'
+          }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+        </motion.button>
       </div>
 
-      {/* News Grid */}
-      <NewsGrid 
-        articles={articles}
-        onArticleRead={(articleId) => {
-          console.log('Article read:', articleId);
-          // Could implement read tracking here
-        }}
-      />
+      {/* Content */}
+      <AnimatePresence mode="wait">
+        {loading && articles.length === 0 ? (
+          <motion.div
+            key="loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <LoadingSkeleton />
+          </motion.div>
+        ) : error ? (
+          <motion.div
+            key="error"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <ErrorState />
+          </motion.div>
+        ) : articles.length === 0 ? (
+          <motion.div
+            key="empty"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <EmptyState />
+          </motion.div>
+        ) : (
+          <motion.div
+            key={`articles-${refreshKey}-${selectedCategories.join('-')}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
+          >
+            <NewsGrid 
+              articles={articles}
+              onArticleRead={(articleId) => {
+                console.log('Article read:', articleId);
+              }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Loading indicator for auto-refresh */}
+      {/* Loading indicator for refresh */}
       {loading && articles.length > 0 && (
-        <div className="text-center py-4">
-          <div className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="text-center py-4"
+        >
+          <div className="inline-flex items-center gap-2 text-sm" style={{ color: colors.mutedForeground }}>
             <RefreshCw className="w-4 h-4 animate-spin" />
-            Updating...
+            Updating news...
           </div>
-        </div>
-      )}
-
-      {/* No articles message during loading */}
-      {articles.length === 0 && !loading && (
-        <EmptyState />
+        </motion.div>
       )}
     </div>
   );

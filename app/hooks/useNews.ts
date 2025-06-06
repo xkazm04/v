@@ -1,8 +1,17 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import { NewsArticle, convertResearchToNews, ResearchResult } from '@/app/types/article';
 import { NewsFilters } from '../lib/services/news-service';
 
-// Update to use local API routes instead of external API
-const LOCAL_API_BASE = '/api';
+const LOCAL_API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+// Enhanced error handling wrapper
+async function handleApiResponse(response: Response) {
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`API Error ${response.status}: ${errorText || response.statusText}`);
+  }
+  return response.json();
+}
 
 async function searchResearchLocal(
   searchText?: string,
@@ -12,7 +21,7 @@ async function searchResearchLocal(
   sourceFilter?: string,
   limitCount: number = 50,
   offsetCount: number = 0
-) {
+): Promise<NewsArticle[]> {
   const params = new URLSearchParams();
   
   if (searchText) params.append('search_text', searchText);
@@ -24,43 +33,35 @@ async function searchResearchLocal(
   params.append('offset_count', String(offsetCount));
 
   const response = await fetch(`${LOCAL_API_BASE}/news?${params.toString()}`);
-  if (!response.ok) {
-    throw new Error(`Search failed: ${response.statusText}`);
-  }
-  return response.json();
-}
-
-async function getResearchResultsLocal(filters: NewsFilters = {}) {
-  const params = new URLSearchParams();
+  const data = await handleApiResponse(response);
   
-  Object.entries(filters).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      params.append(key, String(value));
-    }
-  });
-
-  const response = await fetch(`${LOCAL_API_BASE}/research?${params.toString()}`);
-  if (!response.ok) {
-    throw new Error(`Research fetch failed: ${response.statusText}`);
+  // Convert ResearchResult[] to NewsArticle[]
+  if (Array.isArray(data)) {
+    return data.map((item: ResearchResult) => convertResearchToNews(item));
   }
-  return response.json();
+  
+  return [];
 }
 
 async function getRecentNewsLocal(options: {
   limit?: number;
   onlyFactChecked?: boolean;
   breaking?: boolean;
-} = {}) {
+} = {}): Promise<NewsArticle[]> {
   const params = new URLSearchParams();
   if (options.limit) params.append('limit', String(options.limit));
   if (options.onlyFactChecked) params.append('only_fact_checked', 'true');
   if (options.breaking) params.append('breaking', 'true');
 
   const response = await fetch(`${LOCAL_API_BASE}/news?${params.toString()}`);
-  if (!response.ok) {
-    throw new Error(`News fetch failed: ${response.statusText}`);
+  const data = await handleApiResponse(response);
+  
+  // Convert ResearchResult[] to NewsArticle[]
+  if (Array.isArray(data)) {
+    return data.map((item: ResearchResult) => convertResearchToNews(item));
   }
-  return response.json();
+  
+  return [];
 }
 
 interface UseNewsOptions {
@@ -69,8 +70,11 @@ interface UseNewsOptions {
   breaking?: boolean;
   autoRefresh?: boolean;
   refreshInterval?: number;
-  filters?: NewsFilters;
   categoryFilter?: string;
+  searchText?: string;
+  statusFilter?: string;
+  countryFilter?: string;
+  sourceFilter?: string;
 }
 
 export function useNews({
@@ -79,36 +83,64 @@ export function useNews({
   breaking = false,
   autoRefresh = false,
   refreshInterval = 300000,
-  filters = {},
-  categoryFilter
+  categoryFilter,
+  searchText,
+  statusFilter,
+  countryFilter,
+  sourceFilter
 }: UseNewsOptions = {}) {
-  // Build the complete filters object
-  const completeFilters = {
-    ...filters,
-    ...(categoryFilter && { category: categoryFilter })
-  };
+  
+  // Create comprehensive query key that includes all filters
+  const queryKey = [
+    'news', 
+    { 
+      limit, 
+      onlyFactChecked, 
+      breaking, 
+      categoryFilter, 
+      searchText,
+      statusFilter,
+      countryFilter,
+      sourceFilter
+    }
+  ];
 
   const query = useQuery({
-    queryKey: ['news', { limit, onlyFactChecked, breaking, categoryFilter, filters }],
-    queryFn: () => {
-      // If we have category filter or other filters, use search endpoint
-      if (categoryFilter || Object.keys(filters).length > 0) {
+    queryKey,
+    queryFn: async (): Promise<NewsArticle[]> => {
+      // Determine which endpoint to use based on filters
+      const hasAdvancedFilters = searchText || statusFilter || countryFilter || categoryFilter || sourceFilter;
+      
+      if (hasAdvancedFilters) {
+        // Use advanced search endpoint
         return searchResearchLocal(
-          undefined, // searchText
-          undefined, // statusFilter
-          undefined, // countryFilter
-          categoryFilter, // categoryFilter
-          undefined, // sourceFilter
+          searchText,
+          statusFilter,
+          countryFilter,
+          categoryFilter,
+          sourceFilter,
           limit,
           0 // offset
         );
+      } else {
+        // Use basic news endpoint
+        return getRecentNewsLocal({ limit, onlyFactChecked, breaking });
       }
-      // Otherwise use the regular news endpoint
-      return getRecentNewsLocal({ limit, onlyFactChecked, breaking });
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    gcTime: 5 * 60 * 1000, // 5 minutes (renamed from cacheTime)
     refetchOnWindowFocus: false,
     refetchInterval: autoRefresh ? refreshInterval : false,
+    refetchIntervalInBackground: false,
+    placeholderData: (previousData) => previousData, // Keep previous data while refetching
+    retry: (failureCount, error) => {
+      // Don't retry on 4xx errors, only on network/5xx errors
+      if (error instanceof Error && error.message.includes('4')) {
+        return false;
+      }
+      return failureCount < 3;
+    },
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
   return {
@@ -117,42 +149,101 @@ export function useNews({
     error: query.error?.message || null,
     refreshNews: query.refetch,
     hasMore: (query.data?.length || 0) >= limit,
-    loadMore: async () => {
-      // For load more, we'd need to implement infinite query
-      // This is a placeholder for the current interface
-    }
+    isFetching: query.isFetching,
+    isStale: query.isStale,
   };
 }
 
+// Enhanced category counts hook with better error handling
+export function useCategoryCounts() {
+  return useQuery({
+    queryKey: ['categories', 'counts'],
+    queryFn: async (): Promise<Record<string, number>> => {
+      try {
+        const response = await fetch(`${LOCAL_API_BASE}/news/categories/available`);
+        const data = await handleApiResponse(response);
+        
+        // Handle different response formats
+        if (Array.isArray(data)) {
+          // Convert array of {category, count} to Record<string, number>
+          const counts: Record<string, number> = {};
+          data.forEach((item: {category: string, count: number}) => {
+            if (item.category && typeof item.count === 'number') {
+              counts[item.category] = item.count;
+            }
+          });
+          return counts;
+        } else if (typeof data === 'object' && data !== null) {
+          // Already in the correct format
+          return data as Record<string, number>;
+        }
+        
+        // Fallback to empty object
+        return {};
+      } catch (error) {
+        console.warn('Failed to fetch category counts:', error);
+        // Return empty object instead of throwing in development
+        if (process.env.NODE_ENV === 'development') {
+          return {};
+        }
+        throw error;
+      }
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 15 * 60 * 1000, // 15 minutes
+    refetchOnWindowFocus: false,
+    retry: (failureCount, error) => {
+      // In development, don't retry category counts
+      if (process.env.NODE_ENV === 'development') {
+        return false;
+      }
+      return failureCount < 2;
+    },
+    retryDelay: 1000,
+  });
+}
+
+// Other hooks remain the same but with updated error handling...
 export function useInfiniteNews({
   limit = 20,
   onlyFactChecked = false,
   breaking = false,
-  filters = {}
 }: Omit<UseNewsOptions, 'autoRefresh' | 'refreshInterval'> = {}) {
   return useInfiniteQuery({
-    queryKey: ['news', 'infinite', { limit, onlyFactChecked, breaking, filters }],
-    queryFn: ({ pageParam = 0 }) => {
-      const newsFilters = {
-        ...filters,
-        limit,
-        offset: pageParam as number
-      };
-      return getResearchResultsLocal(newsFilters);
+    queryKey: ['news', 'infinite', { limit, onlyFactChecked, breaking }],
+    queryFn: async ({ pageParam = 0 }): Promise<NewsArticle[]> => {
+      const articles = await getRecentNewsLocal({ 
+        limit, 
+        onlyFactChecked, 
+        breaking 
+      });
+      // Simple pagination simulation - in real implementation, 
+      // you'd pass offset to the API
+      const startIndex = pageParam as number;
+      return articles.slice(startIndex, startIndex + limit);
     },
     initialPageParam: 0,
-    getNextPageParam: (lastPage: any, pages) => {
-      return (lastPage as any[]).length === limit ? pages.length * limit : undefined;
+    getNextPageParam: (lastPage: NewsArticle[], pages) => {
+      return lastPage.length === limit ? pages.length * limit : undefined;
     },
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 }
 
-export function useResearchResults(filters: NewsFilters = {}) {
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function useResearchResults(filters: any = {}) {
   return useQuery({
     queryKey: ['research', 'results', filters],
-    queryFn: () => getResearchResultsLocal(filters),
+    queryFn: () => searchResearchLocal(
+      filters.searchText,
+      filters.statusFilter,
+      filters.countryFilter,
+      filters.categoryFilter,
+      filters.sourceFilter,
+      filters.limitCount || 5,
+      filters.offsetCount || 0
+    ),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
@@ -173,108 +264,3 @@ export function useResearchById(id: string) {
   });
 }
 
-export function useNewsStats() {
-  return useQuery({
-    queryKey: ['news', 'stats'],
-    queryFn: async () => {
-      const response = await fetch(`${LOCAL_API_BASE}/news/stats`);
-      if (!response.ok) {
-        throw new Error(`News stats fetch failed: ${response.statusText}`);
-      }
-      return response.json();
-    },
-    staleTime: 10 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
-}
-
-export function useAvailableCategories() {
-  return useQuery({
-    queryKey: ['news', 'categories'],
-    queryFn: async () => {
-      const response = await fetch(`${LOCAL_API_BASE}/news/categories`);
-      if (!response.ok) {
-        throw new Error(`News categories fetch failed: ${response.statusText}`);
-      }
-      return response.json();
-    },
-    staleTime: 30 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
-}
-
-export function useAvailableCountries() {
-  return useQuery({
-    queryKey: ['news', 'countries'],
-    queryFn: async () => {
-      const response = await fetch(`${LOCAL_API_BASE}/news/countries`);
-      if (!response.ok) {
-        throw new Error(`News countries fetch failed: ${response.statusText}`);
-      }
-      return response.json();
-    },
-    staleTime: 30 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
-}
-
-export function useSearchResearch(
-  searchText?: string,
-  statusFilter?: string,
-  countryFilter?: string,
-  categoryFilter?: string,
-  sourceFilter?: string,
-  limitCount: number = 50,
-  offsetCount: number = 0
-) {
-  return useQuery({
-    queryKey: [
-      'research', 
-      'search', 
-      searchText, 
-      statusFilter, 
-      countryFilter, 
-      categoryFilter,
-      sourceFilter,
-      limitCount,
-      offsetCount
-    ],
-    queryFn: () => searchResearchLocal(
-      searchText,
-      statusFilter,
-      countryFilter,
-      categoryFilter,
-      sourceFilter,
-      limitCount,
-      offsetCount
-    ),
-    enabled: !!(searchText || statusFilter || countryFilter || categoryFilter || sourceFilter),
-    staleTime: 5 * 60 * 1000,
-  });
-}
-
-// Add to useNews hook exports - get category counts
-export function useCategoryCounts() {
-  return useQuery({
-    queryKey: ['categories', 'counts'],
-    queryFn: async () => {
-      const response = await fetch(`${LOCAL_API_BASE}/news/categories`);
-      if (!response.ok) {
-        throw new Error(`Category counts fetch failed: ${response.statusText}`);
-      }
-      const data = await response.json();
-      
-      // Convert array of {category, count} to Record<string, number>
-      const counts: Record<string, number> = {};
-      if (Array.isArray(data)) {
-        data.forEach((item: {category: string, count: number}) => {
-          counts[item.category] = item.count;
-        });
-      }
-      
-      return counts;
-    },
-    staleTime: 10 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
-}

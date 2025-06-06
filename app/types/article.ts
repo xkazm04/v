@@ -43,6 +43,7 @@ export type ResearchResult = {
   created_at: string;
   updated_at: string;
   resources?: string[]; // Legacy URLs from view
+  category?: string; // Added for better category filtering
 };
 
 export type NewsArticle = {
@@ -71,7 +72,7 @@ export type NewsArticle = {
   researchId?: string; // Link to research_results table
 };
 
-// Utility function to convert ResearchResult to NewsArticle
+// Enhanced utility function with better error handling
 export function convertResearchToNews(research: ResearchResult): NewsArticle {
   const statusToScore = {
     'TRUE': 0.9,
@@ -89,30 +90,36 @@ export function convertResearchToNews(research: ResearchResult): NewsArticle {
     'UNVERIFIABLE': 30
   };
 
+  // Safe property access with fallbacks
+  const safeStatement = research.statement || 'Untitled Research';
+  const safeSource = research.source || 'Unknown Source';
+  const safeStatus = research.status || 'UNVERIFIABLE';
+  const safeVerdict = research.verdict || 'No verdict available';
+
   return {
     id: research.id,
-    headline: research.statement.length > 100 
-      ? research.statement.substring(0, 97) + '...'
-      : research.statement,
+    headline: safeStatement.length > 100 
+      ? safeStatement.substring(0, 97) + '...'
+      : safeStatement,
     source: {
-      name: research.source || 'Unknown Source',
+      name: safeSource,
       logoUrl: undefined
     },
-    category: 'Fact Check',
-    datePublished: research.statement_date || research.processed_at,
-    truthScore: statusToScore[research.status],
-    isBreaking: research.status === 'FALSE' || research.status === 'MISLEADING',
-    publishedAt: research.processed_at,
+    category: research.category || 'general', // Use category from research
+    datePublished: research.statement_date || research.processed_at || new Date().toISOString(),
+    truthScore: statusToScore[safeStatus as keyof typeof statusToScore] || 0.5,
+    isBreaking: safeStatus === 'FALSE' || safeStatus === 'MISLEADING',
+    publishedAt: research.processed_at || new Date().toISOString(),
     factCheck: {
-      evaluation: research.status,
-      confidence: statusToConfidence[research.status],
-      verdict: research.verdict,
+      evaluation: safeStatus as NewsArticle['factCheck']['evaluation'],
+      confidence: statusToConfidence[safeStatus as keyof typeof statusToConfidence] || 30,
+      verdict: safeVerdict,
       experts: research.experts,
       resources_agreed: research.resources_agreed,
       resources_disagreed: research.resources_disagreed
     },
-    citation: research.source || '',
-    summary: research.verdict,
+    citation: safeSource,
+    summary: safeVerdict,
     statementDate: research.statement_date,
     researchId: research.id
   };

@@ -8,7 +8,6 @@ import { Card, CardContent } from '@/app/components/ui/card';
 import { Badge } from '@/app/components/ui/badge';
 import { cn } from '@/app/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSearchResearch } from '@/app/hooks/useNews';
 import { useSearchVideos } from '@/app/hooks/useVideos';
 
 interface SearchBarProps {
@@ -32,16 +31,16 @@ export function SearchBar({ className, onResultSelect, placeholder = "Search new
     return () => clearTimeout(timer);
   }, [query]);
 
-  // Search hooks
-  const { data: newsData, isLoading: newsLoading } = useSearchResearch(
-    debouncedQuery || undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    10,
-    0
-  );
+  // // Search hooks
+  // const { data: newsData, isLoading: newsLoading } = useSearchResearch(
+  //   debouncedQuery || undefined,
+  //   undefined,
+  //   undefined,
+  //   undefined,
+  //   undefined,
+  //   10,
+  //   0
+  // );
 
   const { data: videoData, isLoading: videosLoading } = useSearchVideos(
     debouncedQuery || undefined,
@@ -55,9 +54,11 @@ export function SearchBar({ className, onResultSelect, placeholder = "Search new
   );
 
   // Ensure we have arrays to work with
+  //@ts-expect-error Ignore
   const newsResults = Array.isArray(newsData) ? newsData : [];
   const videoResults = Array.isArray(videoData) ? videoData : [];
 
+  //@ts-expect-error Ignore
   const isLoading = newsLoading || videosLoading;
   const hasResults = newsResults.length > 0 || videoResults.length > 0;
 

@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { Skeleton } from '@/app/components/ui/skeleton';
-import { CategoryFilter } from '@/app/sections/feed/CategoryFilter';
+import { CategoryFilter } from '@/app/sections/feed/Filter/CategoryFilter';
 
 interface FilterLayoutProps {
   children?: React.ReactNode;
@@ -37,9 +37,10 @@ export function FilterLayout({ children, className }: FilterLayoutProps) {
     >
       <Suspense fallback={<FilterSkeleton />}>
         <CategoryFilter
-          maxVisible={3}
           showCounts={true}
-          allowMultiSelect={true}
+          selectedCategories={[]}
+          allowMultiSelect={false}
+          onSelectionChange={() => {}}
         />
       </Suspense>
       {children}

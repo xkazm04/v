@@ -225,10 +225,10 @@ export function Navbar() {
 
           {/* Search Bar */}
           <div className="flex-1 max-w-md mx-8">
-            <SearchBar
+            {/* <SearchBar
               onResultSelect={handleSearchResultSelect}
               placeholder="Search news and videos..."
-            />
+            /> */}
           </div>
 
           <div className="flex items-center space-x-2">
