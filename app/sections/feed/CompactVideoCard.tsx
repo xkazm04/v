@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useState, useCallback } from 'react';
 import { VideoMetadata } from '@/app/types/video';
-import { CompactVideoContent } from '@/app/components/video/compact/CompactVideoContent';
+
 interface CompactVideoCardProps {
   video: VideoMetadata;
   priority?: boolean;
@@ -56,11 +56,11 @@ const CompactVideoCard = ({ video, priority = false, index = 0 }: CompactVideoCa
           {/* Main Content */}
           <div className="relative flex gap-4">
 
-            
+{/*             
             <CompactVideoContent 
               video={video}
               isHovered={isHovered}
-            />
+            /> */}
           </div>
           
         </motion.div>

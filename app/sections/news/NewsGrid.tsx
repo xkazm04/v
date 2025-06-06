@@ -126,7 +126,6 @@ export const NewsCard = memo(function NewsCard({
         article={article}
         layout={layout}
         isHovered={isHovered}
-        priority={priority}
       />
 
       {/* Content */}

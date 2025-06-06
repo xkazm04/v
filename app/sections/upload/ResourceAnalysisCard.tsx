@@ -2,128 +2,126 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import {  CheckCircle, XCircle } from 'lucide-react';
 import type { ResourceAnalysis } from './types';
-import { getCountryFlag, getCredibilityColor, getMediaCategoryIcon } from '@/app/helpers/researchResultHelpers';
+import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import ResultResourceSection from './Result/ResultResourceSection';
+import ResultResourceHeader from './Result/ResultResourceHeader';
 
 interface ResourceAnalysisCardProps {
-  title: string;
-  resourceAnalysis: ResourceAnalysis;
-  type: 'supporting' | 'contradicting';
+  supportingAnalysis?: ResourceAnalysis;
+  contradictingAnalysis?: ResourceAnalysis;
   isLoading: boolean;
 }
 
-export function ResourceAnalysisCard({ title, resourceAnalysis, type, isLoading }: ResourceAnalysisCardProps) {
-  const isSupporting = type === 'supporting';
-  const Icon = isSupporting ? CheckCircle : XCircle;
-  const colorClass = isSupporting ? 'border-green-200 bg-green-50/50' : 'border-red-200 bg-red-50/50';
-  const iconColor = isSupporting ? 'text-green-600' : 'text-red-600';
+export function ResourceAnalysisCard({ 
+  supportingAnalysis, 
+  contradictingAnalysis, 
+  isLoading 
+}: ResourceAnalysisCardProps) {
+  const { colors, isDark } = useLayoutTheme();
+
+  const supportingTotal = Number(supportingAnalysis?.total) || 0;
+  const contradictingTotal = Number(contradictingAnalysis?.total) || 0;
+  const totalSources = supportingTotal + contradictingTotal;
+  
+  const supportingPercentage = totalSources > 0 ? (supportingTotal / totalSources) * 100 : 0;
+  const contradictingPercentage = totalSources > 0 ? (contradictingTotal / totalSources) * 100 : 0;
+
+  if (!supportingAnalysis && !contradictingAnalysis) {
+    return null;
+  }
 
   return (
-    <Card className={`${colorClass} ${isLoading ? 'animate-pulse' : ''}`}>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base flex items-center gap-2">
-          <Icon className={`h-4 w-4 ${iconColor}`} />
-          {title}
-          <Badge variant="outline" className="ml-auto">
-            {resourceAnalysis.total}
-          </Badge>
-        </CardTitle>
-      </CardHeader>
-      
-      <CardContent className="space-y-4">
-        {/* Source Breakdown */}
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          <div className="space-y-1">
-            <div className="flex justify-between">
-              <span>Mainstream:</span>
-              <span className="font-medium">{resourceAnalysis.mainstream}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Governance:</span>
-              <span className="font-medium">{resourceAnalysis.governance}</span>
-            </div>
-          </div>
-          <div className="space-y-1">
-            <div className="flex justify-between">
-              <span>Academic:</span>
-              <span className="font-medium">{resourceAnalysis.academic}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Medical:</span>
-              <span className="font-medium">{resourceAnalysis.medical}</span>
-            </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
+      {/* Main Analysis Card */}
+      <div 
+        className={`rounded-3xl border-2 overflow-hidden shadow-xl ${isLoading ? 'opacity-60 pointer-events-none animate-pulse' : ''}`}
+        style={{
+          background: colors.card.background,
+          border: `2px solid ${colors.border}`,
+          boxShadow: colors.card.shadow
+        }}
+      >
+        {/* Header with Comparison Bar */}
+        <ResultResourceHeader
+          supportingTotal={supportingTotal}
+          contradictingTotal={contradictingTotal}
+          supportingPercentage={supportingPercentage}
+          contradictingPercentage={contradictingPercentage}
+          totalSources={totalSources}
+          />
+        {/* Side-by-Side Content */}
+        <div className="p-6">
+          <div className="flex flex-col lg:flex-row gap-8">
+            <ResultResourceSection 
+              analysis={supportingAnalysis} 
+              type="supporting" 
+              percentage={supportingPercentage}
+              isLoading={isLoading}
+            />
+            
+            {/* Divider */}
+            <div 
+              className="hidden lg:block w-px self-stretch"
+              style={{ background: colors.border }}
+            />
+            <div 
+              className="lg:hidden h-px w-full"
+              style={{ background: colors.border }}
+            />
+            
+            <ResultResourceSection 
+              analysis={contradictingAnalysis} 
+              type="contradicting" 
+              percentage={contradictingPercentage}
+              isLoading={isLoading}
+            />
           </div>
         </div>
-
-        {/* Major Countries */}
-        {resourceAnalysis.major_countries.length > 0 && (
-          <div>
-            <p className="text-sm font-medium mb-2">Major Countries:</p>
-            <div className="flex flex-wrap gap-1">
-              {resourceAnalysis.major_countries.map((country, index) => (
-                <Badge key={index} variant="outline" className="text-xs">
-                  {getCountryFlag(country)} {country.toUpperCase()}
-                </Badge>
-              ))}
+        {/* Winner Declaration */}
+        {totalSources > 0 && !isLoading && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.8 }}
+            className="p-6 border-t"
+            style={{
+              background: supportingTotal > contradictingTotal
+                ? isDark ? 'rgba(34, 197, 94, 0.1)' : 'rgba(34, 197, 94, 0.05)'
+                : supportingTotal < contradictingTotal
+                ? isDark ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.05)'
+                : isDark ? 'rgba(245, 158, 11, 0.1)' : 'rgba(245, 158, 11, 0.05)',
+              borderColor: colors.border
+            }}
+          >
+            <div 
+              className="text-xl font-bold text-center"
+              style={{
+                color: supportingTotal > contradictingTotal
+                  ? isDark ? '#4ade80' : '#16a34a'
+                  : supportingTotal < contradictingTotal
+                  ? isDark ? '#f87171' : '#dc2626'
+                  : isDark ? '#fbbf24' : '#d97706'
+              }}
+            >
+              {supportingTotal > contradictingTotal
+                ? '✅ Sources Lean Toward Supporting the Statement'
+                : supportingTotal < contradictingTotal
+                ? '❌ Sources Lean Toward Contradicting the Statement'
+                : '⚖️ Sources Are Evenly Divided'
+              }
             </div>
-          </div>
+            <p className="text-sm text-center mt-1" style={{ color: colors.mutedForeground }}>
+              Based on {totalSources} sources from multiple categories and countries
+            </p>
+          </motion.div>
         )}
-
-        {/* References */}
-        {resourceAnalysis.references.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-sm font-medium">Key References:</p>
-            <div className="space-y-2 max-h-40 overflow-y-auto">
-              {resourceAnalysis.references.slice(0, 3).map((reference, index) => {
-                const CategoryIcon = getMediaCategoryIcon(reference.category);
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="border rounded-lg p-2 hover:bg-white/50 transition-colors"
-                  >
-                    <div className="flex items-start gap-2">
-                      <CategoryIcon className="h-4 w-4 mt-0.5 text-gray-500 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <Button
-                          variant="link"
-                          className="h-auto p-0 text-left font-normal text-sm text-blue-600 hover:text-blue-800"
-                          onClick={() => window.open(reference.url, '_blank')}
-                          disabled={isLoading}
-                        >
-                          <span className="truncate block">{reference.title}</span>
-                        </Button>
-                        <div className="flex items-center gap-2 mt-1 flex-wrap">
-                          <Badge className={`text-xs ${getCredibilityColor(reference.credibility)}`}>
-                            {reference.credibility}
-                          </Badge>
-                          <span className="text-xs text-gray-500">
-                            {getCountryFlag(reference.country)} {reference.country.toUpperCase()}
-                          </span>
-                          <span className="text-xs text-gray-500 capitalize">
-                            {reference.category}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-              {resourceAnalysis.references.length > 3 && (
-                <p className="text-xs text-gray-500 text-center">
-                  +{resourceAnalysis.references.length - 3} more sources
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+      </div>
+    </motion.div>
   );
 }

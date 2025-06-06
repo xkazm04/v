@@ -4,7 +4,6 @@ import {
   Home, 
   TrendingUp as Trending, 
   Bookmark, 
-  Eye,
 } from 'lucide-react';
 
 type Props = {
@@ -15,60 +14,62 @@ type Props = {
 }
 
 const SideNavMainSection = ({expandedSections, isActive, isCollapsed, mounted}: Props) => {
-    return <AnimatePresence initial={false}>
-        {expandedSections.has('main') && (
-            <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="space-y-1 overflow-hidden"
-            >
-                <NavItem
-                    href="/"
-                    icon={Home}
-                    label="Home"
-                    isActiveRoute={isActive('/')}
-                    description="Latest fact-checks"
-                    itemId="home"
-                    isCollapsed={isCollapsed}
-                    mounted={mounted}
-                />
-                <NavItem
-                    href="/trending"
-                    icon={Trending}
-                    label="Trending"
-                    isActiveRoute={isActive('/trending')}
-                    badge={12}
-                    description="Hot topics"
-                    itemId="trending"
-                    isCollapsed={isCollapsed}
-                    mounted={mounted}
-                />
-                <NavItem
-                    href="/subscriptions"
-                    icon={Bookmark}
-                    label="Subscriptions"
-                    isActiveRoute={isActive('/subscriptions')}
-                    description="Your sources"
-                    itemId="subscriptions"
-                    isCollapsed={isCollapsed}
-                    mounted={mounted}
-                />
-                <NavItem
-                    href="/watchlist"
-                    icon={Eye}
-                    label="Watch Later"
-                    isActiveRoute={isActive('/watchlist')}
-                    badge={5}
-                    description="Saved for later"
-                    itemId="watchlist"
-                    isCollapsed={isCollapsed}
-                    mounted={mounted}
-                />
-            </motion.div>
-        )}
-    </AnimatePresence>
-}
+    return (
+        <AnimatePresence initial={false}>
+            {expandedSections.has('main') && (
+                <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="space-y-1 overflow-hidden"
+                >
+                    {[
+                        {
+                            href: "/",
+                            icon: Home,
+                            label: "Home",
+                            itemId: "home"
+                        },
+                        {
+                            href: "/trending",
+                            icon: Trending,
+                            label: "Trending",
+                            itemId: "trending",
+                            badge: 12
+                        },
+                        {
+                            href: "/profiles",
+                            icon: Bookmark,
+                            label: "Liked profiles",
+                            itemId: "profiles"
+                        }
+                    ].map((item, index) => (
+                        <motion.div
+                            key={item.itemId}
+                            initial={{ x: -20, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{ 
+                                duration: 0.3, 
+                                delay: index * 0.05,
+                                ease: "easeOut"
+                            }}
+                        >
+                            <NavItem
+                                href={item.href}
+                                icon={item.icon}
+                                label={item.label}
+                                isActiveRoute={isActive(item.href)}
+                                badge={item.badge}
+                                isCollapsed={isCollapsed}
+                                mounted={mounted}
+                            />
+                        </motion.div>
+                    ))}
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
+};
 
 export default SideNavMainSection;

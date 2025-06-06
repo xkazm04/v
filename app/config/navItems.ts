@@ -3,7 +3,6 @@ export const NAVIGATION_CONFIG = {
     { href: '/', label: 'Home', description: '' },
     { href: '/timeline', label: 'Timeline', description: '' },
     { href: '/dashboard', label: 'Dashboard', description: '' },
-    { href: '/playground', label: 'Playground', description: '' },
     { href: '/upload', label: 'Upload', description: '' },
   ]
 };

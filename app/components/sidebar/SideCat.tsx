@@ -15,6 +15,7 @@ import SideCountryItem from './SideCountryItem';
 import NavItem from './SideNavItem';
 import SideNavMainSection from './SideNavSections';
 import { COUNTRY_SECTIONS } from '@/app/constants/countriesMock';
+import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 
 type Props = {
     isCollapsed: boolean;
@@ -24,6 +25,7 @@ type Props = {
 const SideCat = ({ isCollapsed, isActive }: Props) => {
     const [mounted, setMounted] = useState(false);
     const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['main', 'countries']));
+    const { colors, sidebarColors, isDark } = useLayoutTheme();
 
     useEffect(() => {
         setMounted(true);
@@ -43,11 +45,8 @@ const SideCat = ({ isCollapsed, isActive }: Props) => {
 
     return (
         <div className="relative h-full">
-            {/* Background with subtle gradient */}
-            <div className="absolute inset-0 bg-gradient-to-b from-white/50 via-gray-50/30 to-white/50 dark:from-gray-900/50 dark:via-gray-800/30 dark:to-gray-900/50" />
-            
-            <ScrollArea className="relative h-full py-4">
-                <div className="px-3 space-y-1">
+            <ScrollArea className="h-full py-4">
+                <div className="px-3 space-y-2">
                     {/* Main Navigation Section */}
                     <SideSectionHeader 
                         title="Navigation" 
@@ -63,13 +62,17 @@ const SideCat = ({ isCollapsed, isActive }: Props) => {
                         isActive={isActive}
                         isCollapsed={isCollapsed}
                         mounted={mounted}
-                        />
-
+                    />
 
                     {/* Elegant Divider */}
-                    <div className="my-4 px-4">
+                    <div className="my-6 px-2">
                         <motion.div 
-                            className="h-px bg-gradient-to-r from-transparent via-border to-transparent"
+                            className="h-px"
+                            style={{
+                                background: isDark
+                                    ? `linear-gradient(to right, transparent 0%, rgba(71, 85, 105, 0.4) 50%, transparent 100%)`
+                                    : `linear-gradient(to right, transparent 0%, rgba(226, 232, 240, 0.6) 50%, transparent 100%)`
+                            }}
                             initial={{ scaleX: 0 }}
                             animate={{ scaleX: 1 }}
                             transition={{ duration: 0.5, delay: 0.2 }}
@@ -103,13 +106,13 @@ const SideCat = ({ isCollapsed, isActive }: Props) => {
                                         animate={{ x: 0, opacity: 1 }}
                                         transition={{ 
                                             duration: 0.3, 
-                                            delay: index * 0.05,
+                                            delay: index * 0.03,
                                             ease: "easeOut"
                                         }}
                                     >
                                         <SideCountryItem 
-                                             mounted={mounted}
-                                             isCollapsed={isCollapsed}
+                                            mounted={mounted}
+                                            isCollapsed={isCollapsed}
                                             country={country}
                                             isActiveRoute={isActive(country.href.split('?')[0]) && 
                                                 typeof window !== 'undefined' && 
@@ -122,9 +125,14 @@ const SideCat = ({ isCollapsed, isActive }: Props) => {
                     </AnimatePresence>
 
                     {/* Another Divider */}
-                    <div className="my-4 px-4">
+                    <div className="my-6 px-2">
                         <motion.div 
-                            className="h-px bg-gradient-to-r from-transparent via-border to-transparent"
+                            className="h-px"
+                            style={{
+                                background: isDark
+                                    ? `linear-gradient(to right, transparent 0%, rgba(71, 85, 105, 0.4) 50%, transparent 100%)`
+                                    : `linear-gradient(to right, transparent 0%, rgba(226, 232, 240, 0.6) 50%, transparent 100%)`
+                            }}
                             initial={{ scaleX: 0 }}
                             animate={{ scaleX: 1 }}
                             transition={{ duration: 0.5, delay: 0.4 }}
@@ -156,8 +164,6 @@ const SideCat = ({ isCollapsed, isActive }: Props) => {
                                     icon={Clock} 
                                     label="Recent Activity" 
                                     isActiveRoute={isActive('/recent')}
-                                    description="Last 24 hours"
-                                    itemId="recent"
                                     isCollapsed={isCollapsed}
                                     mounted={mounted}
                                 />
@@ -166,8 +172,6 @@ const SideCat = ({ isCollapsed, isActive }: Props) => {
                                     icon={ThumbsUp} 
                                     label="Top Rated" 
                                     isActiveRoute={isActive('/top-rated')}
-                                    description="Highly verified"
-                                    itemId="top-rated"
                                     isCollapsed={isCollapsed}
                                     mounted={mounted}
                                 />
@@ -178,7 +182,14 @@ const SideCat = ({ isCollapsed, isActive }: Props) => {
             </ScrollArea>
 
             {/* Subtle bottom fade effect */}
-            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+            <div 
+                className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none"
+                style={{
+                    background: isDark
+                        ? `linear-gradient(to top, ${sidebarColors.background} 0%, transparent 100%)`
+                        : `linear-gradient(to top, ${sidebarColors.background} 0%, transparent 100%)`
+                }}
+            />
         </div>
     );
 };

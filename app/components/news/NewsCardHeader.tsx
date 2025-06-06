@@ -10,7 +10,6 @@ interface NewsCardHeaderProps {
   article: NewsArticle;
   layout: 'grid' | 'compact';
   isHovered: boolean;
-  priority?: 'high' | 'medium' | 'low';
 }
 
 const headerVariants = {
@@ -89,7 +88,7 @@ export const NewsCardHeader = memo(function NewsCardHeader({
   }, [article.publishedAt, article.isBreaking]);
 
   // Theme-aware badge colors
-  const getBadgeColors = (type: 'breaking' | 'new' | 'urgent' | 'priority') => {
+  const getBadgeColors = (type: 'breaking' | 'new' | 'urgent') => {
     const baseColors = {
       breaking: {
         bg: isDark ? 'rgba(239, 68, 68, 0.9)' : 'rgba(220, 38, 38, 0.9)',
@@ -108,12 +107,6 @@ export const NewsCardHeader = memo(function NewsCardHeader({
         text: '#ffffff',
         border: isDark ? '#f59e0b' : '#d97706',
         glow: isDark ? 'rgba(245, 158, 11, 0.3)' : 'rgba(217, 119, 6, 0.3)'
-      },
-      priority: {
-        bg: isDark ? 'rgba(139, 92, 246, 0.9)' : 'rgba(124, 58, 237, 0.9)',
-        text: '#ffffff',
-        border: isDark ? '#8b5cf6' : '#7c3aed',
-        glow: isDark ? 'rgba(139, 92, 246, 0.3)' : 'rgba(124, 58, 237, 0.3)'
       }
     };
     

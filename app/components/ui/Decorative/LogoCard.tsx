@@ -3,8 +3,8 @@ import { motion } from "framer-motion"
 type Props = {
     config: {
         color: string;
-        icon: React.ComponentType<any>;
-        label: string;
+        icon?: React.ComponentType<any>;
+        label?: string;
     };
     currentTheme: 'light' | 'dark';
 }
