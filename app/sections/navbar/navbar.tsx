@@ -95,7 +95,7 @@ export function Navbar() {
 
   const navbarColors = getColors('navbar');
 
-  const renderNavLink = (item: typeof NAVIGATION_CONFIG.mainNav[0], isMobile = false) => {
+  const renderNavLink = (item: typeof NAVIGATION_CONFIG.mainNav[number], isMobile = false) => {
     const isActive = isActivePath(item.href);
 
     return (
@@ -115,7 +115,6 @@ export function Navbar() {
             : navbarColors.foreground
         }}
         onMouseEnter={(e) => {
-          //@ts-expect-error Ignore
           e.currentTarget.style.backgroundColor = navbarColors.muted || '';
           e.currentTarget.style.color = colors.primary;
         }}
@@ -131,7 +130,6 @@ export function Navbar() {
         {isMobile && item.description && (
           <span 
             className="text-xs mt-1 line-clamp-1"
-             //@ts-expect-error Ignore
             style={{ color: navbarColors.muted }}
           >
             {item.description}
@@ -166,7 +164,6 @@ export function Navbar() {
       className="sticky top-0 z-50 w-full border-b backdrop-blur-xl"
       style={{
         backgroundColor: `${navbarColors.background}f0`,
-         //@ts-expect-error Ignore
         borderColor: navbarColors.border,
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)'
@@ -270,7 +267,6 @@ export function Navbar() {
               className="absolute top-full left-0 right-0 border-b p-4 md:hidden"
               style={{
                 backgroundColor: navbarColors.background,
-                 //@ts-expect-error Ignore
                 borderColor: navbarColors.border
               }}
             >
@@ -289,9 +285,8 @@ export function Navbar() {
           <NavMobileOverlay
             toggleMobileMenu={toggleMobileMenu}
             actionButtons={actionButtons}
-            renderNavLink={renderNavLink}
-            //@ts-expect-error Ignore
-            renderActionButton={renderActionButton}
+             //@ts-expect-error Ignore
+            renderNavLink={renderNavLink} renderActionButton={renderActionButton}
           />
         )}
       </AnimatePresence>

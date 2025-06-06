@@ -51,7 +51,6 @@ export function BackgroundOverlay({
           <motion.div
             className="absolute inset-0"
             style={{
-              //@ts-expect-error Ignore
               background: `radial-gradient(circle at center, transparent 0%, ${overlayColors.backdrop} 100%)`
             }}
             initial={{ scale: 0.8, opacity: 0 }}

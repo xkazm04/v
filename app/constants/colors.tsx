@@ -1,31 +1,46 @@
 import { AlertTriangle, CheckCircle, XCircle } from "lucide-react";
 
 // Define proper types for color configurations
-interface ComponentColors {
-  background: string;
-  foreground: string;
-  border: string;
-  muted: string;
+export interface ComponentColors {
+  background?: string;
+  foreground?: string;
+  border?: string;
+  muted?: string;
   hover?: string;
   active?: string;
+  backdrop?: string;
+  shadow?: string;
+  blur?: string;
   accent?: string;
 }
 
 interface OverlayColors {
-  backdrop: string;
-  blur: string;
   background?: string;
   foreground?: string;
+  border?: string;
+  muted?: string;
+  hover?: string;
+  active?: string;
+  backdrop?: string;
+  shadow?: string;
+  blur?: string;
+  accent?: string;
 }
 
 interface CardColors {
-  background: string;
-  foreground: string;
-  border: string;
-  shadow: string;
+  background?: string;
+  foreground?: string;
+  border?: string;
+  muted?: string;
+  hover?: string;
+  active?: string;
+  backdrop?: string;
+  shadow?: string;
+  blur?: string;
+  accent?: string;
 }
 
-interface ThemeColors {
+export interface ThemeColors {
   primary: string;
   secondary: string;
   accent: string;

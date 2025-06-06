@@ -4,9 +4,12 @@ import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/app/providers/theme-provider';
 import { QueryProvider } from '@/app/providers/query-provider';
 import { AuthProvider } from '@/app/hooks/useAuth';
-import { Navbar } from '@/app/sections/navbar/navbar';
+import { DesktopNavbar } from '@/app/sections/navigation/DesktopNavbar';
+import { MobileNavbar } from '@/app/sections/navigation/MobileNavbar';
+
 import { Toaster } from '@/app/components/ui/sonner';
 import { PageTransition } from '@/app/components/layout/PageTransition';
+import { NavigationProvider } from './providers/navigation-provider';
 
 // Font configurations
 const inter = Inter({
@@ -48,17 +51,26 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               try {
-                if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                  document.documentElement.classList.add('dark')
+                const savedTheme = localStorage.getItem('theme');
+                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const shouldBeDark = savedTheme === 'dark' || (!savedTheme && systemDark);
+                
+                if (shouldBeDark) {
+                  document.documentElement.classList.add('dark');
+                  document.documentElement.setAttribute('data-theme', 'dark');
                 } else {
-                  document.documentElement.classList.remove('dark')
+                  document.documentElement.classList.remove('dark');
+                  document.documentElement.setAttribute('data-theme', 'light');
                 }
               } catch (_) {}
             `,
           }}
         />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
       </head>
-      <body className="min-h-screen bg-primary-300 font-sans antialiased relative">
+      <body className="min-h-screen bg-background font-sans antialiased relative overflow-x-hidden">
         <QueryProvider>
           <ThemeProvider
             attribute="class"
@@ -66,15 +78,27 @@ export default function RootLayout({
             enableSystem
           >
             <AuthProvider>
-              <div className="relative flex min-h-screen flex-col z-10">
-                <Navbar />
-                <main className="flex-1">
-                  <PageTransition>
-                    {children}
-                  </PageTransition>
-                </main>
-              </div>
-              <Toaster />
+              <NavigationProvider>
+                <div className="relative flex min-h-screen flex-col">
+                  {/* Desktop Navigation */}
+                  <div className="hidden md:block">
+                    <DesktopNavbar />
+                  </div>
+                  
+                  {/* Main Content */}
+                  <main className="flex-1 relative z-10">
+                    <PageTransition>
+                      {children}
+                    </PageTransition>
+                  </main>
+                  
+                  {/* Mobile Navigation - Bottom Tab Bar */}
+                  <div className="md:hidden">
+                    <MobileNavbar />
+                  </div>
+                </div>
+                <Toaster />
+              </NavigationProvider>
             </AuthProvider>
           </ThemeProvider>
         </QueryProvider>

@@ -33,7 +33,7 @@ export function FilterLayout({ children, className }: FilterLayoutProps) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className={`bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg p-4 ${className}`}
+      className={`backdrop-blur-sm rounded-lg p-4 ${className}`}
     >
       <Suspense fallback={<FilterSkeleton />}>
         <CategoryFilter

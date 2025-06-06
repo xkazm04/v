@@ -147,6 +147,7 @@ export function Sidebar({ className }: SidebarProps) {
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'transparent';
+                  //@ts-expect-error Ignore
                   e.currentTarget.style.color = sidebarColors.muted;
                 }}
                 asChild
@@ -179,6 +180,7 @@ export function Sidebar({ className }: SidebarProps) {
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'transparent';
+                  //@ts-expect-error Ignore
                   e.currentTarget.style.color = sidebarColors.muted;
                 }}
               >

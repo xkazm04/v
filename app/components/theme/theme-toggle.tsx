@@ -9,9 +9,10 @@ import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
 
 interface ThemeToggleProps {
-  variant?: 'default' | 'minimal' | 'enhanced';
+  variant?: 'default' | 'minimal' | 'enhanced' | 'mobile';
   showLabel?: boolean;
   className?: string;
+  size?: 'sm' | 'md' | 'lg';
 }
 
 const iconVariants = {
@@ -26,9 +27,9 @@ const iconVariants = {
     opacity: 1,
     transition: {
       type: 'spring',
-      stiffness: 400,
-      damping: 15,
-      duration: 0.4
+      stiffness: 500,
+      damping: 20,
+      duration: 0.3
     }
   },
   exit: { 
@@ -36,7 +37,7 @@ const iconVariants = {
     rotate: 180, 
     opacity: 0,
     transition: {
-      duration: 0.2
+      duration: 0.15
     }
   }
 };
@@ -45,7 +46,7 @@ const buttonVariants = {
   idle: { scale: 1 },
   hover: { 
     scale: 1.05,
-    transition: { duration: 0.2 }
+    transition: { duration: 0.2, ease: 'easeOut' }
   },
   tap: { 
     scale: 0.95,
@@ -53,90 +54,204 @@ const buttonVariants = {
   }
 };
 
-const glowVariants = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: { 
-    opacity: 0.6, 
-    scale: 1.2,
-    transition: {
-      duration: 0.3,
-      ease: 'easeOut'
-    }
-  }
-};
-
 export function ThemeToggle({ 
   variant = 'default', 
   showLabel = false,
-  className 
+  className,
+  size = 'md'
 }: ThemeToggleProps) {
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme, systemTheme } = useTheme();
   const { colors, mounted, isDark } = useLayoutTheme();
   const [isHovered, setIsHovered] = React.useState(false);
   const [isAnimating, setIsAnimating] = React.useState(false);
 
-  // Optimized theme switching with animation coordination
+  // Enhanced theme detection with better resolution
+  const getCurrentTheme = React.useCallback(() => {
+    if (!mounted) return 'light';
+    
+    // Priority: resolved theme > explicit theme > system theme > fallback
+    const currentTheme = resolvedTheme || theme || systemTheme || 'light';
+    
+    // Additional check using document class for more reliable detection
+    if (typeof window !== 'undefined') {
+      const hasSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const hasDarkClass = document.documentElement.classList.contains('dark');
+      const dataTheme = document.documentElement.getAttribute('data-theme');
+      
+      // Use multiple sources for the most accurate theme detection
+      if (currentTheme === 'system') {
+        return hasSystemDark ? 'dark' : 'light';
+      }
+      
+      // Cross-verify with DOM state
+      if (dataTheme) {
+        return dataTheme;
+      }
+      
+      return hasDarkClass ? 'dark' : 'light';
+    }
+    
+    return currentTheme;
+  }, [mounted, resolvedTheme, theme, systemTheme]);
+
+  const currentTheme = getCurrentTheme();
+  const isCurrentlyDark = currentTheme === 'dark';
+
+  // Optimized theme switching with proper state management
   const handleThemeSwitch = React.useCallback(async () => {
-    if (isAnimating) return; // Prevent rapid switching
+    if (isAnimating) return;
     
     setIsAnimating(true);
     
-    // Add a slight delay for smooth animation
-    setTimeout(() => {
-      setTheme(theme === 'dark' ? 'light' : 'dark');
+    try {
+      // Determine next theme
+      let nextTheme: string;
+      if (theme === 'system') {
+        nextTheme = isCurrentlyDark ? 'light' : 'dark';
+      } else {
+        nextTheme = isCurrentlyDark ? 'light' : 'dark';
+      }
       
-      // Reset animation state after theme change
+      // Apply theme with immediate DOM update
+      setTheme(nextTheme);
+      
+      // Update DOM attributes immediately for better sync
+      if (typeof window !== 'undefined') {
+        const root = document.documentElement;
+        
+        if (nextTheme === 'dark') {
+          root.classList.add('dark');
+          root.setAttribute('data-theme', 'dark');
+        } else {
+          root.classList.remove('dark');
+          root.setAttribute('data-theme', 'light');
+        }
+        
+        // Store in localStorage for persistence
+        localStorage.setItem('theme', nextTheme);
+      }
+      
+    } catch (error) {
+      console.error('Theme switch failed:', error);
+    } finally {
+      // Reset animation state with proper timing
       setTimeout(() => {
         setIsAnimating(false);
-      }, 300);
-    }, 100);
-  }, [theme, setTheme, isAnimating]);
+      }, 200);
+    }
+  }, [theme, setTheme, isCurrentlyDark, isAnimating]);
 
-  // Optimized mount check with fallback
-  const getPlaceholderButton = React.useCallback(() => (
-    <Button 
-      variant="ghost" 
-      size="icon" 
-      disabled 
-      className={cn("transition-all duration-200", className)}
-      style={{
-        backgroundColor: 'transparent',
-        color: 'hsl(var(--muted-foreground))'
-      }}
-    >
-      <Sun className="h-[1.2rem] w-[1.2rem]" />
-      <span className="sr-only">Toggle theme</span>
-    </Button>
-  ), [className]);
+  // Size configurations
+  const sizeConfig = {
+    sm: { icon: 'h-4 w-4', button: 'h-8 w-8' },
+    md: { icon: 'h-[1.2rem] w-[1.2rem]', button: 'h-10 w-10' },
+    lg: { icon: 'h-6 w-6', button: 'h-12 w-12' }
+  };
 
-  if (!mounted) {
-    return getPlaceholderButton();
-  }
+  const { icon: iconSize, button: buttonSize } = sizeConfig[size];
 
-  // Enhanced theme detection
-  const currentTheme = resolvedTheme || theme || 'light';
-  const isCurrentlyDark = currentTheme === 'dark';
-  
-  // Theme-aware colors
-  const getThemeColors = () => ({
-    background: colors.background,
-    foreground: colors.foreground,
-    primary: colors.primary,
-    muted: colors.muted,
-    border: colors.border,
-    // Special glow colors for each theme
-    glow: isCurrentlyDark 
-      ? 'rgba(251, 191, 36, 0.3)' // warm golden glow for sun in dark mode
-      : 'rgba(59, 130, 246, 0.3)', // cool blue glow for moon in light mode
-    // Icon colors with better contrast
-    iconColor: isCurrentlyDark ? '#fbbf24' : '#3b82f6'
-  });
+  // Theme-aware colors with better contrast
+  const getThemeColors = React.useCallback(() => {
+    const baseColors = {
+      background: colors.background || 'hsl(var(--background))',
+      foreground: colors.foreground || 'hsl(var(--foreground))',
+      primary: colors.primary || 'hsl(var(--primary))',
+      muted: colors.muted || 'hsl(var(--muted))',
+      border: colors.border || 'hsl(var(--border))',
+    };
+
+    return {
+      ...baseColors,
+      // Enhanced glow effects
+      glow: isCurrentlyDark 
+        ? 'rgba(251, 191, 36, 0.25)' // warm amber glow for sun
+        : 'rgba(96, 165, 250, 0.25)', // cool blue glow for moon
+      // Better icon colors with proper contrast
+      iconColor: isCurrentlyDark 
+        ? '#fbbf24' // warm amber for sun
+        : '#3b82f6', // cool blue for moon
+      // Hover states
+      hoverBg: isCurrentlyDark 
+        ? 'rgba(71, 85, 105, 0.4)'
+        : 'rgba(241, 245, 249, 0.8)',
+    };
+  }, [colors, isCurrentlyDark]);
 
   const themeColors = getThemeColors();
 
-  // Render different variants
-  const renderMinimal = () => (
+  // Placeholder for SSR
+  if (!mounted) {
+    return (
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        disabled 
+        className={cn("transition-all duration-200", buttonSize, className)}
+      >
+        <Sun className={iconSize} />
+        <span className="sr-only">Toggle theme</span>
+      </Button>
+    );
+  }
+
+  // Mobile variant - simplified for touch
+  const renderMobile = () => (
+    <motion.button
+      variants={buttonVariants}
+      initial="idle"
+      whileHover="hover"
+      whileTap="tap"
+      onClick={handleThemeSwitch}
+      disabled={isAnimating}
+      className={cn(
+        "relative flex items-center justify-center rounded-full transition-all duration-300",
+        "active:scale-95 touch-manipulation",
+        buttonSize,
+        className
+      )}
+      style={{
+        backgroundColor: isHovered ? themeColors.hoverBg : 'transparent',
+        color: themeColors.iconColor,
+      }}
+      onTouchStart={() => setIsHovered(true)}
+      onTouchEnd={() => setIsHovered(false)}
+    >
+      {/* Touch feedback */}
+      <motion.div
+        className="absolute inset-0 rounded-full"
+        style={{ backgroundColor: themeColors.glow }}
+        animate={{
+          opacity: isHovered ? 0.6 : 0,
+          scale: isHovered ? 1.1 : 1
+        }}
+        transition={{ duration: 0.2 }}
+      />
+
+      {/* Icon */}
+      <div className="relative z-10">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`mobile-${isCurrentlyDark ? 'sun' : 'moon'}`}
+            variants={iconVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            {isCurrentlyDark ? (
+              <Sun className={iconSize} />
+            ) : (
+              <Moon className={iconSize} />
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </motion.button>
+  );
+
+  // Enhanced desktop variant
+  const renderEnhanced = () => (
     <motion.div
+      className="relative"
       variants={buttonVariants}
       initial="idle"
       whileHover="hover"
@@ -150,184 +265,106 @@ export function ThemeToggle({
         onClick={handleThemeSwitch}
         disabled={isAnimating}
         className={cn(
-          "relative transition-all duration-300 rounded-full",
+          "relative overflow-hidden transition-all duration-300 group rounded-xl",
+          buttonSize,
           className
         )}
         style={{
-          backgroundColor: isHovered ? themeColors.muted : 'transparent',
+          backgroundColor: isHovered ? themeColors.hoverBg : 'transparent',
           color: themeColors.iconColor,
           borderColor: 'transparent'
         }}
       >
-        {/* Glow effect */}
-        <AnimatePresence>
-          {isHovered && (
-            <motion.div
-              variants={glowVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              className="absolute inset-0 rounded-full blur-md"
-              style={{ backgroundColor: themeColors.glow }}
-            />
-          )}
-        </AnimatePresence>
+        {/* Animated background gradient */}
+        <motion.div
+          className="absolute inset-0"
+          style={{
+            background: `radial-gradient(circle at center, ${themeColors.glow} 0%, transparent 70%)`
+          }}
+          animate={{
+            opacity: isHovered ? 1 : 0,
+            scale: isHovered ? 1.2 : 0.8
+          }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+        />
 
-        {/* Icon with smooth transition */}
+        {/* Icon with smooth rotation */}
         <div className="relative z-10">
           <AnimatePresence mode="wait">
             <motion.div
-              key={isCurrentlyDark ? 'sun' : 'moon'}
+              key={`enhanced-${isCurrentlyDark ? 'sun' : 'moon'}`}
               variants={iconVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
             >
               {isCurrentlyDark ? (
-                <Sun className="h-[1.2rem] w-[1.2rem]" />
+                <Sun className={iconSize} />
               ) : (
-                <Moon className="h-[1.2rem] w-[1.2rem]" />
+                <Moon className={iconSize} />
               )}
             </motion.div>
           </AnimatePresence>
         </div>
-        
-        <span className="sr-only">
-          Switch to {isCurrentlyDark ? 'light' : 'dark'} mode
-        </span>
-      </Button>
-    </motion.div>
-  );
 
-  const renderEnhanced = () => (
-    <motion.div
-      variants={buttonVariants}
-      initial="idle"
-      whileHover="hover"
-      whileTap="tap"
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      className="relative"
-    >
-      <Button
-        variant="outline"
-        size={showLabel ? "default" : "icon"}
-        onClick={handleThemeSwitch}
-        disabled={isAnimating}
-        className={cn(
-          "relative overflow-hidden transition-all duration-300 group",
-          showLabel && "pl-3 pr-4",
-          className
-        )}
-        style={{
-          backgroundColor: isHovered ? themeColors.primary : themeColors.background,
-          color: isHovered ? themeColors.background : themeColors.foreground,
-          borderColor: themeColors.border
-        }}
-      >
-        {/* Animated background */}
+        {/* Rotating ring effect */}
         <motion.div
-          className="absolute inset-0"
-          style={{
-            background: `linear-gradient(45deg, ${themeColors.primary}20, ${themeColors.glow})`
-          }}
+          className="absolute inset-1 rounded-full border opacity-0 group-hover:opacity-30"
+          style={{ borderColor: themeColors.iconColor }}
           animate={{
-            opacity: isHovered ? 1 : 0,
-            scale: isHovered ? 1 : 0.8
+            rotate: isAnimating ? 360 : 0,
+            opacity: isHovered ? 0.3 : 0
           }}
-          transition={{ duration: 0.3 }}
+          transition={{
+            rotate: { duration: 0.6, ease: 'easeInOut' },
+            opacity: { duration: 0.2 }
+          }}
         />
 
-        {/* Content */}
-        <div className="relative z-10 flex items-center gap-2">
-          {/* Icon container with smooth animation */}
-          <div className="relative">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={isCurrentlyDark ? 'sun' : 'moon'}
-                variants={iconVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="flex items-center"
-              >
-                {isCurrentlyDark ? (
-                  <Sun className="h-[1.1rem] w-[1.1rem]" />
-                ) : (
-                  <Moon className="h-[1.1rem] w-[1.1rem]" />
-                )}
-              </motion.div>
-            </AnimatePresence>
+        {/* Shimmer effect on hover */}
+        <motion.div
+          className="absolute inset-0 rounded-xl pointer-events-none"
+          style={{
+            background: `linear-gradient(45deg, transparent 20%, ${themeColors.iconColor}20 50%, transparent 80%)`
+          }}
+          animate={{
+            x: isHovered ? ['0%', '100%'] : '0%',
+            opacity: isHovered ? [0, 0.8, 0] : 0
+          }}
+          transition={{
+            duration: 0.8,
+            ease: 'easeInOut'
+          }}
+        />
+      </Button>
 
-            {/* Rotating halo effect */}
-            <motion.div
-              className="absolute inset-0 rounded-full"
-              style={{
-                border: `1px solid ${themeColors.iconColor}30`
-              }}
-              animate={{
-                rotate: isAnimating ? 360 : 0,
-                scale: isHovered ? 1.2 : 1,
-                opacity: isHovered ? 0.6 : 0
-              }}
-              transition={{
-                rotate: { duration: 0.6, ease: 'easeInOut' },
-                scale: { duration: 0.2 },
-                opacity: { duration: 0.2 }
-              }}
-            />
-          </div>
-
-          {/* Label with animation */}
-          {showLabel && (
-            <motion.span
-              className="text-sm font-medium"
-              animate={{
-                opacity: isAnimating ? 0.5 : 1
-              }}
-              transition={{ duration: 0.2 }}
-            >
-              {isCurrentlyDark ? 'Light' : 'Dark'}
-            </motion.span>
-          )}
-        </div>
-
-        {/* Loading indicator */}
+      {/* Loading indicator */}
+      <AnimatePresence>
         {isAnimating && (
           <motion.div
             className="absolute inset-0 flex items-center justify-center"
-            style={{ backgroundColor: `${themeColors.background}80` }}
+            style={{ backgroundColor: `${themeColors.background}95` }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <motion.div
               className="w-4 h-4 border-2 border-current border-t-transparent rounded-full"
+              style={{ borderColor: themeColors.iconColor }}
               animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+              transition={{ 
+                duration: 0.8, 
+                repeat: Infinity, 
+                ease: 'linear' 
+              }}
             />
           </motion.div>
         )}
-      </Button>
-
-      {/* Hover shine effect */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none rounded-lg"
-        style={{
-          background: `linear-gradient(45deg, transparent 30%, ${themeColors.iconColor}20 50%, transparent 70%)`
-        }}
-        animate={{
-          x: isHovered ? ['0%', '100%'] : '0%',
-          opacity: isHovered ? [0, 0.6, 0] : 0
-        }}
-        transition={{
-          duration: 0.6,
-          ease: 'easeInOut'
-        }}
-      />
+      </AnimatePresence>
     </motion.div>
   );
 
+  // Default variant
   const renderDefault = () => (
     <motion.div
       variants={buttonVariants}
@@ -344,75 +381,46 @@ export function ThemeToggle({
         disabled={isAnimating}
         className={cn(
           "relative transition-all duration-300",
+          buttonSize,
           className
         )}
         style={{
-          backgroundColor: isHovered ? themeColors.muted : 'transparent',
+          backgroundColor: isHovered ? themeColors.hoverBg : 'transparent',
           color: themeColors.foreground,
-          borderColor: 'transparent'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = themeColors.muted;
-          e.currentTarget.style.color = themeColors.primary;
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = 'transparent';
-          e.currentTarget.style.color = themeColors.foreground;
         }}
       >
         <AnimatePresence mode="wait">
           <motion.div
-            key={isCurrentlyDark ? 'sun' : 'moon'}
+            key={`default-${isCurrentlyDark ? 'sun' : 'moon'}`}
             variants={iconVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
           >
             {isCurrentlyDark ? (
-              <Sun className="h-[1.2rem] w-[1.2rem] transition-all" />
+              <Sun className={cn(iconSize, "transition-all")} />
             ) : (
-              <Moon className="h-[1.2rem] w-[1.2rem] transition-all" />
+              <Moon className={cn(iconSize, "transition-all")} />
             )}
           </motion.div>
         </AnimatePresence>
         
-        <span className="sr-only">Toggle theme</span>
+        <span className="sr-only">
+          Switch to {isCurrentlyDark ? 'light' : 'dark'} mode
+        </span>
       </Button>
     </motion.div>
   );
 
   // Render based on variant
   switch (variant) {
-    case 'minimal':
-      return renderMinimal();
+    case 'mobile':
+      return renderMobile();
     case 'enhanced':
       return renderEnhanced();
+    case 'minimal':
+      return renderDefault(); // Use default for minimal
     default:
       return renderDefault();
   }
-}
-
-// Optimized hook for theme switching performance
-export function useOptimizedThemeSwitch() {
-  const { setTheme, theme } = useTheme();
-  const [isTransitioning, setIsTransitioning] = React.useState(false);
-
-  const switchTheme = React.useCallback((targetTheme?: string) => {
-    if (isTransitioning) return;
-    
-    setIsTransitioning(true);
-    
-    // Use requestAnimationFrame for smooth transition
-    requestAnimationFrame(() => {
-      const newTheme = targetTheme || (theme === 'dark' ? 'light' : 'dark');
-      setTheme(newTheme);
-      
-      // Reset transition state after a brief delay
-      setTimeout(() => {
-        setIsTransitioning(false);
-      }, 150);
-    });
-  }, [theme, setTheme, isTransitioning]);
-
-  return { switchTheme, isTransitioning };
 }
