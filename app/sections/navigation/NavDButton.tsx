@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/app/components/ui/button';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { LucideIcon } from 'lucide-react';
+import { badgeVariants } from '@/app/components/animations/variants/cardVariants';
 
 interface ActionButtonConfig {
   key: string;
@@ -36,26 +37,6 @@ const buttonVariants = {
   }
 };
 
-const badgeVariants = {
-  hidden: { scale: 0, opacity: 0 },
-  visible: { 
-    scale: 1, 
-    opacity: 1,
-    transition: {
-      type: 'spring',
-      stiffness: 500,
-      damping: 20
-    }
-  },
-  pulse: {
-    scale: [1, 1.1, 1],
-    transition: {
-      duration: 2,
-      repeat: Infinity,
-      ease: 'easeInOut'
-    }
-  }
-};
 
 export const NavDButton: React.FC<NavDButtonProps> = ({ config, navbarColors }) => {
   const { colors } = useLayoutTheme();

@@ -167,10 +167,10 @@ const NewsCardContent = memo(function NewsCardContent({
 
       {/* Bottom Section */}
       {article.factCheck.verdict && <motion.div
-        className="mt-2 pt-2 text-xs font-medium"
+        className="text-xs font-thin line-clamp-2"
         variants={itemVariants}
       >
-        
+        {article.factCheck.verdict}
       </motion.div>}
     </motion.div>
   );

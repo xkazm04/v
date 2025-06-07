@@ -1,8 +1,8 @@
-import { VideoMetadata } from "@/app/types/video";
+import { VideoWithTimestamps } from "@/app/types/video_api";
 import { useCallback, useRef, useState } from "react";
 
 type Props = {
-    videos?: VideoMetadata[];
+    videos?: VideoWithTimestamps[];
     children: React.ReactNode;
     setShowHeader: (show: boolean) => void;
     currentIndex: number;

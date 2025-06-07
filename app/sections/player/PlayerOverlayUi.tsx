@@ -1,24 +1,19 @@
 import { Button } from "@/app/components/ui/button";
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
+import { VideoWithTimestamps } from "@/app/types/video_api";
 import { motion } from "framer-motion"
 import { ChevronDown, ChevronUp, MoreVertical } from "lucide-react";
 
 type Props = {
     index: number;
     currentIndex: number;
-    video: {
-        title: string;
-        channelName: string;
-        views?: number;
-        likes?: number;
-    };
     showTimeline: boolean;
     setShowTimeline: (show: boolean) => void;
     setCurrentIndex: (index: number) => void;
-    videos: any[];
+    videos: VideoWithTimestamps[];
 }
 
-const PlayerOverlayUi = ({index, currentIndex, video, showTimeline, setShowTimeline, setCurrentIndex, videos }: Props) => {
+const PlayerOverlayUi = ({currentIndex, showTimeline, setShowTimeline, setCurrentIndex, videos }: Props) => {
     const { colors, isDark } = useLayoutTheme();
     return <>
         <div className="absolute inset-0 pointer-events-none">
@@ -44,36 +39,6 @@ const PlayerOverlayUi = ({index, currentIndex, video, showTimeline, setShowTimel
                   )`
                 }}
             />
-
-            {/* Video Info */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: index === currentIndex ? 1 : 0, y: 0 }}
-                className="absolute bottom-20 left-4 right-20 pointer-events-auto"
-            >
-                <h3 className="text-white text-lg font-bold mb-2 line-clamp-2 leading-tight drop-shadow-lg">
-                    {video.title}
-                </h3>
-                <p className="text-slate-300 text-sm mb-3 drop-shadow-md">
-                    {video.channelName}
-                </p>
-
-                {/* Enhanced Stats */}
-                <div className="flex items-center gap-4 text-white/80 text-sm">
-                    <motion.span
-                        whileHover={{ scale: 1.05 }}
-                        className="flex items-center gap-1"
-                    >
-                        👁️ {video.views?.toLocaleString()}
-                    </motion.span>
-                    <motion.span
-                        whileHover={{ scale: 1.05 }}
-                        className="flex items-center gap-1"
-                    >
-                        👍 {video.likes?.toLocaleString()}
-                    </motion.span>
-                </div>
-            </motion.div>
 
             {/* Enhanced Right Side Controls */}
             <div className="absolute right-4 bottom-32 flex flex-col items-center gap-4 pointer-events-auto">

@@ -4,6 +4,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/app/lib/utils';
+import { iconVariants, labelVariants, tabVariants } from '@/app/components/animations/variants/mobileNavVariants';
 
 interface TabItem {
   id: string;
@@ -30,121 +31,9 @@ interface MobileNavbarItemProps {
   onTabPress: (tabId: string, href: string) => void;
   onPressStart: (tabId: string) => void;
   onPressEnd: () => void;
+  isCompact?: boolean; 
 }
 
-// Enhanced animation variants for smoother interactions
-const tabVariants = {
-  inactive: { 
-    scale: 1, 
-    y: 0, 
-    opacity: 0.75,
-    filter: 'blur(0px)'
-  },
-  active: { 
-    scale: 1.05, 
-    y: -3, 
-    opacity: 1,
-    filter: 'blur(0px)',
-    transition: {
-      type: 'spring',
-      stiffness: 600,
-      damping: 25,
-      mass: 0.8
-    }
-  },
-  tap: { 
-    scale: 0.92,
-    y: 1,
-    transition: { duration: 0.1 }
-  }
-};
-
-const iconVariants = {
-  inactive: { 
-    scale: 1, 
-    rotate: 0,
-    filter: 'drop-shadow(0 0 0px transparent)'
-  },
-  active: { 
-    scale: 1.15, 
-    rotate: [0, -2, 2, 0],
-    filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.15))',
-    transition: {
-      scale: { duration: 0.3, ease: 'easeOut' },
-      rotate: { duration: 0.6, ease: 'easeInOut' },
-      filter: { duration: 0.3 }
-    }
-  }
-};
-
-const labelVariants = {
-  inactive: { 
-    y: 0, 
-    opacity: 0.7,
-    scale: 0.95,
-    fontWeight: 400
-  },
-  active: { 
-    y: -1, 
-    opacity: 1,
-    scale: 1,
-    fontWeight: 600,
-    transition: {
-      duration: 0.3,
-      ease: 'easeOut'
-    }
-  }
-};
-
-const glowVariants = {
-  hidden: { 
-    opacity: 0, 
-    scale: 0.8,
-    filter: 'blur(8px)'
-  },
-  visible: { 
-    opacity: 1, 
-    scale: 1,
-    filter: 'blur(0px)',
-    transition: {
-      type: 'spring',
-      stiffness: 400,
-      damping: 25,
-      duration: 0.4
-    }
-  }
-};
-
-const pressVariants = {
-  hidden: { 
-    opacity: 0, 
-    scale: 0.7 
-  },
-  visible: { 
-    opacity: 0.4, 
-    scale: 1.3,
-    transition: { duration: 0.15, ease: 'easeOut' }
-  }
-};
-
-const indicatorVariants = {
-  hidden: { 
-    opacity: 0, 
-    scale: 0,
-    rotate: -180
-  },
-  visible: { 
-    opacity: 1, 
-    scale: 1,
-    rotate: 0,
-    transition: {
-      type: 'spring',
-      stiffness: 500,
-      damping: 20,
-      delay: 0.1
-    }
-  }
-};
 
 export const MobileNavbarItem: React.FC<MobileNavbarItemProps> = ({
   item,
@@ -153,7 +42,8 @@ export const MobileNavbarItem: React.FC<MobileNavbarItemProps> = ({
   navColors,
   onTabPress,
   onPressStart,
-  onPressEnd
+  onPressEnd,
+  isCompact = false
 }) => {
   const IconComponent = item.icon;
 
@@ -162,37 +52,33 @@ export const MobileNavbarItem: React.FC<MobileNavbarItemProps> = ({
       key={item.id}
       variants={tabVariants}
       initial="inactive"
-      animate={isActive ? "active" : "inactive"}
+      animate={isActive ? (isCompact ? "activeCompact" : "active") : "inactive"}
       whileTap="tap"
       onTouchStart={() => onPressStart(item.id)}
       onTouchEnd={onPressEnd}
       onClick={() => onTabPress(item.id, item.href)}
       className={cn(
         "relative flex flex-col items-center justify-center flex-1",
-        "py-3 px-2 min-h-[64px] touch-manipulation",
-        "focus:outline-none transition-all duration-200",
-        // Enhanced focus ring
+        "touch-manipulation focus:outline-none transition-all duration-200",
         "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
-        "focus-visible:ring-opacity-50"
+        "focus-visible:ring-opacity-50",
+        isCompact ? "py-2 px-2 min-h-[40px]" : "py-3 px-2 min-h-[64px]"
       )}
       style={{
         color: isActive ? navColors.active : navColors.inactive,
-        //@ts-expect-error Ignore
         focusVisibleRing: `2px solid ${navColors.active}50`
       }}
-      // Enhanced accessibility
       aria-label={`Navigate to ${item.label}`}
       aria-pressed={isActive}
       role="tab"
     >
-      {/* Enhanced background glow with gradient */}
+      {/* Enhanced background glow - reduced in compact mode */}
       <AnimatePresence>
-        {isActive && (
+        {isActive && !isCompact && (
           <motion.div
-            variants={glowVariants}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
             className="absolute inset-0 rounded-2xl"
             style={{
               background: `radial-gradient(ellipse at center, ${navColors.glow} 0%, ${navColors.glow}40 50%, transparent 100%)`,
@@ -203,92 +89,111 @@ export const MobileNavbarItem: React.FC<MobileNavbarItemProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Refined press effect with ripple */}
+      {/* Compact mode active indicator */}
       <AnimatePresence>
-        {isPressed && (
+        {isActive && isCompact && (
           <motion.div
-            variants={pressVariants}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            className="absolute inset-0 rounded-2xl"
-            style={{ 
-              background: `radial-gradient(circle at center, ${navColors.active}20 0%, transparent 70%)`
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="absolute inset-0 rounded-xl"
+            style={{
+              background: `linear-gradient(135deg, ${navColors.active}20, ${navColors.active}10)`,
+              backdropFilter: 'blur(8px)'
             }}
           />
         )}
       </AnimatePresence>
 
-      {/* Enhanced icon with better animations */}
+      {/* Press effect */}
+      <AnimatePresence>
+        {isPressed && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 0.4, scale: 1.3 }}
+            exit={{ opacity: 0, scale: 0.7 }}
+            className="absolute inset-0 rounded-2xl"
+            style={{ 
+              background: `radial-gradient(circle at center, ${navColors.active}20 0%, transparent 70%)`
+            }}
+            transition={{ duration: 0.15, ease: 'easeOut' }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Enhanced icon with compact mode adaptation */}
       <motion.div
-        className="relative z-10 mb-2"
+        className={cn(
+          "relative z-10",
+          isCompact ? "mb-0" : "mb-2"
+        )}
         variants={iconVariants}
-        animate={isActive ? "active" : "inactive"}
+        animate={isActive ? (isCompact ? "activeCompact" : "active") : "inactive"}
       >
         <div 
-          className="p-1 rounded-xl transition-all duration-300"
+          className={cn(
+            "transition-all duration-300",
+            isCompact ? "p-0.5 rounded-lg" : "p-1 rounded-xl"
+          )}
           style={{
             backgroundColor: isActive ? `${navColors.active}15` : 'transparent'
           }}
         >
           <IconComponent 
-            className="h-5 w-5" 
+            className={cn(
+              isCompact ? "h-4 w-4" : "h-5 w-5"
+            )}
             strokeWidth={isActive ? 2.5 : 2}
           />
         </div>
       </motion.div>
 
-      {/* Enhanced label with better typography */}
-      <motion.span
-        className="relative z-10 text-xs tracking-wide"
-        variants={labelVariants}
-        animate={isActive ? "active" : "inactive"}
-        style={{
-          fontFamily: 'var(--font-inter)',
-          letterSpacing: isActive ? '0.025em' : '0.015em'
-        }}
-      >
-        {item.label}
-      </motion.span>
-
-      {/* Modern active indicator - small pill instead of dot */}
+      {/* Label - hidden in compact mode */}
       <AnimatePresence>
-        {isActive && (
-          <motion.div
-            variants={indicatorVariants}
-            initial="hidden"
-            animate="visible"
+        {!isCompact && (
+          <motion.span
+            className="relative z-10 text-xs tracking-wide"
+            variants={labelVariants}
+            animate={isActive ? "active" : "inactive"}
             exit="hidden"
-            className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full"
+            style={{
+              fontFamily: 'var(--font-inter)',
+              letterSpacing: isActive ? '0.025em' : '0.015em'
+            }}
+          >
+            {item.label}
+          </motion.span>
+        )}
+      </AnimatePresence>
+
+      {/* Compact mode active indicator dot */}
+      <AnimatePresence>
+        {isActive && isCompact && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+            className="absolute top-1 right-1 h-1 w-1 rounded-full"
             style={{ 
               backgroundColor: navColors.active,
-              boxShadow: `0 0 8px ${navColors.active}60`
+              boxShadow: `0 0 4px ${navColors.active}80`
             }}
           />
         )}
       </AnimatePresence>
 
-      {/* Subtle border highlight for active state */}
-      {isActive && (
-        <motion.div
-          className="absolute inset-0 rounded-2xl border border-opacity-30"
-          style={{ borderColor: navColors.active }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-        />
-      )}
-
-      {/* Enhanced haptic feedback indicator */}
+      {/* Regular active indicator - hidden in compact mode */}
       <AnimatePresence>
-        {isPressed && (
+        {isActive && !isCompact && (
           <motion.div
-            className="absolute inset-0 rounded-2xl border-2"
-            style={{ borderColor: `${navColors.active}60` }}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1.1, opacity: 1 }}
-            exit={{ scale: 1.3, opacity: 0 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+            className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full"
+            style={{ 
+              backgroundColor: navColors.active,
+              boxShadow: `0 0 8px ${navColors.active}60`
+            }}
           />
         )}
       </AnimatePresence>

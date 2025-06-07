@@ -5,6 +5,7 @@ import { NewsArticle } from '@/app/types/article';
 import { FakeStamp } from '../icons/stamps';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
+import { badgeVariants } from '../animations/variants/cardVariants';
 
 interface NewsCardHeaderProps {
   article: NewsArticle;
@@ -33,26 +34,6 @@ const headerVariants = {
   }
 };
 
-const badgeVariants = {
-  hidden: { opacity: 0, scale: 0, rotate: -180 },
-  visible: { 
-    opacity: 1, 
-    scale: 1,
-    rotate: 0,
-    transition: {
-      duration: 0.5,
-      ease: 'easeOut',
-      type: 'spring',
-      stiffness: 400,
-      damping: 15
-    }
-  },
-  hover: {
-    scale: 1.1,
-    rotate: 5,
-    transition: { duration: 0.2 }
-  }
-};
 
 const pulseVariants = {
   pulse: {

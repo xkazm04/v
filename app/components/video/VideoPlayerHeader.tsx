@@ -6,16 +6,16 @@ import { VideoMetadata } from '@/app/types/video';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
 import { FactCheckBadge } from './header/FactCheckBadge';
-import { VideoStatsBadges } from './header/VideoStatsBadges';
 import { ConfidenceProgressBar } from './header/ConfidenceProgressBar';
 import { ShimmerEffect } from './header/ShimmerEffect';
 import { BackgroundPattern } from './header/BackgroundPattern';
 import { getFactCheckVerdict } from '@/app/utils/videoUtils';
 import { headerVariants } from '../animations/variants/playerVariants';
+import { VideoWithTimestamps } from '@/app/types/video_api';
 
 
 interface VideoPlayerHeaderProps {
-  video: VideoMetadata;
+  video: VideoWithTimestamps;
   isVisible?: boolean;
   isMobile?: boolean;
   className?: string;
@@ -60,6 +60,8 @@ export const VideoPlayerHeader = memo(function VideoPlayerHeader({
          inset 0 1px 0 rgba(255, 255, 255, 0.4)`
   };
 
+  
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -89,14 +91,6 @@ export const VideoPlayerHeader = memo(function VideoPlayerHeader({
                   colors={colors}
                   isDark={isDark}
                 />
-
-                {/* Right Side - Video Stats */}
-                <VideoStatsBadges 
-                  video={video}
-                  isMobile={isMobile}
-                  colors={colors}
-                  isDark={isDark}
-                />
               </div>
 
               {/* Progress bar for fact-check confidence */}
@@ -108,8 +102,6 @@ export const VideoPlayerHeader = memo(function VideoPlayerHeader({
                 />
               )}
             </div>
-
-            {/* Subtle shimmer effect */}
             <ShimmerEffect />
           </div>
         </motion.div>

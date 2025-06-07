@@ -32,3 +32,9 @@ export function formatTimeAgo(dateString: string): string {
   if (diffInSeconds < 29030400) return `${Math.floor(diffInSeconds / 2419200)}mo ago`;
   return `${Math.floor(diffInSeconds / 29030400)}y ago`;
 }
+
+export const formatTime = (seconds: number): string => {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+};

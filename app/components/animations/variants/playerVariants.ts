@@ -31,22 +31,3 @@ export const contentVariants = {
   }
 };
 
-export const badgeVariants = {
-  hidden: { opacity: 0, scale: 0, rotate: -180 },
-  visible: { 
-    opacity: 1, 
-    scale: 1,
-    rotate: 0,
-    transition: {
-      duration: 0.5,
-      ease: "easeOut",
-      type: "spring",
-      stiffness: 400,
-      damping: 15
-    }
-  },
-  hover: {
-    scale: 1.05,
-    transition: { duration: 0.2 }
-  }
-};

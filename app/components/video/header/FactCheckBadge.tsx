@@ -5,7 +5,8 @@ import { Shield, Target } from 'lucide-react';
 import { VideoMetadata } from '@/app/types/video';
 import { getVerdictStyling } from '@/app/config/verdictStyling';
 import { cn } from '@/app/lib/utils';
-import { contentVariants, badgeVariants } from '../../animations/variants/playerVariants';
+import { contentVariants } from '../../animations/variants/playerVariants';
+import { badgeVariants } from '../../animations/variants/cardVariants';
 
 interface FactCheckBadgeProps {
   factCheckInfo: { status: string; evaluation: string; truthPercentage: number } | null;

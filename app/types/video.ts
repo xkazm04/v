@@ -11,7 +11,7 @@ export interface VideoMetadata {
   likes: number;
   uploadDate: string;
   channelName: string;
-  category: VideoCategory;
+  category: string;
   tags?: string[];
   factCheck: FactCheckResult;
   youtubeId: string; // YouTube video ID
@@ -27,13 +27,6 @@ export interface FactCheckResult {
   sources?: number;
   confidence?: number; // 0-100
 }
-
-export type VideoCategory = 
-  | 'All'
-  | 'Technology'
-  | 'Science'
-  | 'Education'
-  | 'News'
 
 export type FeedProps = {
   imageLoaded: boolean;

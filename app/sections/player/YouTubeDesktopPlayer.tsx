@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { VideoMetadata } from '@/app/types/video';
 import { PlayerTimeline } from '@/app/sections/player/timeline/PlayerTimeline';
 import { useState } from 'react';
-import { ListenOnlyTimeline } from './timeline/ListenOnlyTimeline';
 
 interface YouTubeDesktopPlayerProps {
   videos?: VideoMetadata[];
@@ -20,21 +19,6 @@ export function YouTubeDesktopPlayer({
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
   const currentVideo = videos?.[currentIndex];
-
-  const exampleClaims = [
-    {
-      startTime: 10,
-      endTime: 20,
-      text: "Claim 1",
-      veracity: "true"
-    },
-    {
-      startTime: 30,
-      endTime: 40,
-      text: "Claim 2",
-      veracity: "false"
-    }
-  ]
 
 
   const handleSeekToTimestamp = (timestamp: number) => {
@@ -72,8 +56,7 @@ export function YouTubeDesktopPlayer({
         <div className="relative aspect-video bg-black rounded-t-2xl overflow-hidden">
           {/* YouTube iFrame */}
           <iframe
-
-            key={currentVideo.youtubeId} // Force re-render on video change
+            key={currentVideo.youtubeId} 
             src={`https://www.youtube.com/embed/${currentVideo.youtubeId}?autoplay=${autoPlay ? 1 : 0}&rel=0&modestbranding=1&controls=1`}
             className="w-full h-full"
             frameBorder="0"
@@ -104,13 +87,6 @@ export function YouTubeDesktopPlayer({
             onSeekToTimestamp={handleSeekToTimestamp}
             onExpansionChange={() => {}}
           />
-          <ListenOnlyTimeline
-            factCheck={currentVideo.factCheck}
-            duration={currentVideo.duration}
-            videoId={currentVideo.youtubeId}
-            //@ts-expect-error Ignore
-            claims={exampleClaims}
-            />
         </motion.div>
       </div>
       </>}

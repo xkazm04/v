@@ -2,16 +2,18 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { VideoMetadata } from '@/app/types/video';
+import { VideoWithTimestamps } from '@/app/types/video_api';
 import { PlayerTimeline } from '@/app/sections/player/timeline/PlayerTimeline';
 import { Button } from '@/app/components/ui/button';
 import { VideoPlayerHeader } from '@/app/components/video/VideoPlayerHeader';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import { MobileNavbar } from '@/app/sections/navigation/MobileNavbar';
 import YouTubeMobileContainer from './YouTubeMobileContainer';
 import PlayerOverlayUi from './PlayerOverlayUi';
+import { ChevronDown } from 'lucide-react';
 
 interface YouTubeMobilePlayerProps {
-  videos?: VideoMetadata[];
+  videos?: VideoWithTimestamps[];
   initialIndex?: number;
   autoPlay?: boolean;
 }
@@ -25,9 +27,11 @@ export function YouTubeMobilePlayer({
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [showTimeline, setShowTimeline] = useState(false);
   const [showHeader, setShowHeader] = useState(true);
+  const [navbarCollapsed, setNavbarCollapsed] = useState(false);
 
   const handleSeekToTimestamp = (timestamp: number) => {
     console.log('Seek to timestamp:', timestamp);
+    // Implementation for seeking to specific timestamp
   };
 
   const currentVideo = videos?.[currentIndex];
@@ -42,45 +46,50 @@ export function YouTubeMobilePlayer({
         setShowHeader={setShowHeader}
       >
         {/* Video Player */}
-        {videos && videos.map((video, index) => (
-          <div
-            key={video.id}
-            className="w-full h-screen flex-shrink-0 relative bg-black"
-          >
-            {/* YouTube iFrame */}
-            <iframe
-              key={`${video.youtubeId}-${index === currentIndex}`}
-              src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=${index === currentIndex && autoPlay ? 1 : 0}&rel=0&controls=1&modestbranding=1`}
-              className="w-full h-full"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              title={video.title}
-            />
-
-            {/* Enhanced Header with Fact Check */}
-            {index === currentIndex && (
-              <VideoPlayerHeader 
-                video={video}
-                isVisible={showHeader}
-                isMobile={true}
+        {videos && videos.map((videoData, index) => {
+          const youtubeId = extractYouTubeId(videoData.video.video_url);
+          
+          return (
+            <div
+              key={videoData.video.id}
+              className="w-full h-screen flex-shrink-0 relative bg-black"
+            >
+              {/* YouTube iFrame */}
+              <iframe
+                key={`${youtubeId}-${index === currentIndex}`}
+                src={`https://www.youtube.com/embed/${youtubeId}?autoplay=${index === currentIndex && autoPlay ? 1 : 0}&rel=0&controls=1&modestbranding=1`}
+                className="w-full h-full"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title={videoData.video.title || 'Video'}
               />
-            )}
 
-            {/* Overlay UI */}
-            <PlayerOverlayUi
-              index={index}
-              currentIndex={currentIndex}
-              video={video}
-              showTimeline={showTimeline}
-              setShowTimeline={setShowTimeline}
-              setCurrentIndex={setCurrentIndex}
-              videos={videos}
+              {/* Enhanced Header with Fact Check */}
+              {index === currentIndex && (
+                <VideoPlayerHeader 
+                  video={videoData.video}
+                  isVisible={showHeader}
+                  isMobile={true}
+                />
+              )}
+
+              {/* Overlay UI */}
+              <PlayerOverlayUi
+                index={index}
+                currentIndex={currentIndex}
+                video={videoData.video}
+                showTimeline={showTimeline}
+                setShowTimeline={setShowTimeline}
+                setCurrentIndex={setCurrentIndex}
+                videos={videos}
               />
-          </div>
-        ))}
+            </div>
+          );
+        })}
       </YouTubeMobileContainer>
-      {/* Enhanced Timeline Overlay */}
+
+      {/* Enhanced Timeline Overlay - positioned above navbar */}
       {videos && currentVideo && (
         <AnimatePresence>
           {showTimeline && (
@@ -89,38 +98,50 @@ export function YouTubeMobilePlayer({
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="absolute bottom-0 left-0 right-0 backdrop-blur-md border-t border-white/20 p-4"
+              className="absolute left-0 right-0 backdrop-blur-md border-t border-white/20 p-4 z-50"
               style={{
+                bottom: '100px', // Position above navbar
                 background: isDark
                   ? 'rgba(15, 23, 42, 0.95)'
                   : 'rgba(255, 255, 255, 0.95)'
               }}
             >
               <PlayerTimeline
-                factCheck={currentVideo.factCheck}
-                videoDuration={currentVideo.duration}
+                videoData={currentVideo}
                 onSeekToTimestamp={handleSeekToTimestamp}
                 onExpansionChange={() => {}}
+                isOverNavbar={true}
               />
               
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
+                className='absolute bottom-1'
               >
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="mt-3"
+                  className=""
                   style={{ color: colors.foreground }}
                   onClick={() => setShowTimeline(false)}
                 >
-                  Close Timeline
+                  <ChevronDown />
                 </Button>
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
       )}
+      <MobileNavbar 
+        isVideoPlayerMode={true}
+        onVideoPlayerModeToggle={() => setNavbarCollapsed(!navbarCollapsed)}
+      />
     </div>
   );
+}
+
+// Helper function to extract YouTube ID from URL
+function extractYouTubeId(url: string): string {
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+  return match ? match[1] : '';
 }

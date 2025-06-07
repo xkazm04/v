@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import { Star, TrendingUp } from 'lucide-react';
 import { VideoMetadata } from '@/app/types/video';
 import { cn } from '@/app/lib/utils';
-import { contentVariants, badgeVariants } from '../../animations/variants/playerVariants';
+import { contentVariants } from '../../animations/variants/playerVariants';
+import { badgeVariants } from '../../animations/variants/cardVariants';
 
 interface VideoStatsBadgesProps {
   video: VideoMetadata;
