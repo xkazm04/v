@@ -1,13 +1,13 @@
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
 import { Edit3, FileText, Shield } from "lucide-react";
-import { ResearchResponse } from "../types";
+import { LLMResearchResponse } from "@/app/types/research";
 
 type Props = {
     isLoading: boolean;
-    displayResult: ResearchResponse
+    displayResult: LLMResearchResponse
 }
 
-const ResultOverviewContent = ({isLoading, displayResult }: Props) => {
+const ResultOverviewContent = ({ isLoading, displayResult }: Props) => {
     const { colors, isDark } = useLayoutTheme();
     return <div className="p-8 space-y-6" style={{ background: colors.card.background }}>
         {/* Verdict Summary */}
@@ -52,19 +52,17 @@ const ResultOverviewContent = ({isLoading, displayResult }: Props) => {
                 className={`text-base italic border-l-4 border-blue-400 pl-4 ${isLoading ? 'animate-pulse' : ''}`}
                 style={{ color: colors.foreground }}
             >
-                "{displayResult.request.statement}"
+                "{displayResult.request_statement}"
             </blockquote>
-            {displayResult.request.context && (
-                <div
-                    className={`text-sm mt-3 p-3 rounded-lg ${isLoading ? 'animate-pulse' : ''}`}
-                    style={{
-                        background: isDark ? 'rgba(71, 85, 105, 0.2)' : 'rgba(248, 250, 252, 0.8)',
-                        color: colors.mutedForeground
-                    }}
-                >
-                    <strong>Context:</strong> {displayResult.request.context}
-                </div>
-            )}
+            <div
+                className={`text-sm mt-3 p-3 rounded-lg ${isLoading ? 'animate-pulse' : ''}`}
+                style={{
+                    background: isDark ? 'rgba(71, 85, 105, 0.2)' : 'rgba(248, 250, 252, 0.8)',
+                    color: colors.mutedForeground
+                }}
+            >
+                <strong>Context:</strong> {displayResult.request_context}
+            </div>
         </div>
 
         {/* Corrected Statement */}

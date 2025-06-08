@@ -3,13 +3,13 @@ import { motion } from "framer-motion"
 import { Calendar, TrendingUp, User } from "lucide-react";
 import { getCategoryIcon, getCountryName, getCategoryColor } from '@/app/helpers/researchResultHelpers';
 import { Badge } from "@/app/components/ui/badge";
-import { ResearchResponse } from "../types";
+import { LLMResearchResponse } from "@/app/types/research";
 
 type Props = {
-    displayResult: ResearchResponse
+    displayResult: LLMResearchResponse
 }
 
-const ResultOverviewMetadata = ({displayResult}: Props) => {
+const ResultOverviewMetadata = ({ displayResult }: Props) => {
     const CategoryIcon = getCategoryIcon(displayResult.category);
     const { colors, isDark } = useLayoutTheme();
     return <>
@@ -19,19 +19,17 @@ const ResultOverviewMetadata = ({displayResult}: Props) => {
             transition={{ delay: 0.4 }}
             className="flex flex-wrap items-center justify-center gap-4 text-sm"
         >
-            {displayResult.request.source && (
-                <div className="flex items-center gap-2">
-                    <User className="h-4 w-4" style={{ color: colors.mutedForeground }} />
-                    <span style={{ color: colors.mutedForeground }}>
-                        <strong>Source:</strong> {displayResult.request.source}
-                    </span>
-                </div>
-            )}
+            <div className="flex items-center gap-2">
+                <User className="h-4 w-4" style={{ color: colors.mutedForeground }} />
+                <span style={{ color: colors.mutedForeground }}>
+                    <strong>Source:</strong> {displayResult.request_source}
+                </span>
+            </div>
 
             <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" style={{ color: colors.mutedForeground }} />
                 <span style={{ color: colors.mutedForeground }}>
-                    {new Date(displayResult.request.datetime).toLocaleDateString('en-US', {
+                    {new Date(displayResult.request_datetime).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
                         day: 'numeric'

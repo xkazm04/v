@@ -5,10 +5,11 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { ResearchForm } from './ResearchForm';
 import { ResearchResults } from './ResearchResults';
-import type { ResearchRequest, ResearchResponse } from './types';
+import type { ResearchRequest } from './types';
+import { LLMResearchResponse } from '@/app/types/research';
 
 export default function UploadLayout() {
-  const [result, setResult] = useState<ResearchResponse | null>(null);
+  const [result, setResult] = useState<LLMResearchResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleResearch = async (data: ResearchRequest) => {
@@ -26,7 +27,7 @@ export default function UploadLayout() {
         throw new Error(`Failed to research statement: ${response.statusText}`);
       }
 
-      const researchResult: ResearchResponse = await response.json();
+      const researchResult: LLMResearchResponse = await response.json();
       setResult(researchResult);
       toast.success('Fact-check completed successfully!');
     } catch (error) {

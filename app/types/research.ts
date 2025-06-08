@@ -14,7 +14,7 @@ export interface LLMResearchResponse {
     medical: number;
     other: number;
     major_countries: string[];
-    references: any[];
+    references: Reference[];
   } | null;
   resources_disagreed?: {
     total: string;
@@ -25,7 +25,7 @@ export interface LLMResearchResponse {
     medical: number;
     other: number;
     major_countries: string[];
-    references: any[];
+    references: Reference[];
   } | null;
   experts?: {
     critic?: string | null;
@@ -33,6 +33,22 @@ export interface LLMResearchResponse {
     nerd?: string | null;
     psychic?: string | null;
   } | null;
-  research_method: string;
+  research_method?: string;
   profile_id?: string | null;
+  expert_perspectives?: any;
+  key_findings?: any;
+  research_summary?: string | null;
+  confidence_score?: number | null;
+  request_statement: string;
+  request_source: string;
+  request_context: string
+  request_datetime: string;
 }
+
+type Reference = {
+  url: string;
+  title: string;
+  category: 'mainstream' | 'governance' | 'academic' | 'medical' | 'other';
+  country: string;
+  credibility: 'high' | 'medium' | 'low';
+};

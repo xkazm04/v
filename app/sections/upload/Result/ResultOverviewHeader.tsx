@@ -13,7 +13,7 @@ const ResultOverviewHeader = ({ isLoading, displayResult }: Props) => {
     const verdictStyle = getVerdictStyling(displayResult.status, isDark);
     const VerdictIcon = verdictStyle.icon;
 
-    return <div className={`relative p-8 overflow-hidden ${isLoading ? 'animate-pulse' : ''}`}>
+    return <div className={`relative p-4 sm:p-6 lg:p-8 overflow-hidden ${isLoading ? 'animate-pulse' : ''}`}>
         <div className={`absolute inset-0 bg-gradient-to-br ${verdictStyle.bgColor} opacity-90`} />
         <div className="absolute inset-0 opacity-10">
             <div className="absolute inset-0" style={{
@@ -22,25 +22,18 @@ const ResultOverviewHeader = ({ isLoading, displayResult }: Props) => {
             }} />
         </div>
 
-        <div className="relative z-10 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-                <div className="p-4 bg-white/20 rounded-2xl backdrop-blur-sm">
-                    <VerdictIcon className="h-8 w-8 text-white" />
+        <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
+            <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                <div className="p-2 sm:p-3 lg:p-4 bg-white/20 rounded-xl sm:rounded-2xl backdrop-blur-sm flex-shrink-0">
+                    <VerdictIcon className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-white" />
                 </div>
-                <div>
-                    <h2 className="text-sm font-medium text-white/80 uppercase tracking-wider">
+                <div className="min-w-0 flex-1">
+                    <h2 className="text-xs sm:text-sm font-medium text-white/80 uppercase tracking-wider mb-1">
                         Fact-Check Verdict
                     </h2>
-                    <h1 className={`text-4xl md:text-5xl font-black ${verdictStyle.textColor} leading-tight`}>
+                    <h1 className={`text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-black ${verdictStyle.textColor} leading-tight break-words`}>
                         {displayResult.status.toUpperCase()}
                     </h1>
-                </div>
-            </div>
-
-            <div className="text-right">
-                <div className="text-white/80 text-sm font-medium mb-1">Confidence</div>
-                <div className="text-3xl font-bold text-white">
-                    {Math.floor(Math.random() * 20) + 80}%
                 </div>
             </div>
         </div>

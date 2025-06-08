@@ -5,13 +5,12 @@ import { motion } from 'framer-motion';
 import { MessageSquare } from 'lucide-react';
 import { ExpertPanel } from './ExpertPanel';
 import { ResourceAnalysisCard } from './ResourceAnalysisCard';
-import type { ResearchResponse } from './types';
-import { PLACEHOLDER_RESULT } from '@/app/constants/research_placeholder';
 import ResearchResultsOverview from './ResearchResultsOverview';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import { LLMResearchResponse } from '@/app/types/research';
 
 interface ResearchResultsProps {
-  result: ResearchResponse | null;
+  result: LLMResearchResponse | null;
   isLoading: boolean;
 }
 
@@ -46,7 +45,7 @@ export function ResearchResults({ result, isLoading }: ResearchResultsProps) {
     );
   }
 
-  const displayResult = result || PLACEHOLDER_RESULT;
+  const displayResult = result || null;
   
   return (
     <motion.div
@@ -55,6 +54,7 @@ export function ResearchResults({ result, isLoading }: ResearchResultsProps) {
       transition={{ duration: 0.6 }}
       className="space-y-12"
     >
+      {displayResult && <>
       {/* Enhanced Overview - Now includes statement, correction, and verdict */}
       <ResearchResultsOverview
         isLoading={isLoading}
@@ -109,6 +109,7 @@ export function ResearchResults({ result, isLoading }: ResearchResultsProps) {
           </div>
         </motion.div>
       )}
-    </motion.div>
+      </>}
+      </motion.div>
   );
 }

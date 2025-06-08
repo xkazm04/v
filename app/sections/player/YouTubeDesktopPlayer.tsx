@@ -1,12 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { VideoMetadata } from '@/app/types/video';
 import { PlayerTimeline } from '@/app/sections/player/timeline/PlayerTimeline';
 import { useState } from 'react';
+import { Video } from '@/app/types/video_api';
 
 interface YouTubeDesktopPlayerProps {
-  videos?: VideoMetadata[];
+  videos?: Video[];
   initialIndex?: number;
   autoPlay?: boolean;
 }

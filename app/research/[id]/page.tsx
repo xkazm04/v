@@ -4,13 +4,11 @@ import { useParams } from 'next/navigation';
 import { useResearchById } from '@/app/hooks/useNews';
 import { LoadingScreen } from '@/app/components/layout/LoadingScreen';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ExternalLink, Calendar, MapPin, User } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Calendar, User } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
-import { Badge } from '@/app/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import Link from 'next/link';
 import { StatusBadge } from '@/app/sections/upload/StatusBadge';
-import { ResearchResponse } from '@/app/sections/upload/types';
 import { ResearchResults } from '@/app/sections/upload/ResearchResults';
 
 export default function ResearchDetailPage() {
@@ -41,29 +39,6 @@ export default function ResearchDetailPage() {
       </div>
     );
   }
-
-  // Convert ResearchResult to ResearchResponse format for the ResearchResults component
-  const researchResponse: ResearchResponse = {
-    request: {
-      statement: research.statement,
-      source: research.source || 'Unknown Source',
-      context: research.context || '',
-      datetime: research.request_datetime,
-      statement_date: research.statement_date,
-      country: 'us', // Default value
-      category: 'politics' // Default value
-    },
-    valid_sources: research.valid_sources,
-    verdict: research.verdict,
-    status: research.status,
-    correction: research.correction,
-    resources_agreed: research.resources_agreed,
-    resources_disagreed: research.resources_disagreed,
-    experts: research.experts || {},
-    processed_at: research.processed_at,
-    database_id: research.id,
-    research_method: 'Database Lookup'
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -141,7 +116,7 @@ export default function ResearchDetailPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <ResearchResults result={researchResponse} isLoading={false} />
+          <ResearchResults result={research} isLoading={false} />
         </motion.div>
       </div>
     </div>

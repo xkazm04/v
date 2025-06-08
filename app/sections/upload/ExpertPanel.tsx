@@ -2,12 +2,14 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
+import { Card, CardContent } from '../../components/ui/card';
 import { Quote } from 'lucide-react';
 import type { ExpertOpinion } from './types';
-import { EXPERT_ICONS, EXPERT_COLORS } from './types';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import ExpertStatsIcon from '../../components/icons/expert_stats';
+import ExpertPsychIcon from '../../components/icons/expert_psych';
+import ExpertAnalystIcon from '../../components/icons/expert_analyst';
+import ExpertAdvocateIcon from '../../components/icons/expert_advocate';
 
 interface ExpertPanelProps {
   experts?: ExpertOpinion;
@@ -21,7 +23,8 @@ const EXPERT_PROFILES = {
     role: 'Investigative Researcher',
     description: 'Looks for hidden truths and gaps',
     mockQuote: 'There\'s always more beneath the surface',
-    specialty: 'Critical Analysis'
+    specialty: 'Critical Analysis',
+    SvgComponent: ExpertAnalystIcon
   },
   devil: {
     title: "Devil's Advocate",
@@ -29,7 +32,8 @@ const EXPERT_PROFILES = {
     role: 'Contrarian Analyst',
     description: 'Represents minority viewpoints',
     mockQuote: 'Every story has an untold side',
-    specialty: 'Alternative Perspectives'
+    specialty: 'Alternative Perspectives',
+    SvgComponent: ExpertAdvocateIcon
   },
   nerd: {
     title: 'The Data Analyst',
@@ -37,7 +41,8 @@ const EXPERT_PROFILES = {
     role: 'Statistical Expert',
     description: 'Provides statistical analysis',
     mockQuote: 'Numbers don\'t lie, but context matters',
-    specialty: 'Data Science'
+    specialty: 'Data Science',
+    SvgComponent: ExpertStatsIcon
   },
   psychic: {
     title: 'The Psychologist',
@@ -45,7 +50,8 @@ const EXPERT_PROFILES = {
     role: 'Behavioral Expert',
     description: 'Analyzes psychological motivations',
     mockQuote: 'Understanding why reveals the what',
-    specialty: 'Human Psychology'
+    specialty: 'Human Psychology',
+    SvgComponent: ExpertPsychIcon
   }
 };
 
@@ -62,11 +68,11 @@ export function ExpertPanel({ experts, isLoading = false }: ExpertPanelProps) {
     >
       {/* Section Header */}
       <div className="text-center space-y-2">
-        <h3 className="text-3xl font-bold flex items-center justify-center gap-3" style={{ color: colors.foreground }}>
-          <span className="text-4xl">🎭</span>
-          Expert Panel Analysis
+        <h3 className="text-2xl sm:text-3xl font-bold flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3" style={{ color: colors.foreground }}>
+          <span className="text-3xl sm:text-4xl">🎭</span>
+          <span>Expert Panel Analysis</span>
         </h3>
-        <p className="text-lg max-w-2xl mx-auto" style={{ color: colors.mutedForeground }}>
+        <p className="text-sm sm:text-lg max-w-2xl mx-auto px-4" style={{ color: colors.mutedForeground }}>
           Our diverse panel of experts provides multiple perspectives on your statement
         </p>
         {isLoading && (
@@ -86,7 +92,7 @@ export function ExpertPanel({ experts, isLoading = false }: ExpertPanelProps) {
         {expertEntries.map(([expertType, opinion], index) => {
           const expert = expertType as keyof ExpertOpinion;
           const profile = EXPERT_PROFILES[expert];
-          const icon = EXPERT_ICONS[expert];
+          const SvgComponent = profile.SvgComponent;
 
           return (
             <motion.div
@@ -104,7 +110,7 @@ export function ExpertPanel({ experts, isLoading = false }: ExpertPanelProps) {
               className="h-full"
             >
               <Card 
-                className={`h-full border-2 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ${
+                className={`h-full border-2 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden ${
                   isLoading ? 'animate-pulse' : ''
                 }`}
                 style={{
@@ -113,88 +119,50 @@ export function ExpertPanel({ experts, isLoading = false }: ExpertPanelProps) {
                   boxShadow: colors.card.shadow
                 }}
               >
-                <CardHeader className="pb-4">
-                  {/* New Layout: Left side = Title + Icon, Right side = Quote */}
-                  <div className="flex items-start justify-between gap-4">
-                    {/* Left Side - Expert Identity */}
-                    <div className="flex items-center gap-4">
-                      <div className="relative">
+                {/* SVG Background */}
+                <div className="absolute inset-0 opacity-5 flex items-center justify-center pointer-events-none">
+                  <SvgComponent 
+                    width={280} 
+                    height={280} 
+                    color={isDark ? '#ffffff' : '#000000'} 
+                  />
+                </div>
+
+                <CardContent className="p-6 relative z-10">
+                  {/* Expert Header */}
+                  <div className="mb-4">
+                    <div className="flex items-start justify-between gap-4 mb-4">
+                      {/* Right Side - Quote */}
+                      <div className="flex-shrink-0 max-w-xs">
                         <div 
-                          className="w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-lg"
+                          className="p-3 rounded-xl border-l-4 relative"
                           style={{
                             background: isDark 
-                              ? 'linear-gradient(to br, rgba(71, 85, 105, 0.8), rgba(100, 116, 139, 0.9))'
-                              : 'linear-gradient(to br, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.9))',
-                            border: `2px solid ${colors.border}`
+                              ? 'rgba(59, 130, 246, 0.1)' 
+                              : 'rgba(59, 130, 246, 0.05)',
+                            borderLeftColor: colors.primary
                           }}
                         >
-                          {icon}
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="text-xl font-bold mb-1" style={{ color: colors.foreground }}>
-                          {profile.title}
-                        </h4>
-                        <div className="space-y-1">
-                          <p className="text-sm font-semibold" style={{ color: colors.mutedForeground }}>
-                            {profile.name}
-                          </p>
-                          <p className="text-xs" style={{ color: colors.mutedForeground }}>
-                            {profile.role}
-                          </p>
-                          <Badge 
-                            variant="outline" 
-                            className="text-xs"
+                          <Quote 
+                            className="absolute -top-2 -left-2 h-5 w-5 p-1 rounded-full"
                             style={{
-                              background: isDark ? 'rgba(71, 85, 105, 0.2)' : 'rgba(248, 250, 252, 0.8)',
-                              color: colors.foreground,
-                              border: `1px solid ${colors.border}`
+                              background: colors.primary,
+                              color: 'white'
                             }}
-                          >
-                            {profile.specialty}
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Right Side - Quote */}
-                    <div className="flex-shrink-0 max-w-xs">
-                      <div 
-                        className="p-4 rounded-xl border-l-4 relative"
-                        style={{
-                          background: isDark 
-                            ? 'rgba(59, 130, 246, 0.1)' 
-                            : 'rgba(59, 130, 246, 0.05)',
-                          borderLeftColor: colors.primary
-                        }}
-                      >
-                        <Quote 
-                          className="absolute -top-2 -left-2 h-6 w-6 p-1 rounded-full"
-                          style={{
-                            background: colors.primary,
-                            color: 'white'
-                          }}
-                        />
-                        <div className="pl-4">
-                          <div 
-                            className="text-xs font-medium uppercase tracking-wide mb-1"
-                            style={{ color: colors.primary }}
-                          >
-                            Expert's Approach
+                          />
+                          <div className="pl-3">
+                            <p 
+                              className="text-xs italic font-semibold leading-relaxed"
+                              style={{ color: colors.foreground }}
+                            >
+                              "{profile.mockQuote}"
+                            </p>
                           </div>
-                          <p 
-                            className="text-sm italic font-semibold leading-relaxed"
-                            style={{ color: colors.foreground }}
-                          >
-                            "{profile.mockQuote}"
-                          </p>
                         </div>
                       </div>
                     </div>
                   </div>
-                </CardHeader>
 
-                <CardContent className="pt-0">
                   {/* Analysis Section */}
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
@@ -253,29 +221,6 @@ export function ExpertPanel({ experts, isLoading = false }: ExpertPanelProps) {
           );
         })}
       </div>
-
-      {/* Panel Summary */}
-      {expertEntries.length > 0 && !isLoading && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2 }}
-          className="text-center p-6 rounded-2xl border"
-          style={{
-            background: isDark 
-              ? 'linear-gradient(to right, rgba(59, 130, 246, 0.05), rgba(99, 102, 241, 0.05))'
-              : 'linear-gradient(to right, rgba(59, 130, 246, 0.05), rgba(99, 102, 241, 0.05))',
-            border: `1px solid ${colors.border}`
-          }}
-        >
-          <h4 className="text-lg font-bold mb-2" style={{ color: colors.primary }}>
-            Panel Consensus
-          </h4>
-          <p style={{ color: colors.mutedForeground }}>
-            {expertEntries.length} expert{expertEntries.length > 1 ? 's' : ''} provided comprehensive analysis from different perspectives
-          </p>
-        </motion.div>
-      )}
     </motion.div>
   );
 }

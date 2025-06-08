@@ -1,13 +1,13 @@
 import { motion } from 'framer-motion';
-import { ResearchResponse } from './types';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import ResultOverviewContent from './Result/ResultOverviewContent';
 import ResultOverviewMetadata from './Result/ResultOverviewMetadata';
 import ResultOverviewHeader from './Result/ResultOverviewHeader';
+import { LLMResearchResponse } from '@/app/types/research';
 
 type Props = {
     isLoading: boolean;
-    displayResult: ResearchResponse
+    displayResult: LLMResearchResponse
 }
 
 const ResearchResultsOverview = ({isLoading, displayResult}: Props) => {
