@@ -138,46 +138,6 @@ const SideCat = ({ isCollapsed, isActive }: Props) => {
                             transition={{ duration: 0.5, delay: 0.4 }}
                         />
                     </div>
-
-                    {/* Quick Actions Section */}
-                    <SideSectionHeader 
-                        title="Quick Actions" 
-                        icon={Filter} 
-                        sectionId="actions"
-                        isExpanded={expandedSections.has('actions')}
-                        isCollapsed={isCollapsed}
-                        mounted={mounted}
-                        toggleSection={toggleSection}
-                    />
-                    
-                    <AnimatePresence initial={false}>
-                        {expandedSections.has('actions') && (
-                            <motion.div
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: 'auto', opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.3, ease: "easeInOut" }}
-                                className="space-y-1 overflow-hidden"
-                            >
-                                <NavItem 
-                                    href="/recent" 
-                                    icon={Clock} 
-                                    label="Recent Activity" 
-                                    isActiveRoute={isActive('/recent')}
-                                    isCollapsed={isCollapsed}
-                                    mounted={mounted}
-                                />
-                                <NavItem 
-                                    href="/top-rated" 
-                                    icon={ThumbsUp} 
-                                    label="Top Rated" 
-                                    isActiveRoute={isActive('/top-rated')}
-                                    isCollapsed={isCollapsed}
-                                    mounted={mounted}
-                                />
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
                 </div>
             </ScrollArea>
 

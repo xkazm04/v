@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
-import { useAppearanceStore, ColorSubtone } from '@/app/store/appearance';
+import { useAppearanceStore, ColorSubtone } from '@/app/stores/appearance';
 
 export interface AppearanceSettings {
   colorSubtone: ColorSubtone;

@@ -1,20 +1,16 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Filter,
-} from 'lucide-react';
+import { Filter } from 'lucide-react';
 import { cn } from '@/app/lib/utils';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useCategoryCounts } from '@/app/hooks/useNews';
+import { useFilterStore, useSelectedCategories } from '@/app/stores/filterStore';
 import Categories from './Categories';
-
 
 interface CategoryFilterProps {
   className?: string;
-  selectedCategories: string[];
-  onSelectionChange: (categories: string[]) => void;
   maxVisible?: number;
   showCounts?: boolean;
   allowMultiSelect?: boolean;
@@ -23,12 +19,14 @@ interface CategoryFilterProps {
 
 export function CategoryFilter({ 
   className,
-  selectedCategories = [], // Default empty array
-  onSelectionChange,
   showCounts = true,
-  allowMultiSelect = false,
+  allowMultiSelect = true,
 }: CategoryFilterProps) {
   const { colors, isDark } = useLayoutTheme();
+  
+  // Get filter state from Zustand store
+  const selectedCategories = useSelectedCategories();
+  const { setSelectedCategories, toggleCategory } = useFilterStore();
   
   // Enhanced error handling for category counts
   const { 
@@ -37,42 +35,16 @@ export function CategoryFilter({
     error: countsError,
     isError: hasCountsError 
   } = useCategoryCounts();
-  
-  
-  const [pendingSelection, setPendingSelection] = useState<string | null>(null);
-
-  // If category counts fail to load, don't render the component in development
-  if (process.env.NODE_ENV === 'development' && hasCountsError) {
-    console.warn('CategoryFilter: Failed to load category counts, hiding component:', countsError);
-    return null;
-  }
-
-
 
   const handleCategoryClick = useCallback((categoryId: string) => {
-    if (pendingSelection || !onSelectionChange) return; // Prevent double clicks
-    
-    setPendingSelection(categoryId);
-    
-    let newSelection: string[];
-    
     if (allowMultiSelect) {
-      if (selectedCategories.includes(categoryId)) {
-        newSelection = selectedCategories.filter(id => id !== categoryId);
-      } else {
-        newSelection = [...selectedCategories, categoryId];
-      }
+      toggleCategory(categoryId);
     } else {
-      newSelection = selectedCategories.includes(categoryId) ? [] : [categoryId];
+      // Single select mode
+      const newSelection = selectedCategories.includes(categoryId) ? [] : [categoryId];
+      setSelectedCategories(newSelection);
     }
-    
-    // Immediate UI feedback with slight delay for better UX
-    setTimeout(() => {
-      onSelectionChange(newSelection);
-      setPendingSelection(null);
-    }, 150);
-  }, [selectedCategories, allowMultiSelect, onSelectionChange, pendingSelection]);
-
+  }, [selectedCategories, allowMultiSelect, toggleCategory, setSelectedCategories]);
 
   const containerStyles = {
     background: isDark
@@ -134,8 +106,38 @@ export function CategoryFilter({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Filter className="h-4 w-4" style={{ color: colors.primary }} />
+          <span className="text-sm font-medium" style={{ color: colors.foreground }}>
+            Categories
+          </span>
+          {selectedCategories.length > 0 && (
+            <span 
+              className="text-xs px-2 py-1 rounded-full"
+              style={{
+                background: colors.primary + '20',
+                color: colors.primary
+              }}
+            >
+              {selectedCategories.length}
+            </span>
+          )}
+        </div>
+        
+        {selectedCategories.length > 0 && (
+          <button
+            onClick={() => setSelectedCategories([])}
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Clear all
+          </button>
+        )}
+      </div>
+
       {/* Error State for Categories */}
-      {hasCountsError && process.env.NODE_ENV !== 'development' && (
+      {hasCountsError && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -150,16 +152,16 @@ export function CategoryFilter({
         </motion.div>
       )}
 
-      {/* Default Categories */}
+      {/* Categories */}
       <Categories
-        categoryCounts={categoryCounts}
+        categoryCounts={categoryCounts || {}}
         selectedCategories={selectedCategories}
         handleCategoryClick={handleCategoryClick}
         hasCountsError={hasCountsError}
         showCounts={showCounts && !countsLoading && !hasCountsError}
         countsLoading={countsLoading}
-        pendingSelection={pendingSelection}
-        />
+        pendingSelection={null}
+      />
     </motion.div>
   );
 }

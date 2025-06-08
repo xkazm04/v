@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
-import { useAppearanceStore, SUBTONE_CONFIGS, ColorSubtone } from '@/app/store/appearance';
+import { useAppearanceStore, SUBTONE_CONFIGS, ColorSubtone } from '@/app/stores/appearance';
 import { cn } from '@/app/lib/utils';
 
 interface ColorSubtoneSelectorProps {
