@@ -3,11 +3,9 @@
 import { useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '@/app/hooks/useAuth';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useNavigationContext } from '@/app/providers/navigation-provider';
-import { UserProfileDropdown } from './UserProfileDropdown';
 import { ThemeToggle } from '../../components/theme/theme-toggle';
 import DesktopNavbarMain from './DesktopNavbarMain';
 
@@ -35,8 +33,6 @@ const logoVariants = {
 };
 
 export function DesktopNavbar() {
-  const { user, signOut, loading: authLoading } = useAuth();
-  const router = useRouter();
   const pathname = usePathname();
   const { colors, mounted, getColors } = useLayoutTheme();
   const {
@@ -58,15 +54,6 @@ export function DesktopNavbar() {
     // Reset after a short delay
     setTimeout(() => setIsNavigating(false), 300);
   }, [setIsNavigating]);
-
-  const handleLogout = useCallback(async () => {
-    try {
-      await signOut();
-      router.push('/');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  }, [signOut, router]);
 
   if (!mounted) {
     return null; // Prevent hydration mismatch
@@ -134,17 +121,12 @@ export function DesktopNavbar() {
             transition={{ delay: 0.3 }}
           >
             <ThemeToggle variant="default" size="sm" />
-            <UserProfileDropdown
-              user={user}
-              onLogout={handleLogout}
-              variant="mobile"
-            />
           </motion.div>
         </div>
 
         {/* Enhanced Loading Indicator */}
         <AnimatePresence>
-          {(isNavigating || authLoading) && (
+          {(isNavigating) && (
             <motion.div
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}

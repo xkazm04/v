@@ -11,35 +11,26 @@ import {
   TabsContent,
 } from '@/app/components/ui/tabs';
 import { useTheme } from 'next-themes';
-import { useAuth } from '@/app/hooks/useAuth';
-import { updateUserProfile } from '@/app/lib/database';
 import { ColorSubtoneSelector } from './ColorSubtoneSelector';
 import { toast } from 'sonner';
 
 const SetApearance = () => {
   const { theme, setTheme } = useTheme();
-  const { user, profile, refreshProfile } = useAuth();
   const [isUpdating, setIsUpdating] = useState(false);
 
 
   // Sync theme changes with user profile
   useEffect(() => {
-    if (profile && theme && theme !== profile.theme) {
+    if (theme) {
       handleThemeUpdate(theme as 'light' | 'dark' | 'system');
     }
-  }, [theme, profile]);
+  }, [theme]);
 
   const handleThemeUpdate = async (newTheme: 'light' | 'dark' | 'system') => {
-    if (!user || !profile || isUpdating) return;
+    if ( isUpdating) return;
 
     try {
       setIsUpdating(true);
-      const updatedProfile = await updateUserProfile(user.id, { theme: newTheme });
-      
-      if (updatedProfile) {
-        await refreshProfile();
-        toast.success('Theme updated successfully');
-      }
     } catch (error) {
       console.error('Error updating theme:', error);
       toast.error('Failed to update theme');

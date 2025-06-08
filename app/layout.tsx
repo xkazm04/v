@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/app/providers/theme-provider';
 import { QueryProvider } from '@/app/providers/query-provider';
-import { AuthProvider } from '@/app/hooks/useAuth';
 import { DesktopNavbar } from '@/app/sections/navigation/DesktopNavbar';
 import { MobileNavbar } from '@/app/sections/navigation/MobileNavbar';
 
@@ -41,8 +40,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html 
-      lang="en" 
+    <html
+      lang="en"
       suppressHydrationWarning
       className={`${inter.variable} ${spaceGrotesk.variable} ${jetBrainsMono.variable}`}
     >
@@ -77,29 +76,27 @@ export default function RootLayout({
             defaultTheme="system"
             enableSystem
           >
-            <AuthProvider>
-              <NavigationProvider>
-                <div className="relative flex min-h-screen flex-col">
-                  {/* Desktop Navigation */}
-                  <div className="hidden md:block">
-                    <DesktopNavbar />
-                  </div>
-                  
-                  {/* Main Content */}
-                  <main className="flex-1 relative z-10">
-                    <PageTransition>
-                      {children}
-                    </PageTransition>
-                  </main>
-                  
-                  {/* Mobile Navigation - Bottom Tab Bar */}
-                  <div className="md:hidden">
-                    <MobileNavbar />
-                  </div>
+            <NavigationProvider>
+              <div className="relative flex min-h-screen flex-col">
+                {/* Desktop Navigation */}
+                <div className="hidden md:block">
+                  <DesktopNavbar />
                 </div>
-                <Toaster />
-              </NavigationProvider>
-            </AuthProvider>
+
+                {/* Main Content */}
+                <main className="flex-1 relative z-10">
+                  <PageTransition>
+                    {children}
+                  </PageTransition>
+                </main>
+
+                {/* Mobile Navigation - Bottom Tab Bar */}
+                <div className="md:hidden">
+                  <MobileNavbar />
+                </div>
+              </div>
+              <Toaster />
+            </NavigationProvider>
           </ThemeProvider>
         </QueryProvider>
       </body>

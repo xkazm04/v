@@ -5,7 +5,6 @@ import { ChevronUp } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useNavigationContext } from '@/app/providers/navigation-provider';
-import { useAuth } from '@/app/hooks/useAuth';
 import { useState, useCallback } from 'react';
 import { containerVariants } from '@/app/components/animations/variants/mobileNavVariants';
 import MobileNavbarItem from './MobileNavbarItem';
@@ -60,7 +59,6 @@ export function MobileNavbar({
   const router = useRouter();
   const { colors, isDark, mounted } = useLayoutTheme();
   const { activeTab, setActiveTab, setIsNavigating } = useNavigationContext();
-  const { user } = useAuth();
   const [isPressed, setIsPressed] = useState<string | null>(null);
   
   const [isCollapsed, setIsCollapsed] = useState(isVideoPlayerMode);
@@ -250,7 +248,7 @@ export function MobileNavbar({
 
         {/* Enhanced floating action button - hidden in compact video mode */}
         <AnimatePresence>
-          {user && !(isVideoPlayerMode && isCollapsed) && (
+          {!(isVideoPlayerMode && isCollapsed) && (
             <MobileNavActionButton
               navColors={navColors}
               router={router}

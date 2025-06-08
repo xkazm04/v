@@ -1,22 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/app/components/ui/button';
 import { ThemeToggle } from '@/app/components/theme/theme-toggle';
 import { SearchBar } from '@/app/components/search/SearchBar';
 import { cn } from '@/app/lib/utils';
-import { Menu, Upload, Bell } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { useNavigation } from '@/app/hooks/useNavigation';
-import { useAuth } from '@/app/hooks/useAuth';
 import { usePathname, useRouter } from 'next/navigation';
 import NavMobileOverlay from './NavMobileOverlay';
 import { navAnim } from '@/app/components/animations/variants/navVariants';
 import { NAVIGATION_CONFIG } from '@/app/config/navItems';
 import { renderActionButton } from './NavActionButton';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-import UserProfileDropdown from './UserProfileDropdown';
 
 export function Navbar() {
   const {
@@ -28,10 +26,8 @@ export function Navbar() {
     handleNavigation
   } = useNavigation();
 
-  const { user, profile, signOut, loading: authLoading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  const [logoutLoading, setLogoutLoading] = useState(false);
   const { colors, getColors, mounted } = useLayoutTheme();
 
   useEffect(() => {
@@ -48,16 +44,6 @@ export function Navbar() {
     return pathname.startsWith(href);
   };
 
-  const handleLogout = async () => {
-    try {
-      setLogoutLoading(true);
-      await signOut();
-    } catch (error) {
-      console.error('Logout failed:', error);
-    } finally {
-      setLogoutLoading(false);
-    }
-  };
 
   const handleSearchResultSelect = (result: any, type: 'news' | 'video') => {
     if (type === 'news') {
@@ -66,28 +52,6 @@ export function Navbar() {
       router.push(`/watch?v=${result.id}`);
     }
   };
-
-  // Action button configurations - only show for authenticated users
-  const actionButtons = user ? [
-    {
-      key: 'upload',
-      icon: Upload,
-      label: 'Upload',
-      onClick: () => router.push('/upload'),
-      showOnDesktop: true,
-      showOnMobile: false,
-      badge: null
-    },
-    {
-      key: 'notifications',
-      icon: Bell,
-      label: 'Notifications',
-      onClick: () => console.log('Notifications clicked'),
-      showOnDesktop: true,
-      showOnMobile: false,
-      badge: 3 // Example notification count
-    }
-  ] : [];
 
   if (!mounted) {
     return null; // Prevent hydration mismatch
@@ -231,29 +195,14 @@ export function Navbar() {
           <div className="flex items-center space-x-2">
             {/* Action Buttons */}
             <div className="flex items-center space-x-1">
-              {actionButtons.map(config => renderActionButton(config))}
               <ThemeToggle />
-              <UserProfileDropdown
-                user={user}
-                handleLogout={handleLogout}
-                logoutLoading={logoutLoading}
-              />
             </div>
           </div>
         </div>
 
         {/* Mobile Actions */}
         <div className="flex-1 flex justify-end items-center space-x-2 md:hidden">
-          {actionButtons
-            .filter(config => config.showOnMobile)
-            .slice(0, 2) // Limit mobile buttons
-            .map(config => renderActionButton(config, false))}
           <ThemeToggle />
-          <UserProfileDropdown
-            user={user}
-            handleLogout={handleLogout}
-            logoutLoading={logoutLoading}
-          />
         </div>
 
         {/* Mobile Menu Search */}
@@ -284,7 +233,7 @@ export function Navbar() {
         {isMobileMenuOpen && (
           <NavMobileOverlay
             toggleMobileMenu={toggleMobileMenu}
-            actionButtons={actionButtons}
+            actionButtons={[]}
              //@ts-expect-error Ignore
             renderNavLink={renderNavLink} renderActionButton={renderActionButton}
           />
@@ -293,7 +242,7 @@ export function Navbar() {
 
       {/* Loading Indicator */}
       <AnimatePresence>
-        {(isLoading || authLoading) && (
+        {(isLoading) && (
           <motion.div
             variants={navAnim.loading}
             initial="initial"

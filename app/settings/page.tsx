@@ -6,7 +6,6 @@ import {
   TabsContent
 } from '@/app/components/ui/tabs';
 import SetApearance from '../sections/settings/SetApearance';
-import { ProfileSettings } from '@/app/components/profile/ProfileSettings';
 
 export default function SettingsPage() {  
   return (
@@ -28,7 +27,7 @@ export default function SettingsPage() {
             </TabsList>
             
             <TabsContent value="profile">
-              <ProfileSettings />
+              TBD
             </TabsContent>
             
             <SetApearance />

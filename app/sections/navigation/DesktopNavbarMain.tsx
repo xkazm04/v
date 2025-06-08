@@ -2,14 +2,9 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useRouter, usePathname } from 'next/navigation';
-import { useAuth } from '@/app/hooks/useAuth';
-import { Upload, Bell, Settings } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import { NAVIGATION_CONFIG } from '@/app/config/navItems';
-
 import { ThemeToggle } from '../../components/theme/theme-toggle';
-import { UserProfileDropdown } from './UserProfileDropdown';
-import NavDButton from './NavDButton';
 import NavDLink from './NavDLink';
 
 interface DesktopNavbarMainProps {
@@ -25,10 +20,7 @@ export default function DesktopNavbarMain({
   navbarColors, 
   onNavigation 
 }: DesktopNavbarMainProps) {
-  // Use useRouter directly in this component
-  const router = useRouter();
   const pathname = usePathname();
-  const { user, signOut } = useAuth();
 
   const isActivePath = React.useCallback((href: string) => {
     if (href === '/') {
@@ -37,44 +29,7 @@ export default function DesktopNavbarMain({
     return pathname.startsWith(href);
   }, [pathname]);
 
-  const handleLogout = React.useCallback(async () => {
-    try {
-      await signOut();
-      router.push('/');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  }, [signOut, router]);
 
-  // Action buttons for authenticated users
-  const actionButtons = user ? [
-    {
-      key: 'upload',
-      icon: Upload,
-      label: 'Upload',
-      onClick: () => router.push('/upload'),
-      badge: null,
-      variant: 'ghost' as const
-    },
-    {
-      key: 'notifications',
-      icon: Bell,
-      label: 'Notifications',
-      onClick: () => router.push('/notifications'),
-      badge: 3, // Example count
-      variant: 'ghost' as const
-    },
-    {
-      key: 'settings',
-      icon: Settings,
-      label: 'Settings',
-      onClick: () => router.push('/settings'),
-      badge: null,
-      variant: 'ghost' as const
-    }
-  ] : [];
-
-  // Render navigation link
   const renderNavLink = (item: (typeof NAVIGATION_CONFIG.mainNav)[number]) => {
     const isActive = isActivePath(item.href);
     
@@ -84,17 +39,6 @@ export default function DesktopNavbarMain({
         item={item}
         isActive={isActive}
         onNavigation={onNavigation}
-        navbarColors={navbarColors}
-      />
-    );
-  };
-
-  // Render action button
-  const renderActionButton = (config: typeof actionButtons[0]) => {
-    return (
-      <NavDButton
-        key={config.key}
-        config={config}
         navbarColors={navbarColors}
       />
     );
@@ -147,9 +91,6 @@ export default function DesktopNavbarMain({
           staggerChildren: 0.05
         }}
       >
-        {actionButtons.map(renderActionButton)}
-        
-        {/* Enhanced Theme Toggle */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -157,19 +98,7 @@ export default function DesktopNavbarMain({
         >
           <ThemeToggle variant="enhanced" size="md" />
         </motion.div>
-        
-        {/* User Profile */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.6 }}
-        >
-          <UserProfileDropdown
-            user={user}
-            onLogout={handleLogout}
-            variant="desktop"
-          />
-        </motion.div>
+      
       </motion.div>
     </div>
   );
