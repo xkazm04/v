@@ -12,11 +12,7 @@ import { Divider } from '../ui/divider';
 interface NewsCardContentProps {
   isCompact?: boolean;
   article: NewsArticle;
-  isHovered?: boolean;
 }
-
-// Safe date formatting function with relative time
-
 
 const contentVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -43,7 +39,6 @@ const itemVariants = {
 const NewsCardContent = memo(function NewsCardContent({
   isCompact = false,
   article,
-  isHovered = false,
 }: NewsCardContentProps) {
   const { colors, mounted, isDark } = useLayoutTheme();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -94,27 +89,14 @@ const NewsCardContent = memo(function NewsCardContent({
               isCompact ? 'text-sm' : 'md:text-sm lg:text-base 2xl:text-lg',
             )}
             style={{
-              color: isHovered ? colors.foreground : colors.mutedForeground,
               fontFamily: "'Georgia', 'Times New Roman', serif" // Newspaper-like font
             }}
             onClick={() => shouldTruncate && setIsExpanded(!isExpanded)}
           >
             <motion.span
               className="relative"
-              whileHover={{ letterSpacing: '0.01em' }}
-              transition={{ duration: 0.2 }}
             >
               "{displayText}"
-              {shouldTruncate && !isExpanded && (
-                <motion.span
-                  className="ml-1 font-semibold"
-                  style={{ color: colors.primary }}
-                  animate={{ opacity: [0.7, 1, 0.7] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  Read more
-                </motion.span>
-              )}
             </motion.span>
           </blockquote>
 
@@ -129,8 +111,6 @@ const NewsCardContent = memo(function NewsCardContent({
                   src={article.source.logoUrl}
                   alt={article.source.name}
                   className="w-4 h-4 rounded-sm object-cover"
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ duration: 0.2 }}
                 />
               )}
               <span

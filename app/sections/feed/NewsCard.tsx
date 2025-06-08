@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useState, useCallback, useMemo } from 'react';
+import { memo, useState, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NewsArticle } from '@/app/types/article';
 import { NewsCardHeader } from '@/app/components/news/NewsCardHeader';
@@ -8,6 +8,7 @@ import { FactCheckModal } from '@/app/components/modals/FactCheckModal';
 import NewsCardContent from '@/app/components/news/NewsCardContent';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
+import NewsCardWrapper from './NewsCardWrapper';
 
 interface NewsCardProps {
   article: NewsArticle;
@@ -15,67 +16,6 @@ interface NewsCardProps {
   onRead?: (articleId: string) => void;
   className?: string;
 }
-
-const cardVariants = {
-  hidden: { 
-    opacity: 0, 
-    y: 50, 
-    scale: 0.9,
-    rotateX: -10
-  },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    scale: 1,
-    rotateX: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.25, 0.46, 0.45, 0.94],
-      type: "spring",
-      stiffness: 300,
-      damping: 20
-    }
-  },
-  hover: {
-    y: -8,
-    scale: 1.02,
-    rotateY: 2,
-    transition: {
-      duration: 0.3,
-      ease: "easeOut"
-    }
-  },
-  tap: {
-    scale: 0.98,
-    transition: { duration: 0.1 }
-  }
-};
-
-const dismissVariants = {
-  exit: {
-    opacity: 0,
-    scale: 0.8,
-    x: 300,
-    rotateY: 45,
-    rotateX: 15,
-    transition: {
-      duration: 0.6,
-      ease: [0.25, 0.46, 0.45, 0.94]
-    }
-  }
-};
-
-const shimmerVariants = {
-  shimmer: {
-    x: ['100%', '-100%'],
-    transition: {
-      duration: 2,
-      ease: "easeInOut",
-      repeat: Infinity,
-      repeatDelay: 3
-    }
-  }
-};
 
 const NewsCard = memo(function NewsCard({ 
   article, 
@@ -87,21 +27,56 @@ const NewsCard = memo(function NewsCard({
   const [isRead, setIsRead] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
+  
+  // Touch gesture tracking
+  const lastTapRef = useRef<number>(0);
+  const tapCountRef = useRef<number>(0);
 
   const handleLeftClick = useCallback(() => {
+    if (isDragging) return; // Prevent click during drag
+    setSwipeDirection('right');
     setIsRead(true);
     setTimeout(() => {
       onRead?.(article.id);
     }, 500); 
-  }, [article.id, onRead]);
+  }, [article.id, onRead, isDragging]);
 
   const handleRightClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
+    if (isDragging) return; // Prevent right click during drag
     setShowModal(true);
-  }, []);
+  }, [isDragging]);
 
-  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
-  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
+  // Handle double tap for mobile
+  const handleTap = useCallback(() => {
+    if (isDragging) return;
+    
+    const now = Date.now();
+    const timeDiff = now - lastTapRef.current;
+    
+    if (timeDiff < 300) { // Double tap detected (within 300ms)
+      tapCountRef.current++;
+      if (tapCountRef.current === 2) {
+        setShowModal(true);
+        tapCountRef.current = 0;
+        return;
+      }
+    } else {
+      tapCountRef.current = 1;
+    }
+    
+    lastTapRef.current = now;
+    
+    // Single tap after delay (if no second tap)
+    setTimeout(() => {
+      if (tapCountRef.current === 1 && (Date.now() - lastTapRef.current) >= 300) {
+        // Single tap - do nothing or add feedback
+        tapCountRef.current = 0;
+      }
+    }, 350);
+  }, [isDragging]);
 
   const isCompact = layout === 'compact';
 
@@ -155,58 +130,24 @@ const NewsCard = memo(function NewsCard({
     <>
       <AnimatePresence mode="wait">
         {!isRead && (
-          <motion.div
-            variants={cardVariants}
-            initial="hidden"
-            animate="visible"
-            exit={dismissVariants.exit}
-            whileHover="hover"
-            whileTap="tap"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            onClick={handleLeftClick}
-            onContextMenu={handleRightClick}
-            className={cn(
-              'group relative cursor-pointer flex flex-col justify-between',
-              cardStyles.height,
-              'rounded-xl border-2 transition-all duration-300 overflow-hidden transform-gpu',
-              className
-            )}
-            style={{
-              transformStyle: 'preserve-3d',
-              backgroundColor: cardStyles.background,
-              borderColor: cardStyles.borderColor,
-              boxShadow: cardStyles.boxShadow
-            }}
+          <NewsCardWrapper
+            article={article}
+            cardStyles={cardStyles}
+            isRead={isRead}
+            isDragging={isDragging}
+            setIsDragging={setIsDragging}
+            isHovered={isHovered}
+            setIsHovered={setIsHovered}
+            swipeDirection={swipeDirection}
+            setSwipeDirection={setSwipeDirection}
+            setIsRead={setIsRead}
+            onRead={onRead}
+            handleLeftClick={handleLeftClick}
+            handleRightClick={handleRightClick}
+            handleTap={handleTap}
+            className={className}
+            isDark={isDark}
           >
-            {/* Enhanced Background Pattern */}
-            <motion.div 
-              className="absolute inset-0 opacity-[0.02]"
-              initial={{ scale: 1, rotate: 0 }}
-              whileHover={{ scale: 1.05, rotate: 1 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div 
-                className="absolute inset-0"
-                style={{
-                  background: isDark 
-                    ? `radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-                       radial-gradient(circle at 75% 75%, rgba(147, 51, 234, 0.1) 0%, transparent 50%)`
-                    : `radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
-                       radial-gradient(circle at 75% 75%, rgba(147, 51, 234, 0.05) 0%, transparent 50%)`
-                }}
-              />
-              <div 
-                className="absolute inset-0"
-                style={{
-                  backgroundImage: isDark
-                    ? `radial-gradient(circle at 2px 2px, rgba(148, 163, 184, 0.3) 1px, transparent 0)`
-                    : `radial-gradient(circle at 2px 2px, rgba(71, 85, 105, 0.2) 1px, transparent 0)`,
-                  backgroundSize: '24px 24px'
-                }}
-              />
-            </motion.div>
-
             {/* Header with enhanced status badges */}
             <motion.div
               initial={{ y: -10, opacity: 0 }}
@@ -231,7 +172,6 @@ const NewsCard = memo(function NewsCard({
               <NewsCardContent
                 article={article}
                 isCompact={isCompact}
-                isHovered={isHovered}
               />
             </motion.div>
 
@@ -255,69 +195,6 @@ const NewsCard = memo(function NewsCard({
                     )`
               }}
             />
-
-            {/* Enhanced Interaction Hints */}
-            <AnimatePresence>
-              {isHovered && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20, scale: 0.8 }}
-                  animate={{ 
-                    opacity: 1,
-                    y: 0,
-                    scale: 1
-                  }}
-                  exit={{ opacity: 0, y: 20, scale: 0.8 }}
-                  transition={{ 
-                    duration: 0.3,
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 20
-                  }}
-                  className="absolute bottom-2 right-2 z-30"
-                >
-                  <div 
-                    className="text-xs font-medium px-3 py-1.5 rounded-full backdrop-blur-md border"
-                    style={{
-                      backgroundColor: isDark 
-                        ? 'rgba(15, 23, 42, 0.8)' 
-                        : 'rgba(255, 255, 255, 0.9)',
-                      color: colors.foreground,
-                      borderColor: colors.border,
-                      boxShadow: `0 4px 12px ${isDark ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.1)'}`
-                    }}
-                  >
-                    <div className="flex items-center space-x-2">
-                      <span>👆 dismiss</span>
-                      <span 
-                        className="w-1 h-1 rounded-full"
-                        style={{ backgroundColor: colors.border }}
-                      />
-                      <span>🖱️ details</span>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Enhanced shimmer effect */}
-            <motion.div
-              className="absolute inset-0 pointer-events-none z-[1] overflow-hidden"
-              variants={shimmerVariants}
-              animate={isHovered ? "shimmer" : ""}
-            >
-              <div 
-                className="absolute inset-0 w-full h-full transform -skew-x-12"
-                style={{
-                  background: `linear-gradient(90deg, 
-                    transparent 0%, 
-                    ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.4)'} 50%, 
-                    transparent 100%
-                  )`,
-                  opacity: isHovered ? 1 : 0,
-                  transition: 'opacity 0.3s ease'
-                }}
-              />
-            </motion.div>
 
             {/* Subtle border glow for important articles */}
             {(article.isBreaking || article.factCheck) && (
@@ -344,7 +221,7 @@ const NewsCard = memo(function NewsCard({
                 transition={{ duration: 0.3 }}
               />
             )}
-          </motion.div>
+          </NewsCardWrapper>
         )}
       </AnimatePresence>
 

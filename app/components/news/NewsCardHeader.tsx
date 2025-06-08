@@ -100,7 +100,6 @@ export const NewsCardHeader = memo(function NewsCardHeader({
 
   return (
     <AnimatePresence>
-      {/* Breaking News Stamp - positioned outside card boundaries */}
       {timeMetrics.isBreaking && (
         <motion.div
           key="breaking-stamp"

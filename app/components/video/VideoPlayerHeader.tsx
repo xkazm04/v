@@ -2,7 +2,6 @@
 
 import { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { VideoMetadata } from '@/app/types/video';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
 import { FactCheckBadge } from './header/FactCheckBadge';

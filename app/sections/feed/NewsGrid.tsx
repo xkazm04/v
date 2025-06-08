@@ -4,7 +4,6 @@ import { memo, useState, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { NewsArticle } from '@/app/types/article';
 import { NewsCard } from './NewsCard';
-
 interface NewsGridProps {
   articles: NewsArticle[];
   layout?: 'grid' | 'compact';

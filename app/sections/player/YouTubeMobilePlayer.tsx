@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { VideoWithTimestamps } from '@/app/types/video_api';
 import { PlayerTimeline } from '@/app/sections/player/timeline/PlayerTimeline';
@@ -8,6 +8,7 @@ import { Button } from '@/app/components/ui/button';
 import { VideoPlayerHeader } from '@/app/components/video/VideoPlayerHeader';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { MobileNavbar } from '@/app/sections/navigation/MobileNavbar';
+import { YouTubePlayerWithSync } from './YouTubePlayerWithSync';
 import YouTubeMobileContainer from './YouTubeMobileContainer';
 import PlayerOverlayUi from './PlayerOverlayUi';
 import { ChevronDown } from 'lucide-react';
@@ -28,11 +29,30 @@ export function YouTubeMobilePlayer({
   const [showTimeline, setShowTimeline] = useState(false);
   const [showHeader, setShowHeader] = useState(true);
   const [navbarCollapsed, setNavbarCollapsed] = useState(false);
+  
+  // Sync state
+  const [currentVideoTime, setCurrentVideoTime] = useState(0);
+  const [seekRequest, setSeekRequest] = useState<number | null>(null);
 
-  const handleSeekToTimestamp = (timestamp: number) => {
+  const handleTimeUpdate = useCallback((currentTime: number) => {
+    setCurrentVideoTime(currentTime);
+  }, []);
+
+  const handleSeekToTimestamp = useCallback((timestamp: number) => {
     console.log('Seek to timestamp:', timestamp);
-    // Implementation for seeking to specific timestamp
-  };
+    setSeekRequest(timestamp);
+    
+    // Clear seek request after a short delay
+    setTimeout(() => {
+      setSeekRequest(null);
+    }, 500);
+  }, []);
+
+  const handleVideoChange = useCallback((newIndex: number) => {
+    setCurrentIndex(newIndex);
+    setCurrentVideoTime(0);
+    setSeekRequest(null);
+  }, []);
 
   const currentVideo = videos?.[currentIndex];
 
@@ -42,7 +62,7 @@ export function YouTubeMobilePlayer({
       <YouTubeMobileContainer
         videos={videos}
         currentIndex={currentIndex}
-        setCurrentIndex={setCurrentIndex}
+        setCurrentIndex={handleVideoChange}
         setShowHeader={setShowHeader}
       >
         {/* Video Player */}
@@ -52,18 +72,27 @@ export function YouTubeMobilePlayer({
           return (
             <div
               key={videoData.video.id}
-              className="w-full h-screen flex-shrink-0 relative bg-black"
+              className="w-full h-screen relative bg-black"
             >
-              {/* YouTube iFrame */}
-              <iframe
-                key={`${youtubeId}-${index === currentIndex}`}
-                src={`https://www.youtube.com/embed/${youtubeId}?autoplay=${index === currentIndex && autoPlay ? 1 : 0}&rel=0&controls=1&modestbranding=1`}
-                className="w-full h-full"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                title={videoData.video.title || 'Video'}
-              />
+              {/* Synced YouTube Player */}
+              {index === currentIndex ? (
+                <YouTubePlayerWithSync
+                  videoId={youtubeId}
+                  videoData={videoData}
+                  onTimeUpdate={handleTimeUpdate}
+                  onSeekRequest={seekRequest}
+                  autoPlay={autoPlay}
+                  className="w-full h-full"
+                />
+              ) : (
+                // Placeholder for non-active videos
+                <div className="w-full h-full bg-black flex items-center justify-start">
+                  <div className="text-white text-center">
+                    <div className="text-4xl mb-2">📺</div>
+                    <p>Video {index + 1}</p>
+                  </div>
+                </div>
+              )}
 
               {/* Enhanced Header with Fact Check */}
               {index === currentIndex && (
@@ -81,7 +110,7 @@ export function YouTubeMobilePlayer({
                 video={videoData.video}
                 showTimeline={showTimeline}
                 setShowTimeline={setShowTimeline}
-                setCurrentIndex={setCurrentIndex}
+                setCurrentIndex={handleVideoChange}
                 videos={videos}
               />
             </div>
@@ -89,7 +118,7 @@ export function YouTubeMobilePlayer({
         })}
       </YouTubeMobileContainer>
 
-      {/* Enhanced Timeline Overlay - positioned above navbar */}
+      {/* Enhanced Timeline Overlay - Now Synced */}
       {videos && currentVideo && (
         <AnimatePresence>
           {showTimeline && (
@@ -100,7 +129,7 @@ export function YouTubeMobilePlayer({
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               className="absolute left-0 right-0 backdrop-blur-md border-t border-white/20 p-4 z-50"
               style={{
-                bottom: '100px', // Position above navbar
+                bottom: '10px',
                 background: isDark
                   ? 'rgba(15, 23, 42, 0.95)'
                   : 'rgba(255, 255, 255, 0.95)'
@@ -109,29 +138,15 @@ export function YouTubeMobilePlayer({
               <PlayerTimeline
                 videoData={currentVideo}
                 onSeekToTimestamp={handleSeekToTimestamp}
-                onExpansionChange={() => {}}
                 isOverNavbar={true}
+                currentVideoTime={currentVideoTime}
+                setShowTimeline={setShowTimeline}
               />
-              
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className='absolute bottom-1'
-              >
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className=""
-                  style={{ color: colors.foreground }}
-                  onClick={() => setShowTimeline(false)}
-                >
-                  <ChevronDown />
-                </Button>
-              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
       )}
+      
       <MobileNavbar 
         isVideoPlayerMode={true}
         onVideoPlayerModeToggle={() => setNavbarCollapsed(!navbarCollapsed)}

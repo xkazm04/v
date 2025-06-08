@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { VideoWithTimestamps, VideoTimestamp } from '@/app/types/video_api';
 import { useSmartTimeTracking } from '@/app/hooks/useSmartTimeTracking';
@@ -9,21 +9,20 @@ import { getSegmentTypeFromCategory } from '@/app/helpers/playerHelp';
 import PlayerTimelineBottom from './PlayerTimelineBottom';
 import { Divider } from '@/app/components/ui/divider';
 import TimelineClaimItem from './TimelineClaimItem';
-
-import TimelineSegment from './TimelineSegment';
 import TimelineListenHeader from './TimelineListenHeader';
+import { TimelineProgressTracker } from './TimelineProgressTracker';
 
 interface PlayerTimelineProps {
   videoData: VideoWithTimestamps;
   onSeekToTimestamp?: (timestamp: number) => void;
-  onExpansionChange?: (isExpanded: boolean) => void;
-  targetHeight?: string;
   isOverNavbar?: boolean;
-  isListenMode?: boolean; // New prop for listen-only mode
-  currentVideoTime?: number; // External video time if available
+  isListenMode?: boolean;
+  currentVideoTime?: number; 
+  syncMode?: 'external' | 'internal'; 
+  setShowTimeline: (show: boolean) => void; 
 }
 
-export interface SegmentInteface {
+export interface SegmentInterface {
   timestamp: number;
   duration: number;
   type: 'truth' | 'neutral' | 'lie';
@@ -33,7 +32,7 @@ export interface SegmentInteface {
 }
 
 // Convert VideoTimestamps to TimelineSegments
-const convertTimestampsToSegments = (timestamps: VideoTimestamp[]): SegmentInteface[] => {
+const convertTimestampsToSegments = (timestamps: VideoTimestamp[]): SegmentInterface[] => {
   return timestamps.map(timestamp => ({
     id: timestamp.id,
     timestamp: timestamp.time_from_seconds,
@@ -55,11 +54,11 @@ const calculateFactCheckStats = (timestamps: VideoTimestamp[]) => {
   }
 
   const totalStatements = timestamps.length;
-  const truthfulStatements = timestamps.filter(t => 
+  const truthfulStatements = timestamps.filter(t =>
     getSegmentTypeFromCategory(t.category) === 'truth'
   ).length;
-  
-  const averageConfidence = timestamps.reduce((sum, t) => 
+
+  const averageConfidence = timestamps.reduce((sum, t) =>
     sum + (t.confidence_score || 0), 0
   ) / totalStatements;
 
@@ -72,18 +71,17 @@ const calculateFactCheckStats = (timestamps: VideoTimestamp[]) => {
   };
 };
 
-export function PlayerTimeline({ 
+export function PlayerTimeline({
   videoData,
   onSeekToTimestamp,
-  onExpansionChange,
-  targetHeight = "50vh",
   isOverNavbar = false,
   isListenMode = false,
-  currentVideoTime
+  currentVideoTime,
+  syncMode = 'external',
+  setShowTimeline
 }: PlayerTimelineProps) {
   const { colors, isDark, mounted } = useLayoutTheme();
-  const [isExpanded, setIsExpanded] = useState(false);
-  
+
   const timelineRef = useRef<HTMLDivElement>(null);
 
   const { video, timestamps } = videoData;
@@ -91,29 +89,25 @@ export function PlayerTimeline({
   const timelineSegments = convertTimestampsToSegments(timestamps);
   const factCheckStats = calculateFactCheckStats(timestamps);
 
-  // Smart time tracking for listen mode
-  const { 
-    currentTime: trackedTime, 
-    accuracy, 
-    confidence: trackingConfidence 
+  const {
+    currentTime: trackedTime,
+    accuracy,
+    confidence: trackingConfidence
   } = useSmartTimeTracking(video.id, videoDuration);
 
-  // Use external time if provided, otherwise use tracked time
-  const currentTime = currentVideoTime !== undefined ? currentVideoTime : trackedTime;
-  const progressPercentage = (currentTime / videoDuration) * 100;
+  // Determine which time source to use
+  const currentTime = (() => {
+    if (syncMode === 'external' && currentVideoTime !== undefined) {
+      return currentVideoTime; // Use synced time from YouTube player
+    }
+    return trackedTime; // Fallback to internal tracking
+  })();
 
   // Find active claims at current time
   const activeClaims = timelineSegments.filter(
     segment => currentTime >= segment.timestamp && currentTime <= (segment.timestamp + segment.duration)
   );
 
-  useEffect(() => {
-    onExpansionChange?.(isExpanded);
-  }, [isExpanded, onExpansionChange]);
-
-  const handleToggleExpansion = () => {
-    setIsExpanded(!isExpanded);
-  };
 
   const handleSeekToTimestamp = (timestamp: number) => {
     onSeekToTimestamp?.(timestamp);
@@ -125,100 +119,34 @@ export function PlayerTimeline({
 
   // Enhanced color scheme for dual theming
   const timelineColors = {
-    background: isDark 
-      ? 'rgba(15, 23, 42, 0.95)' 
+    background: isDark
+      ? 'rgba(15, 23, 42, 0.95)'
       : 'rgba(255, 255, 255, 0.95)',
-    border: isDark 
-      ? 'rgba(71, 85, 105, 0.2)' 
+    border: isDark
+      ? 'rgba(71, 85, 105, 0.2)'
       : 'rgba(226, 232, 240, 0.3)',
-    track: isDark 
-      ? 'rgba(71, 85, 105, 0.3)' 
+    track: isDark
+      ? 'rgba(71, 85, 105, 0.3)'
       : 'rgba(226, 232, 240, 0.5)',
     progress: colors.primary,
     progressGradient: `linear-gradient(90deg, ${colors.primary}, ${colors.primary}90)`,
     indicator: colors.foreground,
-    activeClaim: isDark 
-      ? 'rgba(30, 41, 59, 0.8)' 
+    activeClaim: isDark
+      ? 'rgba(30, 41, 59, 0.8)'
       : 'rgba(248, 250, 252, 0.8)',
-    accuracy: isDark 
-      ? 'rgba(34, 197, 94, 0.8)' 
-      : 'rgba(22, 163, 74, 0.8)'
+    accuracy: isDark
+      ? 'rgba(34, 197, 94, 0.8)'
+      : 'rgba(22, 163, 74, 0.8)',
+    primary: colors.primary
   };
 
   return (
     <>
-      {/* Expanded Timeline Overlay */}
-      <AnimatePresence>
-        {isExpanded && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
-              onClick={() => setIsExpanded(false)}
-            />
-            
-            {/* Expanded Panel */}
-            <motion.div
-              initial={{ 
-                y: "100%",
-                opacity: 0,
-                scale: 0.95
-              }}
-              animate={{ 
-                y: 0,
-                opacity: 1,
-                scale: 1
-              }}
-              exit={{ 
-                y: "100%",
-                opacity: 0,
-                scale: 0.95
-              }}
-              transition={{ 
-                type: "spring",
-                damping: 25,
-                stiffness: 200,
-                duration: 0.5
-              }}
-              className="fixed max-h-[700px] max-w-[800px] w-full px-5 inset-x-4 top-4 ml-[5%]
-              md:inset-x-8 md:top-8 md:bottom-24 backdrop-blur-md border rounded-xl shadow-2xl z-50 overflow-hidden"
-              style={{
-                backgroundColor: timelineColors.background,
-                borderColor: timelineColors.border
-              }}
-            >
-              {/* Close button */}
-              <motion.button
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ delay: 0.2 }}
-                onClick={() => setIsExpanded(false)}
-                className="absolute top-4 right-4 z-10 p-2 rounded-full transition-colors"
-                style={{
-                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-                  color: colors.foreground
-                }}
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </motion.button>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* Enhanced Regular Timeline with Listen Mode Features */}
+      {/* Enhanced Regular Timeline with Sync Status */}
       <motion.div
         ref={timelineRef}
-        className={`relative backdrop-blur-sm border rounded-lg ${
-          isOverNavbar ? 'z-50' : 'z-10'
-        }`}
+        className={`relative backdrop-blur-sm border rounded-lg ${isOverNavbar ? 'z-50' : 'z-10'
+          }`}
         style={{
           backgroundColor: timelineColors.background,
           borderColor: timelineColors.border,
@@ -226,6 +154,31 @@ export function PlayerTimeline({
         }}
         layout
       >
+        {/* Sync Status Indicator */}
+        {syncMode === 'external' && (
+          <div className="absolute top-2 right-2 z-20">
+            <div className="flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
+              style={{
+                backgroundColor: isDark ? 'rgba(34, 197, 94, 0.2)' : 'rgba(34, 197, 94, 0.1)',
+                color: isDark ? '#4ade80' : '#16a34a',
+                border: `1px solid ${isDark ? 'rgba(34, 197, 94, 0.3)' : 'rgba(34, 197, 94, 0.2)'}`
+              }}>
+              <motion.div
+                className="w-2 h-2 rounded-full bg-green-400"
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.7, 1, 0.7]
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: 'easeInOut'
+                }}
+              />
+            </div>
+          </div>
+        )}
+
         {/* Listen Mode Header with Accuracy Indicator */}
         {isListenMode && (
           <TimelineListenHeader
@@ -237,85 +190,18 @@ export function PlayerTimeline({
           />
         )}
 
-        {/* Enhanced Timeline Progress Track */}
-        <div className="p-4 space-y-3">
-          <div 
-            className="relative rounded-full overflow-hidden"
-            style={{
-              height: isListenMode ? '16px' : '8px',
-              backgroundColor: timelineColors.track
-            }}
-          >
-            {/* Progress bar with enhanced animation */}
-            <motion.div
-              className="absolute inset-y-0 left-0 rounded-full"
-              style={{
-                background: timelineColors.progressGradient,
-                boxShadow: `0 0 12px ${colors.primary}40`
-              }}
-              animate={{ 
-                width: `${Math.min(progressPercentage, 100)}%` 
-              }}
-              transition={{ 
-                duration: isListenMode ? 0.1 : 0.3,
-                ease: 'easeOut'
-              }}
-            />
-
-            {/* Segment indicators using backend timestamps */}
-            <div className="absolute inset-0 flex">
-              {timelineSegments.map((segment) => (
-                <TimelineSegment 
-                  key={segment.id}
-                  segment={segment}
-                  activeClaims={activeClaims}
-                  handleSeekToTimestamp={handleSeekToTimestamp}
-                  videoDuration={videoDuration}
-                />
-              ))}
-            </div>
-
-            {/* Current time indicator with enhanced styling */}
-            <motion.div
-              className="absolute top-0 rounded-full z-20"
-              style={{
-                left: `${Math.min(progressPercentage, 100)}%`,
-                width: '3px',
-                height: '100%',
-                background: timelineColors.indicator,
-                boxShadow: `0 0 12px ${colors.primary}60, 0 0 4px ${colors.primary}40`,
-                transform: 'translateX(-50%)'
-              }}
-              animate={{ 
-                left: `${Math.min(progressPercentage, 100)}%`,
-                scaleY: activeClaims.length > 0 ? 1.3 : 1
-              }}
-              transition={{ 
-                duration: isListenMode ? 0.1 : 0.3,
-                ease: 'easeOut'
-              }}
-            >
-              {/* Pulse effect for active claims */}
-              {activeClaims.length > 0 && (
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  style={{
-                    background: timelineColors.indicator,
-                    filter: 'blur(2px)'
-                  }}
-                  animate={{
-                    scale: [1, 1.5, 1],
-                    opacity: [0.5, 1, 0.5]
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: 'easeInOut'
-                  }}
-                />
-              )}
-            </motion.div>
-          </div>
+        {/* Enhanced Timeline Progress Track - Now Extracted */}
+        <div className="p-4">
+          <TimelineProgressTracker
+            currentTime={currentTime}
+            videoDuration={videoDuration}
+            timelineSegments={timelineSegments}
+            activeClaims={activeClaims}
+            isListenMode={isListenMode}
+            syncMode={syncMode}
+            onSeekToTimestamp={handleSeekToTimestamp}
+            timelineColors={timelineColors}
+          />
 
           {/* Active Claims Display */}
           <AnimatePresence>
@@ -324,14 +210,14 @@ export function PlayerTimeline({
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                className="p-3 rounded-lg border space-y-2"
+                className="p-3 rounded-lg border space-y-2 mt-4"
                 style={{
                   backgroundColor: timelineColors.activeClaim,
                   borderColor: timelineColors.border,
                   backdropFilter: 'blur(8px)'
                 }}
               >
-                <div 
+                <div
                   className="text-sm font-semibold flex items-center space-x-2"
                   style={{ color: colors.foreground }}
                 >
@@ -350,12 +236,12 @@ export function PlayerTimeline({
                   />
                   <span>Active Claims ({activeClaims.length})</span>
                 </div>
-                
+
                 <Divider variant="gradient" thickness="thin" spacing="tight" />
-                
+
                 <div className="space-y-2 max-h-32 overflow-y-auto">
                   {activeClaims.map((claim, index) => (
-                    <TimelineClaimItem 
+                    <TimelineClaimItem
                       claim={claim}
                       key={claim.id}
                       index={index}
@@ -371,7 +257,9 @@ export function PlayerTimeline({
         {/* Timeline controls and info */}
         <PlayerTimelineBottom
           factCheck={factCheckStats}
+          setShowTimeline={setShowTimeline}
         />
+
       </motion.div>
     </>
   );

@@ -15,7 +15,6 @@ import AnimatedSection from './components/animations/AnimatedSection';
 import { FirstTimeUserModal } from './sections/onboarding/FirstTimeUserModal';
 import { useOnboarding } from './hooks/use-onboarding';
 
-// Dynamic imports with loading components for code splitting
 const FeaturedNews = dynamic(() => import('./sections/home/FeaturedNews'), {
   loading: () => <FeaturedNewsSkeleton />,
   ssr: false
@@ -171,7 +170,7 @@ export default function Home() {
 
           {/* Featured News with lazy loading */}
           <AnimatedSection 
-            className="mb-8 px-8"
+            className="pb-8 px-8"
             variants={staggeredSectionVariants}
             threshold={0.1}
             rootMargin="150px"
