@@ -2,8 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, AlertTriangle, Brain, Zap } from "lucide-react";
+import { Quote } from "lucide-react";
 import { LLMResearchResponse } from "@/app/types/research";
+import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
+import { EXPERT_PROFILES } from "@/app/constants/experts";
+
 
 interface FactCheckExpertsProps {
   factCheck: LLMResearchResponse;
@@ -19,24 +22,27 @@ const sectionVariants = {
 };
 
 export function FactCheckExperts({ factCheck }: FactCheckExpertsProps) {
+  const { colors, isDark } = useLayoutTheme();
   const [activeExpert, setActiveExpert] = useState<string | null>(null);
   const [isAutoCycling, setIsAutoCycling] = useState(true);
 
-  if (!factCheck.experts) return null;
-
-  const expertTypes = [
-    { key: "critic", icon: Eye, label: "Critic", color: "#ef4444" },
-    { key: "devil", icon: AlertTriangle, label: "Devil's Advocate", color: "#f59e0b" },
-    { key: "nerd", icon: Brain, label: "Expert", color: "#3b82f6" },
-    { key: "psychic", icon: Zap, label: "Predictor", color: "#8b5cf6" }
-  ];
+  if (!factCheck.experts) {
+    return (
+      <motion.div variants={sectionVariants} className="h-full flex flex-col items-center justify-center p-4">
+        <div className="text-center text-muted-foreground">
+          <Quote className="w-8 h-8 mx-auto mb-2 opacity-50" />
+          <p className="text-sm">No expert analysis available</p>
+        </div>
+      </motion.div>
+    );
+  }
 
   // Filter experts that have content
-  const availableExperts = expertTypes.filter(expert => 
-    factCheck.experts && factCheck.experts[expert.key as keyof typeof factCheck.experts]
+  const availableExperts = Object.entries(EXPERT_PROFILES).filter(([key, profile]) => 
+    factCheck.experts && factCheck.experts[key as keyof typeof factCheck.experts]
   );
 
-  // Auto-cycle through expert opinions every 3 seconds
+  // Auto-cycle through expert opinions every 4 seconds
   useEffect(() => {
     if (!isAutoCycling || availableExperts.length === 0) return;
 
@@ -44,15 +50,15 @@ export function FactCheckExperts({ factCheck }: FactCheckExpertsProps) {
     
     // Start with first expert after a delay
     const startTimeout = setTimeout(() => {
-      setActiveExpert(availableExperts[0].key);
+      setActiveExpert(availableExperts[0][0]);
       currentIndex = 0;
     }, 1000);
 
     // Cycle through experts
     const interval = setInterval(() => {
       currentIndex = (currentIndex + 1) % availableExperts.length;
-      setActiveExpert(availableExperts[currentIndex].key);
-    }, 3000);
+      setActiveExpert(availableExperts[currentIndex][0]);
+    }, 4000);
 
     return () => {
       clearTimeout(startTimeout);
@@ -66,91 +72,91 @@ export function FactCheckExperts({ factCheck }: FactCheckExpertsProps) {
     setActiveExpert(activeExpert === expertKey ? null : expertKey);
   };
 
+  const themeColors = {
+    background: isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(248, 250, 252, 0.8)',
+    border: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(203, 213, 225, 0.5)',
+    cardBackground: isDark ? 'rgba(51, 65, 85, 0.6)' : 'rgba(255, 255, 255, 0.9)',
+    text: colors.foreground,
+    mutedText: isDark ? 'rgba(148, 163, 184, 0.9)' : 'rgba(100, 116, 139, 0.9)',
+    quoteBackground: isDark ? 'rgba(59, 130, 246, 0.1)' : 'rgba(59, 130, 246, 0.05)'
+  };
+
   return (
     <motion.div variants={sectionVariants} className="h-full flex flex-col">
-      {/* Header with auto-cycle indicator */}
-      <div className="flex-shrink-0 mb-2">
+      {/* Header with auto-cycle control */}
+      <div className="flex-shrink-0 mb-3">
         <div className="flex items-center justify-between">
-          <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300">Expert Perspectives</h4>
-          <div className="flex items-center gap-2">
-            {isAutoCycling && (
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                className="w-3 h-3 rounded-full border border-blue-500 dark:border-blue-400 border-t-transparent"
-              />
-            )}
-            <button
-              onClick={() => setIsAutoCycling(!isAutoCycling)}
-              className="text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
-            >
-              {isAutoCycling ? 'Manual' : 'Auto'}
-            </button>
-          </div>
+          <h4 className="text-sm font-semibold" style={{ color: themeColors.text }}>
+            Expert Panel Analysis
+          </h4>
         </div>
       </div>
       
       <div className="flex-1 flex flex-col">
-        {/* Expert buttons */}
-        <div className="grid grid-cols-4 gap-1 mb-2">
-          {expertTypes.map((expert, index) => {
-            const isAvailable = availableExperts.some(ae => ae.key === expert.key);
-            const isActive = activeExpert === expert.key;
+        {/* Expert buttons grid */}
+        <div className="grid grid-cols-2 gap-2 mb-3">
+          {Object.entries(EXPERT_PROFILES).map(([expertKey, profile], index) => {
+            const isAvailable = availableExperts.some(([key]) => key === expertKey);
+            const isActive = activeExpert === expertKey;
+            const SvgComponent = profile.SvgComponent;
             
             return (
               <motion.button
-                key={expert.key}
+                key={expertKey}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ 
                   opacity: isAvailable ? 1 : 0.3, 
-                  scale: 1,
-                  borderColor: isActive 
-                    ? `${expert.color}80` 
-                    : 'rgba(148, 163, 184, 0.4)'
+                  scale: 1
                 }}
                 transition={{ 
-                  delay: 1.3 + index * 0.1,
-                  borderColor: { duration: 0.3 }
+                  delay: 1.3 + index * 0.1
                 }}
-                onClick={() => isAvailable && handleExpertClick(expert.key)}
+                onClick={() => isAvailable && handleExpertClick(expertKey)}
                 disabled={!isAvailable}
-                className="p-2 rounded-lg transition-all duration-200 text-center relative"
+                className="relative p-3 rounded-lg border transition-all duration-200 text-left overflow-hidden"
                 style={{
-                  background: isActive 
-                    ? `${expert.color}15` 
-                    : 'rgba(248, 250, 252, 0.8)', // Light mode: very light gray
-                  border: `1px solid ${isActive 
-                    ? `${expert.color}60` 
-                    : 'rgba(148, 163, 184, 0.4)'
-                  }`,
-                  cursor: isAvailable ? 'pointer' : 'not-allowed',
-                  // Dark mode overrides
-                  ...(typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches && {
-                    background: isActive 
-                      ? `${expert.color}20` 
-                      : 'rgba(51, 65, 85, 0.3)',
-                  })
+                  background: isActive ? `${profile.color}15` : themeColors.background,
+                  borderColor: isActive ? `${profile.color}60` : themeColors.border,
+                  cursor: isAvailable ? 'pointer' : 'not-allowed'
                 }}
-                whileHover={isAvailable ? { scale: 1.05 } : {}}
-                whileTap={isAvailable ? { scale: 0.95 } : {}}
+                whileHover={isAvailable ? { scale: 1.02 } : {}}
+                whileTap={isAvailable ? { scale: 0.98 } : {}}
               >
-                {/* Auto-cycle progress indicator */}
-                {isAutoCycling && isActive && (
-                  <motion.div
-                    className="absolute inset-0 rounded-lg border-2"
-                    style={{ borderColor: expert.color }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 1, 0] }}
-                    transition={{ duration: 3, ease: "easeInOut" }}
-                  />
-                )}
                 
-                <expert.icon 
-                  className="w-3 h-3 mx-auto mb-1" 
-                  style={{ color: expert.color }}
-                />
-                <div className="text-xs text-slate-700 dark:text-slate-300 truncate">
-                  {expert.label}
+                {/* Content */}
+                <div className="relative z-10">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div 
+                      className="w-6 h-6 rounded-full flex items-center justify-center"
+                      style={{ backgroundColor: `${profile.color}20` }}
+                    >
+                      <SvgComponent 
+                        width={14} 
+                        height={14} 
+                        color={profile.color}
+                      />
+                    </div>
+                    <div>
+                      <div className="text-xs font-medium" style={{ color: profile.color }}>
+                        {profile.title}
+                      </div>
+                      <div className="text-xs" style={{ color: themeColors.mutedText }}>
+                        {profile.specialty}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Quote preview */}
+                  <div 
+                    className="text-xs italic p-2 rounded border-l-2"
+                    style={{
+                      background: themeColors.quoteBackground,
+                      borderLeftColor: profile.color,
+                      color: themeColors.mutedText
+                    }}
+                  >
+                    "{profile.mockQuote}"
+                  </div>
                 </div>
               </motion.button>
             );
@@ -158,46 +164,53 @@ export function FactCheckExperts({ factCheck }: FactCheckExpertsProps) {
         </div>
 
         {/* Expert Opinion Display */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-hidden">
           <AnimatePresence mode="wait">
             {activeExpert && factCheck.experts[activeExpert as keyof typeof factCheck.experts] && (
               <motion.div
                 key={activeExpert}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.4 }}
-                className="p-3 rounded-lg h-full flex flex-col
-                         bg-white/90 dark:bg-slate-800/30 
-                         border border-slate-200/60 dark:border-slate-700/40"
+                className="h-full flex flex-col p-4 rounded-lg border relative overflow-hidden"
+                style={{
+                  background: themeColors.cardBackground,
+                  borderColor: themeColors.border
+                }}
               >
-                {/* Expert label */}
-                <div className="flex items-center gap-2 mb-2">
+                {/* Background SVG */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
                   {(() => {
-                    const expert = expertTypes.find(e => e.key === activeExpert);
-                    const IconComponent = expert?.icon || Eye;
-                    return (
-                      <>
-                        <IconComponent 
-                          className="w-4 h-4" 
-                          style={{ color: expert?.color || '#6b7280' }}
-                        />
-                        <span 
-                          className="text-sm font-medium"
-                          style={{ color: expert?.color || '#6b7280' }}
-                        >
-                          {expert?.label}
-                        </span>
-                      </>
-                    );
+                    const profile = EXPERT_PROFILES[activeExpert as keyof typeof EXPERT_PROFILES];
+                    const SvgComponent = profile?.SvgComponent;
+                    return SvgComponent ? (
+                      <SvgComponent 
+                        width={120} 
+                        height={120} 
+                        color={profile.color}
+                      />
+                    ) : null;
                   })()}
                 </div>
                 
                 {/* Opinion text */}
-                <div className="flex-1 overflow-y-auto">
-                  <p className="text-sm text-slate-800 dark:text-slate-200 leading-relaxed">
-                    {factCheck.experts[activeExpert as keyof typeof factCheck.experts]}
-                  </p>
+                <div className="relative z-10 flex-1 overflow-y-auto content-scroll">
+                  <div 
+                    className="p-3 rounded-lg border-l-4"
+                    style={{
+                      background: themeColors.quoteBackground,
+                      borderLeftColor: EXPERT_PROFILES[activeExpert as keyof typeof EXPERT_PROFILES]?.color
+                    }}
+                  >
+                    <Quote 
+                      className="w-4 h-4 mb-2 opacity-60"
+                      style={{ color: EXPERT_PROFILES[activeExpert as keyof typeof EXPERT_PROFILES]?.color }}
+                    />
+                    <p className="text-sm leading-relaxed" style={{ color: themeColors.text }}>
+                      {factCheck.experts[activeExpert as keyof typeof factCheck.experts]}
+                    </p>
+                  </div>
                 </div>
               </motion.div>
             )}

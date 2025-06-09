@@ -76,7 +76,7 @@ const UploadVideo: React.FC = () => {
       setStatementResults([]);
       setFinalResult(null);
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}yt/process-video`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/yt/process-video`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -124,15 +124,11 @@ const UploadVideo: React.FC = () => {
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       {/* Header */}
       <div className="text-center">
-        <div className="flex flex-col">
-          <div>https://www.youtube.com/shorts/FlyeD7esY0c</div>
-          <div>Donald Trump</div>
-        </div>
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           YouTube Video Fact-Checker
         </h1>
         <p className="text-gray-600">
-          Upload a political speech or interview to automatically extract and fact-check statements
+          Uplaod section will be hidden in production.
         </p>
       </div>
 

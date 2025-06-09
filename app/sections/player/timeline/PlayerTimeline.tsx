@@ -2,14 +2,13 @@
 
 import { useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { VideoWithTimestamps, VideoTimestamp } from '@/app/types/video_api';
+import { VideoWithTimestamps } from '@/app/types/video_api';
 import { useSmartTimeTracking } from '@/app/hooks/useSmartTimeTracking';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { getSegmentTypeFromCategory } from '@/app/helpers/playerHelp';
 import PlayerTimelineBottom from './PlayerTimelineBottom';
 import { Divider } from '@/app/components/ui/divider';
 import TimelineClaimItem from './TimelineClaimItem';
-import TimelineListenHeader from './TimelineListenHeader';
 import { TimelineProgressTracker } from './TimelineProgressTracker';
 
 interface PlayerTimelineProps {
@@ -31,44 +30,133 @@ export interface SegmentInterface {
   id: string;
 }
 
-// Convert VideoTimestamps to TimelineSegments
-const convertTimestampsToSegments = (timestamps: VideoTimestamp[]): SegmentInterface[] => {
-  return timestamps.map(timestamp => ({
-    id: timestamp.id,
-    timestamp: timestamp.time_from_seconds,
-    duration: timestamp.time_to_seconds - timestamp.time_from_seconds,
-    type: getSegmentTypeFromCategory(timestamp.category),
-    claim: timestamp.statement,
-    confidence: timestamp.confidence_score || 0
-  }));
+// Convert VideoTimestamps to TimelineSegments with unique keys
+const convertTimestampsToSegments = (timestamps: any[]): SegmentInterface[] => {
+  if (!Array.isArray(timestamps)) {
+    console.warn('convertTimestampsToSegments: timestamps is not an array', timestamps);
+    return [];
+  }
+
+  // Create a Map to track used IDs and ensure uniqueness
+  const usedIds = new Set<string>();
+  
+  return timestamps
+    .filter((timestamp, index) => {
+      // Validate timestamp structure
+      if (!timestamp || typeof timestamp !== 'object') {
+        console.warn(`Invalid timestamp at index ${index}:`, timestamp);
+        return false;
+      }
+
+      // Check required fields
+      if (typeof timestamp.time_from_seconds !== 'number' || typeof timestamp.time_to_seconds !== 'number') {
+        console.warn(`Missing or invalid time fields in timestamp at index ${index}:`, timestamp);
+        return false;
+      }
+
+      if (!timestamp.statement || typeof timestamp.statement !== 'string') {
+        console.warn(`Missing or invalid statement in timestamp at index ${index}:`, timestamp);
+        return false;
+      }
+
+      return true;
+    })
+    .map((timestamp, index) => {
+      // Generate base ID
+      let baseId = timestamp.id || `${timestamp.time_from_seconds}-${timestamp.time_to_seconds}`;
+      
+      // Ensure uniqueness by adding index if needed
+      let uniqueId = baseId;
+      let counter = 1;
+      while (usedIds.has(uniqueId)) {
+        uniqueId = `${baseId}-${counter}`;
+        counter++;
+      }
+      usedIds.add(uniqueId);
+
+      const duration = Math.max(0, timestamp.time_to_seconds - timestamp.time_from_seconds);
+      
+      return {
+        id: uniqueId,
+        timestamp: timestamp.time_from_seconds,
+        duration: duration,
+        type: getSegmentTypeFromCategory(timestamp.category),
+        claim: timestamp.statement,
+        confidence: timestamp.confidence_score || 0
+      };
+    });
 };
 
-// Calculate fact check statistics from timestamps
-const calculateFactCheckStats = (timestamps: VideoTimestamp[]) => {
-  if (timestamps.length === 0) {
+// Calculate fact check statistics from timestamps with error handling
+const calculateFactCheckStats = (timestamps: any[]) => {
+  if (!Array.isArray(timestamps) || timestamps.length === 0) {
+    console.warn('calculateFactCheckStats: Invalid or empty timestamps array');
     return {
       truthPercentage: 0,
+      neutralPercentage: 0,
+      misleadingPercentage: 0,
       confidence: 0,
       sources: 0
     };
   }
 
-  const totalStatements = timestamps.length;
-  const truthfulStatements = timestamps.filter(t =>
-    getSegmentTypeFromCategory(t.category) === 'truth'
-  ).length;
+  try {
+    const validTimestamps = timestamps.filter(t => t && typeof t === 'object');
+    const totalStatements = validTimestamps.length;
+    
+    if (totalStatements === 0) {
+      return {
+        truthPercentage: 0,
+        neutralPercentage: 0,
+        misleadingPercentage: 0,
+        confidence: 0,
+        sources: 0
+      };
+    }
 
-  const averageConfidence = timestamps.reduce((sum, t) =>
-    sum + (t.confidence_score || 0), 0
-  ) / totalStatements;
+    const truthfulStatements = validTimestamps.filter(t =>
+      getSegmentTypeFromCategory(t.category) === 'truth'
+    ).length;
+    
+    const neutralStatements = validTimestamps.filter(t =>
+      getSegmentTypeFromCategory(t.category) === 'neutral'
+    ).length;
+    
+    const misleadingStatements = validTimestamps.filter(t =>
+      getSegmentTypeFromCategory(t.category) === 'lie'
+    ).length;
 
-  const uniqueSources = new Set(timestamps.map(t => t.research_id).filter(Boolean)).size;
+    const confidenceScores = validTimestamps
+      .map(t => t.confidence_score)
+      .filter(score => typeof score === 'number' && !isNaN(score));
+    
+    const averageConfidence = confidenceScores.length > 0
+      ? confidenceScores.reduce((sum, score) => sum + score, 0) / confidenceScores.length
+      : 0;
 
-  return {
-    truthPercentage: Math.round((truthfulStatements / totalStatements) * 100),
-    confidence: Math.round(averageConfidence),
-    sources: uniqueSources
-  };
+    const uniqueSources = new Set(
+      validTimestamps
+        .map(t => t.research_id)
+        .filter(Boolean)
+    ).size;
+
+    return {
+      truthPercentage: Math.round((truthfulStatements / totalStatements) * 100),
+      neutralPercentage: Math.round((neutralStatements / totalStatements) * 100),
+      misleadingPercentage: Math.round((misleadingStatements / totalStatements) * 100),
+      confidence: Math.round(averageConfidence * 100),
+      sources: uniqueSources
+    };
+  } catch (error) {
+    console.error('Error calculating fact check stats:', error);
+    return {
+      truthPercentage: 0,
+      neutralPercentage: 0,
+      misleadingPercentage: 0,
+      confidence: 0,
+      sources: 0
+    };
+  }
 };
 
 export function PlayerTimeline({
@@ -81,10 +169,39 @@ export function PlayerTimeline({
   setShowTimeline
 }: PlayerTimelineProps) {
   const { colors, isDark, mounted } = useLayoutTheme();
-
   const timelineRef = useRef<HTMLDivElement>(null);
 
+  // Validate videoData structure
+  if (!videoData || typeof videoData !== 'object') {
+    console.error('PlayerTimeline: Invalid videoData provided', videoData);
+    return (
+      <div className="p-4 text-center text-red-500">
+        Error: Invalid video data
+      </div>
+    );
+  }
+
   const { video, timestamps } = videoData;
+  
+  // Validate video and timestamps
+  if (!video || typeof video !== 'object') {
+    console.error('PlayerTimeline: Invalid video object', video);
+    return (
+      <div className="p-4 text-center text-red-500">
+        Error: Invalid video object
+      </div>
+    );
+  }
+
+  if (!Array.isArray(timestamps)) {
+    console.error('PlayerTimeline: timestamps is not an array', timestamps);
+    return (
+      <div className="p-4 text-center text-yellow-500">
+        No timestamps available for this video
+      </div>
+    );
+  }
+
   const videoDuration = video.duration_seconds || 0;
   const timelineSegments = convertTimestampsToSegments(timestamps);
   const factCheckStats = calculateFactCheckStats(timestamps);
@@ -103,14 +220,22 @@ export function PlayerTimeline({
     return trackedTime; // Fallback to internal tracking
   })();
 
-  // Find active claims at current time
+  // Find active claims at current time - with error handling
   const activeClaims = timelineSegments.filter(
-    segment => currentTime >= segment.timestamp && currentTime <= (segment.timestamp + segment.duration)
+    segment => {
+      if (!segment || typeof segment.timestamp !== 'number' || typeof segment.duration !== 'number') {
+        return false;
+      }
+      return currentTime >= segment.timestamp && currentTime <= (segment.timestamp + segment.duration);
+    }
   );
 
-
   const handleSeekToTimestamp = (timestamp: number) => {
-    onSeekToTimestamp?.(timestamp);
+    if (typeof timestamp === 'number' && !isNaN(timestamp)) {
+      onSeekToTimestamp?.(timestamp);
+    } else {
+      console.warn('Invalid timestamp for seeking:', timestamp);
+    }
   };
 
   if (!mounted) {
@@ -175,22 +300,12 @@ export function PlayerTimeline({
                   ease: 'easeInOut'
                 }}
               />
+              <span>Synced</span>
             </div>
           </div>
         )}
 
-        {/* Listen Mode Header with Accuracy Indicator */}
-        {isListenMode && (
-          <TimelineListenHeader
-            timelineColors={timelineColors}
-            accuracy={accuracy}
-            trackingConfidence={trackingConfidence}
-            currentTime={currentTime}
-            videoDuration={videoDuration}
-          />
-        )}
-
-        {/* Enhanced Timeline Progress Track - Now Extracted */}
+        {/* Enhanced Timeline Progress Track */}
         <div className="p-4">
           <TimelineProgressTracker
             currentTime={currentTime}
@@ -257,6 +372,8 @@ export function PlayerTimeline({
         {/* Timeline controls and info */}
         <PlayerTimelineBottom
           factCheck={factCheckStats}
+          isExpanded={false}
+          handleToggleExpansion={() => {}}
           setShowTimeline={setShowTimeline}
         />
 

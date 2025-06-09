@@ -109,10 +109,6 @@ export function CategoryFilter({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4" style={{ color: colors.primary }} />
-          <span className="text-sm font-medium" style={{ color: colors.foreground }}>
-            Categories
-          </span>
           {selectedCategories.length > 0 && (
             <span 
               className="text-xs px-2 py-1 rounded-full"

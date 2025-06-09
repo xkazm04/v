@@ -36,6 +36,47 @@ export function TimelineProgressTracker({
   const seekTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastSyncTimeRef = useRef<number>(0);
 
+  // Validate props
+  if (typeof currentTime !== 'number' || typeof videoDuration !== 'number' || videoDuration <= 0) {
+    console.warn('TimelineProgressTracker: Invalid time values', { currentTime, videoDuration });
+    return (
+      <div className="text-center text-muted-foreground p-4">
+        Invalid time data
+      </div>
+    );
+  }
+
+  if (!Array.isArray(timelineSegments)) {
+    console.warn('TimelineProgressTracker: timelineSegments is not an array');
+    return (
+      <div className="text-center text-muted-foreground p-4">
+        No timeline data available
+      </div>
+    );
+  }
+
+  // Filter out invalid segments and ensure unique keys
+  const validSegments = timelineSegments
+    .filter((segment, index) => {
+      if (!segment || typeof segment !== 'object') {
+        console.warn(`Invalid segment at index ${index}:`, segment);
+        return false;
+      }
+      if (!segment.id || typeof segment.id !== 'string') {
+        console.warn(`Missing or invalid ID in segment at index ${index}:`, segment);
+        return false;
+      }
+      if (typeof segment.timestamp !== 'number' || typeof segment.duration !== 'number') {
+        console.warn(`Invalid timestamp/duration in segment at index ${index}:`, segment);
+        return false;
+      }
+      return true;
+    })
+    // Remove duplicates based on ID
+    .filter((segment, index, array) => 
+      array.findIndex(s => s.id === segment.id) === index
+    );
+
   // For external sync, use currentTime directly when not user seeking
   // For internal sync, always use currentTime
   const displayTime = isUserSeeking ? lastSyncTimeRef.current : currentTime;
@@ -47,7 +88,7 @@ export function TimelineProgressTracker({
     }
   }, [currentTime, isUserSeeking]);
 
-  const progressPercentage = (displayTime / videoDuration) * 100;
+  const progressPercentage = Math.min(100, Math.max(0, (displayTime / videoDuration) * 100));
 
   const handleTrackClick = useCallback((e: React.MouseEvent) => {
     if (!trackRef.current) return;
@@ -154,10 +195,10 @@ export function TimelineProgressTracker({
           style={{
             background: timelineColors.progressGradient,
             boxShadow: `0 0 12px ${timelineColors.primary}40`,
-            width: `${Math.min(Math.max(progressPercentage, 0), 100)}%`
+            width: `${progressPercentage}%`
           }}
           animate={{ 
-            width: `${Math.min(Math.max(progressPercentage, 0), 100)}%` 
+            width: `${progressPercentage}%` 
           }}
           transition={{ 
             duration: isUserSeeking ? 0 : 0.1,
@@ -167,7 +208,7 @@ export function TimelineProgressTracker({
 
         {/* Segment indicators */}
         <div className="absolute inset-0 flex pointer-events-none">
-          {timelineSegments.map((segment) => (
+          {validSegments.map((segment) => (
             <TimelineSegment 
               key={segment.id}
               segment={segment}
@@ -182,7 +223,7 @@ export function TimelineProgressTracker({
         <motion.div
           className="absolute top-0 rounded-full z-20 pointer-events-none"
           style={{
-            left: `${Math.min(Math.max(progressPercentage, 0), 100)}%`,
+            left: `${progressPercentage}%`,
             width: '3px',
             height: '100%',
             background: timelineColors.indicator,
@@ -190,7 +231,7 @@ export function TimelineProgressTracker({
             transform: 'translateX(-50%)'
           }}
           animate={{ 
-            left: `${Math.min(Math.max(progressPercentage, 0), 100)}%`,
+            left: `${progressPercentage}%`,
             scaleY: activeClaims.length > 0 ? 1.3 : 1,
             scaleX: isUserSeeking ? 1.5 : 1
           }}

@@ -4,135 +4,29 @@
 
 @layer base {
   :root {
-    /* Cream/sepia paper background with rich dark inks */
-    --background: 45 25% 94%;  /* Aged cream paper */
-    --foreground: 0 0% 8%;     /* Deep black ink */
-    --card: 42 20% 96%;        /* Slightly whiter paper sections */
-    --card-foreground: 0 0% 8%;
-    --popover: 45 25% 94%;
-    --popover-foreground: 0 0% 8%;
-    --primary: 0 0% 12%;       /* Rich newspaper black */
-    --primary-foreground: 45 25% 94%;
-    --secondary: 35 15% 85%;   /* Faded newsprint */
-    --secondary-foreground: 0 0% 15%;
-    --muted: 40 12% 88%;       /* Light sepia tone */
-    --muted-foreground: 0 0% 35%;
-    --accent: 25 85% 35%;      /* Classic red ink for highlights */
-    --accent-foreground: 45 25% 94%;
-    --destructive: 8 85% 40%;  /* Deep red ink */
-    --destructive-foreground: 45 25% 94%;
-    --border: 35 8% 75%;       /* Subtle newsprint lines */
-    --input: 42 15% 92%;       /* Paper input fields */
-    --ring: 0 0% 12%;          /* Focus ring matching primary */
-    --radius: 0.125rem;        /* Sharp, newspaper-like corners */
-    
-    /* Custom scrollbar variables */
+    /* Light theme scrollbar variables */
     --scrollbar-width: 6px;
-    --scrollbar-track: hsl(40 12% 88%);
-    --scrollbar-thumb: hsl(0 0% 35% / 0.4);
-    --scrollbar-thumb-hover: hsl(0 0% 25% / 0.6);
-    --scrollbar-thumb-active: hsl(0 0% 15% / 0.8);
-    --scrollbar-corner: hsl(45 25% 94%);
-    
-    /* Vintage newspaper chart colors - inspired by old printing inks */
-    --chart-1: 220 70% 50%;    /* Bright blue */
-    --chart-2: 340 75% 55%;    /* Vibrant pink */
-    --chart-3: 160 60% 45%;    /* Fresh green */
-    --chart-4: 30 80% 55%;     /* Bright orange */
-    --chart-5: 280 65% 60%;    /* Purple */
-    
-    /* Extended vintage palette */
-    --primary-50: 45 30% 98%;
-    --primary-100: 42 25% 95%;
-    --primary-200: 40 20% 88%;
-    --primary-300: 35 15% 75%;
-    --primary-400: 0 0% 45%;
-    --primary-500: 0 0% 12%;
-    --primary-600: 0 0% 8%;
-    --primary-700: 0 0% 5%;
-    --primary-800: 0 0% 3%;
-    --primary-900: 0 0% 1%;
-    
-    --neutral-50: 45 30% 98%;
-    --neutral-100: 42 25% 95%;
-    --neutral-200: 40 20% 88%;
-    --neutral-300: 35 15% 75%;
-    --neutral-400: 0 0% 60%;
-    --neutral-500: 0 0% 35%;
-    --neutral-600: 0 0% 25%;
-    --neutral-700: 0 0% 15%;
-    --neutral-800: 0 0% 8%;
-    --neutral-900: 0 0% 3%;
-    
-    /* Vintage verification colors - like old stamps and seals */
-    --verified: 160 45% 25%;     /* Official green stamp */
-    --verified-light: 160 30% 90%;
-    --unverified: 35 60% 40%;    /* Warning amber */
-    --unverified-light: 35 40% 92%;
-    --false: 8 85% 40%;          /* Alert red ink */
-    --false-light: 8 50% 94%;
+    --scrollbar-thin-width: 4px;
+    --scrollbar-track: rgba(241, 245, 249, 0.6);
+    --scrollbar-thumb: rgba(148, 163, 184, 0.4);
+    --scrollbar-thumb-hover: rgba(100, 116, 139, 0.6);
+    --scrollbar-thumb-active: rgba(71, 85, 105, 0.8);
+    --scrollbar-corner: rgba(241, 245, 249, 0.8);
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    
-    /* Dark mode scrollbar variables */
-    --scrollbar-width: 6px;
-    --scrollbar-track: hsl(217.2 32.6% 17.5%);
-    --scrollbar-thumb: hsl(215 20.2% 65.1% / 0.3);
-    --scrollbar-thumb-hover: hsl(215 20.2% 75.1% / 0.5);
-    --scrollbar-thumb-active: hsl(210 40% 98% / 0.7);
-    --scrollbar-corner: hsl(222.2 84% 4.9%);
-    
-    --chart-1: 220 70% 50%;    /* Bright blue */
-    --chart-2: 340 75% 55%;    /* Vibrant pink */
-    --chart-3: 160 60% 45%;    /* Fresh green */
-    --chart-4: 30 80% 55%;     /* Bright orange */
-    --chart-5: 280 65% 60%;    /* Purple */
-    
-    /* Dark mode additional variables */
-    --primary-50: 222.2 84% 4.9%;
-    --primary-100: 217.2 32.6% 17.5%;
-    --primary-200: 215 20.2% 25.1%;
-    --primary-300: 215 20.2% 35.1%;
-    --primary-400: 215 20.2% 45.1%;
-    --primary-500: 210 40% 98%;
-    --primary-600: 210 40% 98%;
-    --primary-700: 210 40% 98%;
-    --primary-800: 210 40% 98%;
-    --primary-900: 210 40% 98%;
-    
-    --verified: 142 76% 46%;
-    --verified-light: 142 76% 16%;
-    --unverified: 38 92% 60%;
-    --unverified-light: 38 92% 15%;
-    --false: 0 84% 70%;
-    --false-light: 0 84% 15%;
+    /* Dark theme scrollbar variables */
+    --scrollbar-track: rgba(15, 23, 42, 0.6);
+    --scrollbar-thumb: rgba(71, 85, 105, 0.4);
+    --scrollbar-thumb-hover: rgba(100, 116, 139, 0.6);
+    --scrollbar-thumb-active: rgba(148, 163, 184, 0.8);
+    --scrollbar-corner: rgba(15, 23, 42, 0.8);
   }
 
   html {
     color-scheme: light dark;
     scroll-behavior: smooth;
     overflow-x: hidden;
-    /* Enhanced smooth scrolling */
     scroll-padding-top: 2rem;
   }
 
@@ -144,12 +38,11 @@
 
 @layer components {
   /* ===============================================
-     MODERN CUSTOM SCROLLBAR SYSTEM
+     MODERN MINIMALISTIC SCROLLBAR SYSTEM
      =============================================== */
   
   /* Global scrollbar styling - Applied to all elements */
   * {
-    /* Modern webkit scrollbar styling */
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   }
@@ -161,68 +54,49 @@
   }
 
   *::-webkit-scrollbar-track {
-    background: var(--scrollbar-track);
-    border-radius: 3px;
+    background: transparent;
+    border-radius: 0;
   }
 
   *::-webkit-scrollbar-thumb {
     background: var(--scrollbar-thumb);
-    border-radius: 3px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid transparent;
+    border-radius: 10px;
+    border: 2px solid transparent;
     background-clip: padding-box;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 20px;
   }
 
   *::-webkit-scrollbar-thumb:hover {
     background: var(--scrollbar-thumb-hover);
-    transform: scaleY(1.1);
-    border-radius: 4px;
+    border-width: 1px;
   }
 
   *::-webkit-scrollbar-thumb:active {
     background: var(--scrollbar-thumb-active);
-    transform: scaleY(1.2);
+    border-width: 0px;
   }
 
   *::-webkit-scrollbar-corner {
     background: var(--scrollbar-corner);
   }
 
-  /* Enhanced body scrollbar with gradient effect */
-  body::-webkit-scrollbar-thumb {
-    background: linear-gradient(
-      180deg,
-      var(--scrollbar-thumb) 0%,
-      var(--scrollbar-thumb-hover) 50%,
-      var(--scrollbar-thumb) 100%
-    );
-    box-shadow: 
-      inset 0 1px 0 rgba(255, 255, 255, 0.1),
-      0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-
-  body::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(
-      180deg,
-      var(--scrollbar-thumb-hover) 0%,
-      var(--scrollbar-thumb-active) 50%,
-      var(--scrollbar-thumb-hover) 100%
-    );
-    box-shadow: 
-      inset 0 1px 0 rgba(255, 255, 255, 0.2),
-      0 2px 6px rgba(0, 0, 0, 0.15);
-  }
-
-  /* Specialized scrollbar variants */
+  /* Ultra-thin scrollbar variant */
   .scrollbar-thin {
     scrollbar-width: thin;
   }
 
   .scrollbar-thin::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: var(--scrollbar-thin-width);
+    height: var(--scrollbar-thin-width);
   }
 
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    border: 1px solid transparent;
+  }
+
+  /* Hidden scrollbar */
   .scrollbar-none {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -232,9 +106,42 @@
     display: none;
   }
 
-  /* Sidebar scrollbar - Extra slim and elegant */
+  /* Auto-hide scrollbar for clean look */
+  .scrollbar-auto-hide {
+    overflow: auto;
+  }
+
+  .scrollbar-auto-hide::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    height: var(--scrollbar-width);
+  }
+
+  .scrollbar-auto-hide::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-auto-hide::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .scrollbar-auto-hide:hover::-webkit-scrollbar-thumb,
+  .scrollbar-auto-hide:focus-within::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+  }
+
+  .scrollbar-auto-hide:hover::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+
+  /* Sidebar scrollbar - Ultra minimal */
+  .sidebar-scroll {
+    scrollbar-width: thin;
+  }
+
   .sidebar-scroll::-webkit-scrollbar {
-    width: 3px;
+    width: 2px;
   }
 
   .sidebar-scroll::-webkit-scrollbar-track {
@@ -243,107 +150,91 @@
 
   .sidebar-scroll::-webkit-scrollbar-thumb {
     background: var(--scrollbar-thumb);
-    border-radius: 2px;
+    border-radius: 1px;
     transition: all 0.2s ease;
   }
 
   .sidebar-scroll::-webkit-scrollbar-thumb:hover {
     background: var(--scrollbar-thumb-hover);
-    width: 5px;
-  }
-
-  /* Modal and dialog scrollbars - Slightly thicker for better UX */
-  .modal-scroll::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .modal-scroll::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-    border-radius: 4px;
-    border: 2px solid var(--scrollbar-track);
-    background-clip: padding-box;
-  }
-
-  .modal-scroll::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-thumb-hover);
-    border-width: 1px;
+    width: 3px;
   }
 
   /* Content area scrollbar - Balanced visibility */
+  .content-scroll {
+    scrollbar-width: thin;
+  }
+
   .content-scroll::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
+    height: 5px;
   }
 
   .content-scroll::-webkit-scrollbar-track {
     background: var(--scrollbar-track);
     border-radius: 3px;
-    margin: 4px 0;
+    margin: 2px 0;
   }
 
   .content-scroll::-webkit-scrollbar-thumb {
-    background: linear-gradient(
-      45deg,
-      var(--scrollbar-thumb) 0%,
-      var(--scrollbar-thumb-hover) 100%
-    );
+    background: var(--scrollbar-thumb);
     border-radius: 3px;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
   }
 
   .content-scroll::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(
-      45deg,
-      var(--scrollbar-thumb-hover) 0%,
-      var(--scrollbar-thumb-active) 100%
-    );
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: var(--scrollbar-thumb-hover);
   }
 
-  /* Code block scrollbar - Monospace friendly */
-  .code-scroll::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+  /* Modal scrollbar - Slightly more visible */
+  .modal-scroll {
+    scrollbar-width: thin;
   }
 
-  .code-scroll::-webkit-scrollbar-track {
-    background: hsl(var(--muted));
-    border-radius: 0;
+  .modal-scroll::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
   }
 
-  .code-scroll::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted-foreground) / 0.5);
-    border-radius: 0;
-    border: 1px solid hsl(var(--border));
+  .modal-scroll::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-radius: 3px;
   }
 
-  .code-scroll::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground) / 0.7);
+  .modal-scroll::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 3px;
+    border: 1px solid transparent;
+    background-clip: padding-box;
+  }
+
+  .modal-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
   }
 
   /* Horizontal scrollbar styling */
   .horizontal-scroll {
     overflow-x: auto;
     overflow-y: hidden;
+    scrollbar-width: thin;
   }
 
   .horizontal-scroll::-webkit-scrollbar {
-    height: 6px;
+    height: 4px;
   }
 
   .horizontal-scroll::-webkit-scrollbar-track {
     background: var(--scrollbar-track);
-    border-radius: 3px;
+    border-radius: 2px;
   }
 
   .horizontal-scroll::-webkit-scrollbar-thumb {
     background: var(--scrollbar-thumb);
-    border-radius: 3px;
-    transition: all 0.3s ease;
+    border-radius: 2px;
+    transition: all 0.2s ease;
   }
 
   .horizontal-scroll::-webkit-scrollbar-thumb:hover {
     background: var(--scrollbar-thumb-hover);
-    height: 8px;
   }
 
   /* ===============================================
@@ -378,11 +269,11 @@
 
 @layer utilities {
   /* ===============================================
-     SMOOTH SCROLLING UTILITIES
+     SMOOTH TRANSITIONS AND EFFECTS
      =============================================== */
   
   * {
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
   }
 
   body {
@@ -413,60 +304,13 @@
     border-width: 3px;
   }
 
-  /* Smooth scrolling utilities */
+  /* Scroll utilities */
   .scroll-smooth {
     scroll-behavior: smooth;
   }
 
   .scroll-auto {
     scroll-behavior: auto;
-  }
-
-  /* Scroll snap utilities */
-  .snap-x {
-    scroll-snap-type: x mandatory;
-  }
-
-  .snap-y {
-    scroll-snap-type: y mandatory;
-  }
-
-  .snap-start {
-    scroll-snap-align: start;
-  }
-
-  .snap-center {
-    scroll-snap-align: center;
-  }
-
-  .snap-end {
-    scroll-snap-align: end;
-  }
-
-  /* Scrollbar width utilities */
-  .scrollbar-w-2::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .scrollbar-w-3::-webkit-scrollbar {
-    width: 12px;
-  }
-
-  .scrollbar-w-4::-webkit-scrollbar {
-    width: 16px;
-  }
-
-  /* Custom scroll padding */
-  .scroll-pt-16 {
-    scroll-padding-top: 4rem;
-  }
-
-  .scroll-pt-20 {
-    scroll-padding-top: 5rem;
-  }
-
-  .scroll-pt-24 {
-    scroll-padding-top: 6rem;
   }
 
   /* Accessibility - Respect user preferences */
@@ -482,125 +326,62 @@
   /* High contrast mode support */
   @media (prefers-contrast: high) {
     :root {
-      --scrollbar-thumb: hsl(0 0% 0% / 0.8);
-      --scrollbar-thumb-hover: hsl(0 0% 0%);
-      --scrollbar-track: hsl(0 0% 100%);
+      --scrollbar-thumb: rgba(0, 0, 0, 0.8);
+      --scrollbar-thumb-hover: rgba(0, 0, 0, 1);
+      --scrollbar-track: rgba(255, 255, 255, 0.9);
     }
 
     .dark {
-      --scrollbar-thumb: hsl(0 0% 100% / 0.8);
-      --scrollbar-thumb-hover: hsl(0 0% 100%);
-      --scrollbar-track: hsl(0 0% 0%);
+      --scrollbar-thumb: rgba(255, 255, 255, 0.8);
+      --scrollbar-thumb-hover: rgba(255, 255, 255, 1);
+      --scrollbar-track: rgba(0, 0, 0, 0.9);
     }
   }
 }
 
 /* ===============================================
-   ENHANCED SIDEBAR ANIMATIONS AND EFFECTS
+   ENHANCED COMPONENT EFFECTS
    =============================================== */
-
-.sidebar-glow {
-  position: relative;
-}
-
-.sidebar-glow::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -50px;
-  width: 100px;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
-  transform: translateX(-100px);
-  transition: transform 0.6s ease-in-out;
-}
-
-.sidebar-glow:hover::before {
-  transform: translateX(300px);
-}
 
 /* Smooth backdrop blur transitions */
 @supports (backdrop-filter: blur(10px)) {
-  .sidebar-backdrop {
+  .backdrop-blur-smooth {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    transition: backdrop-filter 0.3s ease;
   }
 }
 
-/* ===============================================
-   SCROLLBAR INTERACTION ENHANCEMENTS
-   =============================================== */
-
-/* Smooth scrollbar appearance on hover */
-.scrollbar-hover-visible {
+/* Hover reveal scrollbar effect */
+.scrollbar-hover-reveal {
   scrollbar-width: none;
 }
 
-.scrollbar-hover-visible::-webkit-scrollbar {
+.scrollbar-hover-reveal::-webkit-scrollbar {
   width: 0px;
-  transition: width 0.3s ease;
+  transition: width 0.2s ease;
 }
 
-.scrollbar-hover-visible:hover {
+.scrollbar-hover-reveal:hover {
   scrollbar-width: thin;
 }
 
-.scrollbar-hover-visible:hover::-webkit-scrollbar {
-  width: 6px;
+.scrollbar-hover-reveal:hover::-webkit-scrollbar {
+  width: 4px;
 }
 
-/* Auto-hide scrollbar for mobile-like experience */
-.scrollbar-auto-hide::-webkit-scrollbar {
-  width: 6px;
-  transition: opacity 0.3s ease;
+.scrollbar-hover-reveal:hover::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 2px;
 }
 
-.scrollbar-auto-hide::-webkit-scrollbar-thumb {
-  opacity: 0;
-  transition: opacity 0.3s ease;
+/* Gradient fade effect for long content */
+.scroll-fade-top {
+  mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
 }
 
-.scrollbar-auto-hide:hover::-webkit-scrollbar-thumb,
-.scrollbar-auto-hide:focus::-webkit-scrollbar-thumb,
-.scrollbar-auto-hide.scrolling::-webkit-scrollbar-thumb {
-  opacity: 1;
-}
-
-/* Gradient scrollbar track for special sections */
-.scrollbar-gradient-track::-webkit-scrollbar-track {
-  background: linear-gradient(
-    180deg,
-    var(--scrollbar-track) 0%,
-    transparent 50%,
-    var(--scrollbar-track) 100%
-  );
-}
-
-/* Animated scrollbar thumb */
-@keyframes scrollbar-pulse {
-  0%, 100% {
-    background: var(--scrollbar-thumb);
-  }
-  50% {
-    background: var(--scrollbar-thumb-hover);
-  }
-}
-
-.scrollbar-pulse::-webkit-scrollbar-thumb {
-  animation: scrollbar-pulse 2s ease-in-out infinite;
-}
-
-/* Scrollbar with shadow effects */
-.scrollbar-shadow::-webkit-scrollbar-thumb {
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 1px 3px rgba(0, 0, 0, 0.2),
-    0 0 0 1px rgba(0, 0, 0, 0.05);
-}
-
-.scrollbar-shadow::-webkit-scrollbar-thumb:hover {
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    0 2px 6px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(0, 0, 0, 0.1);
+.scroll-fade-bottom {
+  mask-image: linear-gradient(to bottom, black 0%, black 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 95%, transparent 100%);
 }

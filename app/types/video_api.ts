@@ -16,17 +16,48 @@ export interface Video {
   processed_at: string | null;
 }
 
-export interface VideoTimestamp {
+export interface SourceData {
+  count: number;
+  percentage: string;
+  references: SourceReference[];
+  countries: string[];
+}
+
+export interface SourceReference {
+  url: string;
+  title: string;
+  country: string;
+  category: string;
+  credibility: 'high' | 'medium' | 'low';
+}
+
+export interface FactCheckData {
   id: string;
-  video_id: string;
-  research_id: string | null;
-  time_from_seconds: number;
-  time_to_seconds: number;
+  verdict: string;
+  status: 'TRUE' | 'FALSE' | 'PARTIALLY_TRUE' | 'MISLEADING' | 'UNVERIFIABLE';
+  correction?: string;
+  confidence: string;
+  sources: {
+    agreed: SourceData;
+    disagreed: SourceData;
+  };
+  expertAnalysis: {
+    nerd?: string;
+    devil?: string;
+    critic?: string;
+    psychic?: string;
+  };
+  processedAt: Date;
+}
+
+export interface VideoTimestamp {
+  startTime: number;
+  endTime: number;
   statement: string;
-  context: string | null;
-  category: string | null;
-  confidence_score: number | null;
-  created_at: string;
+  context?: string;
+  category?: string;
+  confidence?: number;
+  factCheck?: FactCheckData;
 }
 
 export interface VideoWithTimestamps {
@@ -78,3 +109,96 @@ export interface AdvancedSearchResult {
   processed_at: string | null;
   match_rank: number;
 }
+
+export interface ResearchResult {
+  id?: string;
+  source?: string;
+  country?: string;
+  valid_sources?: string;
+  verdict?: string;
+  status?: string;
+  correction?: string;
+  resources_agreed?: {
+    count: number;
+    total: string;
+    references: Array<{
+      url: string;
+      title: string;
+      country: string;
+      category: string;
+      credibility: string;
+    }>;
+    major_countries: string[];
+  };
+  resources_disagreed?: {
+    count: number;
+    total: string;
+    references: Array<{
+      url: string;
+      title: string;
+      country: string;
+      category: string;
+      credibility: string;
+    }>;
+    major_countries: string[];
+  };
+  experts?: {
+    nerd?: string;
+    devil?: string;
+    critic?: string;
+    psychic?: string;
+  };
+  processed_at?: string;
+}
+
+export interface TimestampWithResearch {
+  time_from_seconds: number;
+  time_to_seconds: number;
+  statement: string;
+  context?: string;
+  category?: string;
+  confidence_score?: number;
+  research?: ResearchResult;
+}
+
+export interface VideoDetailResponse {
+  // Video base data
+  video_url: string;
+  source: string;
+  title?: string;
+  verdict?: string;
+  duration_seconds?: number;
+  speaker_name?: string;
+  language_code?: string;
+  processed_at?: string;
+  
+  // Combined timestamps with research data
+  timestamps: TimestampWithResearch[];
+  
+  // Summary statistics
+  total_statements: number;
+  researched_statements: number;
+  research_completion_rate: number;
+}
+
+// Helper types for frontend consumption
+export interface VideoDetail {
+  id: string;
+  url: string;
+  source: string;
+  title: string;
+  speaker: string;
+  duration: number;
+  language: string;
+  processedAt?: Date;
+  verdict?: string;
+  
+  // Fact-check summary
+  totalStatements: number;
+  researchedStatements: number;
+  completionRate: number;
+  
+  // Timestamps for video player
+  timestamps: VideoTimestamp[];
+}
+
