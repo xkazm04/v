@@ -4,14 +4,12 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { VideoWithTimestamps } from '@/app/types/video_api';
 import { PlayerTimeline } from '@/app/sections/player/timeline/PlayerTimeline';
-import { Button } from '@/app/components/ui/button';
 import { VideoPlayerHeader } from '@/app/components/video/VideoPlayerHeader';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { MobileNavbar } from '@/app/sections/navigation/MobileNavbar';
 import { YouTubePlayerWithSync } from './YouTubePlayerWithSync';
 import YouTubeMobileContainer from './YouTubeMobileContainer';
 import PlayerOverlayUi from './PlayerOverlayUi';
-import { ChevronDown } from 'lucide-react';
 
 interface YouTubeMobilePlayerProps {
   videos?: VideoWithTimestamps[];
@@ -24,7 +22,7 @@ export function YouTubeMobilePlayer({
   initialIndex = 0, 
   autoPlay = true 
 }: YouTubeMobilePlayerProps) {
-  const { colors, isDark } = useLayoutTheme();
+  const { isDark } = useLayoutTheme();
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [showTimeline, setShowTimeline] = useState(false);
   const [showHeader, setShowHeader] = useState(true);

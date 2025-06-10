@@ -28,30 +28,36 @@ const NewsCard = memo(function NewsCard({
   const [isHovered, setIsHovered] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
+  const [dismissType, setDismissType] = useState<'fade' | 'swipe-right' | null>(null);
   
   // Touch gesture tracking
   const lastTapRef = useRef<number>(0);
   const tapCountRef = useRef<number>(0);
+  const hasDraggedRef = useRef<boolean>(false);
 
-  const handleLeftClick = useCallback(() => {
-    if (isDragging) return; // Prevent click during drag
-    setSwipeDirection('right');
-    setIsRead(true);
-    setTimeout(() => {
-      onRead?.(article.id);
-    }, 500); 
+  // SEPARATED: Mouse left click - fade out without movement
+  const handleMouseClick = useCallback((e: React.MouseEvent) => {
+    // Only handle if it's a genuine mouse click (not touch on mobile)
+    if (e.pointerType === 'mouse' || (!('ontouchstart' in window) && e.type === 'click')) {
+      if (isDragging || hasDraggedRef.current) return; // Don't handle if we just dragged
+      
+      setDismissType('fade');
+      setIsRead(true);
+      setTimeout(() => {
+        onRead?.(article.id);
+      }, 300); // Shorter delay for fade effect
+    }
   }, [article.id, onRead, isDragging]);
 
   const handleRightClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    if (isDragging) return; // Prevent right click during drag
+    if (isDragging) return;
     setShowModal(true);
   }, [isDragging]);
 
-  // Handle double tap for mobile
-  const handleTap = useCallback(() => {
-    if (isDragging) return;
+  // SEPARATED: Touch interactions - handle double tap for modal
+  const handleTouchTap = useCallback(() => {
+    if (isDragging || hasDraggedRef.current) return;
     
     const now = Date.now();
     const timeDiff = now - lastTapRef.current;
@@ -72,32 +78,47 @@ const NewsCard = memo(function NewsCard({
     // Single tap after delay (if no second tap)
     setTimeout(() => {
       if (tapCountRef.current === 1 && (Date.now() - lastTapRef.current) >= 300) {
-        // Single tap - do nothing or add feedback
         tapCountRef.current = 0;
+        // On mobile, single tap does nothing - only swipe dismisses
       }
     }, 350);
   }, [isDragging]);
+
+  // Handle swipe right gesture - slide out to right
+  const handleSwipeRight = useCallback(() => {
+    setDismissType('swipe-right');
+    setIsRead(true);
+    setTimeout(() => {
+      onRead?.(article.id);
+    }, 500);
+  }, [article.id, onRead]);
+
+  // Reset drag state after drag ends
+  const handleDragEnd = useCallback(() => {
+    setIsDragging(false);
+    // Reset drag flag after a short delay to prevent click handling
+    setTimeout(() => {
+      hasDraggedRef.current = false;
+    }, 100);
+  }, []);
+
+  const handleDragStart = useCallback(() => {
+    setIsDragging(true);
+    hasDraggedRef.current = true;
+  }, []);
 
   const isCompact = layout === 'compact';
 
   // Dynamic styling based on article properties
   const cardStyles = useMemo(() => {
     const baseHeight = isCompact ? 'h-32' : 'h-48';
-    const isBreaking = article.isBreaking;
-    const hasFactCheck = !!article.factCheck;
     
     return {
       height: baseHeight,
       background: mounted 
         ? colors.card.background
         : isDark ? '#1e293b' : '#ffffff',
-      borderColor: mounted
-        ? isBreaking 
-          ? isDark ? 'rgba(239, 68, 68, 0.3)' : 'rgba(220, 38, 38, 0.3)'
-          : hasFactCheck
-            ? isDark ? 'rgba(59, 130, 246, 0.3)' : 'rgba(37, 99, 235, 0.3)'
-            : colors.border
-        : isDark ? '#334155' : '#e2e8f0',
+      borderColor: mounted ? colors.border : (isDark ? '#374151' : '#e5e7eb'),
       boxShadow: mounted
         ? isHovered 
           ? `0 20px 40px -12px ${isDark ? 'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0.15)'}, 0 0 0 1px ${colors.border}`
@@ -106,7 +127,7 @@ const NewsCard = memo(function NewsCard({
           ? '0 4px 12px -2px rgba(0, 0, 0, 0.3)' 
           : '0 4px 12px -2px rgba(0, 0, 0, 0.1)'
     };
-  }, [isCompact, article, colors, mounted, isDark, isHovered]);
+  }, [isCompact, colors, mounted, isDark, isHovered]);
 
   if (!mounted) {
     return (
@@ -114,12 +135,11 @@ const NewsCard = memo(function NewsCard({
         className={cn(
           'group relative cursor-pointer flex flex-col justify-between',
           cardStyles.height,
-          'rounded-xl border-2 transition-all duration-300 overflow-hidden',
+          'rounded-xl border-1 transition-all duration-300 overflow-hidden',
           className
         )}
         style={{
           backgroundColor: cardStyles.background,
-          borderColor: cardStyles.borderColor,
           boxShadow: cardStyles.boxShadow
         }}
       />
@@ -136,15 +156,18 @@ const NewsCard = memo(function NewsCard({
             isRead={isRead}
             isDragging={isDragging}
             setIsDragging={setIsDragging}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
             isHovered={isHovered}
             setIsHovered={setIsHovered}
-            swipeDirection={swipeDirection}
-            setSwipeDirection={setSwipeDirection}
+            dismissType={dismissType}
+            setDismissType={setDismissType}
             setIsRead={setIsRead}
             onRead={onRead}
-            handleLeftClick={handleLeftClick}
+            handleMouseClick={handleMouseClick}
             handleRightClick={handleRightClick}
-            handleTap={handleTap}
+            handleTouchTap={handleTouchTap}
+            handleSwipeRight={handleSwipeRight}
             className={className}
             isDark={isDark}
           >

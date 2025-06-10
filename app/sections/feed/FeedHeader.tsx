@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 import FeedHeaderContent from "./FeedHeaderContent";
 import DynamicBackground from "@/app/components/ui/Decorative/DynamicBackground";
 import { statusColorConfig } from "@/app/constants/colors";
+import StampText from "@/app/components/ui/Decorative/StampText";
 interface StatementOfDayProps {
     className?: string;
 }
@@ -62,7 +63,7 @@ const FeedHeader = ({ className = "" }: StatementOfDayProps) => {
             variants={containerVariants}
             initial="hidden"
             animate={isVisible ? "visible" : "hidden"}
-            className={`relative overflow-hidden rounded-3xl max-w-[2000px] min-h-[300px] ${className}`}
+            className={`relative overflow-hidden rounded-3xl max-w-[2000px] min-h-[400px] ${className}`}
         >
             {/* Dynamic Background with Animated Pattern */}
             <DynamicBackground
@@ -74,6 +75,12 @@ const FeedHeader = ({ className = "" }: StatementOfDayProps) => {
                 currentTheme={currentTheme}
                 setIsVisible={setIsVisible}
             />
+                      
+
+            {currentTheme === 'light' && <StampText 
+              stampText={config.label}
+              config={config}
+              />}
             {/* Content */}
             <FeedHeaderContent
                 config={config}

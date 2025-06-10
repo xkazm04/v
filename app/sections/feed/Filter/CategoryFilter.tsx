@@ -106,32 +106,6 @@ export function CategoryFilter({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {selectedCategories.length > 0 && (
-            <span 
-              className="text-xs px-2 py-1 rounded-full"
-              style={{
-                background: colors.primary + '20',
-                color: colors.primary
-              }}
-            >
-              {selectedCategories.length}
-            </span>
-          )}
-        </div>
-        
-        {selectedCategories.length > 0 && (
-          <button
-            onClick={() => setSelectedCategories([])}
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Clear all
-          </button>
-        )}
-      </div>
-
       {/* Error State for Categories */}
       {hasCountsError && (
         <motion.div

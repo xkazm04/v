@@ -1,223 +1,165 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import { Search, X, Loader2 } from 'lucide-react';
-import { Input } from '@/app/components/ui/input';
+import React from 'react';
+import { Search, X } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
-import { Card, CardContent } from '@/app/components/ui/card';
-import { Badge } from '@/app/components/ui/badge';
 import { cn } from '@/app/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useSearchVideos } from '@/app/hooks/useVideos';
+import { motion } from 'framer-motion';
+import { useSearchState } from '@/app/hooks/useSearchState';
+import { SearchResults } from './SearchResults';
 
 interface SearchBarProps {
   className?: string;
   onResultSelect?: (result: any, type: 'news' | 'video') => void;
   placeholder?: string;
+  variant?: 'default' | 'compact';
+  showIcon?: boolean;
+  autoFocus?: boolean;
+  minQueryLength?: number;
+  debounceDelay?: {
+    short: number;
+    long: number;
+  };
+  limits?: {
+    news: number;
+    videos: number;
+  };
 }
 
-export function SearchBar({ className, onResultSelect, placeholder = "Search news and videos..." }: SearchBarProps) {
-  const [query, setQuery] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-  const [debouncedQuery, setDebouncedQuery] = useState('');
-  const searchRef = useRef<HTMLDivElement>(null);
+export function SearchBar({ 
+  className, 
+  onResultSelect, 
+  placeholder = "Search news and videos...",
+  variant = 'default',
+  showIcon = true,
+  autoFocus = false,
+  minQueryLength = 2,
+  debounceDelay,
+  limits
+}: SearchBarProps) {
+  const {
+    // State
+    query,
+    debouncedQuery,
+    isOpen,
+    isFocused,
+    isLoading,
+    hasResults,
+    shouldSearch,
+    
+    // Results
+    newsResults,
+    videoResults,
+    
+    // Refs
+    searchRef,
+    inputRef,
+    
+    // Handlers
+    handleInputChange,
+    handleClear,
+    handleResultClick,
+    handleFocus,
+    handleBlur
+  } = useSearchState({
+    autoFocus,
+    onResultSelect,
+    minQueryLength,
+    debounceDelay,
+    limits
+  });
 
-  // Debounce search query
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedQuery(query);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [query]);
-
-  // // Search hooks
-  // const { data: newsData, isLoading: newsLoading } = useSearchResearch(
-  //   debouncedQuery || undefined,
-  //   undefined,
-  //   undefined,
-  //   undefined,
-  //   undefined,
-  //   10,
-  //   0
-  // );
-
-  const { data: videoData, isLoading: videosLoading } = useSearchVideos(
-    debouncedQuery || undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    10,
-    0
-  );
-
-  // Ensure we have arrays to work with
-  //@ts-expect-error Ignore
-  const newsResults = Array.isArray(newsData) ? newsData : [];
-  const videoResults = Array.isArray(videoData) ? videoData : [];
-
-  //@ts-expect-error Ignore
-  const isLoading = newsLoading || videosLoading;
-  const hasResults = newsResults.length > 0 || videoResults.length > 0;
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setQuery(value);
-    setIsOpen(value.length > 0);
-  };
-
-  const handleClear = () => {
-    setQuery('');
-    setIsOpen(false);
-  };
-
-  const handleResultClick = (result: any, type: 'news' | 'video') => {
-    onResultSelect?.(result, type);
-    setIsOpen(false);
-    setQuery('');
-  };
+  const isCompact = variant === 'compact';
 
   return (
-    <div ref={searchRef} className={cn('relative w-full max-w-md', className)}>
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
+    <div ref={searchRef} className={cn('relative w-full', className)}>
+      <motion.div 
+        className="relative"
+        animate={{
+          scale: isFocused ? 1.02 : 1,
+        }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+      >
+        {showIcon && (
+          <Search className={cn(
+            "absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground transition-colors pointer-events-none",
+            isCompact ? "h-4 w-4" : "h-4 w-4",
+            isFocused && "text-blue-500"
+          )} />
+        )}
+        
+        <input
+          ref={inputRef}
           type="text"
           placeholder={placeholder}
           value={query}
           onChange={handleInputChange}
-          className="pl-10 pr-10"
-          onFocus={() => query.length > 0 && setIsOpen(true)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          className={cn(
+            "transition-all z-10 duration-200 relative", 
+            showIcon ? "pl-10" : "pl-4",
+            query ? "pr-12" : "pr-4", 
+            isCompact ? "h-9" : "h-10",
+            isFocused && "ring-2 ring-blue-500/20 border-blue-300 dark:border-blue-600",
+            "focus:ring-2 focus:ring-blue-500/20 focus:border-blue-300 dark:focus:border-blue-600"
+          )}
+          autoComplete="off" 
+          spellCheck={false} 
         />
-        {query && (
+        
+        {/* Clear button - positioned to not overlap with loading indicator */}
+        {query && !isLoading && (
           <Button
             variant="ghost"
             size="sm"
-            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
+            className={cn(
+              "absolute right-1 top-1/2 transform -translate-y-1/2 p-0 hover:bg-slate-100 dark:hover:bg-slate-800 z-20",
+              isCompact ? "h-7 w-7" : "h-8 w-8"
+            )}
             onClick={handleClear}
+            tabIndex={-1} // Prevent tab focus
           >
             <X className="h-4 w-4" />
           </Button>
         )}
-      </div>
 
-      <AnimatePresence>
-        {isOpen && query.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="absolute top-full left-0 right-0 mt-2 z-50"
-          >
-            <Card className="max-h-96 overflow-y-auto">
-              <CardContent className="p-4">
-                {isLoading && (
-                  <div className="flex items-center justify-center py-8">
-                    <Loader2 className="h-6 w-6 animate-spin" />
-                    <span className="ml-2 text-sm text-muted-foreground">Searching...</span>
-                  </div>
-                )}
-
-                {!isLoading && !hasResults && debouncedQuery && (
-                  <div className="text-center py-8">
-                    <p className="text-sm text-muted-foreground">No results found for "{debouncedQuery}"</p>
-                  </div>
-                )}
-
-                {!isLoading && hasResults && (
-                  <div className="space-y-4">
-                    {/* News Results */}
-                    {newsResults.length > 0 && (
-                      <div>
-                        <h4 className="text-sm font-medium text-foreground mb-2">News</h4>
-                        <div className="space-y-2">
-                          {newsResults.slice(0, 5).map((item: any, index: number) => (
-                            <div
-                              key={item.id || `news-${index}`}
-                              className="p-2 rounded-md hover:bg-accent cursor-pointer transition-colors"
-                              onClick={() => handleResultClick(item, 'news')}
-                            >
-                              <div className="flex items-start gap-2">
-                                <div className="flex-1">
-                                  <p className="text-sm font-medium line-clamp-2">
-                                    {item.statement || item.title || 'Untitled'}
-                                  </p>
-                                  <div className="flex items-center gap-2 mt-1">
-                                    {item.source && (
-                                      <Badge variant="outline" className="text-xs">
-                                        {item.source}
-                                      </Badge>
-                                    )}
-                                    {item.category && (
-                                      <Badge variant="secondary" className="text-xs">
-                                        {item.category}
-                                      </Badge>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Video Results */}
-                    {videoResults.length > 0 && (
-                      <div>
-                        <h4 className="text-sm font-medium text-foreground mb-2">Videos</h4>
-                        <div className="space-y-2">
-                          {videoResults.slice(0, 5).map((item: any, index: number) => (
-                            <div
-                              key={item.id || `video-${index}`}
-                              className="p-2 rounded-md hover:bg-accent cursor-pointer transition-colors"
-                              onClick={() => handleResultClick(item, 'video')}
-                            >
-                              <div className="flex items-start gap-2">
-                                <div className="flex-1">
-                                  <p className="text-sm font-medium line-clamp-2">
-                                    {item.title || item.statement || 'Untitled'}
-                                  </p>
-                                  <div className="flex items-center gap-2 mt-1">
-                                    {item.speaker_name && (
-                                      <Badge variant="outline" className="text-xs">
-                                        {item.speaker_name}
-                                      </Badge>
-                                    )}
-                                    {item.source && (
-                                      <Badge variant="secondary" className="text-xs">
-                                        {item.source}
-                                      </Badge>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
+        {/* Loading indicator - positioned to not overlap with clear button */}
+        {isLoading && shouldSearch && (
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 z-20">
+            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          </div>
         )}
-      </AnimatePresence>
+      </motion.div>
+
+      {/* Search Results */}
+      <SearchResults
+        isOpen={isOpen}
+        query={query}
+        debouncedQuery={debouncedQuery}
+        newsResults={newsResults}
+        videoResults={videoResults}
+        isLoading={isLoading}
+        hasResults={hasResults}
+        onResultClick={handleResultClick}
+        minQueryLength={minQueryLength}
+      />
+
+      {/* Search hint for short queries */}
+      {isOpen && query.length > 0 && query.length < minQueryLength && !isLoading && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="absolute top-full left-0 right-0 mt-2 z-50"
+        >
+          <div className="bg-white dark:bg-slate-900 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 p-4">
+            <p className="text-sm text-slate-500 dark:text-slate-400 text-center">
+              Type at least {minQueryLength} characters to search
+            </p>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }

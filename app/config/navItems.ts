@@ -1,4 +1,4 @@
-import { Home, Newspaper, Film } from 'lucide-react';
+import { Home, Newspaper, Film, Clock10Icon } from 'lucide-react';
 
 export const NAVIGATION_CONFIG = {
   mainNav: [
@@ -25,6 +25,11 @@ export const NAVIGATION_CONFIG = {
       href: '/upload',
       label: 'Upload',
       description: 'Upload'
+    },
+    {
+      href: '/timeline',
+      label: 'Education',
+      description: 'Educational timeline'
     }
   ]
 } as const;
@@ -57,5 +62,12 @@ export const MOBILE_NAV: TabItem[] = [
     label: 'Reel',
     icon: Film,
     href: '/reel'
+  },
+  {
+    id: 'edu',
+    label: 'Education',
+    icon: Clock10Icon,
+    href: '/timeline',
+    isSpecial: true
   }
 ];

@@ -31,6 +31,7 @@ export function NavigationProvider({ children }: { children: React.ReactNode }) 
     if (path === '/') return 'home';
     if (path.startsWith('/news')) return 'news';
     if (path.startsWith('/reel')) return 'reel';
+    if (path.startsWith('/timeline')) return 'edu';
     return 'home'; // Default fallback
   }, []);
 

@@ -41,3 +41,14 @@ export function getProgressBarColors() {
     misleading: 'bg-red-500'
   };
 }
+
+export const getStatusTranslation = (status: string) => {
+  switch (status) {
+    case 'true': return 'TRUE';
+    case 'false': return 'FALSE';
+    case 'misleading': return 'MISLEAD';
+    case 'partially_true': return 'PARTIAL';
+    case 'unverifiable': return 'UNVERIFIABLE';
+    default: return 'UNKNOWN';
+  }
+}

@@ -34,13 +34,13 @@ const StampText = ({config, stampText}: Props) => {
             }}
             animate={{
                 scale: 1.2,
-                opacity: 0.06,
+                opacity: 0.03,
                 rotate: -12,
                 x: 20,
                 y: -10
             }}
             transition={{
-                duration: 2.5,
+                duration: 2,
                 ease: "easeOut",
                 delay: 0.3
             }}

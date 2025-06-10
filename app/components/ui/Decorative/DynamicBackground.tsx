@@ -40,12 +40,12 @@ const DynamicBackground = ({ config, currentTheme, setIsVisible }: Props) => {
         }
 
         {/* Stamp background */}
-        <div
+        {currentTheme === 'dark' && <div
             className="absolute inset-0 flex items-center justify-end"
             style={{ opacity: config.stampOpacity }}
         >
             <FakeStamp width={800} />
-        </div>
+        </div>}
 
         {/* Floating particles */}
         {particlePositions.map((particle, index) => (

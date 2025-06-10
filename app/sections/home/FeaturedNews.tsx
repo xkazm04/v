@@ -1,10 +1,10 @@
 'use client';
 
 import { useCallback, useMemo } from 'react';
-import { useNews } from '@/app/hooks/useNews';
+import { useNews, useOfflineMode } from '@/app/hooks/useNews';
 import { NewsGrid } from '../feed/NewsGrid';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RefreshCw, AlertCircle } from 'lucide-react';
+import { RefreshCw, AlertCircle, WifiOff } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { Button } from '@/app/components/ui/button';
 import { useNewsFilters } from '@/app/stores/filterStore';
@@ -21,8 +21,7 @@ const FeaturedNews = ({
   autoRefresh = true,
 }: FeaturedNewsProps) => {
   const { colors, isDark } = useLayoutTheme();
-  
-  // Get filter state from Zustand store
+   const { isOffline, toggle: toggleOfflineMode } = useOfflineMode();
   const newsFilters = useNewsFilters();
 
   // Prepare stable filters for useNews hook
@@ -152,29 +151,20 @@ const FeaturedNews = ({
       >
         {error || 'Something went wrong while fetching news.'}
       </p>
-      <Button onClick={handleRefresh} variant="default">
-        <RefreshCw className="w-4 h-4 mr-2" />
-        Try Again
-      </Button>
-    </motion.div>
-  );
-
-  // Empty state
-  const EmptyState = () => (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="text-center py-12"
-    >
-      <h3 
-        className="text-lg font-semibold mb-2"
-        style={{ color: colors.foreground }}
-      >
-        No articles found
-      </h3>
-      <p className="mb-4" style={{ color: colors.mutedForeground }}>
-        Try adjusting your filters or check back later for new content.
-      </p>
+      <div className="flex gap-2 justify-center">
+        <Button onClick={handleRefresh} variant="default">
+          <RefreshCw className="w-4 h-4 mr-2" />
+          Try Again
+        </Button>
+        <Button 
+          onClick={toggleOfflineMode} 
+          variant="outline"
+          className="flex items-center gap-2"
+        >
+          <WifiOff className="w-4 h-4" />
+          Demo Mode
+        </Button>
+      </div>
     </motion.div>
   );
 

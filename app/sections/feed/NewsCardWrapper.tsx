@@ -17,15 +17,18 @@ interface NewsCardWrapperProps {
   isRead: boolean;
   isDragging: boolean;
   setIsDragging: (dragging: boolean) => void;
+  onDragStart: () => void;
+  onDragEnd: () => void;
   isHovered: boolean;
   setIsHovered: (hovered: boolean) => void;
-  swipeDirection: 'left' | 'right' | null;
-  setSwipeDirection: (direction: 'left' | 'right' | null) => void;
+  dismissType: 'fade' | 'swipe-right' | null;
+  setDismissType: (type: 'fade' | 'swipe-right' | null) => void;
   setIsRead: (read: boolean) => void;
   onRead?: (articleId: string) => void;
-  handleLeftClick: () => void;
+  handleMouseClick: (e: React.MouseEvent) => void;
   handleRightClick: (e: React.MouseEvent) => void;
-  handleTap: () => void;
+  handleTouchTap: () => void;
+  handleSwipeRight: () => void;
   className?: string;
   isDark: boolean;
 }
@@ -65,20 +68,20 @@ const cardVariants = {
   }
 };
 
-const dismissVariants = {
+// SEPARATED: Mouse click fade animation - no movement
+const fadeOutVariants = {
   exit: {
     opacity: 0,
-    scale: 0.8,
-    x: 300,
-    rotateY: 45,
-    rotateX: 15,
+    scale: 0.95,
+    filter: 'blur(2px)',
     transition: {
-      duration: 0.6,
+      duration: 0.3,
       ease: [0.25, 0.46, 0.45, 0.94]
     }
   }
 };
 
+// SEPARATED: Swipe right animation - slides to the right
 const swipeRightVariants = {
   exit: {
     opacity: 0,
@@ -98,21 +101,25 @@ const NewsCardWrapper = ({
   cardStyles, 
   isRead, 
   isDragging, 
-  setIsDragging, 
+  setIsDragging,
+  onDragStart,
+  onDragEnd,
   isHovered,
   setIsHovered,
-  swipeDirection, 
-  setSwipeDirection,
+  dismissType,
+  setDismissType,
   setIsRead,
   onRead,
-  handleLeftClick,
+  handleMouseClick,
   handleRightClick,
-  handleTap,
+  handleTouchTap,
+  handleSwipeRight,
   className = '',
   isDark
 }: NewsCardWrapperProps) => {
   
   const dragStartTimeRef = useRef<number>(0);
+  const dragThresholdRef = useRef<boolean>(false);
   
   // Motion values for swipe animation
   const x = useMotionValue(0);
@@ -137,9 +144,17 @@ const NewsCardWrapper = ({
   const handleMouseLeave = useCallback(() => setIsHovered(false), [setIsHovered]);
 
   const handlePanStart = useCallback(() => {
-    setIsDragging(true);
+    onDragStart();
     dragStartTimeRef.current = Date.now();
-  }, [setIsDragging]);
+    dragThresholdRef.current = false;
+  }, [onDragStart]);
+
+  const handlePan = useCallback((event: any, info: PanInfo) => {
+    // Track if we've moved beyond a small threshold (to distinguish from taps)
+    if (Math.abs(info.offset.x) > 10) {
+      dragThresholdRef.current = true;
+    }
+  }, []);
 
   const handlePanEnd = useCallback((event: any, info: PanInfo) => {
     const dragDuration = Date.now() - dragStartTimeRef.current;
@@ -148,14 +163,11 @@ const NewsCardWrapper = ({
 
     // Determine if it's a swipe based on velocity and distance
     const isSwipe = velocity > 500 || offset > 100;
+    const hasMoved = dragThresholdRef.current;
 
     if (isSwipe && info.offset.x > 50) {
-      // Swipe right - dismiss article
-      setSwipeDirection('right');
-      setIsRead(true);
-      setTimeout(() => {
-        onRead?.(article.id);
-      }, 500);
+      // Swipe right - dismiss article with slide animation
+      handleSwipeRight();
     } else if (isSwipe && info.offset.x < -50) {
       // Swipe left - could be used for other actions (mark as favorite, etc.)
       // For now, just spring back
@@ -165,8 +177,20 @@ const NewsCardWrapper = ({
       x.set(0);
     }
 
-    setIsDragging(false);
-  }, [article.id, onRead, x, setSwipeDirection, setIsRead, setIsDragging]);
+    onDragEnd();
+  }, [handleSwipeRight, x, onDragEnd]);
+
+  // Determine exit animation based on dismiss type
+  const getExitVariant = () => {
+    switch (dismissType) {
+      case 'fade':
+        return fadeOutVariants.exit;
+      case 'swipe-right':
+        return swipeRightVariants.exit;
+      default:
+        return fadeOutVariants.exit;
+    }
+  };
 
   if (isRead) {
     return null;
@@ -177,39 +201,41 @@ const NewsCardWrapper = ({
       variants={cardVariants}
       initial="hidden"
       animate="visible"
-      exit={swipeDirection === 'right' ? swipeRightVariants.exit : dismissVariants.exit}
-      whileHover="hover"
-      whileTap="tap"
+      exit={getExitVariant()}
+      whileHover={!isDragging ? "hover" : undefined}
+      whileTap={!isDragging ? "tap" : undefined}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={handleLeftClick}
+      onClick={handleMouseClick}
       onContextMenu={handleRightClick}
       // Touch/Pan gesture handlers
-      onTap={handleTap}
+      onTap={handleTouchTap}
       onPanStart={handlePanStart}
+      onPan={handlePan}
       onPanEnd={handlePanEnd}
       drag="x"
       dragConstraints={{ left: -200, right: 200 }}
       dragElastic={0.2}
       style={{
         x,
-        opacity,
-        scale,
-        rotateZ,
-        backgroundColor
+        opacity: isDragging ? opacity : 1,
+        scale: isDragging ? scale : 1,
+        rotateZ: isDragging ? rotateZ : 0,
+        backgroundColor: isDragging ? backgroundColor : cardStyles.background,
+        boxShadow: cardStyles.boxShadow,
+        border: `1px solid ${cardStyles.borderColor}`
       }}
       className={cn(
         'group relative cursor-pointer flex flex-col justify-between',
         cardStyles.height,
-        'rounded-xl border-2 transition-all duration-300 overflow-hidden transform-gpu',
-        'touch-manipulation select-none', // Optimize for touch
+        'rounded-xl transition-all duration-300 overflow-hidden transform-gpu',
+        'touch-manipulation select-none', 
         className
       )}
     >
       {children}
 
-
-      {/* Swipe Indicators */}
+      {/* Swipe Indicators - Only show during drag */}
       <AnimatePresence>
         {isDragging && (
           <>
@@ -223,9 +249,9 @@ const NewsCardWrapper = ({
               exit={{ opacity: 0, scale: 0.8 }}
               className="absolute right-4 top-1/2 transform -translate-y-1/2 z-30 pointer-events-none"
             >
-              <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-green-500/90 text-white text-sm font-medium">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-green-500/90 text-white text-sm font-medium shadow-lg">
                 <span>✓</span>
-                <span>Dismiss</span>
+                <span>Read</span>
               </div>
             </motion.div>
 
@@ -239,33 +265,50 @@ const NewsCardWrapper = ({
               exit={{ opacity: 0, scale: 0.8 }}
               className="absolute left-4 top-1/2 transform -translate-y-1/2 z-30 pointer-events-none"
             >
-              <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-red-500/90 text-white text-sm font-medium">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-red-500/90 text-white text-sm font-medium shadow-lg">
                 <span>✕</span>
-                <span>Cancel</span>
+                <span>Keep</span>
               </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
 
-      {/* Drag feedback overlay */}
-      {isDragging && (
+      {/* Drag feedback overlay - Only visible during drag */}
+      <AnimatePresence>
+        {isDragging && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: Math.abs(x.get()) > 20 ? 0.8 : 0.3 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 rounded-xl pointer-events-none z-25"
+            style={{
+              background: `linear-gradient(90deg, 
+                ${x.get() > 0 
+                  ? 'rgba(34, 197, 94, 0.1)' 
+                  : 'rgba(239, 68, 68, 0.1)'
+                } 0%, 
+                transparent 50%, 
+                transparent 100%
+              )`
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Visual hint for interaction methods */}
+      {isHovered && !isDragging && (
         <motion.div
-          className="absolute inset-0 rounded-xl pointer-events-none z-25"
-          style={{
-            background: `linear-gradient(90deg, 
-              ${x.get() > 0 
-                ? 'rgba(34, 197, 94, 0.1)' 
-                : 'rgba(239, 68, 68, 0.1)'
-              } 0%, 
-              transparent 50%, 
-              transparent 100%
-            )`
-          }}
-          animate={{
-            opacity: Math.abs(x.get()) > 20 ? 0.8 : 0.3
-          }}
-        />
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.6 }}
+          exit={{ opacity: 0 }}
+          className="absolute bottom-2 right-2 z-30 pointer-events-none"
+        >
+          <div className="flex gap-1 text-xs text-slate-400">
+            <span className="hidden sm:inline">Click</span>
+            <span className="sm:hidden">Swipe →</span>
+          </div>
+        </motion.div>
       )}
     </motion.div>
   );

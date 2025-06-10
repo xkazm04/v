@@ -1,5 +1,5 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { ProfileApiService } from '@/lib/services/profile-api';
+import { ProfileApiService } from '@/app/api/profile/profile';
 import { Profile } from '../types/profile';
 
 interface UseProfileResult {
@@ -41,7 +41,7 @@ export const useProfile = (profileId: string | undefined): UseProfileResult => {
   };
 };
 
-// Additional hook for profile statements (for future use)
+// Hook for profile statements
 export const useProfileStatements = (
   profileId: string | undefined,
   params: { limit?: number; offset?: number } = {}
@@ -60,7 +60,7 @@ export const useProfileStatements = (
   });
 };
 
-// Hook for searching profiles (for future use)
+// Hook for searching profiles
 export const useProfileSearch = (
   params: {
     search?: string;
@@ -78,5 +78,15 @@ export const useProfileSearch = (
     enabled,
     staleTime: 1 * 60 * 1000, // 1 minute for search results
     gcTime: 3 * 60 * 1000, // 3 minutes in cache
+  });
+};
+
+// Hook for profile statistics
+export const useProfileStats = () => {
+  return useQuery({
+    queryKey: ['profile-stats'],
+    queryFn: () => ProfileApiService.getProfileStats(),
+    staleTime: 5 * 60 * 1000, // 5 minutes for stats
+    gcTime: 10 * 60 * 1000, // 10 minutes in cache
   });
 };

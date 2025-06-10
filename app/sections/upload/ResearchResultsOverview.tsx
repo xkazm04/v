@@ -4,13 +4,22 @@ import ResultOverviewContent from './Result/ResultOverviewContent';
 import ResultOverviewMetadata from './Result/ResultOverviewMetadata';
 import ResultOverviewHeader from './Result/ResultOverviewHeader';
 import { LLMResearchResponse } from '@/app/types/research';
+import StampText from '@/app/components/ui/Decorative/StampText';
+import { getStatusTranslation } from '@/app/helpers/factCheck';
 
 type Props = {
     isLoading: boolean;
     displayResult: LLMResearchResponse
 }
 
-const ResearchResultsOverview = ({isLoading, displayResult}: Props) => {
+const config = {
+  color: '#3B82F6', 
+  bgGradient: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%)',
+  stampOpacity: '0.1'
+};
+
+
+const ResearchResultsOverview = ({ isLoading, displayResult }: Props) => {
     const { colors, isDark } = useLayoutTheme();
     return (
         <div className="space-y-6">
@@ -21,7 +30,7 @@ const ResearchResultsOverview = ({isLoading, displayResult}: Props) => {
                 transition={{ delay: 0.2, type: "spring", stiffness: 300, damping: 20 }}
                 className="rounded-3xl border-2 overflow-hidden shadow-xl"
                 style={{
-                    background: isDark 
+                    background: isDark
                         ? `linear-gradient(135deg, 
                             rgba(15, 23, 42, 0.95) 0%,
                             rgba(30, 41, 59, 0.98) 50%,
@@ -44,16 +53,21 @@ const ResearchResultsOverview = ({isLoading, displayResult}: Props) => {
                     displayResult={displayResult}
                 />
 
+                <StampText
+                    config={config}
+                    stampText={getStatusTranslation(displayResult.status)}
+                />
+
                 {/* Content Sections */}
                 <ResultOverviewContent
                     isLoading={isLoading}
                     displayResult={displayResult}
-                 />
+                />
             </motion.div>
 
             <ResultOverviewMetadata
                 displayResult={displayResult}
-                />
+            />
         </div>
     );
 }

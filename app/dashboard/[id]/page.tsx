@@ -1,4 +1,4 @@
-import ProfileDashboard from "@/app/sections/dashboard/ProfileDashboard";
+import DashboardLayout from "@/app/sections/dashboard/DashboardLayout";
 
 interface ProfilePageProps {
   params: Promise<{
@@ -10,8 +10,8 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
   const { id } = await params;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ProfileDashboard profileId={id} />
+    <div className="min-h-screen bg-background">
+      <DashboardLayout profileId={id} />
     </div>
   );
 };

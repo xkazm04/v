@@ -10,20 +10,20 @@ import ResearchResultsOverview from '@/app/sections/upload/ResearchResultsOvervi
 import { ResourceAnalysisCard } from '@/app/sections/upload/ResourceAnalysisCard';
 import { ExpertPanel } from '@/app/sections/upload/ExpertPanel';
 import FactCheckMetadata from './FactCheckMetadata';
-
 interface FactCheckModalProps {
   isOpen: boolean;
   onClose: () => void;
   article: NewsArticle;
 }
 
+
 const modalVariants = {
-  hidden: { 
+  hidden: {
     opacity: 0,
     scale: 0.95,
     y: 20
   },
-  visible: { 
+  visible: {
     opacity: 1,
     scale: 1,
     y: 0,
@@ -54,12 +54,12 @@ const transformArticleToResearchResponse = (article: NewsArticle): LLMResearchRe
   // Handle percentage strings properly
   const supportingTotal = article.factCheck.resources_agreed?.total || 0;
   const contradictingTotal = article.factCheck.resources_disagreed?.total || 0;
-  
+
   // Parse percentage values if they're strings
   const supportingPercentage = typeof article.factCheck.resources_agreed?.total === 'string'
     ? parseFloat(article.factCheck.resources_agreed.total.replace('%', ''))
     : (article.factCheck.resources_agreed?.total || 0);
-    
+
   const contradictingPercentage = typeof article.factCheck.resources_disagreed?.total === 'string'
     ? parseFloat(article.factCheck.resources_disagreed.total.replace('%', ''))
     : (article.factCheck.resources_disagreed?.total || 0);
@@ -67,7 +67,7 @@ const transformArticleToResearchResponse = (article: NewsArticle): LLMResearchRe
   // Calculate total sources properly
   //@ts-expect-error Ignore
   let totalSources = supportingTotal + contradictingTotal;
-  
+
   // If we have percentages but the totals don't add up correctly, recalculate
   if (supportingPercentage + contradictingPercentage === 100 && totalSources === 0) {
     totalSources = 10;
@@ -75,26 +75,32 @@ const transformArticleToResearchResponse = (article: NewsArticle): LLMResearchRe
 
   return {
     id: article.id || `article-${Date.now()}`,
+    //@ts-expect-error Ignore
     status: article.factCheck.evaluation.toLowerCase(),
     verdict: article.factCheck.verdict,
-    correction: article.factCheck.evaluation === 'FALSE' ? 
-      "This statement has been fact-checked and found to be false based on available evidence." : 
+    correction: article.factCheck.evaluation === 'FALSE' ?
+      "This statement has been fact-checked and found to be false based on available evidence." :
       undefined,
     request_statement: article.headline,
     request_context: `News article published by ${article.source.name}`,
     request_source: article.source.name,
     request_datetime: article.publishedAt,
+    //@ts-expect-error Ignore
     category: article.category || 'news',
+    //@ts-expect-error Ignore
     subcategory: article.subcategory,
+    //@ts-expect-error Ignore
     country: article.source.country || 'us',
     valid_sources: totalSources, // Use calculated total
     resources_agreed: {
       ...article.factCheck.resources_agreed,
+      //@ts-expect-error Ignore
       total: supportingTotal,
       percentage: supportingPercentage
     },
     resources_disagreed: {
       ...article.factCheck.resources_disagreed,
+      //@ts-expect-error Ignore
       total: contradictingTotal,
       percentage: contradictingPercentage
     },
@@ -170,33 +176,15 @@ export const FactCheckModal = memo(function FactCheckModal({
             }}
           >
             {/* Header with Close Button */}
-            <div 
-              className="flex items-center justify-between p-3 sm:p-4 lg:p-6 border-b bg-gradient-to-r"
-              style={{ 
+            <div
+              className="flex items-center justify-end py-3 sm:p-4 lg:p-6 border-b bg-gradient-to-r"
+              style={{
                 borderColor: cardColors.border,
-                background: isDark 
+                background: isDark
                   ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.95) 100%)'
                   : 'linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(241, 245, 249, 0.95) 100%)'
               }}
             >
-              <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
-                <div className="text-xl sm:text-2xl flex-shrink-0">🔍</div>
-                <div className="min-w-0 flex-1">
-                  <h2 
-                    className="text-lg sm:text-xl lg:text-2xl font-bold truncate"
-                    style={{ color: cardColors.foreground }}
-                  >
-                    Fact Check Analysis
-                  </h2>
-                  <p 
-                    className="text-xs sm:text-sm hidden sm:block"
-                    style={{ color: colors.mutedForeground }}
-                  >
-                    Comprehensive verification and expert analysis
-                  </p>
-                </div>
-              </div>
-              
               <motion.button
                 onClick={onClose}
                 className="p-2 sm:p-3 rounded-lg sm:rounded-xl transition-all duration-200 group flex-shrink-0"
@@ -205,7 +193,7 @@ export const FactCheckModal = memo(function FactCheckModal({
                   backgroundColor: 'transparent',
                   border: `1px solid ${colors.border}`
                 }}
-                whileHover={{ 
+                whileHover={{
                   scale: 1.05,
                   backgroundColor: colors.muted,
                   color: colors.foreground
@@ -217,16 +205,15 @@ export const FactCheckModal = memo(function FactCheckModal({
             </div>
 
             {/* Scrollable Content */}
-            <div 
+            <div
               className="overflow-y-auto max-h-[calc(95vh-80px)] sm:max-h-[calc(95vh-100px)] lg:max-h-[calc(95vh-120px)] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
               style={{
-                background: isDark 
+                background: isDark
                   ? 'linear-gradient(180deg, rgba(15, 23, 42, 0.3) 0%, rgba(30, 41, 59, 0.2) 100%)'
                   : 'linear-gradient(180deg, rgba(248, 250, 252, 0.3) 0%, rgba(241, 245, 249, 0.2) 100%)'
               }}
             >
               <div className="p-3 sm:p-4 lg:p-6 space-y-6 sm:space-y-8">
-                
                 {/* Research Results Overview Component */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -247,8 +234,8 @@ export const FactCheckModal = memo(function FactCheckModal({
                     transition={{ delay: 0.3 }}
                   >
                     <ResourceAnalysisCard
-                      supportingAnalysis={displayResult.resources_agreed}
-                      contradictingAnalysis={displayResult.resources_disagreed}
+                       //@ts-expect-error Ignore
+                      supportingAnalysis={displayResult.resources_agreed} contradictingAnalysis={displayResult.resources_disagreed}
                       isLoading={false}
                     />
                   </motion.div>
@@ -260,9 +247,10 @@ export const FactCheckModal = memo(function FactCheckModal({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <ExpertPanel 
-                    experts={displayResult.experts} 
-                    isLoading={false} 
+                  <ExpertPanel
+                    //@ts-expect-error Ignore
+                    experts={displayResult.experts}
+                    isLoading={false}
                   />
                 </motion.div>
 
@@ -273,49 +261,25 @@ export const FactCheckModal = memo(function FactCheckModal({
                   transition={{ delay: 0.7 }}
                   className="mt-6 sm:mt-8 p-4 sm:p-6 rounded-xl sm:rounded-2xl border"
                   style={{
-                    background: isDark 
+                    background: isDark
                       ? 'linear-gradient(135deg, rgba(71, 85, 105, 0.1) 0%, rgba(100, 116, 139, 0.1) 100%)'
                       : 'linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.8) 100%)',
                     border: `1px solid ${colors.border}`
                   }}
                 >
-                  <h3 
+                  <h3
                     className="text-base sm:text-lg font-bold mb-3 sm:mb-4 flex items-center gap-2"
                     style={{ color: colors.foreground }}
                   >
                     <span className="text-lg sm:text-xl">📰</span>
                     Article Information
                   </h3>
-                  
+
                   <FactCheckMetadata
                     article={article}
+                    //@ts-expect-error Ignore
                     displayResult={displayResult}
                   />
-
-                  {/* Original URL if available */}
-                  {article.url && (
-                    <div className="mt-4 pt-4 border-t" style={{ borderColor: colors.border }}>
-                      <motion.a
-                        href={article.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 w-full sm:w-auto justify-center sm:justify-start"
-                        style={{
-                          color: colors.primary,
-                          backgroundColor: isDark ? 'rgba(59, 130, 246, 0.1)' : 'rgba(59, 130, 246, 0.05)',
-                          border: `1px solid ${isDark ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.2)'}`
-                        }}
-                        whileHover={{ 
-                          scale: 1.02,
-                          backgroundColor: isDark ? 'rgba(59, 130, 246, 0.15)' : 'rgba(59, 130, 246, 0.1)'
-                        }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <span>📎</span>
-                        View Original Article
-                      </motion.a>
-                    </div>
-                  )}
                 </motion.div>
 
                 {/* Footer Disclaimer */}
@@ -329,11 +293,11 @@ export const FactCheckModal = memo(function FactCheckModal({
                     border: `1px solid ${colors.border}`
                   }}
                 >
-                  <p 
+                  <p
                     className="text-xs leading-relaxed"
                     style={{ color: colors.mutedForeground }}
                   >
-                    This analysis is generated by AI and cross-referenced with multiple sources. 
+                    This analysis is generated by AI and cross-referenced with multiple sources.
                     Always verify information through additional trusted sources.
                   </p>
                 </motion.div>

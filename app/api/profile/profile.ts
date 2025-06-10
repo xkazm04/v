@@ -1,7 +1,6 @@
 import { Profile } from "@/app/types/profile";
 
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
 
 export class ProfileApiService {
   private static async fetchWithErrorHandling<T>(
@@ -83,6 +82,14 @@ export class ProfileApiService {
     const url = `${API_BASE_URL}/profiles/${profileId}/statements?${searchParams.toString()}`;
     
     console.log(`Fetching profile statements: ${url}`);
+    
+    return this.fetchWithErrorHandling(url);
+  }
+
+  static async getProfileStats(): Promise<{ data?: any; error?: string }> {
+    const url = `${API_BASE_URL}/profiles/stats/summary`;
+    
+    console.log(`Fetching profile stats: ${url}`);
     
     return this.fetchWithErrorHandling(url);
   }

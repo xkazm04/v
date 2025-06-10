@@ -1,4 +1,4 @@
-type Diagram = {
+type Timeline = {
   id: string;
   title: string;
   question: string;
@@ -28,7 +28,7 @@ type Event = {
   order: number;
 };
 
-export const sampleDiagram: Diagram = {
+export const sampleDiagram: Timeline = {
   id: "diagram-1",
   title: "Fact-Checking Political Misinformation Timeline",
   question: "How have major political misinformation campaigns evolved and been debunked over time?",

@@ -20,7 +20,7 @@ export function VideoTimestampsList({
   onSeekToTimestamp,
   className 
 }: VideoTimestampsListProps) {
-  const { colors, isDark } = useLayoutTheme();
+  const { colors } = useLayoutTheme();
 
   // Get status icon and color
   const getStatusIcon = (status?: string) => {
@@ -131,12 +131,12 @@ export function VideoTimestampsList({
                     {timestamp.factCheck ? (
                       <>
                         {getStatusIcon(timestamp.factCheck.status)}
-                        <Badge size="sm" className={getStatusColor(timestamp.factCheck.status)}>
+                        <Badge className={getStatusColor(timestamp.factCheck.status)}>
                           {timestamp.factCheck.status.replace('_', ' ')}
                         </Badge>
                       </>
                     ) : (
-                      <Badge size="sm" variant="outline">
+                      <Badge variant="outline">
                         Pending Research
                       </Badge>
                     )}

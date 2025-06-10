@@ -1,6 +1,7 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { NewsArticle, convertResearchToNews, ResearchResult } from '@/app/types/article';
-import { useMemo } from 'react';
+import { MockDataService, demoUtils } from '@/app/services/mockDataService';
+import { useMemo, useEffect } from 'react';
 
 const LOCAL_API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -13,6 +14,30 @@ async function handleApiResponse(response: Response) {
   return response.json();
 }
 
+// Check if API is reachable
+async function checkApiHealth(): Promise<boolean> {
+  if (!LOCAL_API_BASE) return false;
+  
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+    
+    const response = await fetch(`${LOCAL_API_BASE}/health`, {
+      method: 'GET',
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    clearTimeout(timeoutId);
+    return response.ok;
+  } catch (error) {
+    console.log('API health check failed:', error);
+    return false;
+  }
+}
+
 async function getNewsFromResearch(
   limit: number = 50,
   offset: number = 0,
@@ -22,31 +47,76 @@ async function getNewsFromResearch(
   source?: string,
   search?: string
 ): Promise<NewsArticle[]> {
-  const params = new URLSearchParams();
-  
-  // Add pagination
-  params.append('limit', String(limit));
-  params.append('offset', String(offset));
-  
-  // Add filters only if they exist and are not 'all' or 'worldwide'
-  if (status && status !== 'all') params.append('status', status);
-  if (category && category !== 'all') params.append('category', category);
-  if (country && country !== 'all' && country !== 'worldwide') params.append('country', country);
-  if (source && source !== 'all') params.append('source', source);
-  if (search?.trim()) params.append('search', search.trim());
-  
-  // Always sort by processed_at desc to get latest news
-  params.append('sort_by', 'processed_at');
-  params.append('sort_order', 'desc');
+  // Check if we should use offline mode
+  const isOfflineMode = MockDataService.isOfflineMode();
+  const isApiHealthy = !isOfflineMode ? await checkApiHealth() : false;
 
-  const response = await fetch(`${LOCAL_API_BASE}/news?${params.toString()}`);
-  const data = await handleApiResponse(response);
-  
-  if (Array.isArray(data)) {
-    return data.map((item: ResearchResult) => convertResearchToNews(item));
+  // Use mock data if offline mode is enabled OR API is not reachable
+  if (isOfflineMode || !isApiHealthy) {
+    console.log(isOfflineMode ? '🔄 Using demo offline mode' : '⚠️ API unreachable, falling back to offline data');
+    
+    const mockNews = MockDataService.getMockNews({
+      limit,
+      offset,
+      status,
+      category,
+      country,
+      source,
+      search
+    });
+
+    // Simulate network delay for realistic demo experience
+    return MockDataService.simulateNetworkDelay(mockNews, isOfflineMode ? 600 : 1200);
   }
-  
-  return [];
+
+  // Try to fetch from API
+  try {
+    const params = new URLSearchParams();
+    
+    // Add pagination
+    params.append('limit', String(limit));
+    params.append('offset', String(offset));
+    
+    // Add filters only if they exist and are not 'all' or 'worldwide'
+    if (status && status !== 'all') params.append('status', status);
+    if (category && category !== 'all') params.append('category', category);
+    if (country && country !== 'all' && country !== 'worldwide') params.append('country', country);
+    if (source && source !== 'all') params.append('source', source);
+    if (search?.trim()) params.append('search', search.trim());
+    
+    // Always sort by processed_at desc to get latest news
+    params.append('sort_by', 'processed_at');
+    params.append('sort_order', 'desc');
+
+    const response = await fetch(`${LOCAL_API_BASE}/news?${params.toString()}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    const data = await handleApiResponse(response);
+    
+    if (Array.isArray(data)) {
+      return data.map((item: ResearchResult) => convertResearchToNews(item));
+    }
+    
+    return [];
+  } catch (error) {
+    console.warn('API request failed, falling back to offline data:', error);
+    
+    // Fallback to mock data on API failure
+    const mockNews = MockDataService.getMockNews({
+      limit,
+      offset,
+      status,
+      category,
+      country,
+      source,
+      search
+    });
+
+    return MockDataService.simulateNetworkDelay(mockNews, 1000);
+  }
 }
 
 interface UseNewsOptions {
@@ -75,6 +145,19 @@ export function useNews({
   sourceFilter
 }: UseNewsOptions = {}) {
   
+  // Add demo indicator when in offline mode
+  useEffect(() => {
+    if (MockDataService.isOfflineMode()) {
+      demoUtils.addDemoIndicator();
+    } else {
+      demoUtils.removeDemoIndicator();
+    }
+    
+    return () => {
+      demoUtils.removeDemoIndicator();
+    };
+  }, []);
+
   // Create stable query key
   const queryKey = useMemo(() => [
     'news', 
@@ -86,14 +169,14 @@ export function useNews({
       searchText: searchText?.trim() || undefined,
       statusFilter: statusFilter && statusFilter !== 'all' ? statusFilter : undefined,
       countryFilter: countryFilter && countryFilter !== 'all' && countryFilter !== 'worldwide' ? countryFilter : undefined,
-      sourceFilter: sourceFilter && sourceFilter !== 'all' ? sourceFilter : undefined
+      sourceFilter: sourceFilter && sourceFilter !== 'all' ? sourceFilter : undefined,
+      offlineMode: MockDataService.isOfflineMode() // Include offline mode in cache key
     }
   ], [limit, onlyFactChecked, breaking, categoryFilter, searchText, statusFilter, countryFilter, sourceFilter]);
 
   const query = useQuery({
     queryKey,
     queryFn: async (): Promise<NewsArticle[]> => {
-      // Use the /news endpoint which maps to research results
       return getNewsFromResearch(
         limit,
         0, // offset
@@ -104,13 +187,16 @@ export function useNews({
         searchText?.trim()
       );
     },
-    staleTime: 2 * 60 * 1000, // 2 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: MockDataService.isOfflineMode() ? 5 * 60 * 1000 : 2 * 60 * 1000, // Longer stale time for offline
+    gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
-    refetchInterval: autoRefresh ? refreshInterval : false,
+    refetchInterval: autoRefresh && !MockDataService.isOfflineMode() ? refreshInterval : false, // Disable auto-refresh in offline mode
     refetchIntervalInBackground: false,
     placeholderData: (previousData) => previousData,
     retry: (failureCount, error) => {
+      // Don't retry in offline mode
+      if (MockDataService.isOfflineMode()) return false;
+      
       if (error instanceof Error && error.message.includes('4')) {
         return false;
       }
@@ -127,14 +213,25 @@ export function useNews({
     hasMore: (query.data?.length || 0) >= limit,
     isFetching: query.isFetching,
     isStale: query.isStale,
+    isOfflineMode: MockDataService.isOfflineMode(), // Expose offline mode status
   };
 }
 
-// Use existing endpoints for counts
+// Enhanced category counts with offline fallback
 export function useCategoryCounts() {
   return useQuery({
-    queryKey: ['categories', 'counts'],
+    queryKey: ['categories', 'counts', MockDataService.isOfflineMode()],
     queryFn: async (): Promise<Record<string, number>> => {
+      const isOfflineMode = MockDataService.isOfflineMode();
+      const isApiHealthy = !isOfflineMode ? await checkApiHealth() : false;
+
+      if (isOfflineMode || !isApiHealthy) {
+        return MockDataService.simulateNetworkDelay(
+          MockDataService.getMockCategories(),
+          isOfflineMode ? 300 : 800
+        );
+      }
+
       try {
         const response = await fetch(`${LOCAL_API_BASE}/news/categories/available`);
         const data = await handleApiResponse(response);
@@ -151,7 +248,8 @@ export function useCategoryCounts() {
         
         return {};
       } catch (error) {
-        return {};
+        console.warn('Categories API failed, using offline data');
+        return MockDataService.getMockCategories();
       }
     },
     staleTime: 10 * 60 * 1000,
@@ -161,10 +259,21 @@ export function useCategoryCounts() {
   });
 }
 
+// Enhanced country counts with offline fallback
 export function useCountryCounts() {
   return useQuery({
-    queryKey: ['countries', 'counts'],
+    queryKey: ['countries', 'counts', MockDataService.isOfflineMode()],
     queryFn: async (): Promise<Record<string, number>> => {
+      const isOfflineMode = MockDataService.isOfflineMode();
+      const isApiHealthy = !isOfflineMode ? await checkApiHealth() : false;
+
+      if (isOfflineMode || !isApiHealthy) {
+        return MockDataService.simulateNetworkDelay(
+          MockDataService.getMockCountries(),
+          isOfflineMode ? 300 : 800
+        );
+      }
+
       try {
         const response = await fetch(`${LOCAL_API_BASE}/news/countries/available`);
         const data = await handleApiResponse(response);
@@ -181,7 +290,8 @@ export function useCountryCounts() {
         
         return {};
       } catch (error) {
-        return {};
+        console.warn('Countries API failed, using offline data');
+        return MockDataService.getMockCountries();
       }
     },
     staleTime: 10 * 60 * 1000,
@@ -191,14 +301,14 @@ export function useCountryCounts() {
   });
 }
 
-// Keep other existing hooks...
+// Enhanced infinite news with offline support
 export function useInfiniteNews({
   limit = 20,
   onlyFactChecked = false,
   breaking = false,
 }: Omit<UseNewsOptions, 'autoRefresh' | 'refreshInterval'> = {}) {
   return useInfiniteQuery({
-    queryKey: ['news', 'infinite', { limit, onlyFactChecked, breaking }],
+    queryKey: ['news', 'infinite', { limit, onlyFactChecked, breaking, offlineMode: MockDataService.isOfflineMode() }],
     queryFn: async ({ pageParam = 0 }): Promise<NewsArticle[]> => {
       const offset = pageParam as number;
       return getNewsFromResearch(limit, offset);
@@ -212,35 +322,55 @@ export function useInfiniteNews({
   });
 }
 
-export function useResearchResults(filters: any = {}) {
-  return useQuery({
-    queryKey: ['research', 'results', filters],
-    queryFn: () => getNewsFromResearch(
-      filters.limitCount || 5,
-      filters.offsetCount || 0,
-      filters.statusFilter,
-      filters.categoryFilter,
-      filters.countryFilter,
-      filters.sourceFilter,
-      filters.searchText
-    ),
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
-}
-
+// Enhanced research by ID with offline support
 export function useResearchById(id: string) {
   return useQuery({
-    queryKey: ['research', 'result', id],
+    queryKey: ['research', 'result', id, MockDataService.isOfflineMode()],
     queryFn: async () => {
-      const response = await fetch(`${LOCAL_API_BASE}/news/${id}`);
-      if (!response.ok) {
-        throw new Error(`Research fetch failed: ${response.statusText}`);
+      const isOfflineMode = MockDataService.isOfflineMode();
+      
+      if (isOfflineMode) {
+        const mockArticle = MockDataService.getMockArticleById(id);
+        if (!mockArticle) {
+          throw new Error('Article not found in offline data');
+        }
+        return MockDataService.simulateNetworkDelay(mockArticle, 400);
       }
-      return response.json();
+
+      try {
+        const response = await fetch(`${LOCAL_API_BASE}/news/${id}`);
+        if (!response.ok) {
+          throw new Error(`Research fetch failed: ${response.statusText}`);
+        }
+        return response.json();
+      } catch (error) {
+        // Fallback to offline data
+        const mockArticle = MockDataService.getMockArticleById(id);
+        if (mockArticle) {
+          return mockArticle;
+        }
+        throw error;
+      }
     },
     enabled: !!id,
     staleTime: 10 * 60 * 1000,
+    retry: false,
   });
+}
+
+// Demo utility hook for toggling offline mode
+export function useOfflineMode() {
+  return {
+    isOffline: MockDataService.isOfflineMode(),
+    toggle: MockDataService.toggleOfflineMode,
+    enable: () => {
+      localStorage.setItem('demo-offline-mode', 'true');
+      window.location.reload(); // Reload to apply changes
+    },
+    disable: () => {
+      localStorage.setItem('demo-offline-mode', 'false');
+      window.location.reload(); // Reload to apply changes
+    }
+  };
 }
 
