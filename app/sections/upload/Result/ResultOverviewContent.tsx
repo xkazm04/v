@@ -15,8 +15,8 @@ const ResultOverviewContent = ({ isLoading, displayResult }: Props) => {
             className="p-6 rounded-2xl border-2"
             style={{
                 background: isDark
-                    ? 'rgba(71, 85, 105, 0.1)'
-                    : 'rgba(248, 250, 252, 0.8)',
+                    ? 'rgba(71, 85, 105, 1)'
+                    : 'rgba(248, 250, 252, 1)',
                 border: `2px solid ${colors.border}`
             }}
         >

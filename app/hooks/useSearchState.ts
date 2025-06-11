@@ -33,8 +33,8 @@ interface UseSearchStateReturn {
   videoResults: any[];
   
   // Refs
-  searchRef: React.RefObject<HTMLDivElement>;
-  inputRef: React.RefObject<HTMLInputElement>;
+  searchRef: React.RefObject<HTMLDivElement | null>;
+  inputRef: React.RefObject<HTMLInputElement | null>;
   
   // Handlers
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -65,7 +65,7 @@ export function useSearchState({
   // Refs
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const blurTimeoutRef = useRef<NodeJS.Timeout>(null);
+  const blurTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Debounce search query with different delays based on query length
   useEffect(() => {
@@ -166,7 +166,7 @@ export function useSearchState({
     // Clear any pending blur timeout when user starts typing
     if (blurTimeoutRef.current) {
       clearTimeout(blurTimeoutRef.current);
-      blurTimeoutRef.current = undefined;
+      blurTimeoutRef.current = null;
     }
   }, []);
 
@@ -199,7 +199,7 @@ export function useSearchState({
     // Clear any pending blur timeout
     if (blurTimeoutRef.current) {
       clearTimeout(blurTimeoutRef.current);
-      blurTimeoutRef.current = undefined;
+      blurTimeoutRef.current = null;
     }
     
     setIsFocused(true);

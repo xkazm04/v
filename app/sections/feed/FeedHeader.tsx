@@ -63,7 +63,7 @@ const FeedHeader = ({ className = "" }: StatementOfDayProps) => {
             variants={containerVariants}
             initial="hidden"
             animate={isVisible ? "visible" : "hidden"}
-            className={`relative overflow-hidden rounded-3xl max-w-[2000px] min-h-[400px] ${className}`}
+            className={`relative overflow-hidden rounded-3xl max-w-[1600px] min-h-[400px] ${className}`}
         >
             {/* Dynamic Background with Animated Pattern */}
             <DynamicBackground

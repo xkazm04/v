@@ -1,12 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { VideoDetail } from '@/app/types/video_api';
+import { VideoWithTimestamps } from '@/app/types/video_api'; 
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { Clock, User, Globe, BarChart3 } from 'lucide-react';
 
 interface VideoInfoHeaderProps {
-  video: VideoDetail;
+  video: VideoWithTimestamps; 
   className?: string;
 }
 
@@ -24,17 +24,25 @@ export function VideoInfoHeader({ video, className }: VideoInfoHeaderProps) {
     iconBackground: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(226, 232, 240, 0.5)'
   };
 
-  const formatDuration = (seconds: number) => {
+  const formatDuration = (seconds: number | null) => {
+    if (!seconds) return 'Unknown';
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
   const getCompletionColor = (rate: number) => {
-    if (rate >= 80) return isDark ? '#10b981' : '#059669'; // Green
-    if (rate >= 50) return isDark ? '#f59e0b' : '#d97706'; // Orange
-    return isDark ? '#ef4444' : '#dc2626'; // Red
+    if (rate >= 80) return isDark ? '#10b981' : '#059669';
+    if (rate >= 50) return isDark ? '#f59e0b' : '#d97706';
+    return isDark ? '#ef4444' : '#dc2626';
   };
+
+  // Direct calculations - no conversion needed!
+  const totalStatements = video.timestamps.length;
+  const researchedStatements = video.timestamps.filter(ts => ts.factCheck).length;
+  const completionRate = totalStatements > 0 
+    ? (researchedStatements / totalStatements) * 100 
+    : 0;
 
   return (
     <motion.div
@@ -48,7 +56,6 @@ export function VideoInfoHeader({ video, className }: VideoInfoHeaderProps) {
       }}
     >
       <div className="p-6">
-        {/* Main Title */}
         <motion.h1 
           className="text-xl lg:text-2xl font-bold mb-3 leading-tight"
           style={{ color: headerColors.title }}
@@ -56,12 +63,11 @@ export function VideoInfoHeader({ video, className }: VideoInfoHeaderProps) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3 }}
         >
-          {video.title}
+          {video.video.title || 'Untitled Video'}
         </motion.h1>
 
-        {/* Metadata Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Speaker */}
+          {/* Speaker - direct access */}
           <motion.div 
             className="flex items-center gap-2"
             initial={{ opacity: 0, y: 10 }}
@@ -79,12 +85,12 @@ export function VideoInfoHeader({ video, className }: VideoInfoHeaderProps) {
                 Speaker
               </div>
               <div className="text-sm font-medium" style={{ color: headerColors.title }}>
-                {video.speaker}
+                {video.video.speaker_name || 'Unknown Speaker'}
               </div>
             </div>
           </motion.div>
 
-          {/* Duration */}
+          {/* Duration - direct access */}
           <motion.div 
             className="flex items-center gap-2"
             initial={{ opacity: 0, y: 10 }}
@@ -102,12 +108,12 @@ export function VideoInfoHeader({ video, className }: VideoInfoHeaderProps) {
                 Duration
               </div>
               <div className="text-sm font-medium" style={{ color: headerColors.title }}>
-                {formatDuration(video.duration)}
+                {formatDuration(video.video.duration_seconds)}
               </div>
             </div>
           </motion.div>
 
-          {/* Language */}
+          {/* Language - direct access */}
           <motion.div 
             className="flex items-center gap-2"
             initial={{ opacity: 0, y: 10 }}
@@ -125,12 +131,12 @@ export function VideoInfoHeader({ video, className }: VideoInfoHeaderProps) {
                 Language
               </div>
               <div className="text-sm font-medium capitalize" style={{ color: headerColors.title }}>
-                {video.language}
+                {video.video.language_code || 'Unknown'}
               </div>
             </div>
           </motion.div>
 
-          {/* Fact-check Progress */}
+          {/* Fact-check Progress - direct calculation */}
           <motion.div 
             className="flex items-center gap-2"
             initial={{ opacity: 0, y: 10 }}
@@ -149,23 +155,23 @@ export function VideoInfoHeader({ video, className }: VideoInfoHeaderProps) {
               </div>
               <div className="flex items-center gap-2">
                 <div className="text-sm font-medium" style={{ color: headerColors.title }}>
-                  {video.researchedStatements}/{video.totalStatements}
+                  {researchedStatements}/{totalStatements}
                 </div>
                 <div 
                   className="text-xs font-bold px-1.5 py-0.5 rounded"
                   style={{ 
-                    color: getCompletionColor(video.completionRate),
-                    backgroundColor: `${getCompletionColor(video.completionRate)}20`
+                    color: getCompletionColor(completionRate),
+                    backgroundColor: `${getCompletionColor(completionRate)}20`
                   }}
                 >
-                  {video.completionRate.toFixed(0)}%
+                  {completionRate.toFixed(0)}%
                 </div>
               </div>
             </div>
           </motion.div>
         </div>
 
-        {/* Progress Bar */}
+        {/* Progress Bar - direct calculation */}
         <motion.div 
           className="mt-4"
           initial={{ opacity: 0, scaleX: 0 }}
@@ -174,7 +180,7 @@ export function VideoInfoHeader({ video, className }: VideoInfoHeaderProps) {
         >
           <div className="flex items-center justify-between text-xs mb-1" style={{ color: headerColors.subtitle }}>
             <span>Research Progress</span>
-            <span>{video.completionRate.toFixed(1)}% Complete</span>
+            <span>{completionRate.toFixed(1)}% Complete</span>
           </div>
           <div 
             className="h-2 rounded-full overflow-hidden"
@@ -183,11 +189,11 @@ export function VideoInfoHeader({ video, className }: VideoInfoHeaderProps) {
             <motion.div
               className="h-full rounded-full"
               style={{ 
-                backgroundColor: getCompletionColor(video.completionRate),
-                width: `${video.completionRate}%`
+                backgroundColor: getCompletionColor(completionRate),
+                width: `${completionRate}%`
               }}
               initial={{ width: 0 }}
-              animate={{ width: `${video.completionRate}%` }}
+              animate={{ width: `${completionRate}%` }}
               transition={{ delay: 1, duration: 0.8 }}
             />
           </div>

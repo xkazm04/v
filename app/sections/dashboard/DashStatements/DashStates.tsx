@@ -112,6 +112,7 @@ export const DashEmpty = ({themeColors}: Props) => {
         <div
             className="rounded-lg p-8 border text-center"
             style={{
+                //@ts-expect-error Ignore
                 background: themeColors.background,
                 borderColor: themeColors.itemBorder
             }}

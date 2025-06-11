@@ -38,7 +38,7 @@ const NewsCard = memo(function NewsCard({
   // SEPARATED: Mouse left click - fade out without movement
   const handleMouseClick = useCallback((e: React.MouseEvent) => {
     // Only handle if it's a genuine mouse click (not touch on mobile)
-    if (e.pointerType === 'mouse' || (!('ontouchstart' in window) && e.type === 'click')) {
+    if (!('ontouchstart' in window) && e.type === 'click') {
       if (isDragging || hasDraggedRef.current) return; // Don't handle if we just dragged
       
       setDismissType('fade');

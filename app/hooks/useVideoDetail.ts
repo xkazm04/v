@@ -1,55 +1,43 @@
-'use client';
+import { useQuery } from '@tanstack/react-query';
+import { VideoDetailResponse, VideoWithTimestamps, convertBackendToFrontend } from '@/app/types/video_api';
+import { videos as mockVideos } from '@/app/constants/videos';
 
-import { useState, useEffect } from 'react';
-import { videoAPI } from '@/app/api/videos/videos';
-import { VideoDetail } from '@/app/types/video_api';
+const LOCAL_API_BASE = '/api';
 
-interface UseVideoDetailResult {
-  video: VideoDetail | null;
-  loading: boolean;
-  error: string | null;
-  refetch: () => Promise<void>;
+async function getVideoDetail(videoId: string): Promise<VideoWithTimestamps> {
+  try {
+    const response = await fetch(`${LOCAL_API_BASE}/video/${videoId}`);
+    if (!response.ok) {
+      throw new Error(`Video detail fetch failed: ${response.statusText}`);
+    }
+    
+    const backendData: VideoDetailResponse = await response.json();
+    return convertBackendToFrontend(backendData);
+  } catch (error) {
+    // Fallback to mock data if API fails
+    console.warn('API fetch failed, checking mock data:', error);
+    const mockVideo = mockVideos.find(v => v.video.id === videoId);
+    if (mockVideo) {
+      return mockVideo;
+    }
+    throw error;
+  }
 }
 
-export function useVideoDetail(videoId: string | null): UseVideoDetailResult {
-  const [video, setVideo] = useState<VideoDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchVideo = async () => {
-    if (!videoId) {
-      setVideo(null);
-      setLoading(false);
-      return;
+export const useVideoDetail = (videoId: string) => {
+  return useQuery({
+    queryKey: ['video', videoId, 'detail'],
+    queryFn: () => getVideoDetail(videoId),
+    enabled: !!videoId,
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnWindowFocus: false,
+    retry: (failureCount, error) => {
+      // Don't retry if we have mock data
+      if (failureCount === 0) {
+        const mockVideo = mockVideos.find(v => v.video.id === videoId);
+        return !mockVideo; // Only retry if no mock data available
+      }
+      return false;
     }
-
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const videoData = await videoAPI.getVideoForPlayer(videoId);
-      setVideo(videoData);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load video';
-      setError(errorMessage);
-      console.error('Failed to fetch video detail:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchVideo();
-  }, [videoId]);
-
-  const refetch = async () => {
-    await fetchVideo();
-  };
-
-  return {
-    video,
-    loading,
-    error,
-    refetch
-  };
-}
+  });
+};

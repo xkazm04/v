@@ -161,9 +161,8 @@ export function YouTubePlayerWithSync({
       try {
         isSeekingRef.current = true;
         ytPlayerRef.current.seekTo(onSeekRequest, true);
-        lastSeekRequestRef.current = onSeekRequest;
+        lastSeekRequestRef.current = onSeekRequest ?? null;
         
-        // Reset seeking flag after a short delay
         setTimeout(() => {
           isSeekingRef.current = false;
         }, 500);

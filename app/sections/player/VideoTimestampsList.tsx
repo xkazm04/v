@@ -1,14 +1,14 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { VideoDetail, VideoTimestamp } from '@/app/types/video_api';
+import { VideoWithTimestamps, VideoTimestamp } from '@/app/types/video_api'; 
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { Badge } from '@/app/components/ui/badge';
 import { Clock, CheckCircle, XCircle, AlertTriangle, HelpCircle, ExternalLink, BookOpen, PlayCircle } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 
 interface VideoTimestampsListProps {
-  video: VideoDetail;
+  video: VideoWithTimestamps; 
   currentTimestamp?: VideoTimestamp;
   onSeekToTimestamp?: (timestamp: number) => void;
   className?: string;
@@ -22,7 +22,6 @@ export function VideoTimestampsList({
 }: VideoTimestampsListProps) {
   const { colors } = useLayoutTheme();
 
-  // Get status icon and color
   const getStatusIcon = (status?: string) => {
     switch (status) {
       case 'TRUE':
@@ -63,6 +62,13 @@ export function VideoTimestampsList({
     }
   };
 
+  // Direct calculations - no conversion needed!
+  const totalStatements = video.timestamps.length;
+  const researchedStatements = video.timestamps.filter(ts => ts.factCheck).length;
+  const completionRate = totalStatements > 0 
+    ? (researchedStatements / totalStatements) * 100 
+    : 0;
+
   return (
     <Card className={className}>
       <CardHeader>
@@ -72,7 +78,7 @@ export function VideoTimestampsList({
         </CardTitle>
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            {video.researchedStatements} of {video.totalStatements} statements researched
+            {researchedStatements} of {totalStatements} statements researched
           </p>
           <div className="flex items-center gap-2">
             <div 
@@ -82,7 +88,7 @@ export function VideoTimestampsList({
                 backgroundColor: `${colors.primary}20`
               }}
             >
-              {video.completionRate.toFixed(1)}% Complete
+              {completionRate.toFixed(1)}% Complete
             </div>
           </div>
         </div>
@@ -111,7 +117,6 @@ export function VideoTimestampsList({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                {/* Header with time and status */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <PlayCircle className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -132,7 +137,7 @@ export function VideoTimestampsList({
                       <>
                         {getStatusIcon(timestamp.factCheck.status)}
                         <Badge className={getStatusColor(timestamp.factCheck.status)}>
-                          {timestamp.factCheck.status.replace('_', ' ')}
+                          {timestamp.factCheck.status?.replace('_', ' ')}
                         </Badge>
                       </>
                     ) : (
@@ -143,7 +148,6 @@ export function VideoTimestampsList({
                   </div>
                 </div>
                 
-                {/* Statement */}
                 <div className="mb-3">
                   <p className="text-sm leading-relaxed text-foreground">
                     "{timestamp.statement}"
@@ -155,7 +159,6 @@ export function VideoTimestampsList({
                   )}
                 </div>
                 
-                {/* Fact-check details */}
                 {timestamp.factCheck && (
                   <motion.div 
                     className="space-y-2 pt-3 border-t border-muted"
@@ -163,7 +166,6 @@ export function VideoTimestampsList({
                     animate={{ opacity: 1, height: 'auto' }}
                     transition={{ delay: 0.1 }}
                   >
-                    {/* Verdict */}
                     <div>
                       <div className="text-xs font-medium text-muted-foreground mb-1">Verdict:</div>
                       <p className="text-sm text-foreground">
@@ -171,7 +173,6 @@ export function VideoTimestampsList({
                       </p>
                     </div>
                     
-                    {/* Correction */}
                     {timestamp.factCheck.correction && (
                       <div>
                         <div className="text-xs font-medium text-muted-foreground mb-1">Correction:</div>
@@ -181,13 +182,12 @@ export function VideoTimestampsList({
                       </div>
                     )}
                     
-                    {/* Sources summary */}
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <div className="flex items-center gap-1">
                         <ExternalLink className="w-3 h-3" />
                         <span>Sources: {timestamp.factCheck.confidence}</span>
                       </div>
-                      {timestamp.factCheck.sources.agreed.count > 0 && (
+                      {timestamp.factCheck.sources?.agreed.count && timestamp.factCheck.sources.agreed.count > 0 && (
                         <span className="text-green-600">
                           {timestamp.factCheck.sources.agreed.count} sources agree
                         </span>
@@ -196,7 +196,6 @@ export function VideoTimestampsList({
                   </motion.div>
                 )}
                 
-                {/* Category badge */}
                 {timestamp.category && (
                   <div className="mt-2 pt-2 border-t border-muted">
                     <Badge variant="secondary">

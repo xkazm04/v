@@ -65,8 +65,7 @@ export const MobileNavbarItem: React.FC<MobileNavbarItemProps> = ({
         isCompact ? "py-2 px-2 min-h-[40px]" : "py-3 px-2 min-h-[64px]"
       )}
       style={{
-        color: isActive ? navColors.active : navColors.inactive,
-        focusVisibleRing: `2px solid ${navColors.active}50`
+        color: isActive ? navColors.active : navColors.inactive
       }}
       aria-label={`Navigate to ${item.label}`}
       aria-pressed={isActive}

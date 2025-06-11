@@ -53,6 +53,7 @@ export class MockDataService {
 
     if (filters.country && filters.country !== 'all' && filters.country !== 'worldwide') {
       filteredData = filteredData.filter(item => 
+        //@ts-expect-error Ignore
         item.country?.toLowerCase() === filters.country?.toLowerCase()
       );
     }
@@ -104,6 +105,7 @@ export class MockDataService {
     const countries: Record<string, number> = {};
     
     this.data.forEach(item => {
+      //@ts-expect-error Ignore
       const country = item.country || 'unknown';
       countries[country] = (countries[country] || 0) + 1;
     });

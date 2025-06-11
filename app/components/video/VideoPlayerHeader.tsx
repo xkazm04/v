@@ -92,13 +92,13 @@ export const VideoPlayerHeader = memo(function VideoPlayerHeader({
               </div>
 
               {/* Progress bar for fact-check confidence */}
-              {factCheckInfo && (
+              {/* {factCheckInfo && (
                 <ConfidenceProgressBar 
                   factCheckInfo={factCheckInfo}
                   colors={colors}
                   isDark={isDark}
                 />
-              )}
+              )} */}
             </div>
             <ShimmerEffect />
           </div>

@@ -45,9 +45,9 @@ const NewsGrid = memo(function NewsGrid({
   const getGridCols = () => {
     const colsMap = {
       2: 'grid-cols-1 sm:grid-cols-2',
-      3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
-      4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-      5: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
+      3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2',
+      4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3',
+      5: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 mx-[15%]'
     };
     return colsMap[columns] || colsMap[4];
   };
@@ -68,7 +68,7 @@ const NewsGrid = memo(function NewsGrid({
       initial="hidden"
       animate="visible"
       className={`
-        grid ${getGridCols()} ${gapClass} ${className}
+        grid ${getGridCols()} ${gapClass} ${className} max-w-[1600px]
       `}
     >
       {visibleArticles.map((article) => (

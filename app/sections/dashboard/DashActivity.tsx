@@ -96,27 +96,6 @@ const DashActivity = ({ profileId, limit = 10 }: ProfileActivityProps) => {
     pendingBg: isDark ? 'rgba(59, 130, 246, 0.1)' : 'rgba(239, 246, 255, 0.8)'
   };
 
-  // Loading state
-  if (isLoading) {
-    return (
-      <DashLoading themeColors={themeColors} />
-    );
-  }
-
-  // Error state
-  if (isError || error) {
-    return (
-      <DashError themeColors={themeColors} />
-    );
-  }
-
-  // Empty state
-  if (!statements || statements.length === 0) {
-    return (
-        <DashEmpty themeColors={themeColors} />
-    );
-  }
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

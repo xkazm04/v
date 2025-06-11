@@ -1,7 +1,7 @@
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
 import { motion } from "framer-motion"
 import { Calendar, TrendingUp, User } from "lucide-react";
-import { getCategoryIcon, getCountryName, getCategoryColor } from '@/app/helpers/researchResultHelpers';
+import { getCategoryIcon, getCountryName } from '@/app/helpers/researchResultHelpers';
 import { Badge } from "@/app/components/ui/badge";
 import { LLMResearchResponse } from "@/app/types/research";
 
@@ -10,7 +10,6 @@ type Props = {
 }
 
 const ResultOverviewMetadata = ({ displayResult }: Props) => {
-    const CategoryIcon = getCategoryIcon(displayResult.category);
     const { colors, isDark } = useLayoutTheme();
     return <>
         <motion.div
@@ -46,14 +45,13 @@ const ResultOverviewMetadata = ({ displayResult }: Props) => {
 
             {displayResult.category && (
                 <Badge
-                    className={`text-xs font-semibold ${getCategoryColor(displayResult.category)}`}
+                    className={`text-xs font-semibold`}
                     style={{
                         background: isDark ? 'rgba(71, 85, 105, 0.2)' : 'rgba(248, 250, 252, 0.8)',
                         color: colors.foreground,
                         border: `1px solid ${colors.border}`
                     }}
                 >
-                    <CategoryIcon className="h-3 w-3 mr-1" />
                     {displayResult.category.charAt(0).toUpperCase() + displayResult.category.slice(1)}
                 </Badge>
             )}

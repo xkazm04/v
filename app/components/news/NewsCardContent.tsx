@@ -1,12 +1,10 @@
 'use client';
 
-import { memo, useState, useMemo } from 'react';
+import { memo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Clock } from 'lucide-react';
 import { NewsArticle } from '@/app/types/article';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
-import { formatSafeDate } from '@/app/helpers/dateHelpers';
 import { Divider } from '../ui/divider';
 
 interface NewsCardContentProps {
@@ -40,31 +38,14 @@ const NewsCardContent = memo(function NewsCardContent({
   isCompact = false,
   article,
 }: NewsCardContentProps) {
-  const { colors, mounted, isDark } = useLayoutTheme();
+  const { mounted } = useLayoutTheme();
   const [isExpanded, setIsExpanded] = useState(false);
-
-  const dateInfo = useMemo(() => formatSafeDate(article.publishedAt), [article.publishedAt]);
   const maxLength = isCompact ? 120 : 200;
   const shouldTruncate = article.headline.length > maxLength;
   const displayText = isExpanded || !shouldTruncate
     ? article.headline
     : `${article.headline.slice(0, maxLength)}...`;
 
-  // Credibility indicator colors
-  const getCredibilityColor = () => {
-    if (!article.factCheck) return null;
-
-    const evaluation = article.factCheck.evaluation;
-    const colors = {
-      TRUE: isDark ? '#22c55e' : '#16a34a',
-      FALSE: isDark ? '#ef4444' : '#dc2626',
-      MISLEADING: isDark ? '#f59e0b' : '#d97706',
-      PARTIALLY_TRUE: isDark ? '#3b82f6' : '#2563eb',
-      UNVERIFIABLE: isDark ? '#8b5cf6' : '#7c3aed'
-    };
-
-    return colors[evaluation as keyof typeof colors] || colors.UNVERIFIABLE;
-  };
 
   if (!mounted) {
     return null;
@@ -99,45 +80,6 @@ const NewsCardContent = memo(function NewsCardContent({
               "{displayText}"
             </motion.span>
           </blockquote>
-
-        </div>
-        {/* Source and Date */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 flex-1 min-w-0">
-            {/* Source with logo */}
-            <div className="flex items-center space-x-2 min-w-0">
-              {article.source.logoUrl && (
-                <motion.img
-                  src={article.source.logoUrl}
-                  alt={article.source.name}
-                  className="w-4 h-4 rounded-sm object-cover"
-                />
-              )}
-              <span
-                className="text-xs font-medium truncate"
-                style={{ color: colors.foreground }}
-              >
-                {article.source.name}
-              </span>
-            </div>
-
-            <span
-              className="w-1 h-1 rounded-full flex-shrink-0"
-              style={{ backgroundColor: colors.border }}
-            />
-
-            {/* Date display */}
-            <div className="flex items-center space-x-1 flex-shrink-0">
-              <Clock className="w-3 h-3" style={{ color: colors.mutedForeground }} />
-              <span
-                className="text-xs"
-                style={{ color: colors.mutedForeground }}
-                title={dateInfo.absolute}
-              >
-                {dateInfo.relative}
-              </span>
-            </div>
-          </div>
 
         </div>
       </motion.div>

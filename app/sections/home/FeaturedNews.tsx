@@ -169,7 +169,7 @@ const FeaturedNews = ({
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-[1600px]">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
@@ -232,7 +232,7 @@ const FeaturedNews = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <EmptyState />
+            ...
           </motion.div>
         ) : (
           <motion.div

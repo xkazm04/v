@@ -4,17 +4,16 @@ import { motion } from 'framer-motion';
 import { PlayerTimeline } from '@/app/sections/player/timeline/PlayerTimeline';
 import { VideoInfoHeader } from '@/app/sections/player/VideoInfoHeader';
 import { useState, useRef, useEffect } from 'react';
-import { VideoDetail } from '@/app/types/video_api';
+import { VideoWithTimestamps } from '@/app/types/video_api'; // Single import!
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 
 interface YouTubeDesktopPlayerProps {
-  video: VideoDetail;
+  video: VideoWithTimestamps; // Direct usage!
   autoPlay?: boolean;
   onTimeUpdate?: (currentTime: number) => void;
   onPlayStateChange?: (isPlaying: boolean) => void;
 }
 
-// Extract YouTube video ID from URL
 const extractYouTubeId = (url: string): string | null => {
   const patterns = [
     /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/,
@@ -48,14 +47,12 @@ export function YouTubeDesktopPlayer({
   const playerRef = useRef<any>(null);
   const timeUpdateIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Extract YouTube ID from video URL
-  const youtubeId = extractYouTubeId(video.url);
+  // Direct access to video properties - no conversion needed!
+  const youtubeId = extractYouTubeId(video.video.video_url);
 
-  // Initialize YouTube player with API
   useEffect(() => {
     if (!youtubeId) return;
 
-    // Load YouTube IFrame API
     const loadYouTubeAPI = () => {
       return new Promise<void>((resolve) => {
         if (window.YT && window.YT.Player) {
@@ -88,7 +85,7 @@ export function YouTubeDesktopPlayer({
         },
         events: {
           onReady: (event: any) => {
-            console.log('YouTube player ready for:', video.title);
+            console.log('YouTube player ready for:', video.video.title);
             setIsPlayerReady(true);
             setIsPlayerLoading(false);
           },
@@ -97,7 +94,6 @@ export function YouTubeDesktopPlayer({
             setIsPlaying(playing);
             onPlayStateChange?.(playing);
 
-            // Start/stop time tracking
             if (playing) {
               startTimeTracking();
             } else {
@@ -116,9 +112,8 @@ export function YouTubeDesktopPlayer({
         playerRef.current.destroy();
       }
     };
-  }, [youtubeId, video.title, autoPlay, onPlayStateChange]);
+  }, [youtubeId, video.video.title, autoPlay, onPlayStateChange]);
 
-  // Time tracking functions
   const startTimeTracking = () => {
     if (timeUpdateIntervalRef.current) return;
 
@@ -146,39 +141,6 @@ export function YouTubeDesktopPlayer({
     }
   };
 
-  // Convert VideoDetail to VideoWithTimestamps format for PlayerTimeline
-  const videoWithTimestamps = {
-    video: {
-      id: video.id,
-      video_url: video.url,
-      source: video.source,
-      researched: video.researchedStatements > 0,
-      title: video.title,
-      verdict: video.verdict,
-      duration_seconds: video.duration,
-      speaker_name: video.speaker,
-      language_code: video.language,
-      audio_extracted: true,
-      transcribed: true,
-      analyzed: true,
-      created_at: video.processedAt?.toISOString(),
-      updated_at: video.processedAt?.toISOString(),
-      processed_at: video.processedAt?.toISOString()
-    },
-    timestamps: video.timestamps.map(ts => ({
-      id: `${video.id}-${ts.startTime}`,
-      video_id: video.id,
-      research_id: ts.factCheck?.id,
-      time_from_seconds: ts.startTime,
-      time_to_seconds: ts.endTime,
-      statement: ts.statement,
-      context: ts.context,
-      category: ts.category,
-      confidence_score: ts.confidence,
-      created_at: new Date().toISOString()
-    }))
-  };
-
   const containerColors = {
     background: isDark
       ? 'linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.98) 50%, rgba(15, 23, 42, 0.98) 100%)'
@@ -200,7 +162,7 @@ export function YouTubeDesktopPlayer({
       >
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-8 text-center">
           <h3 className="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">Invalid YouTube URL</h3>
-          <p className="text-red-600 dark:text-red-300">Could not extract video ID from: {video.url}</p>
+          <p className="text-red-600 dark:text-red-300">Could not extract video ID from: {video.video.video_url}</p>
         </div>
       </motion.div>
     );
@@ -213,7 +175,6 @@ export function YouTubeDesktopPlayer({
       transition={{ duration: 0.5 }}
       className="w-full max-w-6xl mx-auto"
     >
-      {/* Main Player Container */}
       <div 
         className="relative rounded-2xl overflow-hidden shadow-2xl"
         style={{
@@ -221,11 +182,9 @@ export function YouTubeDesktopPlayer({
           boxShadow: containerColors.shadow
         }}
       >
-        {/* Video Container */}
         <div className="relative aspect-video bg-black rounded-t-2xl overflow-hidden">
           <div id="youtube-player-desktop" className="w-full h-full" />
           
-          {/* Loading Overlay - Only show when actually loading */}
           {isPlayerLoading && (
             <motion.div 
               className="absolute inset-0 bg-black/80 flex items-center justify-center z-10"
@@ -239,16 +198,15 @@ export function YouTubeDesktopPlayer({
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                 />
-                <p>Loading {video.title}...</p>
+                <p>Loading {video.video.title}...</p>
               </div>
             </motion.div>
           )}
         </div>
 
-        {/* Video Info Header */}
+        {/* Direct usage - no conversion! */}
         <VideoInfoHeader video={video} />
 
-        {/* Enhanced Timeline Section */}
         {showTimeline && isPlayerReady && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -260,7 +218,7 @@ export function YouTubeDesktopPlayer({
             }}
           >
             <PlayerTimeline
-              videoData={videoWithTimestamps}
+              videoData={video} // Direct usage!
               onSeekToTimestamp={handleSeekToTimestamp}
               isListenMode={true}
               currentVideoTime={currentTime}

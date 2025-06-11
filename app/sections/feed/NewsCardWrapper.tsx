@@ -10,7 +10,7 @@ interface NewsCardWrapperProps {
   article: NewsArticle;
   cardStyles: {
     height: string;
-    background: string;
+    background: string | undefined;
     borderColor: string;
     boxShadow: string;
   };

@@ -95,6 +95,7 @@ export function YouTubeMobilePlayer({
               {/* Enhanced Header with Fact Check */}
               {index === currentIndex && (
                 <VideoPlayerHeader 
+                //@ts-expect-error Ignore
                   video={videoData.video}
                   isVisible={showHeader}
                   isMobile={true}

@@ -111,26 +111,23 @@ export const VideoCard = memo(function VideoCard({
         )}
       </div>
 
+        <>
+          <div className="h-1/2 relative">
+            <VideoCardThumbnail
+              video={video}
+              className="w-full h-full"
+            />
+          </div>
 
-      {/* Thumbnail */}
-      <div className={layout === 'grid' ? "aspect-video" : "w-40 flex-shrink-0"}>
-        <VideoCardThumbnail
-          video={video}
-          showOverlay={showOverlay}
-          className="w-full h-full"
-        />
-      </div>
-
-      {/* Content */}
-      <div className="flex flex-col flex-1 relative z-10">
-        <VideoCardContent
-          video={video}
-          layout={layout}
-          className={`flex-1 ${isDark ? 'bg-gray-900' : 'bg-gray-100'}`}
-        />
-      </div>
-
-      {/* Shine effect on hover */}
+          <div className="h-1/2 flex flex-col relative z-10">
+            <VideoCardContent
+              video={video}
+              layout={layout}
+              className="flex-1"
+            />
+          </div>
+        </>
+      
       <motion.div
         className="absolute inset-0 pointer-events-none"
         style={{

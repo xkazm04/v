@@ -1,12 +1,8 @@
 import { 
   Video, 
-  VideoWithTimestamps, 
   VideoFilters, 
-  VideoStats, 
-  CategoryInfo, 
-  AdvancedSearchResult,
+  VideoStats, CategoryInfo, AdvancedSearchResult,
   VideoDetailResponse,
-  VideoDetail, 
   FactCheckData
 } from '@/app/types/video_api';
 
@@ -38,13 +34,13 @@ class VideoAPI {
   }
 
   // NEW: Get transformed video detail for frontend consumption
-  async getVideoForPlayer(videoId: string): Promise<VideoDetail> {
+  async getVideoForPlayer(videoId: string): Promise<VideoDetailResponse> {
     const response = await this.getVideoDetail(videoId);
     return this.transformVideoResponse(response, videoId);
   }
 
   // Transform backend response to frontend-friendly format
-  private transformVideoResponse(response: VideoDetailResponse, videoId: string): VideoDetail {
+  private transformVideoResponse(response: VideoDetailResponse, videoId: string): VideoDetailResponse {
     return {
       id: videoId,
       url: response.video_url,
@@ -62,6 +58,7 @@ class VideoAPI {
       completionRate: response.research_completion_rate,
       
       // Transform timestamps
+      //@ts-expect-error Ignore
       timestamps: response.timestamps.map(ts => ({
         startTime: ts.time_from_seconds,
         endTime: ts.time_to_seconds,

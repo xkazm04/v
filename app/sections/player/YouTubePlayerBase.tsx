@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { VideoMetadata } from '@/app/types/video';
 import { useYouTubeAPI } from '@/app/hooks/useYouTubeAPI';
 import { useYouTubePlayer } from '@/app/hooks/useYouTubePlayer';
-import { extractVideoId } from '@/app/utils/youtube';
+import { extractYouTubeId } from '@/app/utils/youtube';
 
 interface YouTubePlayerBaseProps {
   videos: VideoMetadata[];
@@ -23,7 +23,7 @@ export function YouTubePlayerBase({
   const { loadAPI, isAPIReady } = useYouTubeAPI();
   
   const currentVideo = videos[currentIndex];
-  const videoId = currentVideo ? extractVideoId(currentVideo.videoUrl) : '';
+  const videoId = currentVideo ? extractYouTubeId(currentVideo.videoUrl) : '';
 
   const {
     playerState,
@@ -34,7 +34,7 @@ export function YouTubePlayerBase({
     setVolume,
     toggleMute
   } = useYouTubePlayer({
-    videoId,
+    videoId: videoId || '',
     autoPlay,
     onReady: () => setIsInitialized(true),
     onStateChange: (isPlaying) => {

@@ -15,7 +15,6 @@ type Props = {
 const config = {
   color: '#3B82F6', 
   bgGradient: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%)',
-  stampOpacity: '0.1'
 };
 
 

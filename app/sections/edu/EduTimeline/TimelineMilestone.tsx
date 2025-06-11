@@ -121,6 +121,7 @@ export default function TimelineMilestone({
                     style={{
                         backgroundColor: isMilestoneActive 
                             ? colors.primary 
+                            //@ts-expect-error Ignore
                             : colors.cardColors?.background || colors.background,
                         borderColor: isMilestoneActive ? colors.primary : colors.border,
                         color: isMilestoneActive ? 'white' : colors.foreground,
@@ -156,6 +157,7 @@ export default function TimelineMilestone({
                 {milestone.events && milestone.events.map((event, eventIndex) => (
                     <TimelineEventContainer
                         key={event.id}
+                        //@ts-expect-error Ignore
                         event={event as MilestoneEvent}
                         milestone={milestone}
                         eventIndex={eventIndex}

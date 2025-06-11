@@ -131,7 +131,7 @@ export function VideoTimestampItem({
               <div className="flex items-center gap-2">
                 {getStatusIcon(timestamp.factCheck.status)}
                 <Badge className={`${getStatusColor(timestamp.factCheck.status)} border text-xs font-medium`}>
-                  {timestamp.factCheck.status.replace('_', ' ')}
+                  {timestamp.factCheck.status?.replace('_', ' ') || 'Unknown'}
                 </Badge>
               </div>
             ) : (
@@ -212,7 +212,7 @@ export function VideoTimestampItem({
                   Confidence: <span className="font-semibold">{timestamp.factCheck.confidence}%</span>
                 </span>
               </div>
-              {timestamp.factCheck.sources.agreed.count > 0 && (
+              {timestamp.factCheck.sources?.agreed?.count && timestamp.factCheck.sources.agreed.count > 0 && (
                 <div className="flex items-center gap-1">
                   <div className="w-2 h-2 rounded-full bg-green-500" />
                   <span className="text-green-600 font-medium">

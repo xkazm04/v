@@ -1,4 +1,5 @@
-import { formatTime, getSegmentColor } from "@/app/helpers/playerHelp";
+import { getSegmentColor } from "@/app/helpers/playerHelp";
+import { formatTime } from "@/app/utils/format";
 import { motion } from "framer-motion"
 
 type Props = {
