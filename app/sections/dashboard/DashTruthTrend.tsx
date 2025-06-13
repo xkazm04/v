@@ -30,7 +30,6 @@ const DashTruthTrend = ({ speaker }: TruthTrendChartProps) => {
           {viewMode === 'trend' ? (
             <>
               <p className="text-sm text-green-600 flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-green-600" />
                 Truth Rate: {payload[0].value}%
               </p>
               <p className="text-xs text-muted-foreground mt-1">

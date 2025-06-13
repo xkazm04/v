@@ -1,18 +1,18 @@
 'use client';
-
 import { useEffect, useCallback } from 'react';
-import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useNavigationContext } from '@/app/providers/navigation-provider';
 import { ThemeToggle } from '../../components/theme/theme-toggle';
 import DesktopNavbarMain from './DesktopNavbarMain';
+import Image from 'next/image';
+import { useTheme } from 'next-themes';
 
 const navbarVariants = {
   hidden: { y: -100, opacity: 0 },
-  visible: { 
-    y: 0, 
+  visible: {
+    y: 0,
     opacity: 1,
     transition: {
       type: 'spring',
@@ -23,17 +23,9 @@ const navbarVariants = {
   }
 };
 
-const logoVariants = {
-  idle: { scale: 1, rotateY: 0 },
-  hover: { 
-    scale: 1.05, 
-    rotateY: 5,
-    transition: { duration: 0.3, ease: 'easeOut' }
-  }
-};
-
 export function DesktopNavbar() {
   const pathname = usePathname();
+  const { theme } = useTheme();
   const { colors, mounted, getColors } = useLayoutTheme();
   const {
     isNavigating,
@@ -76,7 +68,7 @@ export function DesktopNavbar() {
         }}
       >
         {/* Gradient overlay for depth */}
-        <div 
+        <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background: `linear-gradient(to bottom, ${navbarColors.background}00, ${navbarColors.background}20)`
@@ -84,28 +76,18 @@ export function DesktopNavbar() {
         />
 
         <div className="container relative flex h-16 max-w-screen-2xl items-center px-6">
-          {/* Enhanced Branding */}
-          <motion.div 
-            className="mr-8 flex"
-            variants={logoVariants}
-            initial="idle"
-            whileHover="hover"
-          >
-            <Link
-              href="/"
-              onClick={handleNavigation}
-              className="flex items-center space-x-3 group"
-            >
-              <motion.div 
-                className="font-bold text-xl transition-colors duration-200"
+              <motion.div
+                className="absolute opacity-10"
                 style={{ color: navbarColors.foreground }}
-                whileHover={{ scale: 1.02 }}
               >
-                Verify
+                {theme === 'dark' && <Image
+                  src="/logos/logo_glow_white.png"
+                  alt="Logo"
+                  width={300}
+                  height={300}
+                  className="transition-all duration-300"
+                />}
               </motion.div>
-            </Link>
-          </motion.div>
-
           {/* Main Navigation - Remove router prop and let component use its own useRouter */}
           <DesktopNavbarMain
             //@ts-expect-error Ignore
@@ -114,7 +96,7 @@ export function DesktopNavbar() {
           />
 
           {/* Mobile Actions (for tablet breakpoint) */}
-          <motion.div 
+          <motion.div
             className="flex-1 flex justify-end items-center space-x-2 lg:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -141,7 +123,7 @@ export function DesktopNavbar() {
         </AnimatePresence>
 
         {/* Subtle bottom glow */}
-        <div 
+        <div
           className="absolute bottom-0 left-0 right-0 h-px"
           style={{
             background: `linear-gradient(90deg, transparent, ${colors.primary}40, transparent)`

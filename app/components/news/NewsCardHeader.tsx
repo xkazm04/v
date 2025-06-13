@@ -148,25 +148,6 @@ export const NewsCardHeader = memo(function NewsCardHeader({
           </div>
         </div>
 
-        {/* Breaking News Indicator (if needed) */}
-        {timeMetrics.isBreaking && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="absolute top-1 right-1 z-20"
-          >
-            <div
-              className={cn(
-                "px-1.5 py-0.5 rounded-full text-xs font-bold",
-                "bg-red-500 text-white shadow-lg",
-                "animate-pulse"
-              )}
-            >
-              LIVE
-            </div>
-          </motion.div>
-        )}
-
         {/* Gradient Overlay for better text readability */}
         <div
           className={cn(

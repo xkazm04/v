@@ -4,7 +4,6 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/app/lib/utils';
-import { iconVariants, labelVariants, tabVariants } from '@/app/components/animations/variants/mobileNavVariants';
 
 interface TabItem {
   id: string;
@@ -15,12 +14,9 @@ interface TabItem {
 }
 
 interface NavColors {
-  background: string;
-  border: string;
   inactive: string;
   active: string;
   glow: string;
-  shadow: string;
 }
 
 interface MobileNavbarItemProps {
@@ -29,11 +25,47 @@ interface MobileNavbarItemProps {
   isPressed: boolean;
   navColors: NavColors;
   onTabPress: (tabId: string, href: string) => void;
-  onPressStart: (tabId: string) => void;
-  onPressEnd: () => void;
   isCompact?: boolean; 
 }
 
+const itemVariants = {
+  idle: {
+    scale: 1,
+    y: 0
+  },
+  pressed: {
+    scale: 0.95,
+    y: 1
+  },
+  active: {
+    scale: 1.05,
+    y: -2
+  },
+  activeCompact: {
+    scale: 1,
+    y: 0
+  }
+};
+
+const iconVariants = {
+  idle: {
+    rotate: 0,
+    scale: 1
+  },
+  active: {
+    rotate: [0, -10, 10, 0],
+    scale: 1.1,
+    transition: {
+      rotate: {
+        duration: 0.4,
+        ease: "easeInOut"
+      },
+      scale: {
+        duration: 0.2
+      }
+    }
+  }
+};
 
 export const MobileNavbarItem: React.FC<MobileNavbarItemProps> = ({
   item,
@@ -41,28 +73,28 @@ export const MobileNavbarItem: React.FC<MobileNavbarItemProps> = ({
   isPressed,
   navColors,
   onTabPress,
-  onPressStart,
-  onPressEnd,
   isCompact = false
 }) => {
   const IconComponent = item.icon;
 
+  const getAnimationState = () => {
+    if (isPressed) return 'pressed';
+    if (isActive) return isCompact ? 'activeCompact' : 'active';
+    return 'idle';
+  };
+
   return (
     <motion.button
-      key={item.id}
-      variants={tabVariants}
-      initial="inactive"
-      animate={isActive ? (isCompact ? "activeCompact" : "active") : "inactive"}
-      whileTap="tap"
-      onTouchStart={() => onPressStart(item.id)}
-      onTouchEnd={onPressEnd}
+      variants={itemVariants}
+      animate={getAnimationState()}
+      onTouchStart={() => {}} // Simplified touch handling
       onClick={() => onTabPress(item.id, item.href)}
       className={cn(
         "relative flex flex-col items-center justify-center flex-1",
-        "touch-manipulation focus:outline-none transition-all duration-200",
-        "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
-        "focus-visible:ring-opacity-50",
-        isCompact ? "py-2 px-2 min-h-[40px]" : "py-3 px-2 min-h-[64px]"
+        "touch-manipulation focus:outline-none",
+        "focus-visible:ring-2 focus-visible:ring-offset-2",
+        "transition-colors duration-200",
+        isCompact ? "py-2 px-1 min-h-[40px]" : "py-3 px-2 min-h-[56px]"
       )}
       style={{
         color: isActive ? navColors.active : navColors.inactive
@@ -71,72 +103,36 @@ export const MobileNavbarItem: React.FC<MobileNavbarItemProps> = ({
       aria-pressed={isActive}
       role="tab"
     >
-      {/* Enhanced background glow - reduced in compact mode */}
+      {/* Active Background Glow */}
       <AnimatePresence>
         {isActive && !isCompact && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="absolute inset-0 rounded-2xl"
-            style={{
-              background: `radial-gradient(ellipse at center, ${navColors.glow} 0%, ${navColors.glow}40 50%, transparent 100%)`,
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)'
-            }}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Compact mode active indicator */}
-      <AnimatePresence>
-        {isActive && isCompact && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
             className="absolute inset-0 rounded-xl"
             style={{
-              background: `linear-gradient(135deg, ${navColors.active}20, ${navColors.active}10)`,
-              backdropFilter: 'blur(8px)'
+              background: `radial-gradient(ellipse at center, ${navColors.glow} 0%, transparent 70%)`,
             }}
+            transition={{ duration: 0.2 }}
           />
         )}
       </AnimatePresence>
-
-      {/* Press effect */}
-      <AnimatePresence>
-        {isPressed && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.7 }}
-            animate={{ opacity: 0.4, scale: 1.3 }}
-            exit={{ opacity: 0, scale: 0.7 }}
-            className="absolute inset-0 rounded-2xl"
-            style={{ 
-              background: `radial-gradient(circle at center, ${navColors.active}20 0%, transparent 70%)`
-            }}
-            transition={{ duration: 0.15, ease: 'easeOut' }}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Enhanced icon with compact mode adaptation */}
+      {/* Icon */}
       <motion.div
         className={cn(
-          "relative z-10",
-          isCompact ? "mb-0" : "mb-2"
+          "relative z-10 flex items-center justify-center",
+          isCompact ? "mb-0" : "mb-1"
         )}
         variants={iconVariants}
-        animate={isActive ? (isCompact ? "activeCompact" : "active") : "inactive"}
+        animate={isActive ? 'active' : 'idle'}
       >
         <div 
           className={cn(
-            "transition-all duration-300",
-            isCompact ? "p-0.5 rounded-lg" : "p-1 rounded-xl"
+            "rounded-lg transition-all duration-200",
+            isActive && !isCompact && "bg-white/10",
+            isCompact ? "p-1" : "p-1.5"
           )}
-          style={{
-            backgroundColor: isActive ? `${navColors.active}15` : 'transparent'
-          }}
         >
           <IconComponent 
             className={cn(
@@ -147,17 +143,16 @@ export const MobileNavbarItem: React.FC<MobileNavbarItemProps> = ({
         </div>
       </motion.div>
 
-      {/* Label - hidden in compact mode */}
+      {/* Label - Hidden in compact mode */}
       <AnimatePresence>
         {!isCompact && (
           <motion.span
-            className="relative z-10 text-xs tracking-wide"
-            variants={labelVariants}
-            animate={isActive ? "active" : "inactive"}
-            exit="hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="relative z-10 text-xs font-medium tracking-wide"
             style={{
-              fontFamily: 'var(--font-inter)',
-              letterSpacing: isActive ? '0.025em' : '0.015em'
+              fontWeight: isActive ? 600 : 500
             }}
           >
             {item.label}
@@ -165,30 +160,19 @@ export const MobileNavbarItem: React.FC<MobileNavbarItemProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Compact mode active indicator dot */}
+      {/* Active Indicator Dot */}
       <AnimatePresence>
-        {isActive && isCompact && (
+        {isActive && (
           <motion.div
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0 }}
-            className="absolute top-1 right-1 h-1 w-1 rounded-full"
-            style={{ 
-              backgroundColor: navColors.active,
-              boxShadow: `0 0 4px ${navColors.active}80`
-            }}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Regular active indicator - hidden in compact mode */}
-      <AnimatePresence>
-        {isActive && !isCompact && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0 }}
-            className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full"
+            className={cn(
+              "absolute rounded-full",
+              isCompact 
+                ? "top-1 right-1 h-1.5 w-1.5" 
+                : "top-2 right-2 h-2 w-2"
+            )}
             style={{ 
               backgroundColor: navColors.active,
               boxShadow: `0 0 8px ${navColors.active}60`

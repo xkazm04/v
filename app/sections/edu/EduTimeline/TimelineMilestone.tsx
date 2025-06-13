@@ -162,9 +162,7 @@ export default function TimelineMilestone({
                         milestone={milestone}
                         eventIndex={eventIndex}
                         activeEventId={activeEventId}
-                        expandedEventId={expandedEventId}
                         onEventHover={onEventHover}
-                        onEventExpand={onEventExpand}
                         isMilestoneActive={isMilestoneActive}
                         isVisible={isVisible}
                     />

@@ -15,6 +15,7 @@ import { navAnim } from '@/app/components/animations/variants/navVariants';
 import { NAVIGATION_CONFIG } from '@/app/config/navItems';
 import { renderActionButton } from './NavActionButton';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import Image from 'next/image';
 
 export function Navbar() {
   const {
@@ -173,7 +174,13 @@ export function Navbar() {
                 e.currentTarget.style.color = navbarColors.foreground;
               }}
             >
-              Verify
+              <Image
+                src="/logos/logo_brush_black.png"
+                alt="Logo"
+                width={32}
+                height={32}
+                className="inline-block h-8 w-8 rounded-full"
+                />
             </div>
           </Link>
         </div>

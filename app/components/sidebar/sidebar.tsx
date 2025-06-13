@@ -19,7 +19,6 @@ export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const { width } = useViewport();
   const { colors, sidebarColors, isDark, mounted: themeReady } = useLayoutTheme();
 
   useEffect(() => {

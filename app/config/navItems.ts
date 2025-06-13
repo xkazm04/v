@@ -8,11 +8,6 @@ export const NAVIGATION_CONFIG = {
       description: 'Return to homepage'
     },
     {
-      href: '/news',
-      label: 'News',
-      description: 'Latest fact-checked news'
-    },
-    {
       href: '/dashboard',
       label: 'Dashboard',
       description: 'Dashboard with personalized insights'
@@ -50,12 +45,6 @@ export const MOBILE_NAV: TabItem[] = [
     label: 'Home',
     icon: Home,
     href: '/'
-  },
-  {
-    id: 'news',
-    label: 'News',
-    icon: Newspaper,
-    href: '/news'
   },
   {
     id: 'reel',

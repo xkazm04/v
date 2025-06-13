@@ -89,9 +89,6 @@ export const FeaturedVideos = memo(function FeaturedVideos() {
       >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Featured Videos</h2>
-          <span className="text-sm text-slate-500">
-            {videos.length} verified video{videos.length !== 1 ? 's' : ''}
-          </span>
         </div>
         <VideoGrid 
           videos={videos} 

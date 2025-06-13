@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { ResearchForm } from './ResearchForm';
 import { ResearchResults } from './ResearchResults';
@@ -39,20 +38,8 @@ export default function UploadLayout() {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-8 space-y-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center space-y-2"
-        >
-          <h1 className="text-4xl font-bold text-primary">Test statements</h1>
-          <p className="text-lg text-neutral-200">
-            Fill statement in text form, context and date
-          </p>
-        </motion.div>
-
+    <div className="">
+      <div className="space-y-8">
         {/* Form */}
         <ResearchForm onSubmit={handleResearch} isLoading={isLoading} />
 

@@ -54,7 +54,7 @@ export const NavDLink: React.FC<NavDLinkProps> = ({
         onClick={onNavigation}
         className={cn(
           'relative group px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200',
-          'hover:bg-opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2',
+          'hover:bg-opacity-80 outline-none focus:outline-none',
           'focus:ring-primary',
           isActive ? 'text-primary' : 'text-foreground'
         )}
@@ -109,8 +109,6 @@ export const NavDLink: React.FC<NavDLinkProps> = ({
               style={{ 
                 backgroundColor: navbarColors.background || 'transparent',
                 border: `1px solid ${navbarColors.border}`,
-                borderBottom: 'none',
-                borderRight: 'none'
               }}
             />
           </motion.div>

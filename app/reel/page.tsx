@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import { YouTubeMobilePlayer } from '@/app/sections/player/YouTubeMobilePlayer';
 import { useVideoDataManager } from '@/app/utils/videoDataManager';
 import { VideoDataStates } from '@/app/components/video/VideoDataStates';
-import { VideoDataStatusIndicator } from '@/app/components/video/VideoDataStatusIndicator';
 import { Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -25,20 +24,6 @@ function ReelPageContent() {
   return (
     <VideoDataStates result={videoDataResult}>
       <div className="h-screen bg-black relative">
-        {/* Status Indicators */}
-        <VideoDataStatusIndicator 
-          result={videoDataResult}
-          position="top-left"
-          showVideoCount={false}
-        />
-        
-        <VideoDataStatusIndicator 
-          result={videoDataResult}
-          position="top-right"
-          showVideoCount={true}
-        />
-
-        {/* Main Player */}
         <YouTubeMobilePlayer
           videos={videoDataResult.enhancedVideos}
           initialIndex={videoDataResult.initialIndex}

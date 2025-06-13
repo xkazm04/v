@@ -8,7 +8,6 @@ import { FactCheckOverlay } from '../components/research/FactCheckOverlay';
 import { VideoTimestampsList } from '../sections/player/VideoTimestampsList';
 import { useVideoDataManager } from '@/app/utils/videoDataManager';
 import { YouTubeDesktopPlayer } from '../sections/player/YouTubeDesktopPlayer';
-import { VideoDataStatusIndicator } from '@/app/components/video/VideoDataStatusIndicator';
 import ErrorBoundary from '@/app/components/ErrorBoundary';
 import { RefreshCw, AlertCircle } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
@@ -130,14 +129,6 @@ function WatchPageContent() {
   return (
     <div className="flex relative">
       <Sidebar />
-      
-      <VideoDataStatusIndicator 
-        result={videoDataResult}
-        position="top-right"
-        showVideoCount={false}
-        className="mt-16 mr-4"
-      />
-      
       <div className="flex flex-row justify-center p-4 w-full md:p-6 max-w-[2400px]">
         <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full">
           

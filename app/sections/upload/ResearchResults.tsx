@@ -16,34 +16,6 @@ interface ResearchResultsProps {
 
 export function ResearchResults({ result, isLoading }: ResearchResultsProps) {
   const { colors, isDark } = useLayoutTheme();
-
-  if (!result && !isLoading) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="text-center py-16"
-      >
-        <div className="max-w-md mx-auto space-y-4">
-          <div 
-            className="w-24 h-24 mx-auto rounded-full flex items-center justify-center"
-            style={{
-              background: isDark ? 'rgba(71, 85, 105, 0.2)' : 'rgba(248, 250, 252, 0.8)',
-              border: `2px solid ${colors.border}`
-            }}
-          >
-            <MessageSquare className="h-12 w-12" style={{ color: colors.mutedForeground }} />
-          </div>
-          <h3 className="text-xl font-semibold" style={{ color: colors.foreground }}>
-            Ready for Analysis
-          </h3>
-          <p style={{ color: colors.mutedForeground }}>
-            Submit a statement above to see comprehensive fact-check results with expert analysis
-          </p>
-        </div>
-      </motion.div>
-    );
-  }
   const displayResult = result || null;
   
   return (

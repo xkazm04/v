@@ -2,28 +2,78 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useRef } from 'react';
 
 interface PageTransitionProps {
   children: ReactNode;
 }
 
+// Simplified transition variants
+const getTransitionVariants = (pathname: string, previousPath?: string) => {
+  const getDirection = () => {
+    if (!previousPath) return 'neutral';
+    
+    const routeOrder = ['/', '/reel', '/upload'];
+    const currentIndex = routeOrder.findIndex(route => pathname.startsWith(route));
+    const previousIndex = routeOrder.findIndex(route => previousPath.startsWith(route));
+    
+    if (currentIndex === -1 || previousIndex === -1) return 'neutral';
+    return currentIndex > previousIndex ? 'left' : 'right';
+  };
+
+  const direction = getDirection();
+  
+  // Fast, simple transitions
+  return {
+    initial: { 
+      opacity: 0,
+      x: direction === 'left' ? 30 : direction === 'right' ? -30 : 0,
+      y: direction === 'neutral' ? 10 : 0
+    },
+    animate: { 
+      opacity: 1,
+      x: 0,
+      y: 0,
+      transition: {
+        duration: 0.2,
+        ease: 'easeOut'
+      }
+    },
+    exit: { 
+      opacity: 0,
+      x: direction === 'left' ? -20 : direction === 'right' ? 20 : 0,
+      transition: {
+        duration: 0.15,
+        ease: 'easeIn'
+      }
+    }
+  };
+};
+
 export function PageTransition({ children }: PageTransitionProps) {
   const pathname = usePathname();
-  const [isClient, setIsClient] = useState(false);
+  const previousPathRef = useRef<string>(pathname);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  // Update previous path after transition
+  const handleExitComplete = () => {
+    previousPathRef.current = pathname;
+  };
 
-  if (!isClient) {
-    return <div className="min-h-screen">{children}</div>;
-  }
+  const variants = getTransitionVariants(pathname, previousPathRef.current);
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
+    <AnimatePresence 
+      mode="wait" 
+      initial={false}
+      onExitComplete={handleExitComplete}
+    >
       <motion.div
         key={pathname}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={variants}
+        className="min-h-screen"
       >
         {children}
       </motion.div>

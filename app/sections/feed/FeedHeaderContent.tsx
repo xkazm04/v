@@ -10,7 +10,6 @@ type Props = {
     label: string;
   };
   currentTheme: 'light' | 'dark';
-  itemVariants: any;
   textColors: {
     primary: string;
     secondary: string;
@@ -26,7 +25,25 @@ type Props = {
   };
 }
 
-const FeedHeaderContent = ({config, currentTheme, itemVariants, textColors, mockStatement}: Props) => {
+
+const itemVariants = {
+    hidden: { 
+        opacity: 0, 
+        y: 30,
+        scale: 0.95
+    },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: { 
+            duration: 0.6, 
+            ease: [0.25, 0.46, 0.45, 0.94]
+        }
+    }
+};
+
+const FeedHeaderContent = ({config, currentTheme, textColors, mockStatement}: Props) => {
     return <>
     <div className="relative z-10 p-8 h-full flex flex-col">
         {/* Header with App Branding */}

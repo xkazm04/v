@@ -229,10 +229,10 @@ export function formatVideoDuration(duration_seconds: number | null): string {
 export function getVideoThumbnailUrl(video: Video): string {
   if (video.source === 'youtube') {
     const videoId = extractYouTubeId(video.video_url);
-    return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '/placeholder-video.jpg';
+    return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '/logo_large_black.png';
   }
   
-  return '/placeholder-video.jpg';
+  return '/logo_large_black.png';
 }
 
 function extractYouTubeId(url: string): string | null {

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useVideos } from '@/app/hooks/useVideos';
 import { useVideoDetail } from '@/app/hooks/useVideoDetail';
-import { VideoWithTimestamps, Video } from '@/app/types/video_api';
+import { VideoWithTimestamps } from '@/app/types/video_api';
 import { videos as mockVideos } from '@/app/constants/videos';
 
 export interface VideoDataManagerOptions {
@@ -130,38 +130,6 @@ export function useVideoDataManager(options: VideoDataManagerOptions = {}): Vide
   };
 }
 
-// Simple helper functions
-export function getDataSourceStatus(result: VideoDataManagerResult) {
-  if (result.videosLoading) {
-    return {
-      type: 'loading' as const,
-      message: 'Loading API...',
-      color: 'text-blue-400'
-    };
-  }
-  
-  if (result.isUsingFallback) {
-    return {
-      type: 'fallback' as const,
-      message: 'Using fallback',
-      color: 'text-yellow-400'
-    };
-  }
-  
-  if (result.hasApiData) {
-    return {
-      type: 'connected' as const,
-      message: 'API connected',
-      color: 'text-green-400'
-    };
-  }
-  
-  return {
-    type: 'unknown' as const,
-    message: 'Unknown status',
-    color: 'text-gray-400'
-  };
-}
 
 export function getVideoCountText(count: number): string {
   return `${count} video${count !== 1 ? 's' : ''}`;
