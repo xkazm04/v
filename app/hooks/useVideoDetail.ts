@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { VideoDetailResponse, VideoWithTimestamps, convertBackendToFrontend } from '@/app/types/video_api';
 import { videos as mockVideos } from '@/app/constants/videos';
 
-const LOCAL_API_BASE = '/api';
+const LOCAL_API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 async function getVideoDetail(videoId: string): Promise<VideoWithTimestamps> {
   try {

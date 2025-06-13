@@ -27,9 +27,7 @@ export function LayoutShell({ children }: LayoutShellProps) {
 
       {/* Main Content with Transitions */}
       <main className="flex-1 relative z-10">
-        <PageTransition>
           {children}
-        </PageTransition>
       </main>
 
       {/* Mobile Navigation */}
