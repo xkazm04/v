@@ -2,16 +2,16 @@
 
 import React, { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { CardContent } from '../../components/ui/card';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { Label } from '@/app/components/ui/label';
 import { Video, Play, RotateCcw, YoutubeIcon } from 'lucide-react';
-import { useSSE } from '../../hooks/useSSE';
-import { ProcessingUpdate, ProcessingStatus, StatementResult, VideoProcessingRequest } from '../../types/processing';
-import { ProgressBar, StatusBadge, ProcessingStep } from './components/Progress';
-import { StatementResultsList } from './components/StatementResults';
+import { ProgressBar, StatusBadge, ProcessingStep } from './Progress';
+import { StatementResultsList } from './StatementResults';
 import YtFormAdvanced from './YtFormAdvanced';
 import YtResult from './YtResult';
+import { ProcessingStatus, ProcessingUpdate, StatementResult, VideoProcessingRequest } from '@/app/types/processing';
+import { useSSE } from '@/app/hooks/useSSE';
+import { CardContent } from '@/app/components/ui/card';
 
 const containerVariants = {
   hidden: { opacity: 0, y: 30, scale: 0.95 },

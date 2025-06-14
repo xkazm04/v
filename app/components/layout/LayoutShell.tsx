@@ -4,7 +4,6 @@ import { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { DesktopNavbar } from '@/app/sections/navigation/DesktopNavbar';
 import { MobileNavbar } from '@/app/sections/navigation/MobileNavbar';
-import { PageTransition } from './PageTransition';
 
 interface LayoutShellProps {
   children: ReactNode;

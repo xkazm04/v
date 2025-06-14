@@ -4,11 +4,11 @@ import { motion } from 'framer-motion';
 import { Video, Sparkles, PenToolIcon, TwitterIcon } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
 import UploadLayout from "../sections/upload/UploadLayout";
-import UploadVideo from "../sections/uploadyt/UploadVideo";
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
 import Image from 'next/image';
 import TwitterForm from '../sections/upload/uploadTwitter/TwitterForm';
+import UploadVideo from '../sections/upload/uploadYouTube/UploadVideo';
 
 const containerVariants = {
     hidden: { opacity: 0, y: 20 },

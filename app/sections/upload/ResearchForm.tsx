@@ -108,7 +108,7 @@ export function ResearchForm({ onSubmit, isLoading }: ResearchFormProps) {
 
       <CardContent className="pb-6 sm:pb-8">
         <motion.div
-          className="text-center mb-8"
+          className="text-center mb-8 flex flex-col items-center gap-2"
         >
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-yellow-500 to-yellow-700 bg-clip-text text-transparent mb-2">
             Quote fast-check

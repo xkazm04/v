@@ -46,9 +46,9 @@ const TabsTrigger = React.forwardRef<
       'inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative group',
       {
         // Default variant
-        'rounded-lg px-4 py-2.5 text-sm data-[state=active]:bg-yellow-100/50 data-[state=active]:text-foreground data-[state=active]:shadow-sm': variant === 'default',
+        'rounded-lg py-2.5 text-sm data-[state=active]:bg-yellow-100/50 data-[state=active]:text-foreground data-[state=active]:shadow-sm': variant === 'default',
         // Pills variant
-        'rounded-xl px-6 py-3 text-sm bg-muted/30 hover:bg-muted/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg': variant === 'pills',
+        'rounded-xl py-3 text-sm bg-muted/30 hover:bg-muted/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg': variant === 'pills',
         // Underline variant
         'px-4 py-3 text-sm hover:text-foreground data-[state=active]:text-foreground border-b-2 border-transparent data-[state=active]:border-primary': variant === 'underline',
       },
