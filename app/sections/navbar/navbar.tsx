@@ -54,9 +54,6 @@ export function Navbar() {
     }
   };
 
-  if (!mounted) {
-    return null; // Prevent hydration mismatch
-  }
 
   const navbarColors = getColors('navbar');
 

@@ -1,341 +1,69 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   :root {
-    /* Light theme scrollbar variables */
-    --scrollbar-width: 6px;
-    --scrollbar-thin-width: 4px;
-    --scrollbar-track: rgba(241, 245, 249, 0.6);
-    --scrollbar-thumb: rgba(148, 163, 184, 0.4);
-    --scrollbar-thumb-hover: rgba(100, 116, 139, 0.6);
-    --scrollbar-thumb-active: rgba(71, 85, 105, 0.8);
-    --scrollbar-corner: rgba(241, 245, 249, 0.8);
+    /* Light theme variables - set immediately */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 217.2 91.2% 59.8%;
+    --radius: 0.5rem;
   }
 
   .dark {
-    /* Dark theme scrollbar variables */
-    --scrollbar-track: rgba(15, 23, 42, 0.6);
-    --scrollbar-thumb: rgba(71, 85, 105, 0.4);
-    --scrollbar-thumb-hover: rgba(100, 116, 139, 0.6);
-    --scrollbar-thumb-active: rgba(148, 163, 184, 0.8);
-    --scrollbar-corner: rgba(15, 23, 42, 0.8);
+    /* Dark theme variables - set immediately */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 217.2 91.2% 59.8%;
   }
 
-  html {
-    color-scheme: light dark;
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-    scroll-padding-top: 2rem;
+
+  /* Re-enable transitions after initial load */
+  .transitions-enabled * {
+    transition: all 0.2s ease-in-out !important;
   }
 
-  * {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
 }
 
-@layer components {
-  /* ===============================================
-     MODERN MINIMALISTIC SCROLLBAR SYSTEM
-     =============================================== */
-  
-  /* Global scrollbar styling - Applied to all elements */
+/* Add class to enable transitions after theme is loaded */
+.theme-loaded {
   * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-  }
-
-  /* Webkit browsers (Chrome, Safari, Edge) */
-  *::-webkit-scrollbar {
-    width: var(--scrollbar-width);
-    height: var(--scrollbar-width);
-  }
-
-  *::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: 0;
-  }
-
-  *::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-    border-radius: 10px;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    min-height: 20px;
-  }
-
-  *::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-thumb-hover);
-    border-width: 1px;
-  }
-
-  *::-webkit-scrollbar-thumb:active {
-    background: var(--scrollbar-thumb-active);
-    border-width: 0px;
-  }
-
-  *::-webkit-scrollbar-corner {
-    background: var(--scrollbar-corner);
-  }
-
-  /* Ultra-thin scrollbar variant */
-  .scrollbar-thin {
-    scrollbar-width: thin;
-  }
-
-  .scrollbar-thin::-webkit-scrollbar {
-    width: var(--scrollbar-thin-width);
-    height: var(--scrollbar-thin-width);
-  }
-
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    border-radius: 6px;
-    border: 1px solid transparent;
-  }
-
-  /* Hidden scrollbar */
-  .scrollbar-none {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-
-  .scrollbar-none::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Auto-hide scrollbar for clean look */
-  .scrollbar-auto-hide {
-    overflow: auto;
-  }
-
-  .scrollbar-auto-hide::-webkit-scrollbar {
-    width: var(--scrollbar-width);
-    height: var(--scrollbar-width);
-  }
-
-  .scrollbar-auto-hide::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .scrollbar-auto-hide::-webkit-scrollbar-thumb {
-    background: transparent;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-  }
-
-  .scrollbar-auto-hide:hover::-webkit-scrollbar-thumb,
-  .scrollbar-auto-hide:focus-within::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-  }
-
-  .scrollbar-auto-hide:hover::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-thumb-hover);
-  }
-
-  /* Sidebar scrollbar - Ultra minimal */
-  .sidebar-scroll {
-    scrollbar-width: thin;
-  }
-
-  .sidebar-scroll::-webkit-scrollbar {
-    width: 2px;
-  }
-
-  .sidebar-scroll::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .sidebar-scroll::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-    border-radius: 1px;
-    transition: all 0.2s ease;
-  }
-
-  .sidebar-scroll::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-thumb-hover);
-    width: 3px;
-  }
-
-  /* Content area scrollbar - Balanced visibility */
-  .content-scroll {
-    scrollbar-width: thin;
-  }
-
-  .content-scroll::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
-  }
-
-  .content-scroll::-webkit-scrollbar-track {
-    background: var(--scrollbar-track);
-    border-radius: 3px;
-    margin: 2px 0;
-  }
-
-  .content-scroll::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-    border-radius: 3px;
-    transition: all 0.2s ease;
-  }
-
-  .content-scroll::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-thumb-hover);
-  }
-
-  /* Modal scrollbar - Slightly more visible */
-  .modal-scroll {
-    scrollbar-width: thin;
-  }
-
-  .modal-scroll::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  .modal-scroll::-webkit-scrollbar-track {
-    background: var(--scrollbar-track);
-    border-radius: 3px;
-  }
-
-  .modal-scroll::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-    border-radius: 3px;
-    border: 1px solid transparent;
-    background-clip: padding-box;
-  }
-
-  .modal-scroll::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-thumb-hover);
-  }
-
-  /* Horizontal scrollbar styling */
-  .horizontal-scroll {
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: thin;
-  }
-
-  .horizontal-scroll::-webkit-scrollbar {
-    height: 4px;
-  }
-
-  .horizontal-scroll::-webkit-scrollbar-track {
-    background: var(--scrollbar-track);
-    border-radius: 2px;
-  }
-
-  .horizontal-scroll::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-    border-radius: 2px;
-    transition: all 0.2s ease;
-  }
-
-  .horizontal-scroll::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-thumb-hover);
-  }
-
-  /* ===============================================
-     OTHER COMPONENT STYLES
-     =============================================== */
-
-  .loading-skeleton {
-    @apply animate-pulse bg-muted;
-  }
-
-  .line-clamp-1 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-  }
-
-  .line-clamp-2 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-  }
-
-  .line-clamp-3 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-  }
-}
-
-@layer utilities {
-  /* ===============================================
-     SMOOTH TRANSITIONS AND EFFECTS
-     =============================================== */
-  
-  * {
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
-  }
-
-  body {
-    overflow-x: hidden;
-  }
-
-  .will-change-transform {
-    will-change: transform;
-  }
-
-  .will-change-opacity {
-    will-change: opacity;
-  }
-
-  .gpu-accelerated {
-    transform: translate3d(0, 0, 0);
-  }
-
-  .transition-height {
-    transition: height 0.3s ease-in-out;
-  }
-
-  .bg-gradient-radial {
-    background: radial-gradient(circle, var(--tw-gradient-stops));
-  }
-  
-  .border-3 {
-    border-width: 3px;
-  }
-
-  /* Scroll utilities */
-  .scroll-smooth {
-    scroll-behavior: smooth;
-  }
-
-  .scroll-auto {
-    scroll-behavior: auto;
-  }
-
-  /* Accessibility - Respect user preferences */
-  @media (prefers-reduced-motion: reduce) {
-    * {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
-  }
-
-  /* High contrast mode support */
-  @media (prefers-contrast: high) {
-    :root {
-      --scrollbar-thumb: rgba(0, 0, 0, 0.8);
-      --scrollbar-thumb-hover: rgba(0, 0, 0, 1);
-      --scrollbar-track: rgba(255, 255, 255, 0.9);
-    }
-
-    .dark {
-      --scrollbar-thumb: rgba(255, 255, 255, 0.8);
-      --scrollbar-thumb-hover: rgba(255, 255, 255, 1);
-      --scrollbar-track: rgba(0, 0, 0, 0.9);
-    }
+    transition: background-color 0.2s ease-in-out, 
+                color 0.2s ease-in-out, 
+                border-color 0.2s ease-in-out !important;
   }
 }
 

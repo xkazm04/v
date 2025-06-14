@@ -1,9 +1,9 @@
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
 import { motion } from "framer-motion"
 import { Calendar, TrendingUp, User } from "lucide-react";
-import { getCategoryIcon, getCountryName } from '@/app/helpers/researchResultHelpers';
 import { Badge } from "@/app/components/ui/badge";
 import { LLMResearchResponse } from "@/app/types/research";
+import { getCountryName } from "@/app/helpers/countries";
 
 type Props = {
     displayResult: LLMResearchResponse

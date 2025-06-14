@@ -47,10 +47,6 @@ const NewsCardContent = memo(function NewsCardContent({
     : `${article.headline.slice(0, maxLength)}...`;
 
 
-  if (!mounted) {
-    return null;
-  }
-
   return (
     <motion.div
       className="relative z-10 flex flex-col h-full justify-between p-4"

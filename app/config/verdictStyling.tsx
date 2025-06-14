@@ -1,53 +1,63 @@
-import { CheckCircle2, XCircle, AlertTriangle, Target } from 'lucide-react';
+import { CheckCircle2, XCircle, AlertTriangle, Target, Shield, AlertOctagon } from 'lucide-react';
 
 export const getVerdictStyling = (status: string, isDark: boolean) => {
-    switch (status.toLowerCase()) {
+    if (!status) {
+        return {
+            bgGradient: 'from-blue-500 to-purple-600',
+            borderGlow: 'border-blue-300/50 shadow-blue-500/25',
+            iconGlow: 'bg-blue-400/60',
+            badgeStyle: 'bg-blue-500/20 text-blue-100 border-blue-400/30'
+        };
+    }
+
+    const normalizedStatus = status.toLowerCase();
+
+    switch (normalizedStatus) {
         case 'true':
         case 'mostly true':
             return {
-                icon: CheckCircle2,
-                bgColor: isDark
-                    ? 'from-emerald-600 to-green-700'
-                    : 'from-emerald-500 to-green-600',
-                textColor: 'text-white',
-                badgeColor: isDark
-                    ? 'bg-emerald-900/30 text-emerald-300 border-emerald-700'
-                    : 'bg-emerald-100 text-emerald-800 border-emerald-200'
+                bgGradient: 'from-emerald-500 via-green-500 to-teal-600',
+                borderGlow: 'border-emerald-300/50 shadow-emerald-500/25',
+                iconGlow: 'bg-emerald-400/60',
+                badgeStyle: 'bg-emerald-500/20 text-emerald-100 border-emerald-400/30'
             };
         case 'false':
         case 'mostly false':
             return {
-                icon: XCircle,
-                bgColor: isDark
-                    ? 'from-red-600 to-rose-700'
-                    : 'from-red-500 to-rose-600',
-                textColor: 'text-white',
-                badgeColor: isDark
-                    ? 'bg-red-900/30 text-red-300 border-red-700'
-                    : 'bg-red-100 text-red-800 border-red-200'
+                bgGradient: 'from-red-500 via-rose-500 to-pink-600',
+                borderGlow: 'border-red-300/50 shadow-red-500/25',
+                iconGlow: 'bg-red-400/60',
+                badgeStyle: 'bg-red-500/20 text-red-100 border-red-400/30'
+            };
+        case 'misleading':
+            return {
+                bgGradient: 'from-orange-500 via-red-500 to-rose-600',
+                borderGlow: 'border-orange-300/50 shadow-orange-500/25',
+                iconGlow: 'bg-orange-400/60',
+                badgeStyle: 'bg-orange-500/20 text-orange-100 border-orange-400/30'
             };
         case 'mixed':
         case 'partially true':
+        case 'partially_true':
             return {
-                icon: AlertTriangle,
-                bgColor: isDark
-                    ? 'from-yellow-600 to-amber-700'
-                    : 'from-yellow-500 to-amber-600',
-                textColor: 'text-white',
-                badgeColor: isDark
-                    ? 'bg-yellow-900/30 text-yellow-300 border-yellow-700'
-                    : 'bg-yellow-100 text-yellow-800 border-yellow-200'
+                bgGradient: 'from-yellow-500 via-amber-500 to-orange-500',
+                borderGlow: 'border-yellow-300/50 shadow-yellow-500/25',
+                iconGlow: 'bg-yellow-400/60',
+                badgeStyle: 'bg-yellow-500/20 text-yellow-100 border-yellow-400/30'
+            };
+        case 'unverifiable':
+            return {
+                bgGradient: 'from-slate-500 via-gray-500 to-zinc-600',
+                borderGlow: 'border-slate-300/50 shadow-slate-500/25',
+                iconGlow: 'bg-slate-400/60',
+                badgeStyle: 'bg-slate-500/20 text-slate-100 border-slate-400/30'
             };
         default:
             return {
-                icon: Target,
-                bgColor: isDark
-                    ? 'from-blue-600 to-indigo-700'
-                    : 'from-blue-500 to-indigo-600',
-                textColor: 'text-white',
-                badgeColor: isDark
-                    ? 'bg-blue-900/30 text-blue-300 border-blue-700'
-                    : 'bg-blue-100 text-blue-800 border-blue-200'
+                bgGradient: 'from-blue-500 via-indigo-500 to-purple-600',
+                borderGlow: 'border-blue-300/50 shadow-blue-500/25',
+                iconGlow: 'bg-blue-400/60',
+                badgeStyle: 'bg-blue-500/20 text-blue-100 border-blue-400/30'
             };
     }
 };

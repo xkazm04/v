@@ -24,9 +24,7 @@ export function useTimelineState() {
     setScrollProgress(progress);
   }, []);
 
-  // Enhanced intersection observer for milestone visibility
   useEffect(() => {
-    if (!mounted) return;
 
     // Clean up previous observer
     if (observerRef.current) {
@@ -82,9 +80,7 @@ export function useTimelineState() {
     };
   }, [mounted]);
 
-  // Scroll progress listener with throttling
   useEffect(() => {
-    if (!mounted) return;
 
     let ticking = false;
     

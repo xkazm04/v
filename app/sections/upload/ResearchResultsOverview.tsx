@@ -4,19 +4,11 @@ import ResultOverviewContent from './Result/ResultOverviewContent';
 import ResultOverviewMetadata from './Result/ResultOverviewMetadata';
 import ResultOverviewHeader from './Result/ResultOverviewHeader';
 import { LLMResearchResponse } from '@/app/types/research';
-import StampText from '@/app/components/ui/Decorative/StampText';
-import { getStatusTranslation } from '@/app/helpers/factCheck';
 
 type Props = {
     isLoading: boolean;
     displayResult: LLMResearchResponse
 }
-
-const config = {
-  color: '#3B82F6', 
-  bgGradient: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%)',
-};
-
 
 const ResearchResultsOverview = ({ isLoading, displayResult }: Props) => {
     const { colors, isDark } = useLayoutTheme();
@@ -50,11 +42,6 @@ const ResearchResultsOverview = ({ isLoading, displayResult }: Props) => {
                 <ResultOverviewHeader
                     isLoading={isLoading}
                     displayResult={displayResult}
-                />
-
-                <StampText
-                    config={config}
-                    stampText={getStatusTranslation(displayResult.status)}
                 />
 
                 {/* Content Sections */}

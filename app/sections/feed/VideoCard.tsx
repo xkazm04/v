@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useState } from 'react';
+import { memo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
@@ -13,22 +13,30 @@ interface VideoCardProps {
   layout?: 'grid' | 'list';
   priority?: boolean;
   className?: string;
+  index?: number;
+  isVisible?: boolean;
 }
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 20, scale: 0.95 },
-  visible: { 
+  hidden: { 
+    opacity: 0, 
+    y: 15, 
+    scale: 0.98
+  },
+  visible: (index: number) => ({ 
     opacity: 1, 
     y: 0, 
     scale: 1,
     transition: {
       duration: 0.4,
-      ease: 'easeOut'
+      ease: [0.22, 1, 0.36, 1],
+      delay: Math.min(index * 0.06, 1), 
+      type: "tween" 
     }
-  },
+  }),
   hover: {
     y: -4,
-    scale: 1.02,
+    scale: 1.01,
     transition: {
       duration: 0.2,
       ease: 'easeOut'
@@ -40,22 +48,34 @@ export const VideoCard = memo(function VideoCard({
   video,
   layout = 'grid',
   priority = false,
-  className
+  className,
+  index = 0,
+  isVisible = true
 }: VideoCardProps) {
-  const { cardColors, colors, mounted, isDark } = useLayoutTheme();
+  const { cardColors, colors } = useLayoutTheme();
   const [isHovered, setIsHovered] = useState(false);
-  const [showOverlay, setShowOverlay] = useState(false);
+  const [contentLoaded, setContentLoaded] = useState(false);
 
-  if (!mounted) {
-    return null;
-  }
+  const cardHeight = layout === 'grid' ? 'h-[250px]' : 'h-[180px]';
+
+  useEffect(() => {
+    if (isVisible) {
+      const timer = setTimeout(() => {
+        setContentLoaded(true);
+      }, 100); 
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible]);
+
 
   return (
     <motion.article
       className={cn(
         "relative overflow-hidden rounded-xl group cursor-pointer",
-        "border backdrop-blur-sm transition-all duration-300",
-        layout === 'grid' ? "flex flex-col" : "flex flex-row h-32",
+        "border backdrop-blur-sm",
+        cardHeight,
+        layout === 'grid' ? "flex flex-col" : "flex flex-row",
         className
       )}
       style={{
@@ -64,84 +84,54 @@ export const VideoCard = memo(function VideoCard({
         boxShadow: `0 2px 8px ${cardColors.shadow}`
       }}
       variants={cardVariants}
+      custom={index}
       initial="hidden"
-      animate="visible"
+      animate={isVisible ? "visible" : "hidden"}
       whileHover="hover"
-      onHoverStart={() => {
-        setIsHovered(true);
-        setShowOverlay(true);
-      }}
-      onHoverEnd={() => {
-        setIsHovered(false);
-        setShowOverlay(false);
-      }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
     >
-      {/* Enhanced background effects */}
-      <div className="absolute inset-0">
-        {/* Subtle grain texture */}
-        <div 
-          className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, ${colors.foreground} 1px, transparent 0)`,
-            backgroundSize: '20px 20px'
-          }}
+      {/* Thumbnail section */}
+      <div className={layout === 'grid' ? 'h-1/2 relative' : 'w-1/3 relative'}>
+        <VideoCardThumbnail
+          video={video}
+          className="w-full h-full object-cover"
         />
-        
-        {/* Hover gradient */}
-        <motion.div
-          className="absolute inset-0"
-          style={{
-            background: `linear-gradient(135deg, ${colors.primary}10, ${colors.accent}05)`
-          }}
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-        />
-
-        {/* Border glow on hover */}
-        {isHovered && (
-          <motion.div
-            className="absolute inset-0 rounded-xl"
-            style={{
-              boxShadow: `inset 0 0 0 1px ${colors.primary}40, 0 0 20px ${colors.primary}20`
-            }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          />
-        )}
       </div>
 
-        <>
-          <div className="h-1/2 relative">
-            <VideoCardThumbnail
-              video={video}
-              className="w-full h-full"
-            />
-          </div>
-
-          <div className="h-1/2 flex flex-col relative z-10">
+      {/* Content section */}
+      <div className={layout === 'grid' ? 'h-1/2 flex flex-col relative z-10' : 'flex-1 flex flex-col relative z-10'}>
+        {/* Only show content when it's marked as loaded */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
             <VideoCardContent
               video={video}
               layout={layout}
-              className="flex-1"
+              className="flex-1 p-4"
             />
-          </div>
-        </>
-      
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: `linear-gradient(45deg, transparent 30%, ${colors.primary}10 50%, transparent 70%)`
-        }}
-        animate={{
-          x: isHovered ? ['0%', '100%'] : '0%',
-          opacity: isHovered ? [0, 0.5, 0] : 0
-        }}
-        transition={{
-          duration: 0.6,
-          ease: 'easeInOut'
-        }}
-      />
+          </motion.div>
+      </div>
+
+      {/* Sweep animation on hover - only when content is loaded */}
+      {contentLoaded && (
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `linear-gradient(45deg, transparent 30%, ${colors.primary}08 50%, transparent 70%)`
+          }}
+          animate={{
+            x: isHovered ? '100%' : '-100%',
+            opacity: isHovered ? 0.6 : 0
+          }}
+          transition={{
+            duration: 0.6,
+            ease: 'easeInOut'
+          }}
+        />
+      )}
     </motion.article>
   );
 });

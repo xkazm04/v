@@ -75,8 +75,6 @@ export default function TimelineEventContainer({
     });
   }, []);
 
-  if (!mounted) return null;
-
   const getResponsivePosition = (perspectiveIndex: number) => {
     if (isMobile) {
       return {

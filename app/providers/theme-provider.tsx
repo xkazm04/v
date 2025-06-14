@@ -1,34 +1,22 @@
 'use client';
 
-import { ThemeProvider as NextThemeProvider } from 'next-themes';
+import { ThemeProvider } from 'next-themes';
 
-interface EnhancedThemeProviderProps {
-  children: React.ReactNode;
-  attribute?: string;
-  defaultTheme?: string;
-  enableSystem?: boolean;
-  disableTransitionOnChange?: boolean;
-  storageKey?: string;
-}
-
-export function ThemeProvider({
+export function NoFlashThemeProvider({
   children,
-  attribute = 'class',
-  defaultTheme = 'system',
-  enableSystem = true,
-  disableTransitionOnChange = true, // Disable transitions to prevent flashing
-  storageKey = 'theme'
-}: EnhancedThemeProviderProps) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <NextThemeProvider
-      attribute={attribute}
-      defaultTheme={defaultTheme}
-      enableSystem={enableSystem}
-      disableTransitionOnChange={disableTransitionOnChange}
-      storageKey={storageKey}
-      forcedTheme={undefined}
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange={false}
+      storageKey="theme"
+      enableColorScheme={true}
     >
       {children}
-    </NextThemeProvider>
+    </ThemeProvider>
   );
 }

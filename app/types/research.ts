@@ -1,7 +1,9 @@
+export type StatusType = "TRUE" | "FALSE" | "PARTIALLY_TRUE" | "MISLEADING" | "UNVERIFIABLE";
+
 export interface LLMResearchResponse {
   valid_sources: string;
   verdict: string;
-  status: "TRUE" | "FALSE" | "MISLEADING" | "PARTIALLY_TRUE" | "UNVERIFIABLE";
+  status: StatusType;
   correction?: string | null;
   country?: string | null;
   category?: "POLITICS" | "ECONOMY" | "ENVIRONMENT" | "MILITARY" | "HEALTHCARE" | "EDUCATION" | "TECHNOLOGY" | "SOCIAL" | "INTERNATIONAL" | "OTHER" | null;
@@ -38,7 +40,7 @@ export interface LLMResearchResponse {
   expert_perspectives?: any;
   key_findings?: any;
   research_summary?: string | null;
-  confidence_score?: number | null;
+  confidence_score?: number | undefined | null;
   request_statement: string;
   request_source: string;
   request_context: string

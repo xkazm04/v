@@ -4,9 +4,6 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Profile } from '@/app/types/profile';
 import { 
-  TrendingUpIcon, 
-  TrendingDownIcon, 
-  MinusIcon,
   MapPin,
   Users,
   MessageSquare,
@@ -14,6 +11,7 @@ import {
   Globe
 } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import { countryMap } from '@/app/helpers/countries';
 
 interface DashSpeakerProfileProps {
   profile: Profile;
@@ -22,24 +20,6 @@ interface DashSpeakerProfileProps {
 
 // Country mapping for display
 const getCountryInfo = (countryCode?: string) => {
-  const countryMap: Record<string, { flag: string; name: string }> = {
-    'US': { flag: '🇺🇸', name: 'United States' },
-    'CA': { flag: '🇨🇦', name: 'Canada' },
-    'GB': { flag: '🇬🇧', name: 'United Kingdom' },
-    'DE': { flag: '🇩🇪', name: 'Germany' },
-    'FR': { flag: '🇫🇷', name: 'France' },
-    'IT': { flag: '🇮🇹', name: 'Italy' },
-    'ES': { flag: '🇪🇸', name: 'Spain' },
-    'AU': { flag: '🇦🇺', name: 'Australia' },
-    'JP': { flag: '🇯🇵', name: 'Japan' },
-    'CN': { flag: '🇨🇳', name: 'China' },
-    'IN': { flag: '🇮🇳', name: 'India' },
-    'BR': { flag: '🇧🇷', name: 'Brazil' },
-    'MX': { flag: '🇲🇽', name: 'Mexico' },
-    'RU': { flag: '🇷🇺', name: 'Russia' },
-    'ZA': { flag: '🇿🇦', name: 'South Africa' },
-  };
-  
   if (!countryCode) {
     return { flag: '🌍', name: 'International', code: 'INT' };
   }

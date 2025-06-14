@@ -34,8 +34,6 @@ export default function TimelineMilestone({
     const { colors, mounted, isDark } = useLayoutTheme();
     const isMilestoneActive = milestone.id === activeMilestoneId;
 
-    if (!mounted) return null;
-
     return (
         <motion.div
             className="relative w-full"

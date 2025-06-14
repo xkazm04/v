@@ -23,10 +23,6 @@ export function BackgroundOverlay({
 }: BackgroundOverlayProps) {
   const { getColors, mounted } = useLayoutTheme();
 
-  if (!mounted) {
-    return null;
-  }
-
   const overlayColors = getColors('overlay');
 
   return (

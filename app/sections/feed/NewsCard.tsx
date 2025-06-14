@@ -129,23 +129,6 @@ const NewsCard = memo(function NewsCard({
     };
   }, [isCompact, colors, mounted, isDark, isHovered]);
 
-  if (!mounted) {
-    return (
-      <div 
-        className={cn(
-          'group relative cursor-pointer flex flex-col justify-between',
-          cardStyles.height,
-          'rounded-xl border-1 transition-all duration-300 overflow-hidden',
-          className
-        )}
-        style={{
-          backgroundColor: cardStyles.background,
-          boxShadow: cardStyles.boxShadow
-        }}
-      />
-    );
-  }
-
   return (
     <>
       <AnimatePresence mode="wait">

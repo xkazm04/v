@@ -87,7 +87,7 @@ export default function Home() {
 
       {/* Main Content */}
       <motion.div 
-        className="flex relative min-h-screen"
+        className="flex relative min-h-screen overflow-y-hidden"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
@@ -111,7 +111,7 @@ export default function Home() {
 
           {/* Featured Videos */}
           <div className="mb-8 px-8">
-            <Suspense fallback={<SimpleSkeleton />}>
+            <Suspense fallback={<></>}>
               <FeaturedVideos />
             </Suspense>
           </div>
@@ -123,7 +123,7 @@ export default function Home() {
 
           {/* Featured News */}
           <div className="pb-8 px-8">
-            <Suspense fallback={<SimpleSkeleton />}>
+            <Suspense fallback={<></>}>
               <FeaturedNews />
             </Suspense>
           </div>

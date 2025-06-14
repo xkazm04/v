@@ -47,7 +47,7 @@ export function BaseModal({
   className,
   showCloseButton = true
 }: BaseModalProps) {
-  const { cardColors, overlayColors, colors, mounted } = useLayoutTheme();
+  const { cardColors, overlayColors, colors } = useLayoutTheme();
 
   const handleBackdropClick = useCallback((e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -72,10 +72,6 @@ export function BaseModal({
       document.body.style.overflow = 'unset';
     };
   }, [isOpen, handleKeyDown]);
-
-  if (!mounted) {
-    return null;
-  }
 
   const maxWidthClasses = {
     sm: 'max-w-sm',

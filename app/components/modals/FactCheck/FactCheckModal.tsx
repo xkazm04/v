@@ -136,10 +136,6 @@ export const FactCheckModal = memo(function FactCheckModal({
     }
   }, [onClose]);
 
-  if (!mounted) {
-    return null;
-  }
-
   // Transform article data to research response format
   const displayResult = transformArticleToResearchResponse(article);
 

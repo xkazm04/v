@@ -179,21 +179,6 @@ export function ThemeToggle({
 
   const themeColors = getThemeColors();
 
-  // Placeholder for SSR
-  if (!mounted) {
-    return (
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        disabled 
-        className={cn("transition-all duration-200", buttonSize, className)}
-      >
-        <Sun className={iconSize} />
-        <span className="sr-only">Toggle theme</span>
-      </Button>
-    );
-  }
-
   // Mobile variant - simplified for touch
   const renderMobile = () => (
     <motion.button

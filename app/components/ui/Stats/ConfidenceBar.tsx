@@ -67,13 +67,8 @@ export const ConfidenceBar: React.FC<ConfidenceBarProps> = ({
   showPercentage = true,
   className
 }) => {
-  const { colors, isDark, mounted } = useLayoutTheme();
+  const { colors, isDark } = useLayoutTheme();
 
-  if (!mounted) {
-    return null;
-  }
-
-  // Clamp confidence value between 0-100
   const clampedConfidence = Math.min(Math.max(confidence || 0, 0), 100);
 
   // Get confidence level and color

@@ -2,17 +2,13 @@
 
 import { 
   Home, 
-  ThumbsUp, 
-  Clock,
   Globe,
-  Filter
 } from 'lucide-react';
 import { ScrollArea } from '@/app/components/ui/scroll-area';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import SideSectionHeader from './SideSectionHeader';
 import SideCountryItem from './SideCountryItem';
-import NavItem from './SideNavItem';
 import SideNavMainSection from './SideNavSections';
 import { COUNTRY_SECTIONS } from '@/app/constants/countriesMock';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';

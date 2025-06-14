@@ -45,11 +45,7 @@ export const VideoCardContent = memo(function VideoCardContent({
   const { colors, mounted } = useLayoutTheme();
   const [isHovered, setIsHovered] = useState(false);
   const isGrid = layout === 'grid';
-
-  if (!mounted) {
-    return null;
-  }
-
+  
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
@@ -70,16 +66,13 @@ export const VideoCardContent = memo(function VideoCardContent({
       <Link href={`/watch?v=${video.id}`} className="block group">
         {/* Title */}
         <motion.h3 
-          variants={itemVariants}
           className={cn(
-            "font-bold leading-tight mb-2 line-clamp-2 transition-all duration-200",
+            "font-bold leading-tight mb-2 line-clamp-2 transition-all",
             isGrid ? 'text-sm' : 'text-lg'
           )}
           style={{
             color: isHovered ? colors.primary : colors.foreground
           }}
-          whileHover={{ letterSpacing: '0.01em' }}
-          transition={{ duration: 0.2 }}
         >
           {video.title || 'Untitled Video'}
         </motion.h3>

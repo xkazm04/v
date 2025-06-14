@@ -42,21 +42,6 @@ export const getCategoryColor = (category?: StatementCategory) => {
   }
 };
 
-export const getCountryName = (countryCode?: string) => {
-  const countries: Record<string, string> = {
-    'us': '🇺🇸 United States',
-    'gb': '🇬🇧 United Kingdom',
-    'de': '🇩🇪 Germany',
-    'fr': '🇫🇷 France',
-    'ca': '🇨🇦 Canada',
-    'au': '🇦🇺 Australia',
-    'jp': '🇯🇵 Japan',
-    'br': '🇧🇷 Brazil',
-    'in': '🇮🇳 India',
-    'cn': '🇨🇳 China'
-  };
-  return countries[countryCode?.toLowerCase() || ''] || `🌍 ${countryCode?.toUpperCase()}`;
-};
 
 export const getMediaCategoryIcon = (category: string) => {
   switch (category) {
@@ -77,18 +62,3 @@ export const getCredibilityColor = (credibility: string) => {
   }
 };
 
-export const getCountryFlag = (countryCode: string) => {
-  const flags: Record<string, string> = {
-    'us': '🇺🇸',
-    'gb': '🇬🇧',
-    'de': '🇩🇪',
-    'fr': '🇫🇷',
-    'ca': '🇨🇦',
-    'au': '🇦🇺',
-    'jp': '🇯🇵',
-    'br': '🇧🇷',
-    'in': '🇮🇳',
-    'cn': '🇨🇳'
-  };
-  return flags[countryCode.toLowerCase()] || '🌍';
-};

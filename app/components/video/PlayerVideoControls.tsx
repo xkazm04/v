@@ -124,10 +124,6 @@ export function PlayerVideoControls({
     }
   };
 
-  if (!mounted) {
-    return null;
-  }
-
   const ControlButton = ({ 
     children, 
     onClick, 

@@ -237,11 +237,6 @@ export function PlayerTimeline({
       console.warn('Invalid timestamp for seeking:', timestamp);
     }
   };
-
-  if (!mounted) {
-    return null;
-  }
-
   // Enhanced color scheme for dual theming
   const timelineColors = {
     background: isDark

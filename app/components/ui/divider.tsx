@@ -52,15 +52,6 @@ export const Divider: React.FC<DividerProps> = ({
 }) => {
   const { colors, isDark, mounted } = useLayoutTheme();
 
-  if (!mounted) {
-    return (
-      <div className={cn(
-        orientation === 'horizontal' ? 'h-px w-full' : 'w-px h-full',
-        spacing === 'tight' ? 'my-1' : spacing === 'loose' ? 'my-4' : 'my-2'
-      )} />
-    );
-  }
-
   // Theme-aware color configurations
   const getDividerColors = () => {
     const baseColors = {

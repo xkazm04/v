@@ -20,11 +20,6 @@ export const VideoCardThumbnail = memo(function VideoCardThumbnail({
   const { colors, mounted, isDark } = useLayoutTheme();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
-  
-  if (!mounted) {
-    return null;
-  }
-
   const thumbnailUrl = getVideoThumbnailUrl(video);
   const duration = formatVideoDuration(video.duration_seconds);
 

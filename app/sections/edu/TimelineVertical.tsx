@@ -68,7 +68,7 @@ export const PERSPECTIVE_CONFIGS: PerspectiveConfig[] = [
 
 export default function TimelineVertical() {
   const [expandedEventId, setExpandedEventId] = useState<string | null>(null);
-  const { colors, mounted, isDark } = useLayoutTheme();
+  const { colors, isDark } = useLayoutTheme();
   
   const {
     activeMilestoneId,
@@ -82,20 +82,6 @@ export default function TimelineVertical() {
 
   const diagram = sampleDiagram;
   const sortedMilestones = [...diagram.milestones].sort((a, b) => a.order - b.order);
-
-  if (!mounted) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <motion.div 
-          className="animate-pulse text-muted-foreground text-lg"
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          Loading timeline...
-        </motion.div>
-      </div>
-    );
-  }
 
   return (
     <div 

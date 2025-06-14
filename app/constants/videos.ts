@@ -1,4 +1,4 @@
-import { VideoWithTimestamps, Video, VideoTimestamp, FactCheckData } from "../types/video_api";
+import { VideoWithTimestamps, FactCheckData } from "../types/video_api";
 
 // Mock fact-check data
 const mockFactChecks: Record<string, FactCheckData> = {

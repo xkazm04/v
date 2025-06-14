@@ -96,9 +96,6 @@ export function MobileNavbar({
     onVideoPlayerModeToggle?.();
   }, [onVideoPlayerModeToggle]);
 
-  if (!mounted) {
-    return null;
-  }
 
   const isCompact = isVideoPlayerMode && isCollapsed;
 

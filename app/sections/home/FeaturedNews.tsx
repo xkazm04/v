@@ -8,6 +8,7 @@ import { RefreshCw, AlertCircle, WifiOff } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { Button } from '@/app/components/ui/button';
 import { useNewsFilters } from '@/app/stores/filterStore';
+import { countryLabels } from '@/app/helpers/countries';
 
 interface FeaturedNewsProps {
   limit?: number;
@@ -15,45 +16,6 @@ interface FeaturedNewsProps {
   autoRefresh?: boolean;
 }
 
-// Memoized loading skeleton
-const LoadingSkeleton = memo(({ isDark }: { isDark: boolean }) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {Array.from({ length: 6 }).map((_, index) => (
-      <motion.div 
-        key={index}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: index * 0.1 }}
-        className="animate-pulse"
-      >
-        <div 
-          className="rounded-lg h-48 mb-4" 
-          style={{ 
-            background: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(226, 232, 240, 0.5)' 
-          }}
-        />
-        <div className="space-y-2">
-          <div 
-            className="h-4 rounded w-3/4" 
-            style={{ 
-              background: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(226, 232, 240, 0.5)' 
-            }}
-          />
-          <div 
-            className="h-3 rounded w-1/2" 
-            style={{ 
-              background: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(226, 232, 240, 0.5)' 
-            }}
-          />
-        </div>
-      </motion.div>
-    ))}
-  </div>
-));
-
-LoadingSkeleton.displayName = 'LoadingSkeleton';
-
-// Memoized error state
 const ErrorState = memo(({ 
   colors, 
   error, 
@@ -193,27 +155,7 @@ const FeaturedNews = memo(({
       return `${categoryLabels[newsFilters.categoryFilter] || newsFilters.categoryFilter} News`;
     }
     if (newsFilters.countryFilter && newsFilters.countryFilter !== 'worldwide' && newsFilters.countryFilter !== 'all') {
-      const countryLabels: Record<string, string> = {
-        'US': 'United States',
-        'GB': 'United Kingdom',
-        'FR': 'France',
-        'DE': 'Germany',
-        'CA': 'Canada',
-        'AU': 'Australia',
-        'JP': 'Japan',
-        'CN': 'China',
-        'IN': 'India',
-        'BR': 'Brazil',
-        'RU': 'Russia',
-        'ZA': 'South Africa',
-        'KR': 'South Korea',
-        'MX': 'Mexico',
-        'IT': 'Italy',
-        'ES': 'Spain',
-        'NL': 'Netherlands',
-        'SE': 'Sweden',
-        'NO': 'Norway',
-      };
+
       return `News from ${countryLabels[newsFilters.countryFilter] || newsFilters.countryFilter}`;
     }
     return 'Latest Fact Checks';
@@ -244,31 +186,20 @@ const FeaturedNews = memo(({
 
       {/* Content */}
       <AnimatePresence mode="wait">
-        {loading && articles.length === 0 ? (
-          <motion.div
-            key="loading"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <LoadingSkeleton isDark={isDark} />
-          </motion.div>
-        ) : error ? (
           <motion.div
             key="error"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <ErrorState 
+           {error &&  <ErrorState 
               colors={colors}
               error={error}
               onRefresh={handleRefresh}
               onOfflineMode={handleOfflineMode}
-            />
+            />}
           </motion.div>
-        ) : articles.length === 0 ? (
-          <motion.div
+          {articles.length === 0 && !loading && <motion.div
             key="empty"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -277,8 +208,7 @@ const FeaturedNews = memo(({
             style={{ color: colors.mutedForeground }}
           >
             No news articles found.
-          </motion.div>
-        ) : (
+          </motion.div>}
           <motion.div
             key={`articles-${displayTitle}-${articles.length}`}
             initial={{ opacity: 0, y: 20 }}
@@ -293,10 +223,8 @@ const FeaturedNews = memo(({
               }}
             />
           </motion.div>
-        )}
       </AnimatePresence>
 
-      {/* Refresh indicator */}
       {loading && articles.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}

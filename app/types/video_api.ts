@@ -14,6 +14,7 @@ export interface Video {
   created_at: string;
   updated_at: string | null;
   processed_at: string | null;
+  duration?: string; 
 }
 
 export interface VideoTimestamp {

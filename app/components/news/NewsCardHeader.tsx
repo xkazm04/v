@@ -56,10 +56,6 @@ export const NewsCardHeader = memo(function NewsCardHeader({
     return { isRecent, isVeryRecent, isBreaking, isUrgent, timeDiff };
   }, [article.publishedAt, article.isBreaking]);
 
-  if (!mounted) {
-    return null;
-  }
-
   return (
     <AnimatePresence>
       <motion.div

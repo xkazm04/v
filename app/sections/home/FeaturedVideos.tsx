@@ -1,10 +1,10 @@
 'use client';
 
-import { memo } from 'react';
-import { VideoGrid } from '../feed/VideoGrid';
+import { memo } from 'react';;
 import { useVideos } from '@/app/hooks/useVideos';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { VideoGrid } from '../feed/VideoGrid/VideoGrid';
 
 export const FeaturedVideos = memo(function FeaturedVideos() {
   const { 

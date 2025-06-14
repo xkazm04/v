@@ -1,11 +1,11 @@
-import './globals.css';
-import type { Metadata, Viewport } from 'next';
 import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google';
-import { ThemeProvider } from '@/app/providers/theme-provider';
-import { QueryProvider } from '@/app/providers/query-provider';
+import { Metadata, Viewport } from 'next';
+import { QueryProvider } from './providers/query-provider';
 import { NavigationProvider } from './providers/navigation-provider';
-import { Toaster } from '@/app/components/ui/sonner';
 import { LayoutShell } from './components/layout/LayoutShell';
+import { Toaster } from 'sonner';
+import './globals.css';
+import { NoFlashThemeProvider } from './providers/theme-provider';
 
 // Font configurations with improved performance
 const inter = Inter({
@@ -72,7 +72,7 @@ export default function RootLayout({
       className={`${inter.variable} ${spaceGrotesk.variable} ${jetBrainsMono.variable}`}
     >
       <head>
-        {/* Critical theme script - runs before first paint */}
+        {/* Enhanced no-flash theme script */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -82,14 +82,31 @@ export default function RootLayout({
                   const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                   const shouldBeDark = savedTheme === 'dark' || (!savedTheme && systemDark);
                   
+                  // Set theme immediately
                   document.documentElement.style.colorScheme = shouldBeDark ? 'dark' : 'light';
+                  document.documentElement.classList.toggle('dark', shouldBeDark);
+                  document.documentElement.setAttribute('data-theme', shouldBeDark ? 'dark' : 'light');
                   
+                  // Set CSS variables immediately to prevent flashing
+                  const root = document.documentElement;
                   if (shouldBeDark) {
-                    document.documentElement.classList.add('dark');
-                    document.documentElement.setAttribute('data-theme', 'dark');
+                    root.style.setProperty('--background', '222.2 84% 4.9%');
+                    root.style.setProperty('--foreground', '210 40% 98%');
+                    root.style.setProperty('--card', '222.2 84% 4.9%');
+                    root.style.setProperty('--card-foreground', '210 40% 98%');
+                    root.style.setProperty('--primary', '217.2 91.2% 59.8%');
+                    root.style.setProperty('--border', '217.2 32.6% 17.5%');
+                    root.style.setProperty('--muted', '217.2 32.6% 17.5%');
+                    root.style.setProperty('--muted-foreground', '215 20.2% 65.1%');
                   } else {
-                    document.documentElement.classList.remove('dark');
-                    document.documentElement.setAttribute('data-theme', 'light');
+                    root.style.setProperty('--background', '0 0% 100%');
+                    root.style.setProperty('--foreground', '222.2 84% 4.9%');
+                    root.style.setProperty('--card', '0 0% 100%');
+                    root.style.setProperty('--card-foreground', '222.2 84% 4.9%');
+                    root.style.setProperty('--primary', '217.2 91.2% 59.8%');
+                    root.style.setProperty('--border', '214.3 31.8% 91.4%');
+                    root.style.setProperty('--muted', '210 40% 96%');
+                    root.style.setProperty('--muted-foreground', '215.4 16.3% 46.9%');
                   }
                 } catch (_) {}
               })();
@@ -104,13 +121,7 @@ export default function RootLayout({
       
       <body className="min-h-screen bg-background font-sans antialiased relative overflow-x-hidden">
         <QueryProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange={false}
-            storageKey="theme"
-          >
+          <NoFlashThemeProvider>
             <NavigationProvider>
               <LayoutShell>
                 {children}
@@ -128,7 +139,7 @@ export default function RootLayout({
                 }}
               />
             </NavigationProvider>
-          </ThemeProvider>
+          </NoFlashThemeProvider>
         </QueryProvider>
       </body>
     </html>

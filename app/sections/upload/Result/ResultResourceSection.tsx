@@ -3,8 +3,9 @@ import { ResourceAnalysis } from "../types";
 import { CheckCircle, XCircle, TrendingUp, TrendingDown, Users, Building, GraduationCap, Heart } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/app/components/ui/badge";
-import { getCountryFlag, getCredibilityColor, getMediaCategoryIcon } from "@/app/helpers/researchResultHelpers";
+import { getCredibilityColor, getMediaCategoryIcon } from "@/app/helpers/researchResultHelpers";
 import { Button } from "@/app/components/ui/button";
+import { getCountryFlag } from "@/app/helpers/countries";
 
 const ResultResourceSection = ({ 
     analysis, 

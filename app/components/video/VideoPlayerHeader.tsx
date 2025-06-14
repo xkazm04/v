@@ -28,9 +28,6 @@ export const VideoPlayerHeader = memo(function VideoPlayerHeader({
 }: VideoPlayerHeaderProps) {
   const { colors, isDark, mounted } = useLayoutTheme();
 
-  if (!mounted) {
-    return null;
-  }
   //@ts-expect-error Ignore
   const factCheckInfo = getFactCheckVerdict(video.factCheck);
 

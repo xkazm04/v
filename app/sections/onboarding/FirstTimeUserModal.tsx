@@ -33,7 +33,6 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
     categories: ['politics', 'environment', 'military'],
     theme: 'light'
   });
-  const [setIsVisible] = useState(true);
 
   const steps = [
     { title: 'Choose Your Regions', subtitle: 'Where would you like to see fact-checks from?' },
