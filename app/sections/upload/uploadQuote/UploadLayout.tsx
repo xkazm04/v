@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { ResearchForm } from './ResearchForm';
-import { ResearchResults } from './ResearchResults';
-import type { ResearchRequest } from './types';
+import { ResearchResults } from '../ResearchResults';
+import type { ResearchRequest } from '../types';
 import { LLMResearchResponse } from '@/app/types/research';
 
 export default function UploadLayout() {

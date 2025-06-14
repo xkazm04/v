@@ -122,7 +122,7 @@ export default function Home() {
           </div>
 
           {/* Featured News */}
-          <div className="pb-8 px-8">
+          <div className="pb-8 mb-20 px-8">
             <Suspense fallback={<></>}>
               <FeaturedNews />
             </Suspense>

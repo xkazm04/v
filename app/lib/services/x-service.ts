@@ -1,51 +1,14 @@
-export interface TwitterExtractionRequest {
-  tweet_url: string;
-  additional_context?: string;
-  country?: string;
-}
-
-export interface TwitterExtractionResponse {
-  username: string;
-  content: string;
-  posted_at: string;
-  tweet_id: string;
-  tweet_url: string;
-  user_display_name?: string;
-  user_verified: boolean;
-  retweet_count?: number;
-  like_count?: number;
-  reply_count?: number;
-  extraction_method: string;
-}
-
-export interface TwitterResearchResponse {
-  tweet_data: TwitterExtractionResponse;
-  research_result: any;
-  processing_time_seconds: number;
-  research_method: string;
-}
-
-export interface PredefinedTweet {
-  id: string;
-  url: string;
-  preview: {
-    username: string;
-    display_name: string;
-    content: string;
-    verified: boolean;
-    engagement: {
-      likes: number;
-      retweets: number;
-      replies: number;
-    };
-  };
-  category: string;
-  description: string;
-}
+import { 
+  LLMResearchResponse, 
+  ResearchRequest, 
+  TwitterAnalysisRequest, 
+  TwitterExtractionResponse,
+  PredefinedTweet 
+} from '@/app/types/research';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-class XService {
+class ResearchService {
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
     
@@ -74,7 +37,42 @@ class XService {
     return response.json();
   }
 
-  async extractTweet(request: TwitterExtractionRequest): Promise<TwitterExtractionResponse> {
+  // Quote research (existing endpoint)
+  async researchQuote(request: ResearchRequest): Promise<LLMResearchResponse> {
+    try {
+      return await this.request<LLMResearchResponse>('/fc/research', {
+        method: 'POST',
+        body: JSON.stringify({
+          statement: request.statement,
+          source: request.source || 'Unknown',
+          context: request.context || '',
+          datetime: request.datetime || new Date().toISOString(),
+          statement_date: request.statement_date || null,
+          country: request.country || null,
+          category: request.category || null
+        }),
+      });
+    } catch (error: any) {
+      console.error('Failed to research quote:', error);
+      throw new Error(error.message || 'Failed to research quote');
+    }
+  }
+
+  // Twitter research (now returns same format as quote research)
+  async researchTweet(request: TwitterAnalysisRequest): Promise<LLMResearchResponse> {
+    try {
+      return await this.request<LLMResearchResponse>('/x/research', {
+        method: 'POST',
+        body: JSON.stringify(request),
+      });
+    } catch (error: any) {
+      console.error('Failed to research tweet:', error);
+      throw new Error(error.message || 'Failed to research tweet');
+    }
+  }
+
+  // Twitter extraction (separate endpoint for extraction only)
+  async extractTweet(request: TwitterAnalysisRequest): Promise<TwitterExtractionResponse> {
     try {
       return await this.request<TwitterExtractionResponse>('/x/extract', {
         method: 'POST',
@@ -82,23 +80,7 @@ class XService {
       });
     } catch (error: any) {
       console.error('Failed to extract tweet:', error);
-      throw new Error(
-        error.message || 'Failed to extract tweet content'
-      );
-    }
-  }
-
-  async researchTweet(request: TwitterExtractionRequest): Promise<TwitterResearchResponse> {
-    try {
-      return await this.request<TwitterResearchResponse>('/x/research', {
-        method: 'POST',
-        body: JSON.stringify(request),
-      });
-    } catch (error: any) {
-      console.error('Failed to research tweet:', error);
-      throw new Error(
-        error.message || 'Failed to research tweet'
-      );
+      throw new Error(error.message || 'Failed to extract tweet content');
     }
   }
 
@@ -159,6 +141,7 @@ class XService {
     ];
   }
 
+  // Utility methods
   validateTwitterUrl(url: string): boolean {
     if (!url?.trim()) return false;
     
@@ -183,4 +166,9 @@ class XService {
   }
 }
 
-export const xService = new XService();
+export const researchService = new ResearchService();
+
+// Legacy exports for backward compatibility
+export const xService = researchService;
+export type { TwitterAnalysisRequest as TwitterExtractionRequest };
+export type { LLMResearchResponse as TwitterResearchResponse };

@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { Video, Sparkles, PenToolIcon, TwitterIcon } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
-import UploadLayout from "../sections/upload/UploadLayout";
+import UploadLayout from "../sections/upload/uploadQuote/UploadLayout";
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
 import Image from 'next/image';

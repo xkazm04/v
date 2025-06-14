@@ -1,7 +1,7 @@
 'use client';
 
 import { memo, useMemo, useState, useEffect, useRef } from 'react';
-import { VideoCard } from '../VideoCard';
+import { VideoCardLayout } from '../VideoCardLayout';
 import { useVideos, useInfiniteVideos } from '@/app/hooks/useVideos';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { VideoFilters } from '@/app/types/video_api';
@@ -201,7 +201,7 @@ const VideoGrid = memo(function VideoGrid({
         {/* Actual video cards */}
         <AnimatePresence mode="popLayout">
           {videos.slice(0, loadedCount).map((video, index) => (
-            <VideoCard 
+            <VideoCardLayout 
               key={`${video.id}-${index}`}
               video={video} 
               layout={layout}

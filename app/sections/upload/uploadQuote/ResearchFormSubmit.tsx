@@ -3,7 +3,7 @@
 import { Button } from "@/app/components/ui/button";
 import { motion } from "framer-motion";
 import { Loader2, Search } from "lucide-react";
-import { ResearchRequest } from "./types";
+import { ResearchRequest } from "../types";
 
 type Props = {
     formData: ResearchRequest;

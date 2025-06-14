@@ -23,8 +23,6 @@ const headerVariants = {
     transition: {
       duration: 0.4,
       ease: 'easeOut',
-      type: 'spring',
-      stiffness: 300
     }
   },
   exit: {
@@ -39,23 +37,9 @@ export const NewsCardHeader = memo(function NewsCardHeader({
   article,
   layout,
 }: NewsCardHeaderProps) {
-  const { colors, mounted, isDark } = useLayoutTheme();
+  const { colors, isDark } = useLayoutTheme();
   const dateInfo = useMemo(() => formatSafeDate(article.publishedAt), [article.publishedAt]);
   
-  // Enhanced time calculations
-  const timeMetrics = useMemo(() => {
-    const now = Date.now();
-    const publishTime = new Date(article.publishedAt).getTime();
-    const timeDiff = now - publishTime;
-
-    const isRecent = timeDiff < 3600000; // 1 hour
-    const isVeryRecent = timeDiff < 1800000; // 30 minutes
-    const isBreaking = article.isBreaking;
-    const isUrgent = isBreaking && isVeryRecent;
-
-    return { isRecent, isVeryRecent, isBreaking, isUrgent, timeDiff };
-  }, [article.publishedAt, article.isBreaking]);
-
   return (
     <AnimatePresence>
       <motion.div

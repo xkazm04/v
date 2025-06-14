@@ -1,28 +1,30 @@
+
 'use client';
 
 import { useState } from 'react';
-import { xService, TwitterExtractionRequest, TwitterResearchResponse } from '@/app/lib/services/x-service';
+import { TwitterAnalysisRequest, LLMResearchResponse } from '@/app/types/research';
+import { researchService } from '../lib/services/x-service';
 
 interface UseTwitterResearchReturn {
-  researchTweet: (request: TwitterExtractionRequest) => Promise<TwitterResearchResponse>;
+  researchTweet: (request: TwitterAnalysisRequest) => Promise<LLMResearchResponse>;
   isResearching: boolean;
   researchError: string | null;
-  researchData: TwitterResearchResponse | null;
+  researchData: LLMResearchResponse | null;
   resetResearch: () => void;
 }
 
 export function useTwitterResearch(): UseTwitterResearchReturn {
   const [isResearching, setIsResearching] = useState(false);
   const [researchError, setResearchError] = useState<string | null>(null);
-  const [researchData, setResearchData] = useState<TwitterResearchResponse | null>(null);
+  const [researchData, setResearchData] = useState<LLMResearchResponse | null>(null);
 
-  const researchTweet = async (request: TwitterExtractionRequest): Promise<TwitterResearchResponse> => {
+  const researchTweet = async (request: TwitterAnalysisRequest): Promise<LLMResearchResponse> => {
     try {
       setIsResearching(true);
       setResearchError(null);
       setResearchData(null);
 
-      const result = await xService.researchTweet(request);
+      const result = await researchService.researchTweet(request);
       setResearchData(result);
       return result;
       

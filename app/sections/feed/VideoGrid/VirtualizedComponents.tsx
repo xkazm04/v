@@ -3,7 +3,7 @@
 import { memo } from 'react';
 import { FixedSizeGrid as Grid, FixedSizeList } from 'react-window';
 import { motion } from 'framer-motion';
-import { VideoCard } from '../VideoCard';
+import { VideoCardLayout } from '../VideoCardLayout';
 import { Video } from '@/app/types/video_api';
 
 interface VirtualizedListProps {
@@ -33,7 +33,7 @@ export const VirtualizedList = memo(function VirtualizedList({
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.05 }}
     >
-      <VideoCard 
+      <VideoCardLayout 
         video={videos[index]} 
         layout="list" 
         index={index}
@@ -85,7 +85,7 @@ export const VirtualizedGrid = memo(function VirtualizedGrid({
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: index * 0.05 }}
       >
-        <VideoCard 
+        <VideoCardLayout 
           video={video} 
           layout="grid" 
           index={index}

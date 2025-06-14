@@ -5,7 +5,7 @@ import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
 import { Label } from "@radix-ui/react-label";
 import { motion } from "framer-motion";
 import { Calendar, MapPin, User } from "lucide-react";
-import { ResearchRequest } from "./types";
+import { ResearchRequest } from "../types";
 
 type Props = {
     formData: ResearchRequest;

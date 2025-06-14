@@ -158,7 +158,7 @@ const FeaturedNews = memo(({
 
       return `News from ${countryLabels[newsFilters.countryFilter] || newsFilters.countryFilter}`;
     }
-    return 'Latest Fact Checks';
+    return 'Analyzed statements';
   }, [newsFilters, showBreaking]);
 
   return (

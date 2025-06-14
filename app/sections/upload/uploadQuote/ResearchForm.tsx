@@ -2,12 +2,13 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CardContent } from '../../components/ui/card';
-import type { ResearchRequest } from './types';
+import { CardContent } from '../../../components/ui/card';
+import type { ResearchRequest } from '../types';
 import ResearchFormSubmit from './ResearchFormSubmit';
 import ResearchFormContent from './ResearchFormContent';
 import ResearchFormStatement from './ResearchFormStatement';
 import PredefinedStatements from './PredefinedStatements';
+import { scrollDown } from '@/app/components/animations/Scroll';
 
 interface ResearchFormProps {
   onSubmit: (data: ResearchRequest) => Promise<void>;
@@ -73,6 +74,7 @@ export function ResearchForm({ onSubmit, isLoading }: ResearchFormProps) {
         datetime: new Date().toISOString(),
         statement_date: formData.statement_date || undefined
       });
+      scrollDown();
     }
   };
 

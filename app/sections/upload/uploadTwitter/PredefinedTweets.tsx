@@ -65,15 +65,6 @@ const PredefinedTweets: React.FC<PredefinedTweetsProps> = ({
         animate="visible"
         className="space-y-4"
       >
-        <div className="text-center mb-6">
-          <h3 className="text-lg font-semibold mb-2" style={{ color: colors.foreground }}>
-            Select a Predefined Tweet
-          </h3>
-          <p className="text-sm" style={{ color: colors.mutedForeground }}>
-            Choose from examples below to test fact-checking capabilities
-          </p>
-        </div>
-
         <div className="space-y-4 relative">
           {predefinedTweets.map((tweet, index) => (
             <motion.div

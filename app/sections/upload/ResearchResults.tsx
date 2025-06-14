@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare } from 'lucide-react';
 import { ExpertPanel } from './ExpertPanel';
 import { ResourceAnalysisCard } from './ResourceAnalysisCard';
 import ResearchResultsOverview from './ResearchResultsOverview';

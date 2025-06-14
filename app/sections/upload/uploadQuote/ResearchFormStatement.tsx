@@ -1,7 +1,7 @@
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
 import { motion, AnimatePresence } from "framer-motion"
 import { AlertCircle, FileText } from "lucide-react"
-import { ResearchRequest } from "./types";
+import { ResearchRequest } from "../types";
 import { Label } from "@/app/components/ui/label";
 import { Switch } from "@/app/components/ui/switch";
 
@@ -46,19 +46,19 @@ const ResearchFormStatement = ({ formData, handleChange, handleBlur, errors, tou
                         className="text-sm font-medium"
                         style={{ color: colors.mutedForeground }}
                     >
-                        Predefined
+                        Custom
                     </Label>
                     <Switch
                         id="statement-mode-switch"
-                        checked={mode === 'custom'}
-                        onCheckedChange={(checked) => setMode(checked ? 'custom' : 'predefined')}
+                        checked={mode === 'predefined'}
+                        onCheckedChange={(checked) => setMode(checked ? 'predefined' : 'custom')}
                     />
                     <Label 
                         htmlFor="statement-mode-switch" 
                         className="text-sm font-medium"
                         style={{ color: colors.mutedForeground }}
                     >
-                        Custom
+                        Predefined
                     </Label>
                 </div>
             </div>
@@ -141,7 +141,7 @@ const ResearchFormStatement = ({ formData, handleChange, handleBlur, errors, tou
 
             {/* Mode Description */}
             <div 
-                className="text-xs px-3 py-2 rounded-lg border"
+                className="text-xs px-3 py-2 rounded-lg border 2xl:max-w-[50%] max-w-full"
                 style={{
                     borderColor: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(226, 232, 240, 0.4)',
                     background: isDark ? 'rgba(15, 23, 42, 0.3)' : 'rgba(248, 250, 252, 0.5)',

@@ -7,7 +7,6 @@ import { NewsCardHeader } from '@/app/components/news/NewsCardHeader';
 import { FactCheckModal } from '@/app/components/modals/FactCheck/FactCheckModal';
 import NewsCardContent from '@/app/components/news/NewsCardContent';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-import { cn } from '@/app/lib/utils';
 import NewsCardWrapper from './NewsCardWrapper';
 
 interface NewsCardProps {
