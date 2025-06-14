@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Shield, Target } from 'lucide-react';
+import { Shield, Target, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 import { VideoMetadata } from '@/app/types/video';
 import { getVerdictStyling } from '@/app/config/verdictStyling';
 import { cn } from '@/app/lib/utils';
@@ -18,6 +18,22 @@ interface FactCheckBadgeProps {
   isDark: boolean;
 }
 
+const getStatusIcon = (status: string) => {
+  switch (status?.toLowerCase()) {
+    case 'true':
+    case 'verified':
+      return CheckCircle;
+    case 'false':
+    case 'misleading':
+      return XCircle;
+    case 'partially_true':
+    case 'mixed':
+      return AlertTriangle;
+    default:
+      return Shield;
+  }
+};
+
 export function FactCheckBadge({
   factCheckInfo,
   video,
@@ -26,30 +42,29 @@ export function FactCheckBadge({
   isDark
 }: FactCheckBadgeProps) {
   const verdictStyle = factCheckInfo ? getVerdictStyling(factCheckInfo.status, isDark) : null;
-  const VerdictIcon = verdictStyle?.icon || Shield;
+  const VerdictIcon = factCheckInfo ? getStatusIcon(factCheckInfo.status) : Target;
   const { theme } = useTheme();
   const currentTheme = theme === 'light' ? 'light' : 'dark';
 
   return (
     <motion.div
       variants={contentVariants}
-      className="flex items-center space-x-3 flex-1 min-w-0"
+      className="flex items-center space-x-4 flex-1 min-w-0"
     >
       <DynamicBackground
         currentTheme={currentTheme}
-        config={
-          {
-            color: colors.primary,
-            bgGradient: isDark
-              ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)'
-              : 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
-            stampOpacity: '0.1'
-          }
-        }
+        config={{
+          color: colors.primary,
+          bgGradient: isDark
+            ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)'
+            : 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
+          stampOpacity: '0.05'
+        }}
       />
+      
       {factCheckInfo && verdictStyle ? (
         <>
-          {/* Verdict Badge */}
+          {/* Enhanced Verdict Badge */}
           <motion.div
             variants={badgeVariants}
             whileHover="hover"
@@ -57,114 +72,133 @@ export function FactCheckBadge({
           >
             <div
               className={cn(
-                "p-2 rounded-xl backdrop-blur-sm",
-                isMobile ? "p-1.5" : "p-2"
+                "p-3 rounded-2xl backdrop-blur-sm shadow-xl",
+                isMobile ? "p-4" : "p-3"
               )}
               style={{
                 background: `linear-gradient(135deg, ${verdictStyle.bgColor.split(' ')[1]} 0%, ${verdictStyle.bgColor.split(' ')[2]} 100%)`,
-                border: `1px solid rgba(255, 255, 255, 0.2)`
+                border: `2px solid rgba(255, 255, 255, 0.3)`,
+                boxShadow: `0 8px 25px ${verdictStyle.bgColor.split(' ')[1]}40`
               }}
             >
               <VerdictIcon
                 className={cn(
-                  "text-white drop-shadow-sm",
-                  isMobile ? "h-4 w-4" : "h-5 w-5"
+                  "text-white drop-shadow-lg",
+                  isMobile ? "h-7 w-7" : "h-6 w-6"
                 )}
               />
             </div>
 
-            {/* Glow effect */}
+            {/* Enhanced Glow effect */}
             <motion.div
-              className="absolute inset-0 rounded-xl blur-md opacity-50"
+              className="absolute inset-0 rounded-2xl blur-xl opacity-60"
               style={{
                 background: `linear-gradient(135deg, ${verdictStyle.bgColor.split(' ')[1]} 0%, ${verdictStyle.bgColor.split(' ')[2]} 100%)`,
                 zIndex: -1
               }}
               animate={{
-                opacity: [0.3, 0.6, 0.3],
-                scale: [1, 1.1, 1]
+                opacity: [0.4, 0.8, 0.4],
+                scale: [1, 1.2, 1]
               }}
               transition={{
-                duration: 2,
+                duration: 3,
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
             />
           </motion.div>
 
-          {/* Verdict Text */}
+          {/* Enhanced Verdict Text */}
           <div className="flex-1 min-w-0">
             <motion.div
               variants={contentVariants}
-              className="space-y-1"
+              className="space-y-2"
             >
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 <h3
                   className={cn(
-                    "font-bold tracking-wide uppercase",
-                    isMobile ? "text-xs" : "text-md"
+                    "font-black tracking-wider uppercase",
+                    isMobile ? "text-lg" : "text-base"
                   )}
                   style={{ color: colors.foreground }}
                 >
                   {factCheckInfo.status}
                 </h3>
+                
+                {/* Verification Badge */}
                 <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                  className="px-2 py-1 rounded-lg text-xs font-bold uppercase"
+                  style={{
+                    backgroundColor: `${colors.primary}20`,
+                    color: colors.primary,
+                    border: `1px solid ${colors.primary}40`
+                  }}
+                  animate={{ scale: [1, 1.05, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
                 >
-                  <Shield
-                    className={cn(
-                      "opacity-60",
-                      isMobile ? "h-3 w-3" : "h-4 w-4"
-                    )}
-                    style={{ color: colors.primary }}
-                  />
+                  VERIFIED
                 </motion.div>
               </div>
 
-              <p
-                className={cn(
-                  "font-medium",
-                  isMobile ? "text-xs" : "text-md"
-                )}
-                style={{ color: colors.mutedForeground }}
-              >
-                {factCheckInfo.truthPercentage}% accuracy • {video.factCheck?.totalClaims || 0} claims verified
-              </p>
+              <div className="flex items-center space-x-4">
+                <p
+                  className={cn(
+                    "font-semibold",
+                    isMobile ? "text-base" : "text-sm"
+                  )}
+                  style={{ color: colors.mutedForeground }}
+                >
+                  {factCheckInfo.truthPercentage}% accuracy
+                </p>
+                
+                <div className="w-1 h-4 rounded-full" style={{ backgroundColor: colors.border }} />
+                
+                <p
+                  className={cn(
+                    "font-medium",
+                    isMobile ? "text-sm" : "text-xs"
+                  )}
+                  style={{ color: colors.mutedForeground }}
+                >
+                  {video.factCheck?.totalClaims || 0} claims verified
+                </p>
+              </div>
             </motion.div>
           </div>
         </>
       ) : (
-        /* No Fact Check Available */
+        /* Enhanced No Fact Check Available */
         <motion.div
           variants={contentVariants}
-          className="flex items-center space-x-3"
+          className="flex items-center space-x-4"
         >
           <div
             className={cn(
-              "p-2 rounded-xl backdrop-blur-sm",
-              isMobile ? "p-1.5" : "p-2"
+              "p-3 rounded-2xl backdrop-blur-sm shadow-lg",
+              isMobile ? "p-4" : "p-3"
             )}
             style={{
               background: isDark
-                ? 'rgba(71, 85, 105, 0.6)'
-                : 'rgba(148, 163, 184, 0.4)',
-              border: `1px solid rgba(255, 255, 255, 0.2)`
+                ? 'rgba(71, 85, 105, 0.7)'
+                : 'rgba(148, 163, 184, 0.5)',
+              border: `2px solid rgba(255, 255, 255, 0.2)`,
+              boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
             }}
           >
             <Target
               className={cn(
                 "opacity-80",
-                isMobile ? "h-4 w-4" : "h-5 w-5"
+                isMobile ? "h-7 w-7" : "h-6 w-6"
               )}
               style={{ color: colors.mutedForeground }}
             />
           </div>
-          <div className='relative'>
+          
+          <div className="flex-1">
             <h3
               className={cn(
                 "font-bold",
-                isMobile ? "text-xs" : "text-md"
+                isMobile ? "text-lg" : "text-base"
               )}
               style={{ color: colors.foreground }}
             >
@@ -173,7 +207,7 @@ export function FactCheckBadge({
             <p
               className={cn(
                 "font-medium",
-                isMobile ? "text-xs" : "text-md"
+                isMobile ? "text-base" : "text-sm"
               )}
               style={{ color: colors.mutedForeground }}
             >
