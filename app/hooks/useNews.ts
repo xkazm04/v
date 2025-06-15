@@ -1,6 +1,6 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { NewsArticle, convertResearchToNews, ResearchResult } from '@/app/types/article';
-import { MockDataService, demoUtils } from '@/app/services/mockDataService';
+import { MockDataService, demoUtils } from '@/app/lib/services/mockDataService';
 import { useMemo, useEffect } from 'react';
 
 const LOCAL_API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;

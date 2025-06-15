@@ -1,4 +1,4 @@
-import { supabase, supabaseAdmin } from '@/lib/supabase';
+import { supabase, supabaseAdmin } from '@/app/lib/supabase';
 import { ResearchResult, NewsArticle, convertResearchToNews } from '@/app/types/article';
 
 export class ResearchApiService {

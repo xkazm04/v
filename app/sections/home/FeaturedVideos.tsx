@@ -1,7 +1,7 @@
 'use client';
 
-import { memo } from 'react';;
-import { useVideos } from '@/app/hooks/useVideos';
+import { memo } from 'react';
+import { useFeaturedVideos } from '@/app/hooks/useVideos'; 
 import { Loader2, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { VideoGrid } from '../feed/VideoGrid/VideoGrid';
@@ -12,12 +12,7 @@ export const FeaturedVideos = memo(function FeaturedVideos() {
     isLoading, 
     error, 
     refetch 
-  } = useVideos({ 
-    limit: 4,
-    researched: true,
-    sort_by: 'processed_at',
-    sort_order: 'desc'
-  });
+  } = useFeaturedVideos(4); // ✅ Use dedicated hook
 
   // Loading state
   if (isLoading) {
@@ -89,6 +84,9 @@ export const FeaturedVideos = memo(function FeaturedVideos() {
       >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Featured Videos</h2>
+          <div className="text-sm text-muted-foreground">
+            {videos.length} featured videos
+          </div>
         </div>
         <VideoGrid 
           videos={videos} 

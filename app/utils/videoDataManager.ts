@@ -10,31 +10,23 @@ export interface VideoDataManagerOptions {
   sort_by?: string;
   sort_order?: 'asc' | 'desc';
   videoId?: string | null;
+  enableVideosList?: boolean; // ✅ Add option to disable videos list
 }
 
 export interface VideoDataManagerResult {
-  // Data - ALL using VideoWithTimestamps
   videos: VideoWithTimestamps[];
   specificVideo?: VideoWithTimestamps;
-  
-  // Loading states
   videosLoading: boolean;
   videoLoading: boolean;
-  
-  // Error states
   videosError: Error | null;
   videoError: Error | null;
-  
-  // Status
   hasApiData: boolean;
   hasSpecificVideo: boolean;
   isUsingFallback: boolean;
-  
-  // Computed values
+  isUsingMockData: boolean;
+  dataSource: 'api' | 'mock' | 'hybrid' | 'none';
   initialIndex: number;
   enhancedVideos: VideoWithTimestamps[];
-  
-  // Actions
   refetchVideos: () => void;
   refetchVideo: () => void;
 }
@@ -45,19 +37,29 @@ export function useVideoDataManager(options: VideoDataManagerOptions = {}): Vide
     researched = true,
     sort_by = 'processed_at',
     sort_order = 'desc',
-    videoId
+    videoId,
+    enableVideosList = true // ✅ Default to true, but allow disabling
   } = options;
+
+  // ✅ Only fetch videos list if explicitly enabled and we have meaningful filters
+  const videosQueryOptions = useMemo(() => {
+    if (!enableVideosList) return null;
+    
+    return {
+      limit,
+      researched,
+      sort_by,
+      sort_order
+    };
+  }, [enableVideosList, limit, researched, sort_by, sort_order]);
 
   const {
     data: apiVideos,
     isLoading: videosLoading,
     error: videosError,
     refetch: refetchVideos
-  } = useVideos({
-    limit,
-    researched,
-    sort_by,
-    sort_order
+  } = useVideos(videosQueryOptions || {}, {
+    enabled: !!videosQueryOptions && enableVideosList
   });
 
   const {
@@ -65,25 +67,31 @@ export function useVideoDataManager(options: VideoDataManagerOptions = {}): Vide
     isLoading: videoLoading,
     error: videoError,
     refetch: refetchVideo
-  } = useVideoDetail(videoId || '');
+  } = useVideoDetail(videoId || '', {
+    enabled: !!videoId,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false
+  });
 
-  // Simple combination - no conversions needed!
+  // Enhanced video combination with fallback logic
   const videos: VideoWithTimestamps[] = useMemo(() => {
     const combinedVideos: VideoWithTimestamps[] = [];
 
-    // Add API videos if available
-    if (apiVideos && Array.isArray(apiVideos) && apiVideos.length > 0) {
+    // Add API videos if available and enabled
+    if (enableVideosList && apiVideos && Array.isArray(apiVideos) && apiVideos.length > 0) {
       const convertedVideos = apiVideos.map(video => ({
         video,
-        timestamps: [] // Will be populated when individual video is loaded
+        timestamps: []
       }));
       combinedVideos.push(...convertedVideos);
     }
 
-    // Add mock videos as fallback
-    combinedVideos.push(...mockVideos);
+    // Add mock videos as fallback only if we don't have API data or videos list is disabled
+    if (!enableVideosList || !apiVideos || apiVideos.length === 0) {
+      combinedVideos.push(...mockVideos);
+    }
 
-    // Remove duplicates
+    // Remove duplicates (prefer API data over mock)
     const uniqueVideos = combinedVideos.reduce((acc, current) => {
       const exists = acc.find(video => video.video.id === current.video.id);
       if (!exists) {
@@ -93,7 +101,7 @@ export function useVideoDataManager(options: VideoDataManagerOptions = {}): Vide
     }, [] as VideoWithTimestamps[]);
 
     return uniqueVideos;
-  }, [apiVideos]);
+  }, [apiVideos, enableVideosList]);
 
   const initialIndex = useMemo(() => {
     if (!videoId) return 0;
@@ -103,33 +111,47 @@ export function useVideoDataManager(options: VideoDataManagerOptions = {}): Vide
   const enhancedVideos = useMemo(() => {
     if (!specificVideo) return videos;
     
-    // Simple replacement - no conversion needed!
     return videos.map(v =>
       v.video.id === videoId ? specificVideo : v
     );
   }, [videos, specificVideo, videoId]);
 
-  const hasApiData = Boolean(apiVideos && apiVideos.length > 0);
+  // Enhanced status tracking
+  const hasApiData = Boolean(enableVideosList && apiVideos && apiVideos.length > 0);
   const hasSpecificVideo = Boolean(specificVideo);
   const isUsingFallback = Boolean(videosError && !hasApiData);
+  
+  const isUsingMockData = useMemo(() => {
+    if (!specificVideo || !videoId) return false;
+    return mockVideos.some(mock => mock.video.id === videoId);
+  }, [specificVideo, videoId]);
+
+  const dataSource: 'api' | 'mock' | 'hybrid' | 'none' = useMemo(() => {
+    if (!hasSpecificVideo && !hasApiData) return 'none';
+    if (hasApiData && hasSpecificVideo && !isUsingMockData) return 'api';
+    if (!hasApiData && isUsingMockData) return 'mock';
+    if (hasApiData && isUsingMockData) return 'hybrid';
+    return 'hybrid';
+  }, [hasApiData, hasSpecificVideo, isUsingMockData]);
 
   return {
     videos: enhancedVideos,
     specificVideo,
-    videosLoading,
+    videosLoading: enableVideosList ? videosLoading : false,
     videoLoading,
     videosError: videosError as Error | null,
     videoError: videoError as Error | null,
     hasApiData,
     hasSpecificVideo,
     isUsingFallback,
+    isUsingMockData,
+    dataSource,
     initialIndex,
     enhancedVideos,
     refetchVideos,
     refetchVideo
   };
 }
-
 
 export function getVideoCountText(count: number): string {
   return `${count} video${count !== 1 ? 's' : ''}`;

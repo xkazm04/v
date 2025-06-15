@@ -29,18 +29,17 @@ const jetBrainsMono = JetBrains_Mono({
   preload: false,
 });
 
-// Fixed metadata (removed viewport and themeColor)
 export const metadata: Metadata = {
-  title: 'Verify - Political Fact Checking',
+  title: 'Vaai',
   description: 'Don\'t trust, verify. Advanced political fact-checking and analysis platform.',
   keywords: ['fact-check', 'politics', 'verification', 'analysis'],
-  authors: [{ name: 'Verify Team' }],
+  authors: [{ name: 'kazi' }],
   manifest: '/manifest.json',
   robots: 'index, follow',
   openGraph: {
     type: 'website',
     siteName: 'Verify',
-    title: 'Verify - Political Fact Checking',
+    title: 'Vaai - The keeper of truth',
     description: 'Advanced political fact-checking and analysis platform.',
   },
   icons: {

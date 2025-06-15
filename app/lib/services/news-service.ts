@@ -1,5 +1,5 @@
 import { NewsArticle, ResearchResult, convertResearchToNews } from '@/app/types/article';
-import { ResearchApiService } from '@/lib/services/research-api';
+import { ResearchApiService } from '@/app/lib/services/research-api';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 

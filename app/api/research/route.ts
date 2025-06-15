@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ResearchApiService } from '@/lib/services/research-api';
+import { ResearchApiService } from '@/app/lib/services/research-api';
 
 export const dynamic = 'force-dynamic';
 
