@@ -1,201 +1,145 @@
-// app/hooks/useNews.ts
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { ResearchResult } from '@/app/types/article';
-import { MockDataService, demoUtils } from '@/app/lib/services/mockDataService';
-import { useMemo, useEffect } from 'react';
+import { useApiWithPreferences } from './use-api-with-preferences';
 
-const LOCAL_API_BASE = '/api';
-
-async function handleApiResponse(response: Response) {
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`API Error ${response.status}: ${errorText || response.statusText}`);
-  }
-  return response.json();
-}
-
-async function getResearchFromAPI(
-  limit: number = 50,
-  offset: number = 0,
-  status?: string,
-  category?: string,
-  country?: string,
-  source?: string,
-  search?: string
-): Promise<ResearchResult[]> {
-  console.log(`🔍 Fetching research via Next.js API`);
-  
-  const params = new URLSearchParams();
-  
-  // Add pagination
-  params.append('limit', String(limit));
-  params.append('offset', String(offset));
-  
-  // Add filters only if they exist and are not 'all' or 'worldwide'
-  if (status && status !== 'all') params.append('status_filter', status);
-  if (category && category !== 'all') params.append('category_filter', category);
-  if (country && country !== 'all' && country !== 'worldwide') params.append('country_filter', country);
-  if (source && source !== 'all') params.append('source_filter', source);
-  if (search?.trim()) params.append('search_text', search.trim());
-  
-  // Always sort by processed_at desc to get latest research
-  params.append('sort_by', 'processed_at');
-  params.append('sort_order', 'desc');
-
-  const response = await fetch(`${LOCAL_API_BASE}/news?${params.toString()}`, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  
-  const data = await handleApiResponse(response);
-  
-  console.log(`✅ Next.js API returned ${data.results?.length || 0} research results from ${data.results?.[0]?.__meta?.source || 'unknown'} source`);
-  
-  return data.results || [];
-}
-
-interface UseNewsOptions {
+export interface UseNewsFilters {
   limit?: number;
-  onlyFactChecked?: boolean;
-  breaking?: boolean;
   autoRefresh?: boolean;
-  refreshInterval?: number;
   categoryFilter?: string;
+  countryFilter?: string;
   searchText?: string;
   statusFilter?: string;
-  countryFilter?: string;
   sourceFilter?: string;
+  breaking?: boolean;
+  onlyFactChecked?: boolean;
 }
 
-export function useNews({
-  limit = 20,
-  onlyFactChecked = false,
-  breaking = false,
-  autoRefresh = false,
-  refreshInterval = 300000,
-  categoryFilter,
-  searchText,
-  statusFilter,
-  countryFilter,
-  sourceFilter
-}: UseNewsOptions = {}) {
+interface UseNewsReturn {
+  articles: ResearchResult[];
+  loading: boolean;
+  error: string | null;
+  refreshNews: () => void;
+  dataSource: string;
+}
+
+export function useNews(filters: UseNewsFilters = {}): UseNewsReturn {
+  const [articles, setArticles] = useState<ResearchResult[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [dataSource, setDataSource] = useState<string>('none');
   
-  // Add demo indicator when in offline mode
-  useEffect(() => {
-    if (MockDataService.isOfflineMode()) {
-      demoUtils.addDemoIndicator();
-    } else {
-      demoUtils.removeDemoIndicator();
-    }
+  // ✅ **Use universal API client with preferences**
+  const { 
+    fetchWithPreferences, 
+    createUrlWithPreferences,
+    translationTarget,
+    needsTranslation
+  } = useApiWithPreferences();
+  
+  // Stable filter object to prevent unnecessary re-renders
+  const stableFilters = useMemo(() => {
+    const params: Record<string, string> = {};
     
-    return () => {
-      demoUtils.removeDemoIndicator();
-    };
-  }, []);
-
-  // Create stable query key
-  const queryKey = useMemo(() => [
-    'research', 
-    {
-      limit, 
-      onlyFactChecked, 
-      breaking, 
-      categoryFilter: categoryFilter && categoryFilter !== 'all' ? categoryFilter : undefined,
-      searchText: searchText?.trim() || undefined,
-      statusFilter: statusFilter && statusFilter !== 'all' ? statusFilter : undefined,
-      countryFilter: countryFilter && countryFilter !== 'all' && countryFilter !== 'worldwide' ? countryFilter : undefined,
-      sourceFilter: sourceFilter && sourceFilter !== 'all' ? sourceFilter : undefined,
+    if (filters.limit) params.limit = String(filters.limit);
+    if (filters.statusFilter && filters.statusFilter !== 'all') params.status_filter = filters.statusFilter;
+    if (filters.categoryFilter && filters.categoryFilter !== 'all') params.category_filter = filters.categoryFilter;
+    if (filters.countryFilter && 
+        filters.countryFilter !== 'all' && 
+        filters.countryFilter !== 'worldwide') {
+      params.country_filter = filters.countryFilter;
     }
-  ], [limit, onlyFactChecked, breaking, categoryFilter, searchText, statusFilter, countryFilter, sourceFilter]);
+    if (filters.sourceFilter && filters.sourceFilter !== 'all') params.source_filter = filters.sourceFilter;
+    if (filters.searchText?.trim()) params.search_text = filters.searchText.trim();
+    params.sort_by = 'processed_at';
+    params.sort_order = 'desc';
+    
+    return params;
+  }, [
+    filters.limit,
+    filters.statusFilter, 
+    filters.categoryFilter,
+    filters.countryFilter,
+    filters.sourceFilter,
+    filters.searchText
+  ]);
 
-  const query = useQuery({
-    queryKey,
-    queryFn: async (): Promise<ResearchResult[]> => {
-      return getResearchFromAPI(
-        limit,
-        0, // offset
-        statusFilter === 'all' ? undefined : statusFilter,
-        categoryFilter === 'all' ? undefined : categoryFilter,
-        countryFilter === 'all' || countryFilter === 'worldwide' ? undefined : countryFilter,
-        sourceFilter === 'all' ? undefined : sourceFilter,
-        searchText?.trim()
-      );
-    },
-    staleTime: 2 * 60 * 1000, // 2 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    refetchOnWindowFocus: false,
-    refetchInterval: autoRefresh ? refreshInterval : false,
-    refetchIntervalInBackground: false,
-    placeholderData: (previousData) => previousData,
-    retry: (failureCount, error) => {
-      if (error instanceof Error && error.message.includes('4')) {
-        return false;
+  const fetchNews = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // ✅ **Create URL with user preferences automatically applied**
+      const apiUrl = createUrlWithPreferences('/api/news', stableFilters);
+
+      console.log(`🔄 Fetching news with preferences:`, {
+        url: apiUrl,
+        translationTarget: translationTarget || 'none',
+        needsTranslation
+      });
+      
+      // ✅ **Use enhanced fetch with preferences**
+      const response = await fetchWithPreferences(apiUrl, {
+        cache: 'no-store'
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      return failureCount < 2;
-    },
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
-  });
 
-  // Check if data is from offline mode
-  const isOfflineMode = useMemo(() => {
-    return query.data?.some(result => result.__meta?.source === 'mock') || false;
-  }, [query.data]);
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.details || data.error);
+      }
 
-  // Check data source
-  const dataSource = useMemo(() => {
-    if (!query.data || query.data.length === 0) return 'none';
-    const firstResult = query.data[0];
-    return firstResult.__meta?.source || 'unknown';
-  }, [query.data]);
+      const results = Array.isArray(data.results) ? data.results : data;
+      setArticles(results);
+      
+      // Determine data source from response metadata
+      if (data.__meta?.userPreferences) {
+        setDataSource(data.__meta.userPreferences.translationEnabled ? 'translated' : 'original');
+      } else {
+        setDataSource('unknown');
+      }
 
-  return {
-    articles: query.data || [], // ✅ Now ResearchResult[] instead of NewsArticle[]
-    loading: query.isLoading,
-    error: query.error?.message || null,
-    refreshNews: query.refetch,
-    hasMore: (query.data?.length || 0) >= limit,
-    isFetching: query.isFetching,
-    isStale: query.isStale,
-    isOfflineMode,
-    dataSource,
-  };
-}
+      console.log(`✅ Successfully loaded ${results.length} news results`);
+      
+      // ✅ **Log translation status from response**
+      if (data.__meta?.userPreferences?.translationEnabled) {
+        console.log(`🌐 Content translated to: ${data.__meta.userPreferences.translationTarget}`);
+      } else {
+        console.log(`📄 Content in original language (English)`);
+      }
 
-// ✅ **Remove category and country hooks since they're no longer needed**
-
-// Enhanced infinite research
-export function useInfiniteNews({
-  limit = 20,
-  onlyFactChecked = false,
-  breaking = false,
-}: Omit<UseNewsOptions, 'autoRefresh' | 'refreshInterval'> = {}) {
-  return useInfiniteQuery({
-    queryKey: ['research', 'infinite', { limit, onlyFactChecked, breaking }],
-    queryFn: async ({ pageParam = 0 }): Promise<ResearchResult[]> => {
-      const offset = pageParam as number;
-      return getResearchFromAPI(limit, offset);
-    },
-    initialPageParam: 0,
-    getNextPageParam: (lastPage: ResearchResult[], pages) => {
-      return lastPage.length === limit ? pages.length * limit : undefined;
-    },
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
-}
-
-export function useOfflineMode() {
-  return {
-    isOffline: MockDataService.isOfflineMode(),
-    toggle: MockDataService.toggleOfflineMode,
-    enable: () => {
-      localStorage.setItem('demo-offline-mode', 'true');
-      window.location.reload();
-    },
-    disable: () => {
-      localStorage.setItem('demo-offline-mode', 'false');
-      window.location.reload();
+    } catch (err) {
+      console.error('❌ Failed to fetch news:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
+      setArticles([]);
+      setDataSource('error');
+    } finally {
+      setLoading(false);
     }
+  }, [stableFilters, fetchWithPreferences, createUrlWithPreferences, translationTarget, needsTranslation]);
+
+  // Auto-refresh logic
+  useEffect(() => {
+    fetchNews();
+
+    if (filters.autoRefresh) {
+      const interval = setInterval(fetchNews, 5 * 60 * 1000); // 5 minutes
+      return () => clearInterval(interval);
+    }
+  }, [fetchNews, filters.autoRefresh]);
+
+  const refreshNews = useCallback(() => {
+    fetchNews();
+  }, [fetchNews]);
+
+  return {
+    articles,
+    loading,
+    error,
+    refreshNews,
+    dataSource
   };
 }

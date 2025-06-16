@@ -1,3 +1,7 @@
+import { ResearchResult } from "@/app/types/article";
+import { supabaseAdmin } from "../supabase";
+import { translateResearchStatement } from "./translation-service";
+
 export interface SupabaseNewsFilters {
   limit?: number;
   offset?: number;
@@ -8,6 +12,7 @@ export interface SupabaseNewsFilters {
   search?: string;
   sort_by?: string;
   sort_order?: 'asc' | 'desc';
+  translateTo?: string; // ✅ **NEW: Translation target language**
 }
 
 class SupabaseNewsService {
@@ -55,7 +60,7 @@ class SupabaseNewsService {
           profile_id
         `);
 
-      // Apply filters only with strict validation
+      // Apply filters
       if (filters.status && filters.status !== 'all' && filters.status.trim() !== '') {
         query = query.eq('status', filters.status.toUpperCase());
       }
@@ -98,14 +103,14 @@ class SupabaseNewsService {
       }
 
       // Convert to ResearchResult format
-      return data.map((item: any): ResearchResult => ({
+      let results = data.map((item: any): ResearchResult => ({
         id: item.id,
         statement: item.statement || '',
         source: item.source || '',
         context: item.context || '',
         request_datetime: item.request_datetime || item.created_at,
         statement_date: item.statement_date,
-        country: item.country, // Add country field
+        country: item.country,
         valid_sources: item.valid_sources || '',
         verdict: item.verdict || '',
         status: item.status || 'UNVERIFIABLE',
@@ -113,22 +118,81 @@ class SupabaseNewsService {
         experts: this.parseJsonField(item.experts),
         resources_agreed: this.parseJsonField(item.resources_agreed),
         resources_disagreed: this.parseJsonField(item.resources_disagreed),
-        profileId: item.profile_id, // Add profileId field
+        profileId: item.profile_id, 
         processed_at: item.processed_at || item.created_at,
         created_at: item.created_at,
         updated_at: item.updated_at,
         category: item.category
       }));
 
+      // ✅ **NEW: Apply translation if requested**
+      if (filters.translateTo) {
+        console.log(`🌐 Translating ${results.length} statements to ${filters.translateTo}`);
+        results = await this.translateStatements(results, filters.translateTo);
+      }
+
+      return results;
+
     } catch (error) {
+      console.error('Supabase news service error:', error);
       return [];
+    }
+  }
+
+  /**
+   * ✅ **NEW: Translate statements in batch**
+   */
+  private async translateStatements(results: ResearchResult[], targetLanguage: string): Promise<ResearchResult[]> {
+    try {
+      const translationPromises = results.map(async (result) => {
+        if (!result.statement || result.statement.trim() === '') {
+          return result;
+        }
+
+        try {
+          const translatedStatement = await translateResearchStatement(
+            result.statement,
+            'en', // Source language (English)
+            targetLanguage
+          );
+
+          return {
+            ...result,
+            statement: translatedStatement || result.statement, // Fallback to original if translation fails
+            __meta: {
+              ...result.__meta,
+              originalStatement: result.statement, // Keep original for debugging
+              translatedTo: targetLanguage,
+              translationSource: 'lingo-dev'
+            }
+          };
+        } catch (translationError) {
+          console.warn(`Translation failed for statement ${result.id}:`, translationError);
+          return result; // Return original if translation fails
+        }
+      });
+
+      const translatedResults = await Promise.allSettled(translationPromises);
+      
+      return translatedResults.map((result, index) => {
+        if (result.status === 'fulfilled') {
+          return result.value;
+        } else {
+          console.warn(`Translation failed for result ${index}:`, result.reason);
+          return results[index]; // Return original on failure
+        }
+      });
+
+    } catch (error) {
+      console.error('Batch translation failed:', error);
+      return results; // Return original results if batch translation fails
     }
   }
 
   /**
    * Get single research result by ID
    */
-  async getNewsById(id: string): Promise<ResearchResult | null> {
+  async getNewsById(id: string, translateTo?: string): Promise<ResearchResult | null> {
     try {
       const { data, error } = await supabaseAdmin
         .from('research_results')
@@ -140,7 +204,7 @@ class SupabaseNewsService {
         return null;
       }
 
-      return {
+      let result: ResearchResult = {
         id: data.id,
         statement: data.statement || '',
         source: data.source || '',
@@ -161,7 +225,33 @@ class SupabaseNewsService {
         updated_at: data.updated_at,
         category: data.category
       };
+
+      // ✅ **NEW: Translate single result if requested**
+      if (translateTo && result.statement) {
+        try {
+          const translatedStatement = await translateResearchStatement(
+            result.statement,
+            'en',
+            translateTo
+          );
+
+          result = {
+            ...result,
+            statement: translatedStatement || result.statement,
+            __meta: {
+              originalStatement: result.statement,
+              translatedTo: translateTo,
+              translationSource: 'lingo-dev'
+            }
+          };
+        } catch (translationError) {
+          console.warn(`Single translation failed for ${id}:`, translationError);
+        }
+      }
+
+      return result;
     } catch (error) {
+      console.error('Get news by ID error:', error);
       return null;
     }
   }

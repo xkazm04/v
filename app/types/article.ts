@@ -1,3 +1,5 @@
+import { ExpertOpinion, ResourceAnalysis } from "./research";
+
 export type ResearchResult = {
   id: string;
   statement: string;
@@ -13,7 +15,7 @@ export type ResearchResult = {
   experts: ExpertOpinion;
   resources_agreed?: ResourceAnalysis;
   resources_disagreed?: ResourceAnalysis;
-  profileId?: string; 
+  profile_id?: string; 
   processed_at: string;
   created_at: string;
   updated_at: string;
@@ -109,10 +111,10 @@ export function convertResearchToNews(research: ResearchResult): NewsArticle {
       resources_disagreed: research.resources_disagreed
     },
     citation: safeSource,
-    profileId: research.profileId, // Add profileId
+    profileId: research.profile_id, 
     summary: safeVerdict,
     statementDate: research.statement_date,
     researchId: research.id,
-    __meta: research.__meta // Preserve metadata
+    __meta: research.__meta 
   };
 }

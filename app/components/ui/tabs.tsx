@@ -20,7 +20,7 @@ const TabsList = React.forwardRef<
     className={cn(
       'inline-flex items-center justify-center text-muted-foreground relative',
       {
-        'h-12 rounded-xl bg-muted/50 p-1 backdrop-blur-sm border border-border/50': variant === 'default',
+        'h-12 rounded-xl bg-muted/50 p-1 backdrop-blur-sm': variant === 'default',
         'h-auto bg-transparent p-0 gap-2': variant === 'pills',
         'h-auto bg-transparent p-0 border-b border-border': variant === 'underline',
       },

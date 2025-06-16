@@ -7,8 +7,8 @@ import UploadLayout from "../sections/upload/uploadQuote/UploadLayout";
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
 import Image from 'next/image';
-import TwitterForm from '../sections/upload/uploadTwitter/TwitterForm';
 import UploadVideo from '../sections/upload/uploadYouTube/UploadVideo';
+import TwitterLayout from '../sections/upload/uploadTwitter/TwitterLayout';
 
 const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -141,7 +141,7 @@ const Page = () => {
                                     <UploadVideo />
                                 </TabsContent>
                                 <TabsContent value="tweet" className="mt-0 border-0 p-0">
-                                    <TwitterForm />
+                                    <TwitterLayout />
                                 </TabsContent>
                             </GlassContainer>
                         </motion.div>

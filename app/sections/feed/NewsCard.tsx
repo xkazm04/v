@@ -5,6 +5,7 @@ import { NewsCardHeader } from '@/app/components/news/NewsCardHeader';
 import { FactCheckModal } from '@/app/components/modals/FactCheck/FactCheckModal';
 import NewsCardContent from '@/app/components/news/NewsCardContent';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import { useViewport } from '@/app/hooks/useViewport';
 import NewsCardWrapper from './NewsCardWrapper';
 
 interface NewsCardProps {
@@ -21,6 +22,7 @@ const NewsCard = memo(function NewsCard({
   className = ''
 }: NewsCardProps) {
   const { colors, mounted, isDark } = useLayoutTheme();
+  const { isMobile, isDesktop } = useViewport();
   
   if (!research || !research.id) {
     console.warn('NewsCard: research data is missing or invalid', research);
@@ -37,25 +39,32 @@ const NewsCard = memo(function NewsCard({
   const tapCountRef = useRef<number>(0);
   const hasDraggedRef = useRef<boolean>(false);
 
+  // ✅ **REMOVED: Desktop mouse click for card dismissal**
   const handleMouseClick = useCallback((e: React.MouseEvent) => {
-    if (!('ontouchstart' in window) && e.type === 'click') {
-      if (isDragging || hasDraggedRef.current) return; 
-      
-      setDismissType('fade');
-      setIsRead(true);
-      setTimeout(() => {
-        onRead?.(research.id);
-      }, 300);
+    // Only handle mouse clicks on desktop, and only if not dragging
+    if (isDesktop && !isDragging && !hasDraggedRef.current) {
+      // No action on card click - individual elements handle their own clicks
+      e.preventDefault();
     }
-  }, [research.id, onRead, isDragging]);
+  }, [isDesktop, isDragging]);
 
+  // ✅ **REMOVED: Right click for modal - replaced with quote click**
   const handleRightClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    if (isDragging) return;
-    setShowModal(true);
-  }, [isDragging]);
+    // Right click functionality removed
+  }, []);
 
+  // ✅ **NEW: Handle quote click to open modal**
+  const handleQuoteClick = useCallback(() => {
+    if (!isMobile) {
+      setShowModal(true);
+    }
+  }, [isMobile]);
+
+  // ✅ **UPDATED: Mobile double-tap for modal**
   const handleTouchTap = useCallback(() => {
+    if (!isMobile) return;
+    
     if (isDragging || hasDraggedRef.current) return;
     
     const now = Date.now();
@@ -79,7 +88,7 @@ const NewsCard = memo(function NewsCard({
         tapCountRef.current = 0;
       }
     }, 350);
-  }, [isDragging]);
+  }, [isDragging, isMobile]);
 
   const handleSwipeRight = useCallback(() => {
     setDismissType('swipe-right');
@@ -103,7 +112,7 @@ const NewsCard = memo(function NewsCard({
 
   const isCompact = layout === 'compact';
 
-  // Dynamic styling based on research properties
+  // ✅ **UPDATED: Subtle card styling - no hover movement effects**
   const cardStyles = useMemo(() => {
     const baseHeight = isCompact ? 'h-32' : 'h-48';
     
@@ -114,14 +123,12 @@ const NewsCard = memo(function NewsCard({
         : isDark ? '#1e293b' : '#ffffff',
       borderColor: mounted ? colors.border : (isDark ? '#374151' : '#e5e7eb'),
       boxShadow: mounted
-        ? isHovered 
-          ? `0 20px 40px -12px ${isDark ? 'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0.15)'}, 0 0 0 1px ${colors.border}`
-          : `0 4px 12px -2px ${isDark ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.1)'}, 0 0 0 1px ${colors.border}`
+        ? `0 4px 12px -2px ${isDark ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.1)'}, 0 0 0 1px ${colors.border}`
         : isDark 
           ? '0 4px 12px -2px rgba(0, 0, 0, 0.3)' 
           : '0 4px 12px -2px rgba(0, 0, 0, 0.1)'
     };
-  }, [isCompact, colors, mounted, isDark, isHovered]);
+  }, [isCompact, colors, mounted, isDark]);
 
   return (
     <>
@@ -148,7 +155,7 @@ const NewsCard = memo(function NewsCard({
             className={className}
             isDark={isDark}
           >
-            {/* Header with enhanced status badges */}
+            {/* Header with clickable source */}
             <motion.div
               initial={{ y: -10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -162,7 +169,7 @@ const NewsCard = memo(function NewsCard({
               />
             </motion.div>
 
-            {/* Main Content Area */}
+            {/* Main Content Area with clickable quote */}
             <motion.div
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -172,34 +179,16 @@ const NewsCard = memo(function NewsCard({
               <NewsCardContent
                 research={research}
                 isCompact={isCompact}
+                onQuoteClick={handleQuoteClick}
               />
             </motion.div>
 
-            {/* Enhanced Hover Effect Overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: isHovered ? 1 : 0 }}
-              transition={{ duration: 0.3 }}
-              className="absolute inset-0 pointer-events-none z-5"
-              style={{
-                background: isDark
-                  ? `linear-gradient(135deg, 
-                      rgba(59, 130, 246, 0.03) 0%, 
-                      rgba(147, 51, 234, 0.02) 50%, 
-                      rgba(168, 85, 247, 0.03) 100%
-                    )`
-                  : `linear-gradient(135deg, 
-                      rgba(59, 130, 246, 0.02) 0%, 
-                      rgba(147, 51, 234, 0.01) 50%, 
-                      rgba(168, 85, 247, 0.02) 100%
-                    )`
-              }}
-            />
+            {/* ✅ **REMOVED: Hover effect overlay for whole card** */}
 
-            {/* Subtle border glow for important research */}
+            {/* Status-based subtle border glow - static, not animated */}
             {(research.status === 'FALSE' || research.status === 'MISLEADING') && (
-              <motion.div
-                className="absolute inset-0 rounded-xl pointer-events-none"
+              <div
+                className="absolute inset-0 rounded-xl pointer-events-none opacity-30"
                 style={{
                   background: `linear-gradient(45deg, 
                     ${research.status === 'FALSE' 
@@ -214,11 +203,6 @@ const NewsCard = memo(function NewsCard({
                   )`,
                   zIndex: 1
                 }}
-                animate={{
-                  opacity: isHovered ? 0.8 : 0.3,
-                  scale: isHovered ? 1.02 : 1
-                }}
-                transition={{ duration: 0.3 }}
               />
             )}
           </NewsCardWrapper>

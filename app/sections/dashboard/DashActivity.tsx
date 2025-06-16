@@ -70,9 +70,6 @@ const DashActivity = ({ profileId, limit = 10 }: ProfileActivityProps) => {
   // Fetch profile statements
   const { 
     data: statementsResponse, 
-    isLoading, 
-    error, 
-    isError 
   } = useProfileStatements(profileId, { limit, offset: 0 });
 
   const statements = statementsResponse?.data?.statements || [];

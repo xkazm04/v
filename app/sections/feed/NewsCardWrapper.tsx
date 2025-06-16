@@ -1,13 +1,17 @@
+// app/sections/feed/NewsCardWrapper.tsx
 'use client';
 
 import { useCallback, useRef, ReactNode } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from 'framer-motion';
 import { cn } from '@/app/lib/utils';
 import { ResearchResult } from '@/app/types/article';
+import { useViewport } from '@/app/hooks/useViewport';
+import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import NewsCardMobileRead from '@/app/components/news/NewsCardMobileRead';
 
 interface NewsCardWrapperProps {
   children: ReactNode;
-  research: ResearchResult; // Fix: Use ResearchResult instead of NewsArticle
+  research: ResearchResult;
   cardStyles: {
     height: string;
     background: string | undefined;
@@ -24,7 +28,7 @@ interface NewsCardWrapperProps {
   dismissType: 'fade' | 'swipe-right' | null;
   setDismissType: (type: 'fade' | 'swipe-right' | null) => void;
   setIsRead: (read: boolean) => void;
-  onRead?: (researchId: string) => void; // Fix: Use researchId
+  onRead?: (researchId: string) => void;
   handleMouseClick: (e: React.MouseEvent) => void;
   handleRightClick: (e: React.MouseEvent) => void;
   handleTouchTap: () => void;
@@ -33,33 +37,20 @@ interface NewsCardWrapperProps {
   isDark: boolean;
 }
 
+// ✅ **ENHANCED: Card animations with subtle hover glow**
 const cardVariants = {
   hidden: { 
     opacity: 0, 
-    y: 50, 
-    scale: 0.9,
-    rotateX: -10
+    y: 20, 
+    scale: 0.95
   },
   visible: { 
     opacity: 1, 
     y: 0, 
     scale: 1,
-    rotateX: 0,
     transition: {
-      duration: 0.6,
-      ease: [0.25, 0.46, 0.45, 0.94],
-      type: "spring",
-      stiffness: 300,
-      damping: 20
-    }
-  },
-  hover: {
-    y: -8,
-    scale: 1.02,
-    rotateY: 2,
-    transition: {
-      duration: 0.3,
-      ease: "easeOut"
+      duration: 0.4,
+      ease: [0.25, 0.46, 0.45, 0.94]
     }
   },
   tap: {
@@ -68,7 +59,6 @@ const cardVariants = {
   }
 };
 
-// SEPARATED: Mouse click fade animation - no movement
 const fadeOutVariants = {
   exit: {
     opacity: 0,
@@ -81,7 +71,6 @@ const fadeOutVariants = {
   }
 };
 
-// SEPARATED: Swipe right animation - slides to the right
 const swipeRightVariants = {
   exit: {
     opacity: 0,
@@ -97,7 +86,7 @@ const swipeRightVariants = {
 
 const NewsCardWrapper = ({ 
   children, 
-  research, // Fix: Use research instead of article
+  research,
   cardStyles, 
   isRead, 
   isDragging, 
@@ -118,10 +107,12 @@ const NewsCardWrapper = ({
   isDark
 }: NewsCardWrapperProps) => {
   
+  const { isMobile, isTablet, isDesktop } = useViewport();
+  const { colors } = useLayoutTheme();
   const dragStartTimeRef = useRef<number>(0);
   const dragThresholdRef = useRef<boolean>(false);
   
-  // Motion values for swipe animation
+  // Motion values for swipe animation (mobile only)
   const x = useMotionValue(0);
   const opacity = useTransform(x, [-200, 0, 200], [0.5, 1, 0.5]);
   const scale = useTransform(x, [-200, 0, 200], [0.95, 1, 0.95]);
@@ -132,50 +123,67 @@ const NewsCardWrapper = ({
     x,
     [-200, -50, 0, 50, 200],
     [
-      isDark ? 'rgba(239, 68, 68, 0.2)' : 'rgba(220, 38, 38, 0.2)', // Left swipe (cancel)
+      isDark ? 'rgba(239, 68, 68, 0.2)' : 'rgba(220, 38, 38, 0.2)',
       isDark ? 'rgba(239, 68, 68, 0.1)' : 'rgba(220, 38, 38, 0.1)',
-      cardStyles.background, // Center
+      cardStyles.background,
       isDark ? 'rgba(34, 197, 94, 0.1)' : 'rgba(22, 163, 74, 0.1)',
-      isDark ? 'rgba(34, 197, 94, 0.2)' : 'rgba(22, 163, 74, 0.2)' // Right swipe (dismiss)
+      isDark ? 'rgba(34, 197, 94, 0.2)' : 'rgba(22, 163, 74, 0.2)'
     ]
   );
 
-  const handleMouseEnter = useCallback(() => setIsHovered(true), [setIsHovered]);
-  const handleMouseLeave = useCallback(() => setIsHovered(false), [setIsHovered]);
+  const handleMobileRead = useCallback(() => {
+    setDismissType('fade');
+    setIsRead(true);
+    setTimeout(() => {
+      onRead?.(research.id);
+    }, 300);
+  }, [research.id, onRead, setDismissType, setIsRead]);
+
+  const handleMouseEnter = useCallback(() => {
+    if (isDesktop) {
+      setIsHovered(true);
+    }
+  }, [setIsHovered, isDesktop]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (isDesktop) {
+      setIsHovered(false);
+    }
+  }, [setIsHovered, isDesktop]);
 
   const handlePanStart = useCallback(() => {
-    onDragStart();
-    dragStartTimeRef.current = Date.now();
-    dragThresholdRef.current = false;
-  }, [onDragStart]);
+    if (isMobile || isTablet) {
+      onDragStart();
+      dragStartTimeRef.current = Date.now();
+      dragThresholdRef.current = false;
+    }
+  }, [onDragStart, isMobile, isTablet]);
 
   const handlePan = useCallback((event: any, info: PanInfo) => {
-    // Track if we've moved beyond a small threshold (to distinguish from taps)
-    if (Math.abs(info.offset.x) > 10) {
-      dragThresholdRef.current = true;
+    if (isMobile || isTablet) {
+      // Track if we've moved beyond a small threshold (to distinguish from taps)
+      if (Math.abs(info.offset.x) > 10) {
+        dragThresholdRef.current = true;
+      }
     }
-  }, []);
+  }, [isMobile, isTablet]);
 
   const handlePanEnd = useCallback((event: any, info: PanInfo) => {
-    const dragDuration = Date.now() - dragStartTimeRef.current;
-    const velocity = Math.abs(info.velocity.x);
-    const offset = Math.abs(info.offset.x);
+    if (isMobile || isTablet) {
+      const velocity = Math.abs(info.velocity.x);
+      const offset = Math.abs(info.offset.x);
+      const isSwipe = velocity > 500 || offset > 100;
 
-    const isSwipe = velocity > 500 || offset > 100;
-    const hasMoved = dragThresholdRef.current;
+      if (isSwipe && info.offset.x > 50) {
+        handleSwipeRight();
+      } else {
+        x.set(0);
+      }
 
-    if (isSwipe && info.offset.x > 50) {
-      handleSwipeRight();
-    } else if (isSwipe && info.offset.x < -50) {
-      x.set(0);
-    } else {
-      x.set(0);
+      onDragEnd();
     }
+  }, [handleSwipeRight, x, onDragEnd, isMobile, isTablet]);
 
-    onDragEnd();
-  }, [handleSwipeRight, x, onDragEnd]);
-
-  // Determine exit animation based on dismiss type
   const getExitVariant = () => {
     switch (dismissType) {
       case 'fade':
@@ -185,6 +193,32 @@ const NewsCardWrapper = ({
       default:
         return fadeOutVariants.exit;
     }
+  };
+
+  // ✅ **NEW: Enhanced card glow effect**
+  const getCardGlow = () => {
+    if (!isHovered || isMobile) return cardStyles.boxShadow;
+    
+    const baseGlow = isDark 
+      ? `0 8px 32px -8px rgba(0, 0, 0, 0.4), 0 0 0 1px ${colors.border}`
+      : `0 8px 32px -8px rgba(0, 0, 0, 0.15), 0 0 0 1px ${colors.border}`;
+    
+    const primaryGlow = `0 0 24px ${colors.primary}40, 0 0 48px ${colors.primary}20`;
+    
+    // Add status-specific glow for important content
+    if (research.status === 'FALSE') {
+      const statusGlow = isDark 
+        ? '0 0 24px rgba(239, 68, 68, 0.3)' 
+        : '0 0 24px rgba(220, 38, 38, 0.3)';
+      return `${baseGlow}, ${primaryGlow}, ${statusGlow}`;
+    } else if (research.status === 'MISLEADING') {
+      const statusGlow = isDark 
+        ? '0 0 24px rgba(245, 158, 11, 0.3)' 
+        : '0 0 24px rgba(217, 119, 6, 0.3)';
+      return `${baseGlow}, ${primaryGlow}, ${statusGlow}`;
+    }
+    
+    return `${baseGlow}, ${primaryGlow}`;
   };
 
   if (isRead) {
@@ -197,44 +231,73 @@ const NewsCardWrapper = ({
       initial="hidden"
       animate="visible"
       exit={getExitVariant()}
-      whileHover={!isDragging ? "hover" : undefined}
       whileTap={!isDragging ? "tap" : undefined}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={handleMouseClick}
-      onContextMenu={handleRightClick}
-      // Touch/Pan gesture handlers
-      onTap={handleTouchTap}
+      onClick={isDesktop ? handleMouseClick : undefined}
+      onContextMenu={isDesktop ? handleRightClick : undefined}
+      onTap={isMobile || isTablet ? handleTouchTap : undefined}
       onPanStart={handlePanStart}
       onPan={handlePan}
       onPanEnd={handlePanEnd}
-      drag="x"
+      drag={isMobile || isTablet ? "x" : false}
       dragConstraints={{ left: -200, right: 200 }}
       dragElastic={0.2}
       style={{
-        x,
+        x: isMobile || isTablet ? x : 0,
         opacity: isDragging ? opacity : 1,
         scale: isDragging ? scale : 1,
         rotateZ: isDragging ? rotateZ : 0,
         backgroundColor: isDragging ? backgroundColor : cardStyles.background,
-        boxShadow: cardStyles.boxShadow,
         border: `1px solid ${cardStyles.borderColor}`
       }}
+
+      transition={{
+        boxShadow: { duration: 0.3, ease: "easeOut" },
+        borderColor: { duration: 0.3, ease: "easeOut" }
+      }}
       className={cn(
-        'group relative cursor-pointer flex flex-col justify-between',
+        'group relative flex flex-col justify-between',
         cardStyles.height,
         'rounded-xl transition-all duration-300 overflow-hidden transform-gpu',
-        'touch-manipulation select-none', 
+        'touch-manipulation select-none',
         className
       )}
     >
       {children}
 
-      {/* Swipe Indicators - Only show during drag */}
+      {/* ✅ **NEW: Subtle inner glow overlay for hover state** */}
       <AnimatePresence>
-        {isDragging && (
+        {isHovered && !isMobile && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 rounded-xl pointer-events-none"
+            style={{
+              background: `radial-gradient(circle at 50% 0%, 
+                ${colors.primary}08 0%, 
+                transparent 50%
+              )`,
+              zIndex: 5
+            }}
+            transition={{ duration: 0.3 }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Mobile read button */}
+      {isMobile && (
+        <NewsCardMobileRead
+          onMarkRead={handleMobileRead}
+          className="opacity-80 hover:opacity-100"
+        />
+      )}
+
+      {/* Mobile swipe indicators */}
+      <AnimatePresence>
+        {isDragging && (isMobile || isTablet) && (
           <>
-            {/* Right swipe indicator (dismiss) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{
@@ -250,7 +313,6 @@ const NewsCardWrapper = ({
               </div>
             </motion.div>
 
-            {/* Left swipe indicator (cancel) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{
@@ -269,9 +331,9 @@ const NewsCardWrapper = ({
         )}
       </AnimatePresence>
 
-      {/* Drag feedback overlay - Only visible during drag */}
+      {/* Mobile drag feedback overlay */}
       <AnimatePresence>
-        {isDragging && (
+        {isDragging && (isMobile || isTablet) && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: Math.abs(x.get()) > 20 ? 0.8 : 0.3 }}
@@ -291,17 +353,16 @@ const NewsCardWrapper = ({
         )}
       </AnimatePresence>
 
-      {/* Visual hint for interaction methods */}
-      {isHovered && !isDragging && (
+      {/* Mobile interaction hint */}
+      {(isMobile || isTablet) && isHovered && !isDragging && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.6 }}
           exit={{ opacity: 0 }}
-          className="absolute bottom-2 right-2 z-30 pointer-events-none"
+          className="absolute bottom-2 left-2 z-30 pointer-events-none"
         >
           <div className="flex gap-1 text-xs text-slate-400">
-            <span className="hidden sm:inline">Click</span>
-            <span className="sm:hidden">Swipe →</span>
+            <span>Swipe → or tap ✓</span>
           </div>
         </motion.div>
       )}

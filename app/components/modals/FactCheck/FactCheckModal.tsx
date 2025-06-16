@@ -14,7 +14,7 @@ import FactCheckMetadata from './FactCheckMetadata';
 interface FactCheckModalProps {
   isOpen: boolean;
   onClose: () => void;
-  research: ResearchResult; // Fix: Use ResearchResult instead of NewsArticle
+  research: ResearchResult; 
 }
 
 // Transform ResearchResult to LLMResearchResponse format

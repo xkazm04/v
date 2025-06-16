@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTwitterResearch } from '@/app/hooks/useTwitterResearch';
-import { researchService } from '@/app/lib/services/research-service'
 import { TwitterAnalysisRequest, LLMResearchResponse, PredefinedTweet } from '@/app/types/research';
 import TwitterForm from './TwitterForm';
 import { ResearchResults } from '../ResearchResults';
+import { researchService } from '@/app/lib/services/x-service';
 
 const smoothScrollBy = (distance: number, duration: number = 800) => {
   const startY = window.scrollY;
@@ -70,7 +70,7 @@ const TwitterLayout: React.FC = () => {
 
     } catch (error: any) {
       console.error('Twitter research failed:', error);
-      throw error; // Re-throw to let the form handle the error display
+      throw error;
     }
   };
 
@@ -81,7 +81,6 @@ const TwitterLayout: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      {/* Twitter Analysis Form */}
       <TwitterForm 
         onSubmit={handleSubmitResearch}
         isLoading={isResearching}

@@ -1,5 +1,3 @@
-'use client';
-
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Image from 'next/image';
@@ -7,7 +5,7 @@ import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 
 interface FloatingVerdictIconProps {
   /** Size variant for different use cases */
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   /** Confidence score for the ring animation (0-100) */
   confidence?: number;
   /** Custom colors override */
@@ -33,6 +31,12 @@ interface FloatingVerdictIconProps {
 }
 
 const sizeConfig = {
+  xs: {
+    container: 'w-8 h-8',
+    icon: { width: 16, height: 16 },
+    glow: 'blur-md',
+    ring: { r: 14, strokeWidth: 1.5 }
+  },
   sm: {
     container: 'w-12 h-12',
     icon: { width: 24, height: 24 },

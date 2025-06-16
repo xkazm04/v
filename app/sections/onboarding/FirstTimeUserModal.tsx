@@ -1,47 +1,47 @@
-'use client';
-
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from 'next-themes';
-import { 
-  ChevronRight,
-} from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import DynamicBackground from '@/app/components/ui/Decorative/DynamicBackground';
 import OnboardingHeader from './OnboardingHeader';
 import OnboardingSelectionButton from './OnboardingSelectionButton';
+import { useUserPreferences } from '@/app/hooks/use-user-preferences';
 import { CATEGORIES, COUNTRIES, THEMES } from '@/app/constants/onboarding';
-
-interface UserPreferences {
-  countries: string[];
-  categories: string[];
-  theme: 'light' | 'dark';
-}
+import LanguageSelector from '@/app/components/userPreferences/LanguageSelector';
 
 interface FirstTimeUserModalProps {
   isOpen: boolean;
-  onComplete: (preferences: UserPreferences) => void;
+  onComplete: () => void;
   onSkip?: () => void;
 }
 
-
 export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUserModalProps) {
   const { setTheme } = useTheme();
+  const { completeOnboarding } = useUserPreferences();
   const [currentStep, setCurrentStep] = useState(0);
-  const [preferences, setPreferences] = useState<UserPreferences>({
+  
+  // Local state for onboarding preferences
+  const [tempPreferences, setTempPreferences] = useState({
+    language: 'en',
     countries: ['worldwide'],
     categories: ['politics', 'environment', 'military'],
-    theme: 'light'
+    theme: 'light' as 'light' | 'dark'
   });
 
   const steps = [
+    { title: 'Choose Your Language', subtitle: 'Select your preferred language for news content' },
     { title: 'Choose Your Regions', subtitle: 'Where would you like to see fact-checks from?' },
     { title: 'Select Categories', subtitle: 'What topics interest you most?' },
     { title: 'Pick Your Theme', subtitle: 'How would you like the app to look?' },
   ];
 
+  const handleLanguageChange = (language: string) => {
+    setTempPreferences(prev => ({ ...prev, language }));
+  };
+
   const handleCountryToggle = (countryId: string) => {
-    setPreferences(prev => ({
+    setTempPreferences(prev => ({
       ...prev,
       countries: prev.countries.includes(countryId)
         ? prev.countries.filter(id => id !== countryId)
@@ -50,7 +50,7 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
   };
 
   const handleCategoryToggle = (categoryId: string) => {
-    setPreferences(prev => ({
+    setTempPreferences(prev => ({
       ...prev,
       categories: prev.categories.includes(categoryId)
         ? prev.categories.filter(id => id !== categoryId)
@@ -59,7 +59,7 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
   };
 
   const handleThemeSelect = (themeId: 'light' | 'dark') => {
-    setPreferences(prev => ({ ...prev, theme: themeId }));
+    setTempPreferences(prev => ({ ...prev, theme: themeId }));
     setTheme(themeId);
   };
 
@@ -67,7 +67,14 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      onComplete(preferences);
+      // Complete onboarding with all preferences
+      completeOnboarding({
+        language: tempPreferences.language,
+        countries: tempPreferences.countries,
+        categories: tempPreferences.categories,
+        theme: tempPreferences.theme,
+      });
+      onComplete();
     }
   };
 
@@ -77,37 +84,58 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
     }
   };
 
+  const handleSkip = () => {
+    // Complete onboarding with minimal preferences
+    completeOnboarding({
+      language: 'en',
+      countries: ['worldwide'],
+      categories: ['politics'],
+      theme: 'light',
+    });
+    onSkip?.();
+  };
+
   const canProceed = () => {
     switch (currentStep) {
-      case 0: return preferences.countries.length > 0;
-      case 1: return preferences.categories.length > 0;
-      case 2: return true;
+      case 0: return true; // Language always has a default
+      case 1: return tempPreferences.countries.length > 0;
+      case 2: return tempPreferences.categories.length > 0;
+      case 3: return true;
       default: return false;
     }
   };
 
   const getBackgroundConfig = () => ({
-    color: currentStep === 0 ? '#3b82f6' : currentStep === 1 ? '#22c55e' : '#8b5cf6',
+    color: currentStep === 0 ? '#10b981' : currentStep === 1 ? '#3b82f6' : currentStep === 2 ? '#22c55e' : '#8b5cf6',
     bgGradient: `linear-gradient(135deg, 
       rgba(15, 23, 42, 0.95) 0%, 
       rgba(30, 41, 59, 0.98) 30%, 
-      rgba(${currentStep === 0 ? '59, 130, 246' : currentStep === 1 ? '34, 197, 94' : '139, 92, 246'}, 0.15) 100%
+      rgba(${currentStep === 0 ? '16, 185, 129' : currentStep === 1 ? '59, 130, 246' : currentStep === 2 ? '34, 197, 94' : '139, 92, 246'}, 0.15) 100%
     )`,
     stampOpacity: '0.03'
   });
 
-
-
   const renderStepContent = () => {
     switch (currentStep) {
       case 0:
+        return (
+          <LanguageSelector
+            value={tempPreferences.language}
+            onChange={handleLanguageChange}
+            variant="onboarding"
+            label="Content Language"
+            description="News articles will be translated to your preferred language"
+          />
+        );
+      
+      case 1:
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-2xl mx-auto">
             {COUNTRIES.map((country) => (
               <OnboardingSelectionButton
                 key={country.id}
                 item={country}
-                isSelected={preferences.countries.includes(country.id)}
+                isSelected={tempPreferences.countries.includes(country.id)}
                 onClick={() => handleCountryToggle(country.id)}
                 type="country"
               />
@@ -115,14 +143,14 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
           </div>
         );
       
-      case 1:
+      case 2:
         return (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
             {CATEGORIES.map((category) => (
               <OnboardingSelectionButton
                 key={category.id}
                 item={category}
-                isSelected={preferences.categories.includes(category.id)}
+                isSelected={tempPreferences.categories.includes(category.id)}
                 onClick={() => handleCategoryToggle(category.id)}
                 type="category"
               />
@@ -130,14 +158,14 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
           </div>
         );
       
-      case 2:
+      case 3:
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-2xl mx-auto">
             {THEMES.map((theme) => (
               <OnboardingSelectionButton
                 key={theme.id}
                 item={theme}
-                isSelected={preferences.theme === theme.id}
+                isSelected={tempPreferences.theme === theme.id}
                 onClick={() => handleThemeSelect(theme.id as 'light' | 'dark')}
                 type="theme"
               />
@@ -178,18 +206,19 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
             {/* Dynamic Background */}
             <DynamicBackground 
               config={getBackgroundConfig()}
-              currentTheme={preferences.theme}
+              currentTheme={tempPreferences.theme}
             />
+            
             {/* Content */}
             <div className="relative z-20 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm">
               {/* Header */}
               <OnboardingHeader
-                onSkip={onSkip}
+                onSkip={handleSkip}
                 currentStep={currentStep}
                 steps={steps}
                 getBackgroundConfig={getBackgroundConfig}
-                preferences={preferences}
-                />
+                preferences={tempPreferences}
+              />
 
               {/* Step Content */}
               <div className="p-6 md:p-8">
@@ -235,7 +264,7 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
                       backgroundColor: canProceed() ? getBackgroundConfig().color : undefined
                     }}
                   >
-                    {currentStep === steps.length - 1 ? 'Complete' : 'Next'}
+                    {currentStep === steps.length - 1 ? 'Complete Setup' : 'Next'}
                     <ChevronRight className="w-4 h-4 ml-2" />
                   </Button>
                 </div>

@@ -12,23 +12,32 @@ export async function GET(request: NextRequest) {
     
     console.log(`🔍 Research API route called with params:`, Object.fromEntries(searchParams.entries()));
     
-    // Parse filters from search params
+    // Parse filters from search params (including translation)
     const filters = newsService.parseSearchParams(searchParams);
     
-    // Get research results with dual strategy
-    const results = await newsService.getNews(filters);
+    const enhancedFilters = {
+      ...filters,
+      translate_to: 'es'
+    };
+    
+    console.log(`🌐 Translation enabled: English → Spanish`);
+    
+    // Get research results with translation
+    const results = await newsService.getNews(enhancedFilters);
     
     console.log(`✅ Research API returning ${results.length} results in ${Date.now() - startTime}ms`);
     
-    // ✅ **Return ResearchResult array directly**
+    // Return ResearchResult array with translated statements
     return NextResponse.json({
       results,
       count: results.length,
-      filters: filters,
+      filters: enhancedFilters,
       __meta: {
         fetchTime: Date.now() - startTime,
         timestamp: new Date().toISOString(),
-        totalSources: ['supabase', 'backend', 'mock']
+        totalSources: ['supabase', 'backend', 'mock'],
+        translationEnabled: true,
+        targetLanguage: 'es'
       }
     });
 
@@ -39,7 +48,7 @@ export async function GET(request: NextRequest) {
       { 
         error: 'Internal server error',
         details: error instanceof Error ? error.message : 'Unknown error',
-        results: [], // Return empty array to prevent frontend breaks
+        results: [],
         __meta: {
           fetchTime: Date.now() - startTime,
           timestamp: new Date().toISOString(),
