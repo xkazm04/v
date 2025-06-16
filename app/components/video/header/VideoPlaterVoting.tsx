@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { useState } from "react";
 import { ThumbsUp, ThumbsDown, Users } from 'lucide-react';
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
+import { cn } from "@/app/lib/utils";
 
 interface UserFeedback {
   agreed: number;
