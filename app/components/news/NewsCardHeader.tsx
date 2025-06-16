@@ -1,7 +1,6 @@
-'use client';
 import { memo, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NewsArticle } from '@/app/types/article';
+import { ResearchResult } from '@/app/types/article';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
 import { formatSafeDate } from '@/app/helpers/dateHelpers';
@@ -9,7 +8,7 @@ import { Clock } from 'lucide-react';
 import Image from 'next/image';
 
 interface NewsCardHeaderProps {
-  article: NewsArticle;
+  research: ResearchResult;
   layout: 'grid' | 'compact';
   isHovered: boolean;
 }
@@ -34,16 +33,22 @@ const headerVariants = {
 };
 
 export const NewsCardHeader = memo(function NewsCardHeader({
-  article,
+  research,
   layout,
 }: NewsCardHeaderProps) {
   const { colors, isDark } = useLayoutTheme();
-  const dateInfo = useMemo(() => formatSafeDate(article.publishedAt), [article.publishedAt]);
+  const dateInfo = useMemo(() => formatSafeDate(research.processed_at), [research.processed_at]);
+  
+  // Get country flag based on research country
+  // const countryFlag = useMemo(() => {
+  //   const countryCode = research.country?.toLowerCase() || 'us';
+  //   return `/countries/country_${countryCode}.svg`;
+  // }, [research.country]);
   
   return (
     <AnimatePresence>
       <motion.div
-        key="news-header"
+        key="research-header"
         variants={headerVariants}
         initial="hidden"
         animate="visible"
@@ -56,8 +61,8 @@ export const NewsCardHeader = memo(function NewsCardHeader({
         {/* Country Flag Background */}
         <div className="absolute -right-20 inset-0 z-0">
           <Image
-            src="/countries/country_usa.svg"
-            alt={`${article.source.name} country flag`}
+            src={'/countries/country_usa.svg'} 
+            alt={`Flag of ${research.country || 'Unknown'}`}
             fill
             className={cn(
               "object-contain",
@@ -68,21 +73,10 @@ export const NewsCardHeader = memo(function NewsCardHeader({
             }}
           />
         </div>
+        
         <div className="relative z-10 w-full flex items-center justify-between">
           {/* Left Side - Source */}
           <div className="flex items-center space-x-2 min-w-0 flex-1">
-            {article.source.logoUrl && (
-              <motion.img
-                src={article.source.logoUrl}
-                alt={article.source.name}
-                className={cn(
-                  "w-4 h-4 rounded-sm object-cover flex-shrink-0",
-                  "ring-1 ring-white/20"
-                )}
-                whileHover={{ scale: 1.1 }}
-                transition={{ duration: 0.2 }}
-              />
-            )}
             <span
               className={cn(
                 "text-sm font-semibold truncate",
@@ -95,7 +89,7 @@ export const NewsCardHeader = memo(function NewsCardHeader({
                   : '0 1px 2px rgba(255,255,255,0.8)'
               }}
             >
-              {article.source.name}
+              {research.source}
             </span>
           </div>
 

@@ -1,52 +1,51 @@
+// app/api/news/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { newsService } from '@/app/lib/services/news-service';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
+  const startTime = Date.now();
+  
   try {
     const { searchParams } = new URL(request.url);
     
-    // Create a simple object to check for search parameters
-    const paramObject = {
-      search_text: searchParams.get('search_text'),
-      status_filter: searchParams.get('status_filter'),
-      country_filter: searchParams.get('country_filter'),
-      category_filter: searchParams.get('category_filter'),
-      source_filter: searchParams.get('source_filter')
-    };
-
-    // Determine if this is a search request or general news request
-    if (newsService.isSearchRequest(paramObject)) {
-      // Handle search request
-      const searchFilters = newsService.parseSearchParams(searchParams);
-      const articles = await newsService.searchResearch(searchFilters);
-      return NextResponse.json(articles);
-    } else {
-      // Handle general recent news request
-      const recentNewsFilters = newsService.parseRecentNewsParams(searchParams);
-      const articles = await newsService.getRecentNews(recentNewsFilters);
-      return NextResponse.json(articles);
-    }
-  } catch (error) {
-    console.error('News API error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' }, 
-      { status: 500 }
-    );
-  }
-}
-
-// Optional: Add other HTTP methods if needed
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    // Handle POST requests if needed
-    // Example: Create news, update news, etc.
+    console.log(`🔍 Research API route called with params:`, Object.fromEntries(searchParams.entries()));
     
-    return NextResponse.json({ message: 'POST endpoint not implemented yet' }, { status: 501 });
+    // Parse filters from search params
+    const filters = newsService.parseSearchParams(searchParams);
+    
+    // Get research results with dual strategy
+    const results = await newsService.getNews(filters);
+    
+    console.log(`✅ Research API returning ${results.length} results in ${Date.now() - startTime}ms`);
+    
+    // ✅ **Return ResearchResult array directly**
+    return NextResponse.json({
+      results,
+      count: results.length,
+      filters: filters,
+      __meta: {
+        fetchTime: Date.now() - startTime,
+        timestamp: new Date().toISOString(),
+        totalSources: ['supabase', 'backend', 'mock']
+      }
+    });
+
   } catch (error) {
-    console.error('News API POST error:', error);
+    console.error('💥 Research API error:', error);
+    
     return NextResponse.json(
-      { error: 'Internal server error' }, 
+      { 
+        error: 'Internal server error',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        results: [], // Return empty array to prevent frontend breaks
+        __meta: {
+          fetchTime: Date.now() - startTime,
+          timestamp: new Date().toISOString(),
+          source: 'error'
+        }
+      },
       { status: 500 }
     );
   }

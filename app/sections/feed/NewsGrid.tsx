@@ -1,14 +1,14 @@
-'use client';
 
-import { memo, useState, useCallback, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { NewsArticle } from '@/app/types/article';
+import { memo, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ResearchResult } from '@/app/types/article';
 import { NewsCard } from './NewsCard';
+import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+
 interface NewsGridProps {
-  articles: NewsArticle[];
-  layout?: 'grid' | 'compact';
-  columns?: 2 | 3 | 4 | 5;
+  articles: ResearchResult[]; // Fix: Use ResearchResult
   onArticleRead?: (articleId: string) => void;
+  layout?: 'grid' | 'compact';
   className?: string;
 }
 
@@ -23,62 +23,108 @@ const containerVariants = {
   }
 };
 
-const NewsGrid = memo(function NewsGrid({ 
-  articles, 
-  layout = 'grid',
-  columns = 4,
+const itemVariants = {
+  hidden: { 
+    opacity: 0, 
+    y: 30,
+    scale: 0.95
+  },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.4,
+      ease: 'easeOut'
+    }
+  }
+};
+
+const NewsGrid = memo(function NewsGrid({
+  articles,
   onArticleRead,
+  layout = 'grid',
   className = ''
 }: NewsGridProps) {
-  const [readArticles, setReadArticles] = useState<Set<string>>(new Set());
+  const { colors } = useLayoutTheme();
 
   const handleArticleRead = useCallback((articleId: string) => {
-    setReadArticles(prev => new Set(prev).add(articleId));
     onArticleRead?.(articleId);
   }, [onArticleRead]);
 
-  const visibleArticles = useMemo(() => 
-    articles.filter(article => !readArticles.has(article.id)),
-    [articles, readArticles]
-  );
-
-  const getGridCols = () => {
-    const colsMap = {
-      2: 'grid-cols-1 sm:grid-cols-2',
-      3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2',
-      4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3',
-      5: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 mx-[15%]'
-    };
-    return colsMap[columns] || colsMap[4];
-  };
-
-  const gapClass = layout === 'compact' ? 'gap-3' : 'gap-4 md:gap-6';
-
-  if (visibleArticles.length === 0) {
+  // ✅ **FIX: Add proper data validation**
+  if (!Array.isArray(articles)) {
+    console.warn('NewsGrid: articles is not an array', articles);
     return (
-      <div className="text-center py-12 text-gray-500">
-        No more articles to display
+      <div className="text-center py-8">
+        <p style={{ color: colors.mutedForeground }}>
+          Invalid data format received
+        </p>
       </div>
     );
   }
 
+  if (articles.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p style={{ color: colors.mutedForeground }}>
+          No research results found
+        </p>
+      </div>
+    );
+  }
+
+  // ✅ **FIX: Filter out invalid research data**
+  const validArticles = articles.filter(article => 
+    article && 
+    typeof article === 'object' && 
+    article.id && 
+    article.statement
+  );
+
+  if (validArticles.length === 0) {
+    console.warn('NewsGrid: No valid articles found', articles);
+    return (
+      <div className="text-center py-8">
+        <p style={{ color: colors.mutedForeground }}>
+          No valid research results available
+        </p>
+      </div>
+    );
+  }
+
+  if (validArticles.length < articles.length) {
+    console.warn(`NewsGrid: Filtered out ${articles.length - validArticles.length} invalid articles`);
+  }
+
   return (
     <motion.div
+      className={`grid gap-4 sm:gap-6 ${
+        layout === 'compact' 
+          ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
+          : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4'
+      } ${className}`}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className={`
-        grid ${getGridCols()} ${gapClass} ${className} max-w-[1600px]
-      `}
     >
-      {visibleArticles.map((article) => (
-        <NewsCard
-          key={article.id}
-          article={article}
-          layout={layout}
-          onRead={handleArticleRead}
-        />
-      ))}
+      <AnimatePresence>
+        {validArticles.map((research, index) => (
+          <motion.div
+            key={`${research.id}-${index}`} // Use index as fallback for uniqueness
+            variants={itemVariants}
+            layout
+            className="flex"
+          >
+            <NewsCard
+              research={research}
+              layout={layout}
+              onRead={handleArticleRead}
+              className="w-full"
+            />
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </motion.div>
   );
 });

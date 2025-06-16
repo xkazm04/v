@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { Filter } from 'lucide-react';
 import { cn } from '@/app/lib/utils';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-import { useCategoryCounts } from '@/app/hooks/useNews';
 import { useFilterStore, useSelectedCategories } from '@/app/stores/filterStore';
 import Categories from './Categories';
 
@@ -28,13 +27,6 @@ export function CategoryFilter({
   const selectedCategories = useSelectedCategories();
   const { setSelectedCategories, toggleCategory } = useFilterStore();
   
-  // Enhanced error handling for category counts
-  const { 
-    data: categoryCounts, 
-    isLoading: countsLoading, 
-    error: countsError,
-    isError: hasCountsError 
-  } = useCategoryCounts();
 
   const handleCategoryClick = useCallback((categoryId: string) => {
     if (allowMultiSelect) {
@@ -65,39 +57,6 @@ export function CategoryFilter({
       : '0 8px 32px rgba(0, 0, 0, 0.1)'
   };
 
-  // Show loading state for initial load
-  if (countsLoading && !categoryCounts) {
-    return (
-      <motion.div 
-        className={cn("p-4", className)}
-        style={containerStyles}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="flex items-center justify-center py-8">
-          <div className="flex items-center space-x-3">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            >
-              <Filter 
-                className="h-5 w-5" 
-                style={{ color: colors.primary }}
-              />
-            </motion.div>
-            <span 
-              className="text-sm"
-              style={{ color: colors.mutedForeground }}
-            >
-              Loading categories...
-            </span>
-          </div>
-        </div>
-      </motion.div>
-    );
-  }
-
   return (
     <motion.div 
       className={cn("p-4 space-y-4", className)}
@@ -106,24 +65,10 @@ export function CategoryFilter({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Error State for Categories */}
-      {hasCountsError && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center py-4"
-        >
-          <span 
-            className="text-xs"
-            style={{ color: colors.mutedForeground }}
-          >
-            Categories temporarily unavailable
-          </span>
-        </motion.div>
-      )}
+
 
       {/* Categories */}
-      <Categories
+      {/* <Categories
         categoryCounts={categoryCounts || {}}
         selectedCategories={selectedCategories}
         handleCategoryClick={handleCategoryClick}
@@ -131,7 +76,7 @@ export function CategoryFilter({
         showCounts={showCounts && !countsLoading && !hasCountsError}
         countsLoading={countsLoading}
         pendingSelection={null}
-      />
+      /> */}
     </motion.div>
   );
 }

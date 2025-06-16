@@ -1,15 +1,13 @@
-'use client';
-
-import { memo, useState } from 'react';
+import { memo, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { NewsArticle } from '@/app/types/article';
+import { ResearchResult } from '@/app/types/article';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
 import { Divider } from '../ui/divider';
 
 interface NewsCardContentProps {
   isCompact?: boolean;
-  article: NewsArticle;
+  research: ResearchResult;
 }
 
 const contentVariants = {
@@ -36,16 +34,25 @@ const itemVariants = {
 
 const NewsCardContent = memo(function NewsCardContent({
   isCompact = false,
-  article,
+  research,
 }: NewsCardContentProps) {
-  const { mounted } = useLayoutTheme();
   const [isExpanded, setIsExpanded] = useState(false);
+  const { colors } = useLayoutTheme();
+  
   const maxLength = isCompact ? 120 : 200;
-  const shouldTruncate = article.headline.length > maxLength;
-  const displayText = isExpanded || !shouldTruncate
-    ? article.headline
-    : `${article.headline.slice(0, maxLength)}...`;
+  const shouldTruncate = useMemo(() => {
+    return (research.statement?.length || 0) > maxLength;
+  }, [research.statement, maxLength]);
 
+  const displayText = useMemo(() => {
+    if (!research.statement) return 'No statement available';
+    
+    if (isExpanded || !shouldTruncate) {
+      return research.statement;
+    }
+    
+    return `${research.statement.slice(0, maxLength)}...`;
+  }, [research.statement, isExpanded, shouldTruncate, maxLength]);
 
   return (
     <motion.div
@@ -59,37 +66,38 @@ const NewsCardContent = memo(function NewsCardContent({
         className="flex flex-col items-start justify-between flex-1"
         variants={itemVariants}
       >
-        <div>
+        <div className="w-full">
           <blockquote
             className={cn(
-              "font-medium leading-relaxed transition-all duration-300 cursor-pointer line-clamp-5",
+              "font-medium leading-relaxed transition-all duration-300 line-clamp-5",
               isCompact ? 'text-sm' : 'md:text-sm lg:text-base 2xl:text-lg',
+              shouldTruncate ? 'cursor-pointer hover:text-opacity-80' : ''
             )}
             style={{
-              fontFamily: "'Georgia', 'Times New Roman', serif" // Newspaper-like font
+              fontFamily: "'Georgia', 'Times New Roman', serif",
+              color: colors.foreground
             }}
             onClick={() => shouldTruncate && setIsExpanded(!isExpanded)}
           >
-            <motion.span
-              className="relative"
-            >
+            <motion.span className="relative">
               "{displayText}"
             </motion.span>
           </blockquote>
-
         </div>
       </motion.div>
 
-      <Divider 
-        variant='glow' />
+      <Divider variant='glow' />
 
-      {/* Bottom Section */}
-      {article.factCheck.verdict && <motion.div
-        className="text-xs font-thin line-clamp-2"
-        variants={itemVariants}
-      >
-        {article.factCheck.verdict}
-      </motion.div>}
+      {/* Bottom Section - Verdict */}
+      {research.verdict && (
+        <motion.div
+          className="text-xs font-thin line-clamp-2 mt-2"
+          variants={itemVariants}
+          style={{ color: colors.mutedForeground }}
+        >
+          {research.verdict}
+        </motion.div>
+      )}
     </motion.div>
   );
 });

@@ -1,30 +1,3 @@
-export type ExpertOpinion = {
-  critic?: string;
-  devil?: string;
-  nerd?: string;
-  psychic?: string;
-};
-
-export type ResourceReference = {
-  url: string;
-  title: string;
-  category: 'mainstream' | 'governance' | 'academic' | 'medical' | 'other';
-  country: string;
-  credibility: 'high' | 'medium' | 'low';
-};
-
-export type ResourceAnalysis = {
-  total: string; // e.g., "85%"
-  count: number;
-  mainstream: number;
-  governance: number;
-  academic: number;
-  medical: number;
-  other: number;
-  major_countries: string[];
-  references: ResourceReference[];
-};
-
 export type ResearchResult = {
   id: string;
   statement: string;
@@ -32,6 +5,7 @@ export type ResearchResult = {
   context: string;
   request_datetime: string;
   statement_date?: string;
+  country?: string; // Add country field
   valid_sources: string;
   verdict: string;
   status: 'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE' | 'UNVERIFIABLE';
@@ -39,11 +13,18 @@ export type ResearchResult = {
   experts: ExpertOpinion;
   resources_agreed?: ResourceAnalysis;
   resources_disagreed?: ResourceAnalysis;
+  profileId?: string; 
   processed_at: string;
   created_at: string;
   updated_at: string;
   resources?: string[]; // Legacy URLs from view
   category?: string; // Added for better category filtering
+  __meta?: {
+    source?: string;
+    fetchTime?: number;
+    timestamp?: string;
+    warning?: string;
+  };
 };
 
 export type NewsArticle = {
@@ -54,6 +35,7 @@ export type NewsArticle = {
     logoUrl?: string;
   };
   category: string;
+  country?: string; // Add country field
   datePublished: string;
   truthScore: number; // 0 to 1
   isBreaking: boolean;
@@ -67,9 +49,16 @@ export type NewsArticle = {
     resources_disagreed?: ResourceAnalysis;
   };
   citation: string;
+  profileId?: string; 
   summary: string;
   statementDate?: string;
   researchId?: string; // Link to research_results table
+  __meta?: {
+    source?: string;
+    fetchTime?: number;
+    timestamp?: string;
+    warning?: string;
+  };
 };
 
 // Enhanced utility function with better error handling
@@ -106,6 +95,7 @@ export function convertResearchToNews(research: ResearchResult): NewsArticle {
       logoUrl: undefined
     },
     category: research.category || 'general', // Use category from research
+    country: research.country, // Add country field
     datePublished: research.statement_date || research.processed_at || new Date().toISOString(),
     truthScore: statusToScore[safeStatus as keyof typeof statusToScore] || 0.5,
     isBreaking: safeStatus === 'FALSE' || safeStatus === 'MISLEADING',
@@ -119,8 +109,10 @@ export function convertResearchToNews(research: ResearchResult): NewsArticle {
       resources_disagreed: research.resources_disagreed
     },
     citation: safeSource,
+    profileId: research.profileId, // Add profileId
     summary: safeVerdict,
     statementDate: research.statement_date,
-    researchId: research.id
+    researchId: research.id,
+    __meta: research.__meta // Preserve metadata
   };
 }

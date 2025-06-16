@@ -2,10 +2,10 @@
   {
     "id": "d8e2c85f-280a-4e35-90eb-a6b0ba4a24b5",
     "statement": "Mr. Trump on Truth Social upped the ante with, \"Elon was wearing thin. I asked him to leave. I took away his EV mandate that forced everyone to buy electric cars that nobody else wanted (that he knew for months I was going to do) and he just went crazy.\"",
-    "source": "Unknown Speaker",
+    "source": "Donald Trump",
     "context": "The speaker quotes Donald Trump's response to Elon Musk's criticism.",
     "request_datetime": "2025-06-09T11:00:39.589578Z",
-    "statement_date": null,
+    "statement_date": "2025-06-08T15:30:00.000Z",
     "country": "US",
     "category": "politics",
     "valid_sources": "60% (across 10 unique sources)",
@@ -15,7 +15,7 @@
     "resources_agreed": {
       "count": 6,
       "other": 1,
-      "total": "80%",
+      "total": "60%",
       "medical": 0,
       "academic": 0,
       "governance": 2,
@@ -34,25 +34,18 @@
           "country": "us",
           "category": "mainstream",
           "credibility": "high"
-        },
-        {
-          "url": "https://www.bloomberg.com/news/articles/2022-04-12/trump-administration-moves-to-roll-back-ev-mandates",
-          "title": "Bloomberg: Trump Administration Moves to Roll Back EV Mandates",
-          "country": "us",
-          "category": "mainstream",
-          "credibility": "high"
         }
       ],
       "major_countries": ["us"]
     },
     "resources_disagreed": {
-      "count": 2,
+      "count": 4,
       "other": 1,
-      "total": "20%",
+      "total": "40%",
       "medical": 0,
       "academic": 0,
       "governance": 0,
-      "mainstream": 1,
+      "mainstream": 3,
       "references": [
         {
           "url": "https://www.independent.org/newsroom/analysis/does-elon-musk-support-ev-mandates",
@@ -72,16 +65,15 @@
     },
     "processed_at": "2025-06-09T11:00:54.466616Z",
     "created_at": "2025-06-09T11:00:55.270185Z",
-    "updated_at": "2025-06-09T11:00:55.270185Z",
-    "confidence_score": 70
+    "updated_at": "2025-06-09T11:00:55.270185Z"
   },
   {
     "id": "e6a954ba-f9c4-4a29-8bc5-3a846f8a8e41",
     "statement": "Inflation is caused by businesses not government.",
     "source": "Alberto Fernández",
-    "context": "Economic address",
-    "request_datetime": "2025-06-02T00:29:06.73Z",
-    "statement_date": "2021-08-01",
+    "context": "Economic address regarding inflation causes",
+    "request_datetime": "2025-06-02T00:29:06.730Z",
+    "statement_date": "2021-08-01T14:00:00.000Z",
     "country": "AR",
     "category": "economy",
     "valid_sources": "85% (across 20 unique sources)",
@@ -89,6 +81,25 @@
     "status": "MISLEADING",
     "correction": "Inflation is caused by a combination of factors including monetary policy (government), demand and supply imbalances, and business practices.",
     "resources_agreed": {
+      "count": 3,
+      "other": 1,
+      "total": "15%",
+      "medical": 0,
+      "academic": 1,
+      "governance": 0,
+      "mainstream": 1,
+      "references": [
+        {
+          "url": "https://www.cato.org/public-policy/fiscal-policy/the-cato-institute-monetary-policy-report-june-2022",
+          "title": "Cato Institute: Monetary Policy Report",
+          "country": "us",
+          "category": "other",
+          "credibility": "medium"
+        }
+      ],
+      "major_countries": ["us"]
+    },
+    "resources_disagreed": {
       "count": 17,
       "other": 2,
       "total": "85%",
@@ -114,25 +125,6 @@
       ],
       "major_countries": ["us", "gb", "de"]
     },
-    "resources_disagreed": {
-      "count": 3,
-      "other": 1,
-      "total": "15%",
-      "medical": 0,
-      "academic": 1,
-      "governance": 0,
-      "mainstream": 1,
-      "references": [
-        {
-          "url": "https://www.cato.org/public-policy/fiscal-policy/the-cato-institute-monetary-policy-report-june-2022",
-          "title": "Cato Institute: Monetary Policy Report",
-          "country": "us",
-          "category": "other",
-          "credibility": "medium"
-        }
-      ],
-      "major_countries": ["us"]
-    },
     "experts": {
       "nerd": "Empirical evidence shows that inflation is often a multifactorial phenomenon. According to the IMF, 'the most relevant factors [for inflation] are the growth rate of the money supply, the velocity of money, and the output gap.' These factors are influenced by both government policy and business practices.",
       "devil": "While it's true that businesses play a role in price-setting, saying inflation is not caused by government overlooks the significant impact of fiscal and monetary policies. A nuanced view recognizes the interplay between business practices and government actions.",
@@ -141,8 +133,7 @@
     },
     "processed_at": "2025-06-02T00:29:09.565959Z",
     "created_at": "2025-06-02T00:29:10.387163Z",
-    "updated_at": "2025-06-02T00:29:10.387163Z",
-    "confidence_score": 70
+    "updated_at": "2025-06-02T00:29:10.387163Z"
   },
   {
     "id": "efd21884-4494-40dd-a436-d7cc0734437b",
@@ -150,7 +141,7 @@
     "source": "Andrej Babiš",
     "context": "Multiple denials over many years regarding his alleged past as an StB agent 'Bureš'. Slovak courts ultimately ruled against him.",
     "request_datetime": "2025-06-05T15:39:01.722Z",
-    "statement_date": "2020-06-05",
+    "statement_date": "2020-06-05T12:00:00.000Z",
     "country": "CZ",
     "category": "politics",
     "valid_sources": "85% (across 20 unique sources)",
@@ -203,8 +194,7 @@
     },
     "processed_at": "2025-06-05T15:39:06.515745Z",
     "created_at": "2025-06-05T15:39:06.867258Z",
-    "updated_at": "2025-06-05T15:39:06.867258Z",
-    "confidence_score": 70
+    "updated_at": "2025-06-05T15:39:06.867258Z"
   },
   {
     "id": "a1b2c3d4-5e6f-7g8h-9i0j-k1l2m3n4o5p6",
@@ -212,7 +202,7 @@
     "source": "Donald Trump",
     "context": "Tweet from 2012, repeatedly referenced in political discourse",
     "request_datetime": "2025-06-01T14:22:15.123Z",
-    "statement_date": "2012-11-06",
+    "statement_date": "2012-11-06T18:00:00.000Z",
     "country": "US",
     "category": "environment",
     "valid_sources": "95% (across 30 unique sources)",
@@ -220,6 +210,25 @@
     "status": "FALSE",
     "correction": "Climate change is supported by 97% of actively publishing climate scientists and major scientific organizations globally. It is not a conspiracy by any country.",
     "resources_agreed": {
+      "count": 2,
+      "other": 2,
+      "total": "5%",
+      "medical": 0,
+      "academic": 0,
+      "governance": 0,
+      "mainstream": 0,
+      "references": [
+        {
+          "url": "https://www.heartland.org/topics/climate-change/",
+          "title": "Heartland Institute Climate Position",
+          "country": "us",
+          "category": "other",
+          "credibility": "low"
+        }
+      ],
+      "major_countries": ["us"]
+    },
+    "resources_disagreed": {
       "count": 28,
       "other": 2,
       "total": "95%",
@@ -245,25 +254,6 @@
       ],
       "major_countries": ["us", "gb", "de", "fr", "ca", "au"]
     },
-    "resources_disagreed": {
-      "count": 2,
-      "other": 2,
-      "total": "5%",
-      "medical": 0,
-      "academic": 0,
-      "governance": 0,
-      "mainstream": 0,
-      "references": [
-        {
-          "url": "https://www.heartland.org/topics/climate-change/",
-          "title": "Heartland Institute Climate Position",
-          "country": "us",
-          "category": "other",
-          "credibility": "low"
-        }
-      ],
-      "major_countries": ["us"]
-    },
     "experts": {
       "nerd": "The scientific consensus on climate change is supported by multiple lines of evidence including temperature records, ice core data, satellite measurements, and computer models. The notion of it being a 'hoax' contradicts decades of peer-reviewed research.",
       "devil": "While China may benefit economically from green technology investments, this doesn't make climate change a conspiracy. Many countries, including the US, also lead in renewable energy innovation and deployment.",
@@ -272,8 +262,7 @@
     },
     "processed_at": "2025-06-01T14:22:25.891234Z",
     "created_at": "2025-06-01T14:22:26.123456Z",
-    "updated_at": "2025-06-01T14:22:26.123456Z",
-    "confidence_score": 95
+    "updated_at": "2025-06-01T14:22:26.123456Z"
   },
   {
     "id": "b2c3d4e5-6f7g-8h9i-0j1k-l2m3n4o5p6q7",
@@ -281,7 +270,7 @@
     "source": "Various social media posts",
     "context": "Widespread misinformation campaign during COVID-19 vaccine rollout",
     "request_datetime": "2025-05-28T09:15:33.456Z",
-    "statement_date": "2021-03-15",
+    "statement_date": "2021-03-15T10:30:00.000Z",
     "country": "US",
     "category": "healthcare",
     "valid_sources": "98% (across 45 unique sources)",
@@ -289,6 +278,25 @@
     "status": "FALSE",
     "correction": "mRNA vaccines work in the cytoplasm of cells and never enter the nucleus where DNA is stored. They contain no magnetic materials.",
     "resources_agreed": {
+      "count": 1,
+      "other": 1,
+      "total": "2%",
+      "medical": 0,
+      "academic": 0,
+      "governance": 0,
+      "mainstream": 0,
+      "references": [
+        {
+          "url": "https://www.naturalnews.com/vaccine-claims",
+          "title": "Natural News: Vaccine Claims",
+          "country": "us",
+          "category": "other",
+          "credibility": "low"
+        }
+      ],
+      "major_countries": ["us"]
+    },
+    "resources_disagreed": {
       "count": 44,
       "other": 1,
       "total": "98%",
@@ -314,25 +322,6 @@
       ],
       "major_countries": ["us", "gb", "de", "fr", "ca", "au", "jp"]
     },
-    "resources_disagreed": {
-      "count": 1,
-      "other": 1,
-      "total": "2%",
-      "medical": 0,
-      "academic": 0,
-      "governance": 0,
-      "mainstream": 0,
-      "references": [
-        {
-          "url": "https://www.naturalnews.com/vaccine-claims",
-          "title": "Natural News: Vaccine Claims",
-          "country": "us",
-          "category": "other",
-          "credibility": "low"
-        }
-      ],
-      "major_countries": ["us"]
-    },
     "experts": {
       "nerd": "mRNA technology has been studied for decades. The vaccines deliver instructions for making a harmless piece of the coronavirus spike protein, which triggers an immune response. The mRNA is quickly broken down by the cell and never interacts with DNA in the nucleus.",
       "devil": "Even if someone wanted to alter DNA through vaccines, the mRNA delivery system used in COVID vaccines cannot accomplish this. The technology simply doesn't work that way, and magnetic materials are not present in any approved vaccine formulations.",
@@ -341,8 +330,7 @@
     },
     "processed_at": "2025-05-28T09:15:45.789012Z",
     "created_at": "2025-05-28T09:15:46.012345Z",
-    "updated_at": "2025-05-28T09:15:46.012345Z",
-    "confidence_score": 98
+    "updated_at": "2025-05-28T09:15:46.012345Z"
   },
   {
     "id": "c3d4e5f6-7g8h-9i0j-1k2l-m3n4o5p6q7r8",
@@ -350,7 +338,7 @@
     "source": "Donald Trump",
     "context": "Repeated claims following the 2020 presidential election",
     "request_datetime": "2025-05-30T16:45:12.789Z",
-    "statement_date": "2020-11-07",
+    "statement_date": "2020-11-07T20:00:00.000Z",
     "country": "US",
     "category": "politics",
     "valid_sources": "92% (across 35 unique sources)",
@@ -358,6 +346,25 @@
     "status": "FALSE",
     "correction": "Multiple recounts, audits, and court cases found no evidence of fraud sufficient to change the election results. Election security measures worked as intended.",
     "resources_agreed": {
+      "count": 3,
+      "other": 3,
+      "total": "8%",
+      "medical": 0,
+      "academic": 0,
+      "governance": 0,
+      "mainstream": 0,
+      "references": [
+        {
+          "url": "https://www.thegatewaypundit.com/election-fraud-claims",
+          "title": "Gateway Pundit: Election Fraud Claims",
+          "country": "us",
+          "category": "other",
+          "credibility": "low"
+        }
+      ],
+      "major_countries": ["us"]
+    },
+    "resources_disagreed": {
       "count": 32,
       "other": 2,
       "total": "92%",
@@ -383,25 +390,6 @@
       ],
       "major_countries": ["us"]
     },
-    "resources_disagreed": {
-      "count": 3,
-      "other": 3,
-      "total": "8%",
-      "medical": 0,
-      "academic": 0,
-      "governance": 0,
-      "mainstream": 0,
-      "references": [
-        {
-          "url": "https://www.thegatewaypundit.com/election-fraud-claims",
-          "title": "Gateway Pundit: Election Fraud Claims",
-          "country": "us",
-          "category": "other",
-          "credibility": "low"
-        }
-      ],
-      "major_countries": ["us"]
-    },
     "experts": {
       "nerd": "Statistical analysis of voting patterns, demographic data, and historical trends all support the legitimacy of the 2020 election results. The scale of fraud alleged would require coordination across multiple states and leave extensive evidence.",
       "devil": "While isolated cases of voter fraud occur in every election, the claims of 'massive' fraud have not been supported by evidence. Even Trump-appointed officials and judges found no merit in the allegations.",
@@ -410,7 +398,6 @@
     },
     "processed_at": "2025-05-30T16:45:25.123456Z",
     "created_at": "2025-05-30T16:45:26.234567Z",
-    "updated_at": "2025-05-30T16:45:26.234567Z",
-    "confidence_score": 92
+    "updated_at": "2025-05-30T16:45:26.234567Z"
   }
 ]

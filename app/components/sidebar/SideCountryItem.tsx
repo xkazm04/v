@@ -3,7 +3,7 @@ import { cn } from '@/app/lib/utils';
 import { EnhancedBadge } from '../ui/enhanced-badge';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useFilterStore, useSelectedCountry } from '@/app/stores/filterStore';
-import { useCountryCounts } from '@/app/hooks/useNews';
+
 
 type Props = {
     country: {
@@ -26,13 +26,13 @@ const SideCountryItem = ({ country, isActiveRoute, isCollapsed, mounted }: Props
     const { setSelectedCountry } = useFilterStore();
     
     // Get real country counts from API
-    const { data: countryCounts = {}, isLoading: countsLoading } = useCountryCounts();
+    // const { data: countryCounts = {}, isLoading: countsLoading } = useCountryCounts();
     
     // Check if this country is currently selected in filters
     const isFilterActive = selectedCountry === country.code;
     
     // Get the actual count for this country from API (don't show count for worldwide/default)
-    const actualCount = country.isDefault ? 0 : (countryCounts[country.code] || 0);
+    // const actualCount = country.isDefault ? 0 : (countryCounts[country.code] || 0);
 
     const handleCountryClick = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -118,36 +118,6 @@ const SideCountryItem = ({ country, isActiveRoute, isCollapsed, mounted }: Props
                                     >
                                         {country.name}
                                     </span>
-                                    {/* Only show counts for non-default countries */}
-                                    {!country.isDefault && !countsLoading && actualCount > 0 && (
-                                        <motion.div
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            transition={{ delay: 0.1, type: "spring" }}
-                                        >
-                                            <EnhancedBadge  
-                                                variant="outline"
-                                                className="ml-2 text-xs h-5 px-2 font-medium"
-                                            >
-                                                {actualCount}
-                                            </EnhancedBadge>
-                                        </motion.div>
-                                    )}
-                                    {/* Show loading indicator for non-default countries */}
-                                    {!country.isDefault && countsLoading && (
-                                        <motion.div
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            transition={{ delay: 0.1, type: "spring" }}
-                                        >
-                                            <EnhancedBadge  
-                                                variant="outline"
-                                                className="ml-2 text-xs h-5 px-2 font-medium"
-                                            >
-                                                ...
-                                            </EnhancedBadge>
-                                        </motion.div>
-                                    )}
                                 </motion.div>
                             )}
                         </AnimatePresence>

@@ -2,7 +2,7 @@
 
 import { memo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NewsArticle } from '@/app/types/article';
+import { ResearchResult } from '@/app/types/article'; // Fix: Import ResearchResult
 import { X } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { LLMResearchResponse } from '@/app/types/research';
@@ -10,101 +10,47 @@ import ResearchResultsOverview from '@/app/sections/upload/ResearchResultsOvervi
 import { ResourceAnalysisCard } from '@/app/sections/upload/ResourceAnalysisCard';
 import { ExpertPanel } from '@/app/sections/upload/ExpertPanel';
 import FactCheckMetadata from './FactCheckMetadata';
+
 interface FactCheckModalProps {
   isOpen: boolean;
   onClose: () => void;
-  article: NewsArticle;
+  research: ResearchResult; // Fix: Use ResearchResult instead of NewsArticle
 }
 
-
-const modalVariants = {
-  hidden: {
-    opacity: 0,
-    scale: 0.95,
-    y: 20
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: {
-      duration: 0.3,
-      ease: 'easeOut'
-    }
-  },
-  exit: {
-    opacity: 0,
-    scale: 0.95,
-    y: 20,
-    transition: {
-      duration: 0.2,
-      ease: 'easeIn'
-    }
-  }
-};
-
-const overlayVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-  exit: { opacity: 0 }
-};
-
-// Transform NewsArticle to LLMResearchResponse format
-const transformArticleToResearchResponse = (article: NewsArticle): LLMResearchResponse => {
+// Transform ResearchResult to LLMResearchResponse format
+const transformResearchToResponse = (research: ResearchResult): LLMResearchResponse => {
   // Handle percentage strings properly
-  const supportingTotal = article.factCheck.resources_agreed?.total || 0;
-  const contradictingTotal = article.factCheck.resources_disagreed?.total || 0;
+  const supportingTotal = research.resources_agreed?.count || 0;
+  const contradictingTotal = research.resources_disagreed?.count || 0;
 
   // Parse percentage values if they're strings
-  const supportingPercentage = typeof article.factCheck.resources_agreed?.total === 'string'
-    ? parseFloat(article.factCheck.resources_agreed.total.replace('%', ''))
-    : (article.factCheck.resources_agreed?.total || 0);
+  const supportingPercentage = typeof research.resources_agreed?.total === 'string'
+    ? parseFloat(research.resources_agreed.total.replace('%', ''))
+    : (research.resources_agreed?.count || 0);
 
-  const contradictingPercentage = typeof article.factCheck.resources_disagreed?.total === 'string'
-    ? parseFloat(article.factCheck.resources_disagreed.total.replace('%', ''))
-    : (article.factCheck.resources_disagreed?.total || 0);
+  const contradictingPercentage = typeof research.resources_disagreed?.total === 'string'
+    ? parseFloat(research.resources_disagreed.total.replace('%', ''))
+    : (research.resources_disagreed?.count || 0);
 
   // Calculate total sources properly
-  //@ts-expect-error Ignore
   let totalSources = supportingTotal + contradictingTotal;
 
-  // If we have percentages but the totals don't add up correctly, recalculate
-  if (supportingPercentage + contradictingPercentage === 100 && totalSources === 0) {
-    totalSources = 10;
-  }
-
   return {
-    id: article.id || `article-${Date.now()}`,
-    //@ts-expect-error Ignore
-    status: article.factCheck.evaluation.toLowerCase(),
-    verdict: article.factCheck.verdict,
-    correction: article.factCheck.evaluation === 'FALSE' ?
-      "This statement has been fact-checked and found to be false based on available evidence." :
-      undefined,
-    request_statement: article.headline,
-    request_context: `News article published by ${article.source.name}`,
-    request_source: article.source.name,
-    request_datetime: article.publishedAt,
-    //@ts-expect-error Ignore
-    category: article.category || 'news',
-    //@ts-expect-error Ignore
-    subcategory: article.subcategory,
-    //@ts-expect-error Ignore
-    country: article.source.country || 'us',
-    valid_sources: totalSources, // Use calculated total
-    resources_agreed: {
-      ...article.factCheck.resources_agreed,
-      //@ts-expect-error Ignore
-      total: supportingTotal,
-      percentage: supportingPercentage
-    },
-    resources_disagreed: {
-      ...article.factCheck.resources_disagreed,
-      //@ts-expect-error Ignore
-      total: contradictingTotal,
-      percentage: contradictingPercentage
-    },
-    experts: article.factCheck.experts || {},
+    id: research.id,
+    status: research.status.toLowerCase() as any,
+    verdict: research.verdict,
+    correction: research.correction,
+    request_statement: research.statement,
+    request_context: research.context,
+    request_source: research.source,
+    request_datetime: research.request_datetime,
+    category: research.category || 'news',
+    subcategory: undefined,
+    country: research.country || 'unknown',
+    valid_sources: totalSources,
+    resources_agreed: research.resources_agreed,
+    resources_disagreed: research.resources_disagreed,
+    experts: research.experts || {},
     metadata: {
       processing_time: Math.random() * 5 + 2,
       model_version: 'fact-check-v1.0',
@@ -112,15 +58,15 @@ const transformArticleToResearchResponse = (article: NewsArticle): LLMResearchRe
       source_reliability: 'high',
       last_updated: new Date().toISOString()
     },
-    created_at: article.publishedAt,
-    updated_at: new Date().toISOString()
+    created_at: research.created_at,
+    updated_at: research.updated_at
   };
 };
 
 export const FactCheckModal = memo(function FactCheckModal({
   isOpen,
   onClose,
-  article
+  research // Fix: Use research parameter name
 }: FactCheckModalProps) {
   const { colors, cardColors, overlayColors, mounted, isDark } = useLayoutTheme();
 
@@ -136,8 +82,8 @@ export const FactCheckModal = memo(function FactCheckModal({
     }
   }, [onClose]);
 
-  // Transform article data to research response format
-  const displayResult = transformArticleToResearchResponse(article);
+  // Transform research data to display format
+  const displayResult = transformResearchToResponse(research);
 
   return (
     <AnimatePresence>
@@ -230,8 +176,8 @@ export const FactCheckModal = memo(function FactCheckModal({
                     transition={{ delay: 0.3 }}
                   >
                     <ResourceAnalysisCard
-                       //@ts-expect-error Ignore
-                      supportingAnalysis={displayResult.resources_agreed} contradictingAnalysis={displayResult.resources_disagreed}
+                      supportingAnalysis={displayResult.resources_agreed}
+                      contradictingAnalysis={displayResult.resources_disagreed}
                       isLoading={false}
                     />
                   </motion.div>
@@ -244,13 +190,12 @@ export const FactCheckModal = memo(function FactCheckModal({
                   transition={{ delay: 0.5 }}
                 >
                   <ExpertPanel
-                    //@ts-expect-error Ignore
                     experts={displayResult.experts}
                     isLoading={false}
                   />
                 </motion.div>
 
-                {/* Article Metadata Section - Mobile Optimized */}
+                {/* Research Metadata Section */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -267,13 +212,12 @@ export const FactCheckModal = memo(function FactCheckModal({
                     className="text-base sm:text-lg font-bold mb-3 sm:mb-4 flex items-center gap-2"
                     style={{ color: colors.foreground }}
                   >
-                    <span className="text-lg sm:text-xl">📰</span>
-                    Article Information
+                    <span className="text-lg sm:text-xl">🔬</span>
+                    Research Information
                   </h3>
 
                   <FactCheckMetadata
-                    article={article}
-                    //@ts-expect-error Ignore
+                    research={research}
                     displayResult={displayResult}
                   />
                 </motion.div>
@@ -305,3 +249,35 @@ export const FactCheckModal = memo(function FactCheckModal({
     </AnimatePresence>
   );
 });
+
+const modalVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.95,
+    y: 20
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      duration: 0.3,
+      ease: 'easeOut'
+    }
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    y: 20,
+    transition: {
+      duration: 0.2,
+      ease: 'easeIn'
+    }
+  }
+};
+
+const overlayVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+  exit: { opacity: 0 }
+};

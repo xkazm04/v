@@ -1,12 +1,12 @@
-'use client';
 
 import { useCallback, useMemo, memo } from 'react';
-import { useNews, useOfflineMode } from '@/app/hooks/useNews';
+import { useNews } from '@/app/hooks/useNews';
 import { NewsGrid } from '../feed/NewsGrid';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RefreshCw, AlertCircle, WifiOff } from 'lucide-react';
+import { RefreshCw, AlertCircle, Database, HardDrive, Wifi } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { Button } from '@/app/components/ui/button';
+import { Badge } from '@/app/components/ui/badge';
 import { useNewsFilters } from '@/app/stores/filterStore';
 import { countryLabels } from '@/app/helpers/countries';
 
@@ -16,86 +16,52 @@ interface FeaturedNewsProps {
   autoRefresh?: boolean;
 }
 
-const ErrorState = memo(({ 
-  colors, 
-  error, 
-  onRefresh, 
-  onOfflineMode 
-}: { 
-  colors: any; 
-  error: string | null; 
-  onRefresh: () => void; 
-  onOfflineMode: () => void; 
-}) => (
-  <motion.div 
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="text-center py-12"
-  >
-    <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-    <h3 
-      className="text-lg font-semibold mb-2"
-      style={{ color: colors.foreground }}
-    >
-      Failed to load news
-    </h3>
-    <p 
-      className="mb-4"
-      style={{ color: colors.mutedForeground }}
-    >
-      {error || 'Something went wrong while fetching news.'}
-    </p>
-    <div className="flex gap-2 justify-center">
-      <Button onClick={onRefresh} variant="default">
-        <RefreshCw className="w-4 h-4 mr-2" />
-        Try Again
-      </Button>
-      <Button 
-        onClick={onOfflineMode} 
-        variant="outline"
-        className="flex items-center gap-2"
-      >
-        <WifiOff className="w-4 h-4" />
-        Demo Mode
-      </Button>
-    </div>
-  </motion.div>
-));
+const DataSourceIndicator = memo(({ dataSource }: { dataSource: string }) => {
+  const getSourceConfig = () => {
+    switch (dataSource) {
+      case 'supabase':
+        return {
+          icon: <Database className="w-3 h-3" />,
+          label: 'Supabase Live',
+          color: 'bg-green-500',
+          description: 'Real-time data'
+        };
+      case 'backend':
+        return {
+          icon: <Wifi className="w-3 h-3" />,
+          label: 'Backend API',
+          color: 'bg-blue-500',
+          description: 'API fallback'
+        };
+      case 'mock':
+        return {
+          icon: <HardDrive className="w-3 h-3" />,
+          label: 'Demo Mode',
+          color: 'bg-orange-500',
+          description: 'Offline data'
+        };
+      default:
+        return {
+          icon: <AlertCircle className="w-3 h-3" />,
+          label: 'Unknown',
+          color: 'bg-gray-500',
+          description: 'Unknown source'
+        };
+    }
+  };
 
-ErrorState.displayName = 'ErrorState';
+  const config = getSourceConfig();
 
-// Memoized refresh button
-const RefreshButton = memo(({ 
-  onRefresh, 
-  loading, 
-  isDark, 
-  colors 
-}: { 
-  onRefresh: () => void; 
-  loading: boolean; 
-  isDark: boolean; 
-  colors: any; 
-}) => (
-  <motion.button
-    onClick={onRefresh}
-    disabled={loading}
-    className="p-2 rounded-lg transition-all duration-200"
-    style={{
-      background: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(148, 163, 184, 0.2)',
-      border: `1px solid ${isDark ? 'rgba(71, 85, 105, 0.4)' : 'rgba(148, 163, 184, 0.3)'}`,
-      color: colors.mutedForeground
-    }}
-    whileHover={{
-      scale: 1.05,
-      background: isDark ? 'rgba(71, 85, 105, 0.4)' : 'rgba(148, 163, 184, 0.3)'
-    }}
-    whileTap={{ scale: 0.95 }}
-  >
-    <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-  </motion.button>
-));
+  return (
+    <Badge variant="secondary" className="flex items-center gap-2 text-xs">
+      <div className={`w-2 h-2 rounded-full ${config.color}`} />
+      {config.icon}
+      {config.label}
+    </Badge>
+  );
+});
 
-RefreshButton.displayName = 'RefreshButton';
+DataSourceIndicator.displayName = 'DataSourceIndicator';
 
 const FeaturedNews = memo(({ 
   limit = 20, 
@@ -103,7 +69,6 @@ const FeaturedNews = memo(({
   autoRefresh = true,
 }: FeaturedNewsProps) => {
   const { colors, isDark } = useLayoutTheme();
-  const { isOffline, toggle: toggleOfflineMode } = useOfflineMode();
   const newsFilters = useNewsFilters();
 
   // Stable filters to prevent unnecessary re-renders
@@ -119,12 +84,13 @@ const FeaturedNews = memo(({
     onlyFactChecked: newsFilters.onlyFactChecked,
   }), [newsFilters, limit, autoRefresh, showBreaking]);
 
-  // Fetch news with stable filters
+  // ✅ **FIX: Fetch research results directly**
   const { 
-    articles, 
+    articles: researchResults, // This is already ResearchResult[]
     loading, 
     error, 
-    refreshNews
+    refreshNews,
+    dataSource
   } = useNews(enhancedFilters);
 
   // Stable handlers
@@ -132,9 +98,26 @@ const FeaturedNews = memo(({
     refreshNews();
   }, [refreshNews]);
 
-  const handleOfflineMode = useCallback(() => {
-    toggleOfflineMode();
-  }, [toggleOfflineMode]);
+  // ✅ **FIX: Add validation for research results**
+  const validResearchResults = useMemo(() => {
+    if (!Array.isArray(researchResults)) {
+      console.warn('FeaturedNews: researchResults is not an array', researchResults);
+      return [];
+    }
+
+    const filtered = researchResults.filter(result => 
+      result && 
+      typeof result === 'object' && 
+      result.id && 
+      result.statement
+    );
+
+    if (filtered.length < researchResults.length) {
+      console.warn(`FeaturedNews: Filtered out ${researchResults.length - filtered.length} invalid results`);
+    }
+
+    return filtered;
+  }, [researchResults]);
 
   // Stable display title
   const displayTitle = useMemo(() => {
@@ -152,54 +135,83 @@ const FeaturedNews = memo(({
         international: 'International',
         other: 'Other'
       };
-      return `${categoryLabels[newsFilters.categoryFilter] || newsFilters.categoryFilter} News`;
+      return `${categoryLabels[newsFilters.categoryFilter] || newsFilters.categoryFilter} Research`;
     }
     if (newsFilters.countryFilter && newsFilters.countryFilter !== 'worldwide' && newsFilters.countryFilter !== 'all') {
-
-      return `News from ${countryLabels[newsFilters.countryFilter] || newsFilters.countryFilter}`;
+      return `Research from ${countryLabels[newsFilters.countryFilter] || newsFilters.countryFilter}`;
     }
-    return 'Analyzed statements';
+    return 'Latest Research Results';
   }, [newsFilters, showBreaking]);
 
   return (
     <div className="space-y-6 max-w-[1600px]">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <motion.h2 
-          className="text-2xl font-bold"
-          style={{ color: colors.foreground }}
-          key={displayTitle}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {displayTitle}
-        </motion.h2>
+        <div className="flex items-center gap-3">
+          <motion.h2 
+            className="text-2xl font-bold"
+            style={{ color: colors.foreground }}
+            key={displayTitle}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {displayTitle}
+          </motion.h2>
+          
+          {/* Data Source Indicator */}
+          {dataSource && dataSource !== 'none' && (
+            <DataSourceIndicator dataSource={dataSource} />
+          )}
+        </div>
 
-        <RefreshButton 
-          onRefresh={handleRefresh}
-          loading={loading}
-          isDark={isDark}
-          colors={colors}
-        />
+        <motion.button
+          onClick={handleRefresh}
+          disabled={loading}
+          className="p-2 rounded-lg transition-all duration-200"
+          style={{
+            background: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(148, 163, 184, 0.2)',
+            border: `1px solid ${isDark ? 'rgba(71, 85, 105, 0.4)' : 'rgba(148, 163, 184, 0.3)'}`,
+            color: colors.mutedForeground
+          }}
+          whileHover={{
+            scale: 1.05,
+            background: isDark ? 'rgba(71, 85, 105, 0.4)' : 'rgba(148, 163, 184, 0.3)'
+          }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+        </motion.button>
       </div>
 
       {/* Content */}
       <AnimatePresence mode="wait">
-          <motion.div
-            key="error"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+        {error ? (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-12"
           >
-           {error &&  <ErrorState 
-              colors={colors}
-              error={error}
-              onRefresh={handleRefresh}
-              onOfflineMode={handleOfflineMode}
-            />}
+            <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+            <h3 
+              className="text-lg font-semibold mb-2"
+              style={{ color: colors.foreground }}
+            >
+              Failed to load research
+            </h3>
+            <p 
+              className="mb-4"
+              style={{ color: colors.mutedForeground }}
+            >
+              {error || 'Something went wrong while fetching research.'}
+            </p>
+            <Button onClick={handleRefresh} variant="default">
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Try Again
+            </Button>
           </motion.div>
-          {articles.length === 0 && !loading && <motion.div
+        ) : validResearchResults.length === 0 && !loading ? (
+          <motion.div
             key="empty"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -207,25 +219,29 @@ const FeaturedNews = memo(({
             className="text-center py-12"
             style={{ color: colors.mutedForeground }}
           >
-            No news articles found.
-          </motion.div>}
+            No research results found.
+          </motion.div>
+        ) : (
           <motion.div
-            key={`articles-${displayTitle}-${articles.length}`}
+            key={`research-${displayTitle}-${validResearchResults.length}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}
           >
+            {/* ✅ **FIX: Pass ResearchResult[] directly to NewsGrid** */}
             <NewsGrid 
-              articles={articles}
-              onArticleRead={(articleId) => {
-                // Handle article read tracking if needed
+              articles={validResearchResults}
+              onArticleRead={(researchId) => {
+                // Handle research read tracking if needed
+                console.log('Research read:', researchId);
               }}
             />
           </motion.div>
+        )}
       </AnimatePresence>
 
-      {loading && articles.length > 0 && (
+      {loading && validResearchResults.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -234,7 +250,7 @@ const FeaturedNews = memo(({
         >
           <div className="inline-flex items-center gap-2 text-sm" style={{ color: colors.mutedForeground }}>
             <RefreshCw className="w-4 h-4 animate-spin" />
-            Updating news...
+            Updating research...
           </div>
         </motion.div>
       )}

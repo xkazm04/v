@@ -1,269 +1,237 @@
-import { NewsArticle, ResearchResult, convertResearchToNews } from '@/app/types/article';
-import { ResearchApiService } from '@/app/lib/services/research-api';
+// app/lib/services/news-service.ts
+import { supabaseNewsService } from './supabase-news-service';
+import { MockDataService } from './mockDataService';
+import { ResearchResult } from '@/app/types/article';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const BACKEND_API_BASE = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:8000';
 
-export interface NewsFilters {
+export interface NewsServiceFilters {
   limit?: number;
   offset?: number;
-  status?: 'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE' | 'UNVERIFIABLE';
-  category?: string;
-  country?: string;
-  source?: string;
-  date_from?: string;
-  date_to?: string;
-  processed_from?: string;
-  processed_to?: string;
-  search?: string;
+  status_filter?: string;
+  category_filter?: string;
+  country_filter?: string;
+  source_filter?: string;
+  search_text?: string;
   sort_by?: string;
   sort_order?: 'asc' | 'desc';
 }
 
-export interface NewsStats {
-  total_results: number;
-  status_distribution: Record<string, number>;
-  category_distribution: Record<string, number>;
-  country_distribution: Record<string, number>;
-  recent_results: number;
-  earliest_result: string | null;
-  latest_result: string | null;
-}
-
-export interface CategoryInfo {
-  category: string;
-  count: number;
-}
-
-export interface CountryInfo {
-  country: string;
-  count: number;
-}
-
-export interface SearchFilters {
-  searchText?: string;
-  statusFilter?: string;
-  countryFilter?: string;
-  categoryFilter?: string;
-  sourceFilter?: string;
-  limitCount?: number;
-  offsetCount?: number;
-}
-
-export interface RecentNewsFilters {
-  limit?: number;
-  onlyFactChecked?: boolean;
-  breaking?: boolean;
-}
-
 class NewsService {
-  private static instance: NewsService;
-
-  private constructor() {}
-
-  public static getInstance(): NewsService {
-    if (!NewsService.instance) {
-      NewsService.instance = new NewsService();
-    }
-    return NewsService.instance;
-  }
-
-  private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
+  /**
+   * Get research results with dual strategy: Supabase → Backend → Mock
+   */
+  async getNews(filters: NewsServiceFilters = {}): Promise<ResearchResult[]> {
+    const startTime = Date.now();
     
-    const response = await fetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options?.headers,
-      },
-      ...options,
-    });
+    // ✅ **STRATEGY 1: Try Supabase first**
+    try {
+      console.log('🔄 Attempting Supabase research fetch...');
+      
+      const supabaseFilters = {
+        limit: filters.limit,
+        offset: filters.offset,
+        status: filters.status_filter,
+        category: filters.category_filter,
+        country: filters.country_filter,
+        source: filters.source_filter,
+        search: filters.search_text,
+        sort_by: filters.sort_by,
+        sort_order: filters.sort_order
+      };
 
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
-    }
-
-    return response.json();
-  }
-
-  async getResearchResults(filters: NewsFilters = {}): Promise<ResearchResult[]> {
-    const params = new URLSearchParams();
-    
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        params.append(key, String(value));
+      const supabaseResults = await supabaseNewsService.getNews(supabaseFilters);
+      
+      if (supabaseResults && supabaseResults.length > 0) {
+        console.log(`✅ Successfully fetched ${supabaseResults.length} research results from Supabase in ${Date.now() - startTime}ms`);
+        
+        return supabaseResults.map(result => ({
+          ...result,
+          __meta: {
+            source: 'supabase',
+            fetchTime: Date.now() - startTime,
+            timestamp: new Date().toISOString()
+          }
+        }));
+      } else {
+        console.log('⚠️ No research found in Supabase, trying backend...');
       }
-    });
-
-    const queryString = params.toString();
-    const endpoint = `/news${queryString ? `?${queryString}` : ''}`;
-    
-    return this.request<ResearchResult[]>(endpoint);
-  }
-
-  async getResearchById(id: string): Promise<ResearchResult> {
-    return this.request<ResearchResult>(`/news/${id}`);
-  }
-
-  async searchResearch(filters: SearchFilters): Promise<NewsArticle[]> {
-    const {
-      searchText,
-      statusFilter,
-      countryFilter,
-      categoryFilter,
-      sourceFilter,
-      limitCount = 50,
-      offsetCount = 0
-    } = filters;
-
-    const searchFilters = {
-      searchText,
-      statusFilter,
-      countryFilter,
-      categoryFilter,
-      sourceFilter,
-      limitCount,
-      offsetCount
-    };
-
-    const result = await ResearchApiService.searchResearch(searchFilters);
-
-    if (result.error) {
-      throw new Error(result.error);
+    } catch (supabaseError) {
+      console.warn('⚠️ Supabase research fetch failed:', supabaseError);
     }
 
-    // Convert raw research results to NewsArticle format
-    return (result.data || []).map((research: ResearchResult) => 
-      convertResearchToNews(research)
+    // ✅ **STRATEGY 2: Fallback to Backend API**
+    try {
+      console.log('🔄 Attempting backend research fetch...');
+      
+      const params = new URLSearchParams();
+      if (filters.limit) params.append('limit', String(filters.limit));
+      if (filters.offset) params.append('offset', String(filters.offset));
+      if (filters.status_filter && filters.status_filter !== 'all') params.append('status', filters.status_filter);
+      if (filters.category_filter && filters.category_filter !== 'all') params.append('category', filters.category_filter);
+      if (filters.country_filter && filters.country_filter !== 'all' && filters.country_filter !== 'worldwide') {
+        params.append('country', filters.country_filter);
+      }
+      if (filters.source_filter && filters.source_filter !== 'all') params.append('source', filters.source_filter);
+      if (filters.search_text?.trim()) params.append('search', filters.search_text.trim());
+      if (filters.sort_by) params.append('sort_by', filters.sort_by);
+      if (filters.sort_order) params.append('sort_order', filters.sort_order);
+
+      // ✅ **Use /news endpoint**
+      const response = await fetch(`${BACKEND_API_BASE}/news?${params.toString()}`, {
+        headers: {
+          'Accept': 'application/json',
+        },
+        signal: AbortSignal.timeout(10000)
+      });
+
+      if (response.ok) {
+        const backendData = await response.json();
+        console.log(`✅ Successfully fetched ${Array.isArray(backendData) ? backendData.length : 0} research from backend in ${Date.now() - startTime}ms`);
+        
+        // ✅ **Return as ResearchResult directly, fix field mapping if needed**
+        const processedResults: ResearchResult[] = Array.isArray(backendData) 
+          ? backendData.map((item: any) => ({
+              // Map backend fields to ResearchResult interface
+              id: item.id || '',
+              statement: item.statement || '',
+              source: item.source || '',
+              context: item.context || '',
+              request_datetime: item.request_datetime || item.created_at || new Date().toISOString(),
+              statement_date: item.statement_date,
+              country: item.country,
+              valid_sources: item.valid_sources || '',
+              verdict: item.verdict || '',
+              status: item.status || 'UNVERIFIABLE',
+              correction: item.correction,
+              experts: item.experts,
+              resources_agreed: item.resources_agreed,
+              resources_disagreed: item.resources_disagreed,
+              processed_at: item.processed_at || item.created_at || new Date().toISOString(),
+              created_at: item.created_at || new Date().toISOString(),
+              updated_at: item.updated_at || new Date().toISOString(),
+              category: item.category,
+              profileId: item.profileId || item.profile_id,
+              __meta: {
+                source: 'backend',
+                fetchTime: Date.now() - startTime,
+                timestamp: new Date().toISOString()
+              }
+            }))
+          : [];
+        
+        return processedResults;
+      } else {
+        console.warn(`⚠️ Backend responded with status: ${response.status}`);
+      }
+    } catch (backendError) {
+      console.warn('⚠️ Backend research fetch failed:', backendError);
+    }
+
+    // ✅ **STRATEGY 3: Ultimate fallback to mock data**
+    console.log('🔄 Using mock data fallback...');
+    
+    const mockResults = MockDataService.getMockNews({
+      limit: filters.limit,
+      offset: filters.offset,
+      status: filters.status_filter,
+      category: filters.category_filter,
+      country: filters.country_filter,
+      source: filters.source_filter,
+      search: filters.search_text
+    });
+
+    console.log(`✅ Using ${mockResults.length} mock research results`);
+    
+    // ✅ **Convert mock NewsArticle to ResearchResult format**
+    return mockResults.map(article => ({
+      id: article.id,
+      statement: article.headline,
+      source: article.source.name,
+      context: article.summary,
+      request_datetime: article.publishedAt,
+      statement_date: article.statementDate,
+      country: article.country,
+      valid_sources: '',
+      verdict: article.factCheck.verdict,
+      status: article.factCheck.evaluation,
+      correction: '',
+      experts: article.factCheck.experts,
+      resources_agreed: article.factCheck.resources_agreed,
+      resources_disagreed: article.factCheck.resources_disagreed,
+      processed_at: article.publishedAt,
+      created_at: article.datePublished,
+      updated_at: article.publishedAt,
+      category: article.category,
+      profileId: article.profileId,
+      __meta: {
+        source: 'mock',
+        fetchTime: Date.now() - startTime,
+        timestamp: new Date().toISOString(),
+        warning: 'Using offline mock data'
+      }
+    }));
+  }
+
+  /**
+   * Parse search parameters
+   */
+  parseSearchParams(searchParams: URLSearchParams): NewsServiceFilters {
+    return {
+      limit: searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined,
+      offset: searchParams.get('offset') ? parseInt(searchParams.get('offset')!) : undefined,
+      status_filter: searchParams.get('status_filter') || undefined,
+      category_filter: searchParams.get('category_filter') || undefined,
+      country_filter: searchParams.get('country_filter') || undefined,
+      source_filter: searchParams.get('source_filter') || undefined,
+      search_text: searchParams.get('search_text') || undefined,
+      sort_by: searchParams.get('sort_by') || 'processed_at',
+      sort_order: (searchParams.get('sort_order') as 'asc' | 'desc') || 'desc'
+    };
+  }
+
+  /**
+   * Check if request has search parameters
+   */
+  isSearchRequest(params: any): boolean {
+    return !!(
+      params.search_text ||
+      (params.status_filter && params.status_filter !== 'all') ||
+      (params.category_filter && params.category_filter !== 'all') ||
+      (params.country_filter && params.country_filter !== 'all' && params.country_filter !== 'worldwide') ||
+      (params.source_filter && params.source_filter !== 'all')
     );
   }
 
-  async getNewsStats(): Promise<NewsStats> {
-    return this.request<NewsStats>('/news/stats/summary');
-  }
-
-  async getAvailableCategories(): Promise<CategoryInfo[]> {
-    return this.request<CategoryInfo[]>('/news/categories/available');
-  }
-
-  async getAvailableCountries(): Promise<CountryInfo[]> {
-    return this.request<CountryInfo[]>('/news/countries/available');
-  }
-
-  async getRecentNews(filters: RecentNewsFilters = {}): Promise<NewsArticle[]> {
-    const newsFilters: NewsFilters = {
-      limit: filters.limit || 20,
+  /**
+   * Parse recent news parameters
+   */
+  parseRecentNewsParams(searchParams: URLSearchParams): NewsServiceFilters {
+    return {
+      limit: searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : 20,
+      offset: searchParams.get('offset') ? parseInt(searchParams.get('offset')!) : 0,
       sort_by: 'processed_at',
       sort_order: 'desc'
     };
-
-    // Filter for fact-checked items (exclude UNVERIFIABLE)
-    if (filters.onlyFactChecked) {
-      const statuses: Array<'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE'> = 
-        ['TRUE', 'FALSE', 'MISLEADING', 'PARTIALLY_TRUE'];
-      
-      const allResults: ResearchResult[] = [];
-      
-      for (const status of statuses) {
-        const results = await this.getResearchResults({
-          ...newsFilters,
-          status,
-          limit: Math.ceil((filters.limit || 20) / statuses.length)
-        });
-        allResults.push(...results);
-      }
-      
-      // Sort by processed_at and limit
-      allResults.sort((a, b) => 
-        new Date(b.processed_at).getTime() - new Date(a.processed_at).getTime()
-      );
-      
-      return allResults
-        .slice(0, filters.limit || 20)
-        .map(this.convertToNewsArticle);
-    }
-
-    // Filter for breaking news (FALSE or MISLEADING)
-    if (filters.breaking) {
-      const breakingResults = await Promise.all([
-        this.getResearchResults({ ...newsFilters, status: 'FALSE' }),
-        this.getResearchResults({ ...newsFilters, status: 'MISLEADING' })
-      ]);
-      
-      const combined = [...breakingResults[0], ...breakingResults[1]]
-        .sort((a, b) => 
-          new Date(b.processed_at).getTime() - new Date(a.processed_at).getTime()
-        )
-        .slice(0, filters.limit || 20);
-      
-      return combined.map(result => ({
-        ...this.convertToNewsArticle(result),
-        isBreaking: true
-      }));
-    }
-
-    // Default: get all recent results
-    const results = await this.getResearchResults(newsFilters);
-    return results.map(this.convertToNewsArticle);
   }
 
-  // Helper method to convert research to news article
-  convertToNewsArticle(research: ResearchResult): NewsArticle {
-    return convertResearchToNews(research);
+  /**
+   * Search research with filters
+   */
+  async searchResearch(filters: NewsServiceFilters): Promise<ResearchResult[]> {
+    return this.getNews(filters);
   }
 
-  // Determine if request is a search request based on parameters
-  isSearchRequest(params: Record<string, string | null>): boolean {
-    const searchParams = ['search_text', 'status_filter', 'country_filter', 'category_filter', 'source_filter'];
-    return searchParams.some(param => params[param] !== null && params[param] !== undefined);
-  }
-
-  // Parse search parameters from URL search params
-  parseSearchParams(searchParams: URLSearchParams): SearchFilters {
-    return {
-      searchText: searchParams.get('search_text') || undefined,
-      statusFilter: searchParams.get('status_filter') || undefined,
-      countryFilter: searchParams.get('country_filter') || undefined,
-      categoryFilter: searchParams.get('category_filter') || undefined,
-      sourceFilter: searchParams.get('source_filter') || undefined,
-      limitCount: parseInt(searchParams.get('limit_count') || '50'),
-      offsetCount: parseInt(searchParams.get('offset_count') || '0')
-    };
-  }
-
-  // Parse recent news parameters from URL search params
-  parseRecentNewsParams(searchParams: URLSearchParams): RecentNewsFilters {
-    return {
-      limit: parseInt(searchParams.get('limit') || '20'),
-      onlyFactChecked: searchParams.get('only_fact_checked') === 'true',
-      breaking: searchParams.get('breaking') === 'true'
-    };
+  /**
+   * Get recent research
+   */
+  async getRecentNews(filters: NewsServiceFilters): Promise<ResearchResult[]> {
+    return this.getNews({
+      ...filters,
+      sort_by: 'processed_at',
+      sort_order: 'desc'
+    });
   }
 }
 
-// Export the singleton instance
-export const newsService = NewsService.getInstance();
-
-// Export helper functions for easier usage
-export async function fetchRecentNews(filters?: RecentNewsFilters): Promise<NewsArticle[]> {
-  return newsService.getRecentNews(filters);
-}
-
-export async function searchNews(filters: SearchFilters): Promise<NewsArticle[]> {
-  return newsService.searchResearch(filters);
-}
-
-export async function fetchNewsById(id: string): Promise<ResearchResult> {
-  return newsService.getResearchById(id);
-}
-
-export async function fetchNewsStats(): Promise<NewsStats> {
-  return newsService.getNewsStats();
-}
-
-export async function fetchAvailableCategories(): Promise<CategoryInfo[]> {
-  return newsService.getAvailableCategories();
-}
-
-export async function fetchAvailableCountries(): Promise<CountryInfo[]> {
-  return newsService.getAvailableCountries();
-}
+export const newsService = new NewsService();

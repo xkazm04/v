@@ -1,8 +1,6 @@
-'use client';
-
 import { memo, useState, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NewsArticle } from '@/app/types/article';
+import { ResearchResult } from '@/app/types/article';
 import { NewsCardHeader } from '@/app/components/news/NewsCardHeader';
 import { FactCheckModal } from '@/app/components/modals/FactCheck/FactCheckModal';
 import NewsCardContent from '@/app/components/news/NewsCardContent';
@@ -10,43 +8,46 @@ import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import NewsCardWrapper from './NewsCardWrapper';
 
 interface NewsCardProps {
-  article: NewsArticle;
+  research: ResearchResult;
   layout?: 'grid' | 'compact';
-  onRead?: (articleId: string) => void;
+  onRead?: (researchId: string) => void;
   className?: string;
 }
 
 const NewsCard = memo(function NewsCard({ 
-  article, 
+  research, 
   layout = 'grid',
   onRead,
   className = ''
 }: NewsCardProps) {
   const { colors, mounted, isDark } = useLayoutTheme();
+  
+  if (!research || !research.id) {
+    console.warn('NewsCard: research data is missing or invalid', research);
+    return null;
+  }
+
   const [isRead, setIsRead] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dismissType, setDismissType] = useState<'fade' | 'swipe-right' | null>(null);
   
-  // Touch gesture tracking
   const lastTapRef = useRef<number>(0);
   const tapCountRef = useRef<number>(0);
   const hasDraggedRef = useRef<boolean>(false);
 
-  // SEPARATED: Mouse left click - fade out without movement
   const handleMouseClick = useCallback((e: React.MouseEvent) => {
-    // Only handle if it's a genuine mouse click (not touch on mobile)
     if (!('ontouchstart' in window) && e.type === 'click') {
-      if (isDragging || hasDraggedRef.current) return; // Don't handle if we just dragged
+      if (isDragging || hasDraggedRef.current) return; 
       
       setDismissType('fade');
       setIsRead(true);
       setTimeout(() => {
-        onRead?.(article.id);
-      }, 300); // Shorter delay for fade effect
+        onRead?.(research.id);
+      }, 300);
     }
-  }, [article.id, onRead, isDragging]);
+  }, [research.id, onRead, isDragging]);
 
   const handleRightClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -54,14 +55,13 @@ const NewsCard = memo(function NewsCard({
     setShowModal(true);
   }, [isDragging]);
 
-  // SEPARATED: Touch interactions - handle double tap for modal
   const handleTouchTap = useCallback(() => {
     if (isDragging || hasDraggedRef.current) return;
     
     const now = Date.now();
     const timeDiff = now - lastTapRef.current;
     
-    if (timeDiff < 300) { // Double tap detected (within 300ms)
+    if (timeDiff < 300) {
       tapCountRef.current++;
       if (tapCountRef.current === 2) {
         setShowModal(true);
@@ -73,29 +73,24 @@ const NewsCard = memo(function NewsCard({
     }
     
     lastTapRef.current = now;
-    
-    // Single tap after delay (if no second tap)
+
     setTimeout(() => {
       if (tapCountRef.current === 1 && (Date.now() - lastTapRef.current) >= 300) {
         tapCountRef.current = 0;
-        // On mobile, single tap does nothing - only swipe dismisses
       }
     }, 350);
   }, [isDragging]);
 
-  // Handle swipe right gesture - slide out to right
   const handleSwipeRight = useCallback(() => {
     setDismissType('swipe-right');
     setIsRead(true);
     setTimeout(() => {
-      onRead?.(article.id);
+      onRead?.(research.id);
     }, 500);
-  }, [article.id, onRead]);
+  }, [research.id, onRead]);
 
-  // Reset drag state after drag ends
   const handleDragEnd = useCallback(() => {
     setIsDragging(false);
-    // Reset drag flag after a short delay to prevent click handling
     setTimeout(() => {
       hasDraggedRef.current = false;
     }, 100);
@@ -108,7 +103,7 @@ const NewsCard = memo(function NewsCard({
 
   const isCompact = layout === 'compact';
 
-  // Dynamic styling based on article properties
+  // Dynamic styling based on research properties
   const cardStyles = useMemo(() => {
     const baseHeight = isCompact ? 'h-32' : 'h-48';
     
@@ -133,7 +128,7 @@ const NewsCard = memo(function NewsCard({
       <AnimatePresence mode="wait">
         {!isRead && (
           <NewsCardWrapper
-            article={article}
+            research={research}
             cardStyles={cardStyles}
             isRead={isRead}
             isDragging={isDragging}
@@ -161,7 +156,7 @@ const NewsCard = memo(function NewsCard({
               className="relative z-20"
             >
               <NewsCardHeader 
-                article={article} 
+                research={research} 
                 layout={layout} 
                 isHovered={isHovered} 
               />
@@ -175,7 +170,7 @@ const NewsCard = memo(function NewsCard({
               className="relative z-10 flex-1"
             >
               <NewsCardContent
-                article={article}
+                research={research}
                 isCompact={isCompact}
               />
             </motion.div>
@@ -201,20 +196,20 @@ const NewsCard = memo(function NewsCard({
               }}
             />
 
-            {/* Subtle border glow for important articles */}
-            {(article.isBreaking || article.factCheck) && (
+            {/* Subtle border glow for important research */}
+            {(research.status === 'FALSE' || research.status === 'MISLEADING') && (
               <motion.div
                 className="absolute inset-0 rounded-xl pointer-events-none"
                 style={{
                   background: `linear-gradient(45deg, 
-                    ${article.isBreaking 
+                    ${research.status === 'FALSE' 
                       ? isDark ? 'rgba(239, 68, 68, 0.1)' : 'rgba(220, 38, 38, 0.1)'
-                      : isDark ? 'rgba(59, 130, 246, 0.1)' : 'rgba(37, 99, 235, 0.1)'
+                      : isDark ? 'rgba(245, 158, 11, 0.1)' : 'rgba(217, 119, 6, 0.1)'
                     } 0%, 
                     transparent 50%, 
-                    ${article.isBreaking 
+                    ${research.status === 'FALSE' 
                       ? isDark ? 'rgba(239, 68, 68, 0.1)' : 'rgba(220, 38, 38, 0.1)'
-                      : isDark ? 'rgba(59, 130, 246, 0.1)' : 'rgba(37, 99, 235, 0.1)'
+                      : isDark ? 'rgba(245, 158, 11, 0.1)' : 'rgba(217, 119, 6, 0.1)'
                     } 100%
                   )`,
                   zIndex: 1
@@ -234,7 +229,7 @@ const NewsCard = memo(function NewsCard({
       <FactCheckModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
-        article={article}
+        research={research}
       />
     </>
   );

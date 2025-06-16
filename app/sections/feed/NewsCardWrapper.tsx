@@ -3,11 +3,11 @@
 import { useCallback, useRef, ReactNode } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from 'framer-motion';
 import { cn } from '@/app/lib/utils';
-import { NewsArticle } from '@/app/types/article';
+import { ResearchResult } from '@/app/types/article';
 
 interface NewsCardWrapperProps {
   children: ReactNode;
-  article: NewsArticle;
+  research: ResearchResult; // Fix: Use ResearchResult instead of NewsArticle
   cardStyles: {
     height: string;
     background: string | undefined;
@@ -24,7 +24,7 @@ interface NewsCardWrapperProps {
   dismissType: 'fade' | 'swipe-right' | null;
   setDismissType: (type: 'fade' | 'swipe-right' | null) => void;
   setIsRead: (read: boolean) => void;
-  onRead?: (articleId: string) => void;
+  onRead?: (researchId: string) => void; // Fix: Use researchId
   handleMouseClick: (e: React.MouseEvent) => void;
   handleRightClick: (e: React.MouseEvent) => void;
   handleTouchTap: () => void;
@@ -97,7 +97,7 @@ const swipeRightVariants = {
 
 const NewsCardWrapper = ({ 
   children, 
-  article, 
+  research, // Fix: Use research instead of article
   cardStyles, 
   isRead, 
   isDragging, 
@@ -161,19 +161,14 @@ const NewsCardWrapper = ({
     const velocity = Math.abs(info.velocity.x);
     const offset = Math.abs(info.offset.x);
 
-    // Determine if it's a swipe based on velocity and distance
     const isSwipe = velocity > 500 || offset > 100;
     const hasMoved = dragThresholdRef.current;
 
     if (isSwipe && info.offset.x > 50) {
-      // Swipe right - dismiss article with slide animation
       handleSwipeRight();
     } else if (isSwipe && info.offset.x < -50) {
-      // Swipe left - could be used for other actions (mark as favorite, etc.)
-      // For now, just spring back
       x.set(0);
     } else {
-      // Not a swipe, spring back to center
       x.set(0);
     }
 
