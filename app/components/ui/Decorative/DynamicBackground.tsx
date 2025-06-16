@@ -27,7 +27,8 @@ const DynamicBackground = ({ config, currentTheme, setIsVisible }: Props) => {
         const timer = setTimeout(() => setIsVisible?.(true), 100);
         return () => clearTimeout(timer);
     }, []);
-    return <div className="absolute inset-0">
+    
+    return <div className="absolute inset-0 overflow-hidden rounded-2xl"> 
         {/* Base gradient */}
         {currentTheme === 'dark' && <>
             <div
@@ -74,36 +75,36 @@ const DynamicBackground = ({ config, currentTheme, setIsVisible }: Props) => {
             />
         ))}
 
-        {/* Large accent circles */}
+        {/* Large accent circles - Fixed positioning to prevent overflow */}
         <motion.div
-            className="absolute -top-20 -right-20 w-40 h-40 rounded-full"
+            className="absolute top-0 right-0 w-40 h-40 rounded-full"
             style={{
-                background: `radial-gradient(circle, ${config.color}${currentTheme === 'light' ? '15' : '20'}, transparent 70%)`
+                background: `radial-gradient(circle, ${config.color}${currentTheme === 'light' ? '15' : '20'}, transparent 70%)`,
+                transform: 'translate(50%, -50%)'
             }}
             animate={{
                 scale: [1, 1.2, 1],
-                rotate: [0, 180, 360]
             }}
             transition={{
                 duration: 15,
                 repeat: Infinity,
-                ease: "linear"
+                ease: "easeInOut"
             }}
         />
 
         <motion.div
-            className="absolute -bottom-20 -left-20 w-60 h-60 rounded-full"
+            className="absolute bottom-0 left-0 w-60 h-60 rounded-full"
             style={{
-                background: `radial-gradient(circle, ${config.color}${currentTheme === 'light' ? '10' : '15'}, transparent 60%)`
+                background: `radial-gradient(circle, ${config.color}${currentTheme === 'light' ? '10' : '15'}, transparent 60%)`,
+                transform: 'translate(-50%, 50%)' 
             }}
             animate={{
                 scale: [1.2, 1, 1.2],
-                rotate: [360, 180, 0]
             }}
             transition={{
                 duration: 20,
                 repeat: Infinity,
-                ease: "linear"
+                ease: "easeInOut"
             }}
         />
     </div>

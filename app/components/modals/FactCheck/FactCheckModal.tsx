@@ -1,15 +1,14 @@
 'use client';
 
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ResearchResult } from '@/app/types/article'; // Fix: Import ResearchResult
+import { ResearchResult } from '@/app/types/article';
 import { X } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { LLMResearchResponse } from '@/app/types/research';
 import ResearchResultsOverview from '@/app/sections/upload/ResearchResultsOverview';
 import { ResourceAnalysisCard } from '@/app/sections/upload/ResourceAnalysisCard';
 import { ExpertPanel } from '@/app/sections/upload/ExpertPanel';
-import FactCheckMetadata from './FactCheckMetadata';
 
 interface FactCheckModalProps {
   isOpen: boolean;
@@ -66,30 +65,77 @@ const transformResearchToResponse = (research: ResearchResult): LLMResearchRespo
 export const FactCheckModal = memo(function FactCheckModal({
   isOpen,
   onClose,
-  research // Fix: Use research parameter name
+  research
 }: FactCheckModalProps) {
   const { colors, cardColors, overlayColors, mounted, isDark } = useLayoutTheme();
 
+  // ✅ **FIX: Improved event handlers with better focus management**
   const handleBackdropClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
     if (e.target === e.currentTarget) {
       onClose();
     }
   }, [onClose]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    e.stopPropagation();
     if (e.key === 'Escape') {
       onClose();
     }
   }, [onClose]);
 
-  // Transform research data to display format
+  // ✅ **FIX: Simplified body scroll management - only one useEffect**
+  useEffect(() => {
+    if (isOpen) {
+      // Store the current inline style values (not computed styles)
+      const originalOverflow = document.body.style.overflow;
+      const originalPointerEvents = document.body.style.pointerEvents;
+      
+      // Apply modal styles
+      document.body.style.overflow = 'hidden';
+      document.body.style.pointerEvents = 'none';
+      
+      // Allow pointer events on modal elements
+      const modalElements = document.querySelectorAll('[data-modal="fact-check"]');
+      modalElements.forEach((el) => {
+        (el as HTMLElement).style.pointerEvents = 'auto';
+      });
+      
+      return () => {
+        // ✅ **FIX: Restore original inline styles (empty string removes inline style)**
+        document.body.style.overflow = originalOverflow;
+        document.body.style.pointerEvents = originalPointerEvents;
+      };
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        e.preventDefault();
+        e.stopPropagation();
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleGlobalKeyDown, true);
+      return () => {
+        document.removeEventListener('keydown', handleGlobalKeyDown, true);
+      };
+    }
+  }, [isOpen, onClose]);
+
   const displayResult = transformResearchToResponse(research);
 
+  if (!isOpen) return null;
+
   return (
-    <AnimatePresence>
-      {isOpen && (
+    <div className="fixed inset-0 z-[9999]" data-modal="fact-check">
+      <AnimatePresence>
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4"
+          className="fixed inset-0 flex items-center justify-center p-2 sm:p-4"
+          style={{ pointerEvents: 'auto' }} 
           onKeyDown={handleKeyDown}
           tabIndex={-1}
         >
@@ -100,7 +146,7 @@ export const FactCheckModal = memo(function FactCheckModal({
             animate="visible"
             exit="exit"
             onClick={handleBackdropClick}
-            className="absolute inset-0 backdrop-blur-sm"
+            className="absolute inset-0 backdrop-blur-sm cursor-pointer"
             style={{ backgroundColor: overlayColors.backdrop }}
           />
 
@@ -110,12 +156,13 @@ export const FactCheckModal = memo(function FactCheckModal({
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="relative w-full max-w-6xl max-h-[95vh] overflow-hidden rounded-xl sm:rounded-2xl shadow-2xl"
+            className="relative w-full max-w-6xl max-h-[95vh] overflow-hidden rounded-xl sm:rounded-2xl shadow-2xl z-10"
             style={{
               backgroundColor: cardColors.background,
               border: `1px solid ${cardColors.border}`,
               boxShadow: `0 25px 50px -12px ${cardColors.shadow}`
             }}
+            onClick={(e) => e.stopPropagation()} // ✅ **FIX: Prevent event bubbling**
           >
             {/* Header with Close Button */}
             <div
@@ -128,7 +175,10 @@ export const FactCheckModal = memo(function FactCheckModal({
               }}
             >
               <motion.button
-                onClick={onClose}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onClose();
+                }}
                 className="p-2 sm:p-3 rounded-lg sm:rounded-xl transition-all duration-200 group flex-shrink-0"
                 style={{
                   color: colors.mutedForeground,
@@ -146,14 +196,18 @@ export const FactCheckModal = memo(function FactCheckModal({
               </motion.button>
             </div>
 
-            {/* Scrollable Content */}
+            {/* ✅ **FIX: Improved scrollable content with proper event handling** */}
             <div
-              className="overflow-y-auto max-h-[calc(95vh-80px)] sm:max-h-[calc(95vh-100px)] lg:max-h-[calc(95vh-120px)] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
+              className="overflow-y-auto max-h-[calc(95vh-80px)] sm:max-h-[calc(95vh-100px)] lg:max-h-[calc(95vh-120px)]"
               style={{
                 background: isDark
                   ? 'linear-gradient(180deg, rgba(15, 23, 42, 0.3) 0%, rgba(30, 41, 59, 0.2) 100%)'
-                  : 'linear-gradient(180deg, rgba(248, 250, 252, 0.3) 0%, rgba(241, 245, 249, 0.2) 100%)'
+                  : 'linear-gradient(180deg, rgba(248, 250, 252, 0.3) 0%, rgba(241, 245, 249, 0.2) 100%)',
+                scrollbarWidth: 'thin',
+                scrollbarColor: isDark ? '#4a5568 #2d3748' : '#cbd5e0 #e2e8f0'
               }}
+              onWheel={(e) => e.stopPropagation()} // ✅ **FIX: Allow wheel scrolling**
+              onTouchMove={(e) => e.stopPropagation()} // ✅ **FIX: Allow touch scrolling**
             >
               <div className="p-3 sm:p-4 lg:p-6 space-y-6 sm:space-y-8">
                 {/* Research Results Overview Component */}
@@ -194,59 +248,12 @@ export const FactCheckModal = memo(function FactCheckModal({
                     isLoading={false}
                   />
                 </motion.div>
-
-                {/* Research Metadata Section */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.7 }}
-                  className="mt-6 sm:mt-8 p-4 sm:p-6 rounded-xl sm:rounded-2xl border"
-                  style={{
-                    background: isDark
-                      ? 'linear-gradient(135deg, rgba(71, 85, 105, 0.1) 0%, rgba(100, 116, 139, 0.1) 100%)'
-                      : 'linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.8) 100%)',
-                    border: `1px solid ${colors.border}`
-                  }}
-                >
-                  <h3
-                    className="text-base sm:text-lg font-bold mb-3 sm:mb-4 flex items-center gap-2"
-                    style={{ color: colors.foreground }}
-                  >
-                    <span className="text-lg sm:text-xl">🔬</span>
-                    Research Information
-                  </h3>
-
-                  <FactCheckMetadata
-                    research={research}
-                    displayResult={displayResult}
-                  />
-                </motion.div>
-
-                {/* Footer Disclaimer */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.9 }}
-                  className="text-center p-3 sm:p-4 rounded-lg"
-                  style={{
-                    background: isDark ? 'rgba(71, 85, 105, 0.1)' : 'rgba(248, 250, 252, 0.5)',
-                    border: `1px solid ${colors.border}`
-                  }}
-                >
-                  <p
-                    className="text-xs leading-relaxed"
-                    style={{ color: colors.mutedForeground }}
-                  >
-                    This analysis is generated by AI and cross-referenced with multiple sources.
-                    Always verify information through additional trusted sources.
-                  </p>
-                </motion.div>
               </div>
             </div>
           </motion.div>
         </div>
-      )}
-    </AnimatePresence>
+      </AnimatePresence>
+    </div>
   );
 });
 

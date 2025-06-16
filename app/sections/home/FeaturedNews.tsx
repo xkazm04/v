@@ -3,10 +3,9 @@ import { useCallback, useMemo, memo } from 'react';
 import { useNews } from '@/app/hooks/useNews';
 import { NewsGrid } from '../feed/NewsGrid';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RefreshCw, AlertCircle, Database, HardDrive, Wifi } from 'lucide-react';
+import { RefreshCw, AlertCircle } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { Button } from '@/app/components/ui/button';
-import { Badge } from '@/app/components/ui/badge';
 import { useNewsFilters } from '@/app/stores/filterStore';
 import { countryLabels } from '@/app/helpers/countries';
 
@@ -16,52 +15,6 @@ interface FeaturedNewsProps {
   autoRefresh?: boolean;
 }
 
-const DataSourceIndicator = memo(({ dataSource }: { dataSource: string }) => {
-  const getSourceConfig = () => {
-    switch (dataSource) {
-      case 'supabase':
-        return {
-          icon: <Database className="w-3 h-3" />,
-          label: 'Supabase Live',
-          color: 'bg-green-500',
-          description: 'Real-time data'
-        };
-      case 'backend':
-        return {
-          icon: <Wifi className="w-3 h-3" />,
-          label: 'Backend API',
-          color: 'bg-blue-500',
-          description: 'API fallback'
-        };
-      case 'mock':
-        return {
-          icon: <HardDrive className="w-3 h-3" />,
-          label: 'Demo Mode',
-          color: 'bg-orange-500',
-          description: 'Offline data'
-        };
-      default:
-        return {
-          icon: <AlertCircle className="w-3 h-3" />,
-          label: 'Unknown',
-          color: 'bg-gray-500',
-          description: 'Unknown source'
-        };
-    }
-  };
-
-  const config = getSourceConfig();
-
-  return (
-    <Badge variant="secondary" className="flex items-center gap-2 text-xs">
-      <div className={`w-2 h-2 rounded-full ${config.color}`} />
-      {config.icon}
-      {config.label}
-    </Badge>
-  );
-});
-
-DataSourceIndicator.displayName = 'DataSourceIndicator';
 
 const FeaturedNews = memo(({ 
   limit = 20, 
@@ -158,11 +111,6 @@ const FeaturedNews = memo(({
           >
             {displayTitle}
           </motion.h2>
-          
-          {/* Data Source Indicator */}
-          {dataSource && dataSource !== 'none' && (
-            <DataSourceIndicator dataSource={dataSource} />
-          )}
         </div>
 
         <motion.button

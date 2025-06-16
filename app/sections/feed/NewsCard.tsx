@@ -39,7 +39,6 @@ const NewsCard = memo(function NewsCard({
   const tapCountRef = useRef<number>(0);
   const hasDraggedRef = useRef<boolean>(false);
 
-  // ✅ **REMOVED: Desktop mouse click for card dismissal**
   const handleMouseClick = useCallback((e: React.MouseEvent) => {
     // Only handle mouse clicks on desktop, and only if not dragging
     if (isDesktop && !isDragging && !hasDraggedRef.current) {
@@ -48,20 +47,17 @@ const NewsCard = memo(function NewsCard({
     }
   }, [isDesktop, isDragging]);
 
-  // ✅ **REMOVED: Right click for modal - replaced with quote click**
   const handleRightClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     // Right click functionality removed
   }, []);
 
-  // ✅ **NEW: Handle quote click to open modal**
   const handleQuoteClick = useCallback(() => {
     if (!isMobile) {
       setShowModal(true);
     }
   }, [isMobile]);
 
-  // ✅ **UPDATED: Mobile double-tap for modal**
   const handleTouchTap = useCallback(() => {
     if (!isMobile) return;
     

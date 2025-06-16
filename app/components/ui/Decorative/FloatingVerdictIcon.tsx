@@ -123,15 +123,18 @@ export const FloatingVerdictIcon: React.FC<FloatingVerdictIconProps> = ({
           stiffness: 100,
           damping: 10
         }}
-        whileHover={{ 
+        whileHover={onClick ? { 
           scale: 1.1, 
           rotate: 5,
           transition: { duration: 0.2 }
-        }}
+        } : undefined} // ✅ **FIX: Only enable hover if clickable**
         onClick={onClick}
         onHoverStart={() => onHover?.(true)}
         onHoverEnd={() => onHover?.(false)}
-        style={{ cursor: onClick ? 'pointer' : 'default' }}
+        style={{ 
+          cursor: onClick ? 'pointer' : 'default',
+          pointerEvents: onClick ? 'auto' : 'none' // ✅ **FIX: Disable interactions if no onClick**
+        }}
       >
         {/* Icon Glow Background */}
         <motion.div 

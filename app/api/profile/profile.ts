@@ -1,6 +1,6 @@
 import { Profile } from "@/app/types/profile";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL = '/api'; 
 
 export class ProfileApiService {
   private static async fetchWithErrorHandling<T>(
@@ -8,6 +8,8 @@ export class ProfileApiService {
     options?: RequestInit
   ): Promise<{ data?: T; error?: string }> {
     try {
+      console.log(`Making API request to: ${url}`);
+      
       const response = await fetch(url, {
         headers: {
           'Content-Type': 'application/json',
@@ -25,8 +27,10 @@ export class ProfileApiService {
         };
       }
 
-      const data = await response.json();
-      return { data };
+      const result = await response.json();
+      console.log(`API response:`, result);
+      
+      return { data: result.data || result };
     } catch (error) {
       console.error('Network error:', error);
       return {
@@ -36,10 +40,7 @@ export class ProfileApiService {
   }
 
   static async getProfileById(profileId: string): Promise<{ data?: Profile; error?: string }> {
-    const url = `${API_BASE_URL}/profiles/${profileId}`;
-    
-    console.log(`Fetching profile: ${url}`);
-    
+    const url = `${API_BASE_URL}/profile/${profileId}`;
     return this.fetchWithErrorHandling<Profile>(url);
   }
 
@@ -60,7 +61,7 @@ export class ProfileApiService {
     if (params.limit) searchParams.set('limit', params.limit.toString());
     if (params.offset) searchParams.set('offset', params.offset.toString());
 
-    const url = `${API_BASE_URL}/profiles?${searchParams.toString()}`;
+    const url = `${API_BASE_URL}/profile?${searchParams.toString()}`;
     
     console.log(`Searching profiles: ${url}`);
     
@@ -79,7 +80,7 @@ export class ProfileApiService {
     if (params.limit) searchParams.set('limit', params.limit.toString());
     if (params.offset) searchParams.set('offset', params.offset.toString());
 
-    const url = `${API_BASE_URL}/profiles/${profileId}/statements?${searchParams.toString()}`;
+    const url = `${API_BASE_URL}/profile/${profileId}/statements?${searchParams.toString()}`;
     
     console.log(`Fetching profile statements: ${url}`);
     
@@ -87,7 +88,7 @@ export class ProfileApiService {
   }
 
   static async getProfileStats(): Promise<{ data?: any; error?: string }> {
-    const url = `${API_BASE_URL}/profiles/stats/summary`;
+    const url = `${API_BASE_URL}/profile/stats/summary`;
     
     console.log(`Fetching profile stats: ${url}`);
     

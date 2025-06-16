@@ -32,13 +32,6 @@ const SideNavMainSection = ({expandedSections, isActive, isCollapsed, mounted}: 
                             itemId: "home"
                         },
                         {
-                            href: "/trending",
-                            icon: Trending,
-                            label: "Trending",
-                            itemId: "trending",
-                            badge: 12
-                        },
-                        {
                             href: "/profiles",
                             icon: Bookmark,
                             label: "Liked profiles",

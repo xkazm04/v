@@ -1,3 +1,4 @@
+import { use } from 'react';
 import DashboardLayout from "@/app/sections/dashboard/DashboardLayout";
 
 interface ProfilePageProps {
@@ -6,8 +7,8 @@ interface ProfilePageProps {
   }>;
 }
 
-const ProfilePage = async ({ params }: ProfilePageProps) => {
-  const { id } = await params;
+const ProfilePage = ({ params }: ProfilePageProps) => {
+  const { id } = use(params);
 
   return (
     <div className="min-h-screen bg-background">
@@ -15,10 +16,8 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
     </div>
   );
 };
-
 export default ProfilePage;
 
-// Generate metadata for SEO
 export async function generateMetadata({ params }: ProfilePageProps) {
   const { id } = await params;
   

@@ -12,8 +12,7 @@ export const FeaturedVideos = memo(function FeaturedVideos() {
     isLoading, 
     error, 
     refetch 
-  } = useFeaturedVideos(4); // ✅ Use dedicated hook
-
+  } = useFeaturedVideos(4); 
   // Loading state
   if (isLoading) {
     return (
@@ -84,9 +83,6 @@ export const FeaturedVideos = memo(function FeaturedVideos() {
       >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Featured Videos</h2>
-          <div className="text-sm text-muted-foreground">
-            {videos.length} featured videos
-          </div>
         </div>
         <VideoGrid 
           videos={videos} 

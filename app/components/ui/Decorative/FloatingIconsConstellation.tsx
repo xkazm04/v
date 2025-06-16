@@ -76,7 +76,7 @@ const FloatingIconsConstellation = memo(function FloatingIconsConstellation({
   const config = variantConfigs[variant];
 
   return (
-    <div className={`fixed inset-0 pointer-events-none overflow-hidden ${className}`}>
+    <div className={`fixed inset-0 pointer-events-none overflow-hidden ${className} opacity-50`}>
       {/* Dynamic Background */}
       <div className={`
           ${isDark ? 'opacity-50' : 'opacity-100'}
