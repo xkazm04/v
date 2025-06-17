@@ -1,5 +1,6 @@
 import { ResearchResult } from "@/app/types/article";
-import { supabase } from "../supabase"; // ✅ Use regular client, not admin
+import { supabaseAdmin } from "../supabase";
+import { translateResearchStatement } from "./translation-service";
 
 export interface SupabaseNewsFilters {
   limit?: number;
@@ -14,57 +15,26 @@ export interface SupabaseNewsFilters {
   translateTo?: string;
 }
 
-// Client-side translation function that calls API route
-async function translateViaAPI(
-  statement: string,
-  sourceLocale: string = 'en',
-  targetLocale: string = 'es'
-): Promise<string | null> {
-  if (!statement || statement.trim() === '' || sourceLocale === targetLocale) {
-    return statement;
-  }
-
-  try {
-    const response = await fetch('/api/translate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        text: statement,
-        sourceLocale,
-        targetLocale,
-      }),
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.translatedText || statement;
-    } else {
-      console.warn('Translation API failed:', response.status);
-      return statement;
-    }
-  } catch (error) {
-    console.warn('Translation error:', error);
-    return statement;
-  }
-}
-
-class SupabaseNewsService {
+class SupabaseNewsServiceServer {
   /**
-   * Get research results from Supabase research_results table (client-side safe)
+   * Get research results from Supabase research_results table (server-side with admin client)
    */
   async getNews(filters: SupabaseNewsFilters = {}): Promise<ResearchResult[]> {
     try {
+      // Check if admin client is available
+      if (!supabaseAdmin) {
+        console.warn('Supabase admin client not available (missing service role key)');
+        return [];
+      }
+
       // Test connection first
-      const { data: testData, error: testError } = await supabase
+      const { data: testData, error: testError } = await supabaseAdmin
         .from('research_results')
         .select('id, statement')
         .limit(1);
 
       if (testError) {
-        console.warn(`Supabase connection failed: ${testError.message}`);
-        return [];
+        throw new Error(`Supabase connection failed: ${testError.message}`);
       }
 
       if (!testData || testData.length === 0) {
@@ -72,7 +42,7 @@ class SupabaseNewsService {
       }
 
       // Build main query
-      let query = supabase
+      let query = supabaseAdmin
         .from('research_results')
         .select(`
           id,
@@ -131,8 +101,7 @@ class SupabaseNewsService {
       const { data, error } = await query;
 
       if (error) {
-        console.warn(`Supabase query failed: ${error.message}`);
-        return [];
+        throw new Error(`Supabase query failed: ${error.message}`);
       }
 
       if (!data || data.length === 0) {
@@ -177,7 +146,7 @@ class SupabaseNewsService {
   }
 
   /**
-   * Translate statements in batch using API route
+   * Translate statements in batch using direct translation service
    */
   private async translateStatements(results: ResearchResult[], targetLanguage: string): Promise<ResearchResult[]> {
     try {
@@ -187,7 +156,7 @@ class SupabaseNewsService {
         }
 
         try {
-          const translatedStatement = await translateViaAPI(
+          const translatedStatement = await translateResearchStatement(
             result.statement,
             'en', // Source language (English)
             targetLanguage
@@ -200,7 +169,7 @@ class SupabaseNewsService {
               ...result.__meta,
               originalStatement: result.statement, // Keep original for debugging
               translatedTo: targetLanguage,
-              translationSource: 'api'
+              translationSource: 'lingo-dev'
             }
           };
         } catch (translationError) {
@@ -227,73 +196,6 @@ class SupabaseNewsService {
   }
 
   /**
-   * Get single research result by ID
-   */
-  async getNewsById(id: string, translateTo?: string): Promise<ResearchResult | null> {
-    try {
-      const { data, error } = await supabase
-        .from('research_results')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (error || !data) {
-        return null;
-      }
-
-      let result: ResearchResult = {
-        id: data.id,
-        statement: data.statement || '',
-        source: data.source || '',
-        context: data.context || '',
-        request_datetime: data.request_datetime || data.created_at,
-        statement_date: data.statement_date,
-        country: data.country,
-        valid_sources: data.valid_sources || '',
-        verdict: data.verdict || '',
-        status: data.status || 'UNVERIFIABLE',
-        correction: data.correction,
-        experts: this.parseJsonField(data.experts),
-        resources_agreed: this.parseJsonField(data.resources_agreed),
-        resources_disagreed: this.parseJsonField(data.resources_disagreed),
-        profileId: data.profile_id,
-        processed_at: data.processed_at || data.created_at,
-        created_at: data.created_at,
-        updated_at: data.updated_at,
-        category: data.category
-      };
-
-      // Translate single result if requested
-      if (translateTo && result.statement) {
-        try {
-          const translatedStatement = await translateViaAPI(
-            result.statement,
-            'en',
-            translateTo
-          );
-
-          result = {
-            ...result,
-            statement: translatedStatement || result.statement,
-            __meta: {
-              originalStatement: result.statement,
-              translatedTo: translateTo,
-              translationSource: 'api'
-            }
-          };
-        } catch (translationError) {
-          console.warn(`Single translation failed for ${id}:`, translationError);
-        }
-      }
-
-      return result;
-    } catch (error) {
-      console.error('Get news by ID error:', error);
-      return null;
-    }
-  }
-
-  /**
    * Parse JSON fields safely
    */
   private parseJsonField(field: any): any {
@@ -308,21 +210,6 @@ class SupabaseNewsService {
     }
     return undefined;
   }
-
-  /**
-   * Health check for Supabase connection
-   */
-  async healthCheck(): Promise<boolean> {
-    try {
-      const { error } = await supabase
-        .from('research_results')
-        .select('id')
-        .limit(1);
-      return !error;
-    } catch (error) {
-      return false;
-    }
-  }
 }
 
-export const supabaseNewsService = new SupabaseNewsService();
+export const supabaseNewsServiceServer = new SupabaseNewsServiceServer();

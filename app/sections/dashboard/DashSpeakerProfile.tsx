@@ -5,13 +5,10 @@ import Image from 'next/image';
 import { Profile } from '@/app/types/profile';
 import { 
   MapPin,
-  Users,
-  MessageSquare,
-  Calendar,
-  Globe
 } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { countryMap } from '@/app/helpers/countries';
+import DashRelScore from '@/app/components/ui/Dashboard/DashRelScore';
 
 interface DashSpeakerProfileProps {
   profile: Profile;
@@ -35,30 +32,7 @@ const getAvatarUrl = (profile: Profile) => {
   if (profile.avatar_url) {
     return profile.avatar_url;
   }
-  
-  // Generate a default avatar using initials
-  const initials = profile.name
-    .split(' ')
-    .map(n => n[0])
-    .join('')
-    .substring(0, 2)
-    .toUpperCase();
-  
-  // Using a simple avatar service (you can replace with your preferred service)
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=random&color=fff&size=96&bold=true`;
-};
-
-// Format date for display
-const formatDate = (dateString: string) => {
-  try {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  } catch {
-    return 'Unknown';
-  }
 };
 
 const DashSpeakerProfile = ({ profile, isLoading = false }: DashSpeakerProfileProps) => {
@@ -127,13 +101,7 @@ const DashSpeakerProfile = ({ profile, isLoading = false }: DashSpeakerProfilePr
             backgroundSize: '32px 32px'
           }}
         />
-      </div>
-
-      {/* Floating accent elements */}
-      <div className="absolute top-4 right-4 w-3 h-3 bg-primary rounded-full animate-pulse" />
-      <div className="absolute top-12 right-8 w-2 h-2 bg-purple-500 rounded-full animate-pulse delay-300" />
-      <div className="absolute top-8 right-16 w-1 h-1 bg-blue-500 rounded-full animate-pulse delay-700" />
-      
+      </div>      
       <div className="relative z-10">
         {/* Main Profile Section */}
         <div className="flex items-start gap-6 mb-8">
@@ -160,16 +128,6 @@ const DashSpeakerProfile = ({ profile, isLoading = false }: DashSpeakerProfilePr
               <h2 className="text-3xl font-black text-foreground tracking-tight leading-tight">
                 {profile.name}
               </h2>
-              <div className="flex items-center gap-1 rounded-full px-3 py-1 backdrop-blur-sm"
-                   style={{
-                     background: themeColors.cardBackground,
-                     border: `1px solid ${themeColors.cardBorder}`
-                   }}>
-                <Globe className="w-4 h-4 text-muted-foreground" />
-                <span className="text-xs font-medium text-muted-foreground">
-                  Profile
-                </span>
-              </div>
             </div>
             
             {/* Party */}
@@ -185,82 +143,14 @@ const DashSpeakerProfile = ({ profile, isLoading = false }: DashSpeakerProfilePr
             <div className="flex items-center gap-2 mb-4">
               <MapPin className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm font-medium text-foreground">
-                {country.flag} {country.name}
-              </span>
-              <span className="text-xs px-2 py-1 rounded-full"
-                    style={{
-                      background: `${themeColors.accent}20`,
-                      color: themeColors.accent
-                    }}>
-                {country.code}
+               {country.name}
               </span>
             </div>
-
-            {/* Creation Date */}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Calendar className="h-4 w-4" />
-              <span>Member since {formatDate(profile.created_at)}</span>
-            </div>
+            <DashRelScore
+              score={90}
+              />
           </div>
         </div>
-        
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <motion.div 
-            whileHover={{ scale: 1.02 }}
-            className="relative rounded-2xl p-6 border backdrop-blur-sm shadow-lg text-center overflow-hidden"
-            style={{
-              background: themeColors.cardBackground,
-              borderColor: themeColors.cardBorder
-            }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10" />
-            <div className="relative z-10">
-              <MessageSquare className="h-6 w-6 mx-auto mb-2" style={{ color: themeColors.accent }} />
-              <div className="text-3xl font-black text-foreground mb-1">
-                {profile.total_statements || 0}
-              </div>
-              <div className="text-xs text-muted-foreground uppercase tracking-widest font-bold">
-                Statements
-              </div>
-            </div>
-          </motion.div>
-          
-          <motion.div 
-            whileHover={{ scale: 1.02 }}
-            className="relative rounded-2xl p-6 border backdrop-blur-sm shadow-lg text-center overflow-hidden"
-            style={{
-              background: themeColors.cardBackground,
-              borderColor: themeColors.cardBorder
-            }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-green-500/10" />
-            <div className="relative z-10">
-              <Users className="h-6 w-6 text-emerald-500 mx-auto mb-2" />
-              <div className="text-3xl font-black text-foreground mb-1">
-                --
-              </div>
-              <div className="text-xs text-muted-foreground uppercase tracking-widest font-bold">
-                Reliability
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                Coming Soon
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Profile ID for debugging (remove in production) */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="mt-4 p-2 rounded text-xs text-muted-foreground"
-               style={{ background: themeColors.cardBackground }}>
-            <strong>Profile ID:</strong> {profile.id}
-            <br />
-            <strong>Normalized Name:</strong> {profile.name_normalized}
-            <br />
-            <strong>Last Updated:</strong> {formatDate(profile.updated_at)}
-          </div>
-        )}
       </div>
     </motion.div>
   );

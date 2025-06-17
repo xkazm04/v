@@ -2,15 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useProfile } from '@/app/hooks/useProfile';
+import { useCombinedProfile } from '@/app/hooks/useCombinedProfile';
 import { AlertCircle, Loader2 } from 'lucide-react';
-
 import DashSpeakerProfile from '@/app/sections/dashboard/DashSpeakerProfile';
-import DashTruthTrend from '@/app/sections/dashboard/DashTruthTrend';
-import DashBreakdown from '@/app/sections/dashboard/DashBreakdown';
-import DashScore from '@/app/sections/dashboard/DashScore';
-import DashActivity from '@/app/sections/dashboard/DashActivity';
 import DashComparison from '@/app/sections/dashboard/DashComparison';
+import DashStatementsAnalyticsSection from '@/app/sections/dashboard/DashStatements/DashStatementAnalyticsSection';
 import { MOCK_SPEAKERS } from '@/app/constants/speakers';
 
 interface DashboardLayoutProps {
@@ -21,18 +17,29 @@ const DashboardLayout = ({ profileId }: DashboardLayoutProps) => {
   const [selectedSpeaker, setSelectedSpeaker] = useState(MOCK_SPEAKERS[0]);
   const [timeRange, setTimeRange] = useState('6months');
   
-  // Fetch real profile data if profileId is provided
-  const { profile, isLoading: profileLoading, error: profileError, isError } = useProfile(profileId);
+  // Fetch real profile data if profileId is provided using combined hook
+  const { 
+    profile, 
+    isLoading: profileLoading, 
+    error: profileError, 
+    isError,
+    dataSource 
+  } = useCombinedProfile(profileId);
 
   // Use real profile data when available, fallback to mock data
   const shouldUseRealData = profileId && profile && !isError;
 
   useEffect(() => {
+    // Log data source for debugging
+    if (profileId && dataSource) {
+      console.log(`📊 Dashboard using ${dataSource} as data source for profile: ${profileId}`);
+    }
+
     // If we have a profileId but no real data yet, and it's not loading, show an error
     if (profileId && !profile && !profileLoading && isError) {
-      console.warn('Failed to load profile:', profileError);
+      console.warn('Failed to load profile from all sources:', profileError);
     }
-  }, [profileId, profile, profileLoading, isError, profileError]);
+  }, [profileId, profile, profileLoading, isError, profileError, dataSource]);
 
   // Loading state for real profile
   if (profileId && profileLoading) {
@@ -43,7 +50,12 @@ const DashboardLayout = ({ profileId }: DashboardLayoutProps) => {
             <div className="text-center space-y-4">
               <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
               <div className="text-lg font-semibold text-foreground">Loading Profile...</div>
-              <div className="text-sm text-muted-foreground">Fetching profile data for {profileId}</div>
+              <div className="text-sm text-muted-foreground">
+                Fetching profile data for {profileId}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Trying Supabase → FastAPI fallback
+              </div>
             </div>
           </div>
         </div>
@@ -61,7 +73,7 @@ const DashboardLayout = ({ profileId }: DashboardLayoutProps) => {
               <AlertCircle className="w-12 h-12 mx-auto text-red-500" />
               <div className="text-lg font-semibold text-foreground">Profile Not Found</div>
               <div className="text-sm text-muted-foreground max-w-md mx-auto">
-                {profileError || `Unable to load profile with ID: ${profileId}`}
+                {profileError || `Unable to load profile with ID: ${profileId} from any data source`}
               </div>
               <button 
                 onClick={() => window.history.back()}
@@ -79,6 +91,16 @@ const DashboardLayout = ({ profileId }: DashboardLayoutProps) => {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto space-y-8">
+        {/* Data Source Indicator (only in development) */}
+        {process.env.NODE_ENV === 'development' && profileId && dataSource && (
+          <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+            <div className="text-sm text-blue-700 dark:text-blue-300">
+              📊 Data Source: <span className="font-semibold capitalize">{dataSource}</span>
+              {dataSource === 'api' && ' (Fallback)'}
+            </div>
+          </div>
+        )}
+
         {/* Speaker Selection - Only show for mock data */}
         {!shouldUseRealData && (
           <motion.div
@@ -119,122 +141,22 @@ const DashboardLayout = ({ profileId }: DashboardLayoutProps) => {
             {shouldUseRealData ? (
               <>
                 <DashSpeakerProfile profile={profile} />
-                {/* Real data components will be added later */}
-                <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">Reliability Score</h3>
-                  <div className="text-center text-muted-foreground">
-                    <div className="text-sm">Coming soon with more data</div>
-                  </div>
-                </div>
-                <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">Comparison</h3>
-                  <div className="text-center text-muted-foreground">
-                    <div className="text-sm">Coming soon with more profiles</div>
-                  </div>
-                </div>
+                {/* Additional real data components can be added here later */}
               </>
             ) : (
               <>
-                <DashScore speaker={selectedSpeaker} />
                 <DashComparison currentSpeaker={selectedSpeaker} />
               </>
             )}
           </motion.div>
 
-          {/* Center Column - Main Analytics */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="space-y-6"
-          >
-            {shouldUseRealData ? (
-              <>
-                <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">Truth Trend</h3>
-                  <div className="text-center text-muted-foreground py-8">
-                    <div className="text-sm">Statement analysis coming soon</div>
-                    <div className="text-xs mt-2">
-                      Profile has {profile.total_statements || 0} statements
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">Topic Breakdown</h3>
-                  <div className="text-center text-muted-foreground py-8">
-                    <div className="text-sm">Topic analysis coming soon</div>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <>
-                <DashTruthTrend speaker={selectedSpeaker} timeRange={timeRange} />
-                <DashBreakdown speaker={selectedSpeaker} />
-              </>
-            )}
-          </motion.div>
-
-          {/* Right Column - Activity */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
-            className="space-y-6"
-          >
-            {shouldUseRealData ? (
-              <DashActivity profileId={profileId!} limit={10} />
-            ) : (
-              <></>
-            )}
-          </motion.div>
+          {/* Center & Right Columns - Analytics Section */}
+          <DashStatementsAnalyticsSection 
+            profileId={profileId}
+            speaker={shouldUseRealData ? undefined : selectedSpeaker}
+            timeRange={timeRange}
+          />
         </div>
-
-        {/* Time Range Controls - Only for mock data */}
-        {!shouldUseRealData && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="flex justify-center"
-          >
-            <div className="bg-card border border-border rounded-xl p-2 shadow-sm">
-              {['1month', '3months', '6months', '1year', 'all'].map((range) => (
-                <button
-                  key={range}
-                  onClick={() => setTimeRange(range)}
-                  className={`
-                    px-4 py-2 rounded-lg font-medium transition-all duration-200 capitalize
-                    ${timeRange === range
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
-                    }
-                  `}
-                >
-                  {range === 'all' ? 'All Time' : range.replace(/(\d+)/, '$1 ')}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Debug Info - Development only */}
-        {process.env.NODE_ENV === 'development' && shouldUseRealData && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="bg-card border border-border rounded-xl p-4 shadow-sm"
-          >
-            <h4 className="text-sm font-semibold text-foreground mb-2">Debug Info</h4>
-            <div className="text-xs text-muted-foreground space-y-1">
-              <div><strong>Profile ID:</strong> {profile.id}</div>
-              <div><strong>Name:</strong> {profile.name}</div>
-              <div><strong>Statements:</strong> {profile.total_statements || 0}</div>
-              <div><strong>Country:</strong> {profile.country || 'Not set'}</div>
-              <div><strong>Party:</strong> {profile.party || 'Not set'}</div>
-            </div>
-          </motion.div>
-        )}
       </div>
     </div>
   );
