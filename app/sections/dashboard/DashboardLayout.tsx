@@ -29,18 +29,6 @@ const DashboardLayout = ({ profileId }: DashboardLayoutProps) => {
   // Use real profile data when available, fallback to mock data
   const shouldUseRealData = profileId && profile && !isError;
 
-  useEffect(() => {
-    // Log data source for debugging
-    if (profileId && dataSource) {
-      console.log(`📊 Dashboard using ${dataSource} as data source for profile: ${profileId}`);
-    }
-
-    // If we have a profileId but no real data yet, and it's not loading, show an error
-    if (profileId && !profile && !profileLoading && isError) {
-      console.warn('Failed to load profile from all sources:', profileError);
-    }
-  }, [profileId, profile, profileLoading, isError, profileError, dataSource]);
-
   // Loading state for real profile
   if (profileId && profileLoading) {
     return (

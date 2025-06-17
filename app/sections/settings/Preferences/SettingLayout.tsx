@@ -1,4 +1,3 @@
-// app/sections/settings/SettingLayout.tsx
 'use client';
 
 import { memo } from 'react';
@@ -6,17 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useUserPreferences } from '@/app/hooks/use-user-preferences';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
-import { 
-  Sparkles, 
-  Star,
-  Layers,
-  Cpu,
-  MapPin,
-  Zap,
-  Brain,
-  Shield,
-  Globe
-} from 'lucide-react';
 import SettingLanguage from './SettingLanguage';
 import SettingCountry from './SettingCountry';
 import { AVAILABLE_LANGUAGES } from '@/app/components/userPreferences/LanguageSelector';
