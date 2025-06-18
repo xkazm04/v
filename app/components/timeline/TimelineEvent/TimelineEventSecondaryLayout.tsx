@@ -2,255 +2,268 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ExpertOpinionCard from '../../../components/timeline/ExpertOpinionCard/ExpertOpinionCard';
 import { useViewport } from '@/app/hooks/useViewport';
 import { getSecondaryOpinionPositions } from '@/app/config/timelineEventPositions';
-import TimelineEventFactCard from './TimelineEventFactCard';
-import { EventType } from '../data/timeline';
+import { EventType } from '@/app/types/timeline';
 
 type Props = {
-    gridConfig: {
-        container: string;
-    };
     isActive: boolean;
     event: EventType;
-    showAllOpinions: boolean;
-    setShowAllOpinions: (value: boolean) => void;
+    eventIndex: number;
 }
-const TimelineEventSecondaryLayout = ({ gridConfig, isActive, event, showAllOpinions, setShowAllOpinions }: Props) => {
+
+const TimelineEventSecondaryLayout = ({ 
+    isActive, 
+    event, 
+    eventIndex
+}: Props) => {
     const { isMobile, isTablet, isDesktop } = useViewport();
     const leftOpinions = event.all_opinions.filter(op => op.isLeft);
     const rightOpinions = event.all_opinions.filter(op => !op.isLeft);
     const allSecondaryOpinions = [...leftOpinions, ...rightOpinions];
 
+    // Enhanced debug logging
+    console.log('TimelineEventSecondaryLayout render:', { 
+        eventId: event.id, 
+        allSecondaryOpinions: allSecondaryOpinions.length,
+        leftOpinions: leftOpinions.length,
+        rightOpinions: rightOpinions.length,
+        isDesktop,
+        isTablet,
+        isMobile
+    });
 
-    const secondaryPositions = getSecondaryOpinionPositions(allSecondaryOpinions, isTablet, isDesktop);
+    const secondaryPositions = getSecondaryOpinionPositions(allSecondaryOpinions, isDesktop, isTablet);
+    
     const getPositionsByRow = () => {
         const grouped = {
             top: secondaryPositions.filter(p => p.position.row === "top"),
             middle: secondaryPositions.filter(p => p.position.row === "middle"),
             bottom: secondaryPositions.filter(p => p.position.row === "bottom")
         };
+        
         return grouped;
     };
 
     const positionsByRow = getPositionsByRow();
 
-    return <div className={gridConfig.container}>
-
-        {/* Desktop: Organized Row Layout */}
-        {isDesktop && (
-            <div className="relative flex flex-col items-center justify-center">
-                {/* Top Row - 2 opinions */}
-                {positionsByRow.top.length > 0 && (
-                    <motion.div
-                        className="flex items-center justify-center gap-8 mb-6"
-                        initial={{ opacity: 0, y: -30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, ease: "easeOut" }}
-                    >
-                        <AnimatePresence>
-                            {positionsByRow.top.map(({ opinion, position, index }) => (
-                                <motion.div
-                                    key={`${opinion.id}-${index}`}
-                                    className={position.className}
-                                    initial={{
-                                        opacity: 0,
-                                        scale: 0.8,
-                                        y: -50
-                                    }}
-                                    animate={{
-                                        opacity: 1,
-                                        scale: 1,
-                                        y: 0
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        scale: 0.8,
-                                        y: -50
-                                    }}
-                                    transition={{
-                                        delay: index * 0.1,
-                                        duration: 0.6,
-                                        type: "spring",
-                                        stiffness: 100,
-                                        damping: 20
-                                    }}
-                                >
-                                    <ExpertOpinionCard
-                                        opinion={opinion.opinion}
-                                        expertType={opinion.expert_type}
-                                        side={position.side}
-                                        isStrongest={false}
-                                        isActive={isActive}
-                                        isExpanded={true}
-                                        index={index}
-                                        isSecondaryLayout={true}
-                                    />
-                                </motion.div>
-                            ))}
-                        </AnimatePresence>
-                    </motion.div>
-                )}
-
-                {/* Middle Row - Central fact + side opinions */}
-                <motion.div
-                    className="flex items-center justify-center gap-12 mb-6"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-                >
-                    {/* Left side opinion */}
-                    {positionsByRow.middle.find(p => p.position.column === "left") && (
+    return (
+        <div className="w-full">
+            {isDesktop && (
+                <div className="relative w-full max-w-6xl mx-auto">
+                    {/* Top Row */}
+                    {positionsByRow.top.length > 0 && (
                         <motion.div
-                            className="w-80"
-                            initial={{ opacity: 0, x: -50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.3, duration: 0.6, type: "spring" }}
+                            className="flex items-center justify-center gap-6 mb-8 w-full"
+                            initial={{ opacity: 0, y: -30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, ease: "easeOut" }}
                         >
-                            <ExpertOpinionCard
-                                opinion={positionsByRow.middle.find(p => p.position.column === "left")!.opinion.opinion}
-                                expertType={positionsByRow.middle.find(p => p.position.column === "left")!.opinion.expert_type}
-                                side="left"
-                                isStrongest={false}
-                                isActive={isActive}
-                                isExpanded={true}
-                                index={positionsByRow.middle.find(p => p.position.column === "left")!.index}
-                                isSecondaryLayout={true}
-                            />
+                            <AnimatePresence>
+                                {positionsByRow.top.map(({ opinion, position, index }) => {
+                                    console.log(`Rendering top row card ${index}:`, { opinion: opinion.id, side: position.side });
+                                    return (
+                                        <motion.div
+                                            key={`${opinion.id}-${index}`}
+                                            className="w-72 flex-shrink-0"
+                                            initial={{
+                                                opacity: 0,
+                                                scale: 0.8,
+                                                y: -50
+                                            }}
+                                            animate={{
+                                                opacity: 1,
+                                                scale: 1,
+                                                y: 0
+                                            }}
+                                            exit={{
+                                                opacity: 0,
+                                                scale: 0.8,
+                                                y: -50
+                                            }}
+                                            transition={{
+                                                delay: index * 0.1,
+                                                duration: 0.6,
+                                                type: "spring",
+                                                stiffness: 100,
+                                                damping: 20
+                                            }}
+                                        >
+                                            <ExpertOpinionCard
+                                                opinion={opinion.opinion}
+                                                expertType={opinion.expert_type}
+                                                side={position.side}
+                                                isStrongest={false}
+                                                isActive={isActive}
+                                                isExpanded={true}
+                                                index={index}
+                                                isSecondaryLayout={true}
+                                            />
+                                        </motion.div>
+                                    );
+                                })}
+                            </AnimatePresence>
                         </motion.div>
                     )}
 
-                    <TimelineEventFactCard
-                        isActive={isActive}
-                        showAllOpinions={showAllOpinions}
-                        setShowAllOpinions={setShowAllOpinions}
-                        event={event}
-                        eventIndex={0}
-                        />
-
-                    {/* Right side opinion */}
-                    {positionsByRow.middle.find(p => p.position.column === "right") && (
-                        <motion.div
-                            className="w-80"
-                            initial={{ opacity: 0, x: 50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.3, duration: 0.6, type: "spring" }}
-                        >
-                            <ExpertOpinionCard
-                                opinion={positionsByRow.middle.find(p => p.position.column === "right")!.opinion.opinion}
-                                expertType={positionsByRow.middle.find(p => p.position.column === "right")!.opinion.expert_type}
-                                side="right"
-                                isStrongest={false}
-                                isActive={isActive}
-                                isExpanded={true}
-                                index={positionsByRow.middle.find(p => p.position.column === "right")!.index}
-                                isSecondaryLayout={true}
-                            />
-                        </motion.div>
-                    )}
-                </motion.div>
-
-                {/* Bottom Row - 2 opinions */}
-                {positionsByRow.bottom.length > 0 && (
+                    {/* Middle Row - Side opinions only (fact card is handled by parent) */}
                     <motion.div
-                        className="flex items-center justify-center gap-8"
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+                        className="flex items-center justify-center gap-16 mb-8 w-full"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
                     >
-                        <AnimatePresence>
-                            {positionsByRow.bottom.map(({ opinion, position, index }) => (
-                                <motion.div
-                                    key={`${opinion.id}-${index}`}
-                                    className={position.className}
-                                    initial={{
-                                        opacity: 0,
-                                        scale: 0.8,
-                                        y: 50
-                                    }}
-                                    animate={{
-                                        opacity: 1,
-                                        scale: 1,
-                                        y: 0
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        scale: 0.8,
-                                        y: 50
-                                    }}
-                                    transition={{
-                                        delay: (index + 4) * 0.1,
-                                        duration: 0.6,
-                                        type: "spring",
-                                        stiffness: 100,
-                                        damping: 20
-                                    }}
-                                >
-                                    <ExpertOpinionCard
-                                        opinion={opinion.opinion}
-                                        expertType={opinion.expert_type}
-                                        side={position.side}
-                                        isStrongest={false}
-                                        isActive={isActive}
-                                        isExpanded={true}
-                                        index={index}
-                                        isSecondaryLayout={true}
-                                    />
-                                </motion.div>
-                            ))}
-                        </AnimatePresence>
-                    </motion.div>
-                )}
-            </div>
-        )}
-
-        {/* Tablet & Mobile: Grid layout for secondary opinions */}
-        {(isTablet || isMobile) && (
-            <>
-                {/* Central fact first on tablet/mobile */}
-                <div className={`${isTablet ? 'col-span-2 order-first mb-8' : 'mb-8'
-                    }`}>
-                    <TimelineEventFactCard 
-                        isActive={isActive}
-                        showAllOpinions={showAllOpinions}
-                        setShowAllOpinions={setShowAllOpinions}
-                        event={event}
-                        eventIndex={0}
-                        />
-                </div>
-
-                {/* Secondary opinions grid */}
-                <div className={`${isTablet ? 'col-span-2 grid grid-cols-2 gap-4' : 'space-y-4'
-                    }`}>
-                    <AnimatePresence>
-                        {allSecondaryOpinions.slice(0, 6).map((opinion, index) => (
+                        {/* Left side opinion */}
+                        {positionsByRow.middle.find(p => p.position.column === "left") && (
                             <motion.div
-                                key={`${opinion.id}-${index}`}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
-                                transition={{
-                                    delay: index * 0.08,
-                                    duration: 0.4,
-                                    type: "spring",
-                                    stiffness: 100
-                                }}
+                                className="w-72 flex-shrink-0"
+                                initial={{ opacity: 0, x: -50 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.3, duration: 0.6, type: "spring" }}
                             >
-                                <ExpertOpinionCard
-                                    opinion={opinion.opinion}
-                                    expertType={opinion.expert_type}
-                                    side={opinion.isLeft ? 'left' : 'right'}
-                                    isStrongest={false}
-                                    isActive={isActive}
-                                    isExpanded={true}
-                                    index={index}
-                                    isSecondaryLayout={true}
-                                />
+                                {(() => {
+                                    const leftMiddle = positionsByRow.middle.find(p => p.position.column === "left");
+                                    return (
+                                        <ExpertOpinionCard
+                                            opinion={leftMiddle!.opinion.opinion}
+                                            expertType={leftMiddle!.opinion.expert_type}
+                                            side="left"
+                                            isStrongest={false}
+                                            isActive={isActive}
+                                            isExpanded={true}
+                                            index={leftMiddle!.index}
+                                            isSecondaryLayout={true}
+                                        />
+                                    );
+                                })()}
                             </motion.div>
-                        ))}
-                    </AnimatePresence>
+                        )}
+
+                        {/* Center spacer for fact card (handled by parent) */}
+                        <div className="w-80 flex-shrink-0" />
+
+                        {/* Right side opinion */}
+                        {positionsByRow.middle.find(p => p.position.column === "right") && (
+                            <motion.div
+                                className="w-72 flex-shrink-0"
+                                initial={{ opacity: 0, x: 50 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.3, duration: 0.6, type: "spring" }}
+                            >
+                                {(() => {
+                                    const rightMiddle = positionsByRow.middle.find(p => p.position.column === "right");
+                                    return (
+                                        <ExpertOpinionCard
+                                            opinion={rightMiddle!.opinion.opinion}
+                                            expertType={rightMiddle!.opinion.expert_type}
+                                            side="right"
+                                            isStrongest={false}
+                                            isActive={isActive}
+                                            isExpanded={true}
+                                            index={rightMiddle!.index}
+                                            isSecondaryLayout={true}
+                                        />
+                                    );
+                                })()}
+                            </motion.div>
+                        )}
+                    </motion.div>
+
+                    {/* Bottom Row */}
+                    {positionsByRow.bottom.length > 0 && (
+                        <motion.div
+                            className="flex items-center justify-center gap-6 w-full"
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+                        >
+                            <AnimatePresence>
+                                {positionsByRow.bottom.map(({ opinion, position, index }) => {
+                                    console.log(`Rendering bottom row card ${index}:`, { opinion: opinion.id, side: position.side });
+                                    return (
+                                        <motion.div
+                                            key={`${opinion.id}-${index}`}
+                                            className="w-72 flex-shrink-0"
+                                            initial={{
+                                                opacity: 0,
+                                                scale: 0.8,
+                                                y: 50
+                                            }}
+                                            animate={{
+                                                opacity: 1,
+                                                scale: 1,
+                                                y: 0
+                                            }}
+                                            exit={{
+                                                opacity: 0,
+                                                scale: 0.8,
+                                                y: 50
+                                            }}
+                                            transition={{
+                                                delay: (index + 4) * 0.1,
+                                                duration: 0.6,
+                                                type: "spring",
+                                                stiffness: 100,
+                                                damping: 20
+                                            }}
+                                        >
+                                            <ExpertOpinionCard
+                                                opinion={opinion.opinion}
+                                                expertType={opinion.expert_type}
+                                                side={position.side}
+                                                isStrongest={false}
+                                                isActive={isActive}
+                                                isExpanded={true}
+                                                index={index}
+                                                isSecondaryLayout={true}
+                                            />
+                                        </motion.div>
+                                    );
+                                })}
+                            </AnimatePresence>
+                        </motion.div>
+                    )}
                 </div>
-            </>
-        )}
-    </div>
+            )}
+
+            {/* Tablet & Mobile: Grid layout for secondary opinions only */}
+            {(isTablet || isMobile) && (
+                <div className="w-full mt-8">
+                    {/* Secondary opinions grid */}
+                    <div className={`${isTablet ? 'grid grid-cols-2 gap-4' : 'space-y-4'}`}>
+                        <AnimatePresence>
+                            {allSecondaryOpinions.slice(0, 6).map((opinion, index) => {
+                                console.log(`Rendering tablet/mobile card ${index}:`, { opinion: opinion.id, side: opinion.isLeft ? 'left' : 'right' });
+                                return (
+                                    <motion.div
+                                        key={`${opinion.id}-${index}`}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -20 }}
+                                        transition={{
+                                            delay: index * 0.08,
+                                            duration: 0.4,
+                                            type: "spring",
+                                            stiffness: 100
+                                        }}
+                                    >
+                                        <ExpertOpinionCard
+                                            opinion={opinion.opinion}
+                                            expertType={opinion.expert_type}
+                                            side={opinion.isLeft ? 'left' : 'right'}
+                                            isStrongest={false}
+                                            isActive={isActive}
+                                            isExpanded={true}
+                                            index={index}
+                                            isSecondaryLayout={true}
+                                        />
+                                    </motion.div>
+                                );
+                            })}
+                        </AnimatePresence>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 }
 
 export default TimelineEventSecondaryLayout;

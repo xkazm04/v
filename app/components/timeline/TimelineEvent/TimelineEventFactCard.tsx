@@ -2,7 +2,7 @@ import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useViewport } from '@/app/hooks/useViewport';
 import { Eye, EyeOff, Hash, FileText } from 'lucide-react';
 import {motion} from 'framer-motion';
-import { EventType } from '../data/timeline';
+import { EventType } from '@/app/types/timeline';
 
 type Props = {
     className?: string;

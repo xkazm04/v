@@ -9,7 +9,7 @@ type Props = {
     isStrongest?: boolean;
     isExpanded?: boolean;
     index: number;
-    side: 'left' | 'right';
+    side: 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
     isActive?: boolean;
     expertType: string; 
 }
@@ -25,8 +25,11 @@ const ExpertOpinionCardWrapper = ({ children, isSecondaryLayout, isStrongest, is
         const offset = index * (isMobile ? 8 : 12);
         const scaleReduction = index * 0.02;
 
+        const isLeftSide = side === 'left' || side === 'top-left' || side === 'bottom-left';
+        const isRightSide = side === 'right' || side === 'top-right' || side === 'bottom-right';
+
         return {
-            x: side === 'left' ? -offset : offset,
+            x: isLeftSide ? -offset : isRightSide ? offset : 0,
             y: offset * 0.5,
             scale: 1 - scaleReduction,
             zIndex: 10 - index
@@ -35,22 +38,17 @@ const ExpertOpinionCardWrapper = ({ children, isSecondaryLayout, isStrongest, is
 
     const stackTransform = getStackTransform();
 
-    // Card dimensions for different layouts
     const getCardDimensions = () => {
         if (isSecondaryLayout) {
-            if (isMobile) {
+            if (isMobile || isTablet) {
                 return "min-h-[120px] max-w-full";
-            } else if (isTablet) {
-                return "min-h-[140px] max-w-[280px]";
             } else {
-                return "min-h-[160px] max-w-[320px]"; 
+                return "min-h-[160px] w-[450px]"; 
             }
-        } else if (isMobile) {
+        } else if (isMobile || isTablet) {
             return "min-h-[140px] max-w-full";
-        } else if (isTablet) {
-            return "min-h-[160px] max-w-[300px]";
         } else {
-            return "min-h-[180px] max-w-[380px]"; 
+            return "min-h-[180px] w-[500px]"; 
         }
     };
 
@@ -58,7 +56,12 @@ const ExpertOpinionCardWrapper = ({ children, isSecondaryLayout, isStrongest, is
         if (isSecondaryLayout) {
             return 'text-center';
         } else {
-            return side === 'left' ? 'ml-auto' : 'mr-auto';
+            const isLeftSide = side === 'left' || side === 'top-left' || side === 'bottom-left';
+            const isRightSide = side === 'right' || side === 'top-right' || side === 'bottom-right';
+            
+            if (isLeftSide) return 'ml-auto';
+            if (isRightSide) return 'mr-auto';
+            return 'mx-auto';
         }
     };
 
@@ -82,8 +85,9 @@ const ExpertOpinionCardWrapper = ({ children, isSecondaryLayout, isStrongest, is
     };
 
     const cardStyling = getCardStyling();
+    
     return <motion.div
-        className={`relative backdrop-blur-md border-2 ${getCardDimensions()} ${getTextAlignment()} overflow-hidden`}
+        className={`relative backdrop-blur-md border ${getCardDimensions()} ${getTextAlignment()} overflow-hidden`}
         style={{
             backgroundColor: cardStyling.backgroundColor,
             borderColor: cardStyling.borderColor,

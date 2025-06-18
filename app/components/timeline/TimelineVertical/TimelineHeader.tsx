@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useViewport } from '@/app/hooks/useViewport';
-import { Timeline } from '../data/timeline';
+import { Timeline } from '../../../types/timeline';
 import { Calendar, Users, Globe, Target } from 'lucide-react';
 import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
 import { FloatingVerdictIcon } from '@/app/components/ui/Decorative/FloatingVerdictIcon';

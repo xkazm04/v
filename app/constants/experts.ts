@@ -2,8 +2,11 @@ import ExpertAdvocateIcon from "../components/icons/expert_advocate";
 import ExpertAnalystIcon from "../components/icons/expert_analyst";
 import ExpertPsychIcon from "../components/icons/expert_psych";
 import ExpertStatsIcon from "../components/icons/expert_stats";
+import ExpertConspiratorIcon from "../components/icons/expert_consipartor";
 
 import { Brain, DollarSign, Scale, Crown, Eye, User } from 'lucide-react';
+import ExpertKingIcon from "../components/icons/expert_king";
+import ExpertPublicIcon from "../components/icons/expert_public";
 
 
 
@@ -83,7 +86,8 @@ export const EXPERT_TIMELINE_CONFIG = {
     description: 'Common Perspective',
     specialty: 'Public Opinion',
     mockConfidence: 3,
-    SvgComponent: ExpertStatsIcon
+    SvgComponent: ExpertPublicIcon
+    
   },
   psychic: { 
     icon: Eye, 
@@ -113,7 +117,7 @@ export const EXPERT_TIMELINE_CONFIG = {
     description: 'Geopolitical & Strategic Analysis',
     specialty: 'Geopolitical Strategy',
     mockConfidence: 5,
-    SvgComponent: ExpertAdvocateIcon
+    SvgComponent: ExpertKingIcon
   },
   conspirator: { 
     icon: Brain, 
@@ -123,6 +127,6 @@ export const EXPERT_TIMELINE_CONFIG = {
     description: 'Hidden Connections & Motives',
     specialty: 'Pattern Recognition',
     mockConfidence: 3,
-    SvgComponent: ExpertAdvocateIcon
+    SvgComponent: ExpertConspiratorIcon
   }
 };

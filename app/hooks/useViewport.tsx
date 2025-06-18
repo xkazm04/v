@@ -35,3 +35,5 @@ export const useViewport = () => {
 
   return viewport;
 };
+
+export type ViewportType = ReturnType<typeof useViewport>;

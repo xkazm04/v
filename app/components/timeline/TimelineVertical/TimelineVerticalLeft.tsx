@@ -1,25 +1,24 @@
-'use client';
 import { motion, MotionValue } from 'framer-motion';
 import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
 
-interface TimelineVerticalRightProps {
+interface TimelineVerticalLeftProps {
   sideOpacity: MotionValue<number>;
-  rightSide: string;
+  leftSide: string;
   colors: any;
 }
 
-export default function TimelineVerticalRight({
+export default function TimelineVerticalLeft({
   sideOpacity,
-  rightSide,
+  leftSide,
   colors
-}: TimelineVerticalRightProps) {
+}: TimelineVerticalLeftProps) {
   return (
     <motion.div
-      className="fixed right-6 top-6 z-40 w-[200px]"
+      className="fixed -left-5 top-6 z-40 w-[200px]"
       style={{ opacity: sideOpacity }}
-      initial={{ x: 100, opacity: 0 }}
+      initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
-      transition={{ delay: 1.2, duration: 0.8, ease: "easeOut" }}
+      transition={{ delay: 1, duration: 0.8, ease: "easeOut" }}
     >
       <GlassContainer
         style="subtle"
@@ -28,10 +27,10 @@ export default function TimelineVerticalRight({
         className="p-4"
       >
         <motion.div
-          className="flex flex-col items-center text-center border-l border-blue-500"
-        >
+          className="flex flex-row items-center text-center border-r px-2 border-blue-500"
+        >  
           <p className="text-xs writing-mode-vertical-rl text-orientation-mixed">
-            {rightSide}
+            {leftSide}
           </p>
         </motion.div>
       </GlassContainer>
