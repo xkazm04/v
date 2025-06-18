@@ -2,10 +2,10 @@
 import { motion } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useViewport } from '@/app/hooks/useViewport';
+import { useTimelineAudioStore } from '@/app/stores/useTimelineAudioStore';
 import { Timeline } from '../../../types/timeline';
-import { Calendar, Users, Globe, Target } from 'lucide-react';
+import { Calendar, Users, Globe, Target, Volume2 } from 'lucide-react';
 import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
-import { FloatingVerdictIcon } from '@/app/components/ui/Decorative/FloatingVerdictIcon';
 import TimelineHeaderSummary from './TimelineHeaderSummary';
 
 interface TimelineHeaderProps {
@@ -13,8 +13,17 @@ interface TimelineHeaderProps {
 }
 
 export default function TimelineHeader({ timeline }: TimelineHeaderProps) {
-  const { colors, isDark } = useLayoutTheme();
+  const { colors } = useLayoutTheme();
   const { isMobile, isTablet, isDesktop } = useViewport();
+  
+  // Get playing state from audio store
+  const { activeComponentId, activeComponentType, isPlaying, currentTrack } = useTimelineAudioStore();
+  
+  // Check if this header is currently playing
+  const isCurrentlyPlaying = activeComponentType === 'header' && 
+                            activeComponentId === timeline.id && 
+                            isPlaying && 
+                            currentTrack?.type === 'conclusion';
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -43,12 +52,43 @@ export default function TimelineHeader({ timeline }: TimelineHeaderProps) {
 
   return (
     <motion.div
+      id={timeline.id}
       className={`relative text-center ${isMobile ? 'py-8 px-4' : isTablet ? 'py-12 px-6' : 'py-16 px-8'
         }`}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
+      style={{
+        backgroundColor: isCurrentlyPlaying ? colors.primary + '05' : 'transparent',
+        transition: 'background-color 0.3s ease'
+      }}
     >
+      {/* Playing Indicator */}
+      {isCurrentlyPlaying && (
+        <motion.div
+          className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1 rounded-full border"
+          style={{
+            backgroundColor: colors.primary + '10',
+            borderColor: colors.primary + '30',
+            color: colors.primary
+          }}
+          initial={{ opacity: 0, scale: 0.8, y: -10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.8, y: -10 }}
+        >
+          <motion.div
+            animate={{ 
+              scale: [1, 1.2, 1],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <Volume2 className="w-3 h-3" />
+          </motion.div>
+          <span className="text-xs font-medium">Playing</span>
+        </motion.div>
+      )}
+
       {/* Compact Title */}
       <motion.div
         className="relative mb-8"
@@ -57,6 +97,10 @@ export default function TimelineHeader({ timeline }: TimelineHeaderProps) {
         <motion.h1
           className={`relative z-10 font-black tracking-tight leading-tight ${isMobile ? 'text-2xl' : 'text-3xl'
             }`}
+          animate={{
+            color: isCurrentlyPlaying ? colors.primary : colors.foreground
+          }}
+          transition={{ duration: 0.3 }}
         >
           {timeline.title}
         </motion.h1>
@@ -143,6 +187,7 @@ export default function TimelineHeader({ timeline }: TimelineHeaderProps) {
               timeline={timeline}
               colors={colors}
               itemVariants={itemVariants}
+              isCurrentlyPlaying={isCurrentlyPlaying}
               />
 
             {/* Right Perspective */}
@@ -210,13 +255,17 @@ export default function TimelineHeader({ timeline }: TimelineHeaderProps) {
               </motion.div>
             </div>
 
-            <p
+            <motion.p
               className={`leading-relaxed font-light ${isMobile ? 'text-sm' : 'text-base'
                 }`}
               style={{ color: colors.foreground }}
+              animate={{
+                backgroundColor: isCurrentlyPlaying ? colors.primary + '08' : 'transparent'
+              }}
+              transition={{ duration: 0.3 }}
             >
               {timeline.conclusion}
-            </p>
+            </motion.p>
 
           </GlassContainer>
         </motion.div>

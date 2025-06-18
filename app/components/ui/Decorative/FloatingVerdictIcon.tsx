@@ -127,13 +127,13 @@ export const FloatingVerdictIcon: React.FC<FloatingVerdictIconProps> = ({
           scale: 1.1, 
           rotate: 5,
           transition: { duration: 0.2 }
-        } : undefined} // ✅ **FIX: Only enable hover if clickable**
+        } : undefined} 
         onClick={onClick}
         onHoverStart={() => onHover?.(true)}
         onHoverEnd={() => onHover?.(false)}
         style={{ 
           cursor: onClick ? 'pointer' : 'default',
-          pointerEvents: onClick ? 'auto' : 'none' // ✅ **FIX: Disable interactions if no onClick**
+          pointerEvents: onClick ? 'auto' : 'none' 
         }}
       >
         {/* Icon Glow Background */}

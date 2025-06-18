@@ -25,6 +25,11 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 217.2 91.2% 59.8%;
     --radius: 0.5rem;
+    
+    /* Scrollbar variables */
+    --scrollbar-track: 0 0% 96%;
+    --scrollbar-thumb: 217.2 91.2% 59.8%;
+    --scrollbar-thumb-hover: 217.2 91.2% 55%;
   }
 
   .dark {
@@ -48,6 +53,11 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 217.2 91.2% 59.8%;
+    
+    /* Dark scrollbar variables */
+    --scrollbar-track: 217.2 32.6% 12%;
+    --scrollbar-thumb: 217.2 91.2% 59.8%;
+    --scrollbar-thumb-hover: 217.2 91.2% 65%;
   }
 
 
@@ -65,6 +75,40 @@
                 color 0.2s ease-in-out, 
                 border-color 0.2s ease-in-out !important;
   }
+}
+
+/* ===============================================
+   MODERN THIN SCROLLBAR
+   =============================================== */
+
+.scrollbar-thin {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--scrollbar-thumb) / 0.6) hsl(var(--scrollbar-track));
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: hsl(var(--scrollbar-track));
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: hsl(var(--scrollbar-thumb) / 0.6);
+  border-radius: 3px;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--scrollbar-thumb-hover) / 0.8);
+}
+
+.scrollbar-thin::-webkit-scrollbar-corner {
+  background: hsl(var(--scrollbar-track));
 }
 
 /* ===============================================

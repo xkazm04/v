@@ -3,7 +3,7 @@ import { supabaseAdmin } from '../supabase';
 
 // Lingo.dev client
 const lingoDotDev = new LingoDotDevEngine({
-  apiKey: process.env.NEXT_PUBLIC_LINGO_API_KEY!,
+  apiKey: process.env.LINGO_API_KEY!,
   batchSize: 100,
   idealBatchItemSize: 1000,
 });

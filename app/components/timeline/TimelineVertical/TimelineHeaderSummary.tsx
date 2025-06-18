@@ -1,6 +1,6 @@
 import { GlassContainer } from "@/app/components/ui/containers/GlassContainer";
 import { FloatingVerdictIcon } from "@/app/components/ui/Decorative/FloatingVerdictIcon";
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 
 type Props = {
     timeline: {
@@ -13,9 +13,10 @@ type Props = {
         border: string;
     };
     itemVariants: any;
+    isCurrentlyPlaying?: boolean;
 }
 
-const TimelineHeaderSummary = ({ timeline, colors, itemVariants }: Props) => {
+const TimelineHeaderSummary = ({ timeline, colors, itemVariants, isCurrentlyPlaying = false }: Props) => {
     return <motion.div
         className="col-span-6"
         variants={itemVariants}
@@ -70,12 +71,18 @@ const TimelineHeaderSummary = ({ timeline, colors, itemVariants }: Props) => {
             </motion.div>
         </div>
 
-        <p
+        <motion.p
             className="leading-relaxed font-light text-base mb-6"
             style={{ color: colors.foreground }}
+            animate={{
+                backgroundColor: isCurrentlyPlaying ? colors.primary + '08' : 'transparent',
+                padding: isCurrentlyPlaying ? '12px' : '0px',
+                borderRadius: isCurrentlyPlaying ? '8px' : '0px'
+            }}
+            transition={{ duration: 0.3 }}
         >
             {timeline.conclusion}
-        </p>
+        </motion.p>
         </GlassContainer>
     </motion.div>
 }

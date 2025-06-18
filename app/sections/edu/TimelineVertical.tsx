@@ -1,10 +1,12 @@
 'use client'
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import { motion, useTransform } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useViewport } from '@/app/hooks/useViewport';
 import { useTimelineScroll } from '@/app/hooks/useTimelineScroll';
+import { useTimelineAudioStore } from '@/app/stores/useTimelineAudioStore';
+import { useElevenLabsAudio } from '@/app/hooks/useElevenLabsAudio';
 import TimelineMilestone from '../../components/timeline/TimelineMilestone/TimelineMilestone';
 import TimelineProgress from '../../components/timeline/TimelineProgress/TimelineProgress';
 import TimelineBackground from '../../components/timeline/TimelineVertical/TimelineBackground';
@@ -27,8 +29,6 @@ const OptimizedTimelineMilestone = React.memo(({
   index, 
   activeEventId, 
   activeMilestoneId, 
-  onEventHover, 
-  onMilestoneHover, 
   smoothScrollProgress 
 }: any) => (
   <div
@@ -40,8 +40,6 @@ const OptimizedTimelineMilestone = React.memo(({
       index={index}
       activeEventId={activeEventId}
       activeMilestoneId={activeMilestoneId}
-      onEventHover={onEventHover}
-      onMilestoneHover={onMilestoneHover}
       scrollProgress={smoothScrollProgress}
     />
   </div>
@@ -51,7 +49,7 @@ OptimizedTimelineMilestone.displayName = 'OptimizedTimelineMilestone';
 
 // Fixed Timeline Progress Component using portal
 const FixedTimelineProgress = React.memo(({ 
-  scrollProgress, 
+  smoothScrollProgress, 
   sortedMilestones, 
   activeMilestoneId, 
   activeEventId, 
@@ -64,7 +62,7 @@ const FixedTimelineProgress = React.memo(({
 
   const progressComponent = (
     <MemoizedTimelineProgress
-      scrollProgress={scrollProgress}
+      scrollProgress={smoothScrollProgress}
       milestones={sortedMilestones}
       activeMilestoneId={activeMilestoneId}
       activeEventId={activeEventId}
@@ -85,13 +83,11 @@ export default function TimelineVertical() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const timeline: Timeline = useMemo(() => exampleData as Timeline, []);
+  
+  // Initialize audio store
+  const { initializeTracklist } = useTimelineAudioStore();
 
-  const sortedMilestones = useMemo(() => 
-    [...timeline.milestones].sort((a, b) => a.order - b.order), 
-    [timeline.milestones]
-  );
-
-  // Use the custom scrolling hook
+  // Use the custom scrolling hook first to get scroll utilities
   const {
     activeEventId,
     activeMilestoneId,
@@ -99,10 +95,56 @@ export default function TimelineVertical() {
     smoothScrollProgress,
     handleNavigateToMilestone,
     handleNavigateToEvent,
-  } = useTimelineScroll({
-    milestones: timeline.milestones,
-    containerRef
+    scrollToMilestone,
+    scrollToEvent,
+  } = useTimelineScroll(containerRef, timeline);
+
+  // Initialize audio functionality with scroll utilities
+  const { audioRef, generateAndPlay, pause } = useElevenLabsAudio({
+    autoPlay: true,
+    scrollToMilestone,
+    scrollToEvent,
+    onError: (error) => {
+      console.error('Timeline audio error:', error);
+    }
   });
+
+  // Handle audio play and pause events from TimelineProgressContent
+  useEffect(() => {
+    const handleAudioPlay = async (event: CustomEvent) => {
+      const { track } = event.detail;
+      try {
+        console.log('Handling audio play for track:', track.title);
+        console.log('Track text:', track.text);
+        await generateAndPlay(track.text);
+      } catch (error) {
+        console.error('Failed to play audio:', error);
+      }
+    };
+
+    const handleAudioPause = () => {
+      console.log('Handling audio pause');
+      pause();
+    };
+
+    // Listen for audio events
+    window.addEventListener('timeline-audio-play', handleAudioPlay as EventListener);
+    window.addEventListener('timeline-audio-pause', handleAudioPause as EventListener);
+    
+    return () => {
+      window.removeEventListener('timeline-audio-play', handleAudioPlay as EventListener);
+      window.removeEventListener('timeline-audio-pause', handleAudioPause as EventListener);
+    };
+  }, [generateAndPlay, pause]);
+
+  useEffect(() => {
+    initializeTracklist(timeline);
+  }, [timeline, initializeTracklist]);
+
+  const sortedMilestones = useMemo(() => 
+    [...timeline.milestones].sort((a, b) => a.order - b.order), 
+    [timeline.milestones]
+  );
 
   const progressWidth = useTransform(smoothScrollProgress, [0, 1], ['0%', '100%']);
   const headerOpacity = useTransform(smoothScrollProgress, [0, 0.2], [1, 0]); 
@@ -130,9 +172,15 @@ export default function TimelineVertical() {
 
   return (
     <>
-      {/* FIXED: Timeline Progress rendered via portal outside scrolling container */}
+      {/* Hidden audio element for playback */}
+      <audio
+        ref={audioRef}
+        preload="metadata"
+        style={{ display: 'none' }}
+      />
+
       <FixedTimelineProgress
-        scrollProgress={smoothScrollProgress}
+        smoothScrollProgress={smoothScrollProgress}
         sortedMilestones={sortedMilestones}
         activeMilestoneId={activeMilestoneId}
         activeEventId={activeEventId}

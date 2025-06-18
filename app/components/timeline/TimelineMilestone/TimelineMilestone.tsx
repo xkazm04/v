@@ -2,8 +2,10 @@ import { motion, useTransform, MotionValue } from 'framer-motion';
 import { useMemo } from 'react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useViewport } from '@/app/hooks/useViewport';
+import { useTimelineAudioStore } from '@/app/stores/useTimelineAudioStore';
 import { Milestone } from '../../../types/timeline';
 import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
+import { Volume2 } from 'lucide-react';
 import TimelineMilestoneDateBadge from './TimelineMilestoneDateBadge';
 import TimelineMilestonePersons from './TimelineMilestonePersons';
 import TimelineMilestoneImpact from './TimelineMilestoneImpact';
@@ -27,6 +29,16 @@ export default function TimelineMilestone({
   const { colors, isDark } = useLayoutTheme();
   const { isMobile, isTablet, isDesktop } = useViewport();
   const isActive = activeMilestoneId === milestone.id;
+  
+  // Get playing state from audio store
+  const { activeComponentId, activeComponentType, isPlaying, currentTrack } = useTimelineAudioStore();
+  
+  // Check if this milestone is currently playing
+  const isCurrentlyPlaying = activeComponentType === 'milestone' && 
+                            activeComponentId === milestone.id && 
+                            isPlaying && 
+                            currentTrack?.type === 'milestone_context';
+  
   const milestoneProgress = useTransform(
     scrollProgress,
     [index * 0.15, index * 0.15 + 0.1, index * 0.15 + 0.2],
@@ -51,6 +63,11 @@ export default function TimelineMilestone({
       backgroundColor: colors.background,
       borderColor: colors.border,
       boxShadow: `0 12px 40px ${isDark ? 'rgba(0,0,0,0.25)' : 'rgba(0,0,0,0.1)'}`
+    },
+    playing: {
+      backgroundColor: colors.primary,
+      borderColor: colors.primary,
+      boxShadow: `0 0 60px ${colors.primary}80, 0 0 120px ${colors.primary}30`
     }
   }), [colors.primary, colors.background, colors.border, isDark]);
 
@@ -93,17 +110,48 @@ export default function TimelineMilestone({
 
   return (
     <motion.section
+      id={milestone.id}
       className={`relative ${isMobile ? 'mb-10' : 'mb-16'}`}
       style={{
         opacity: index === 0 ? 1 : milestoneProgress,
         scale: milestoneScale,
-        y: milestoneY
+        y: milestoneY,
+        backgroundColor: isCurrentlyPlaying ? colors.primary + '03' : 'transparent',
+        borderRadius: isCurrentlyPlaying ? '16px' : '0px',
+        padding: isCurrentlyPlaying ? '16px' : '0px',
+        transition: 'all 0.3s ease'
       }}
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
     >
+      {/* Playing Indicator */}
+      {isCurrentlyPlaying && (
+        <motion.div
+          className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1 rounded-full border z-40"
+          style={{
+            backgroundColor: colors.primary + '10',
+            borderColor: colors.primary + '30',
+            color: colors.primary
+          }}
+          initial={{ opacity: 0, scale: 0.8, y: -10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.8, y: -10 }}
+        >
+          <motion.div
+            animate={{ 
+              scale: [1, 1.2, 1],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <Volume2 className="w-3 h-3" />
+          </motion.div>
+          <span className="text-xs font-medium">Playing</span>
+        </motion.div>
+      )}
+
       <motion.div
         className={`relative flex items-center justify-center ${isMobile ? 'mb-8' : 'mb-10'
           }`}
@@ -115,9 +163,9 @@ export default function TimelineMilestone({
         <motion.div
           className={`relative z-30 rounded-full border-2 backdrop-blur-md flex items-center justify-center ${isMobile ? 'w-16 h-16' : isTablet ? 'w-20 h-20' : 'w-24 h-24'
             }`}
-          style={isActive ? nodeStyles.active : nodeStyles.inactive}
+          style={isCurrentlyPlaying ? nodeStyles.playing : (isActive ? nodeStyles.active : nodeStyles.inactive)}
           variants={floatingVariants}
-          animate={isActive ? "floating" : "idle"}
+          animate={isActive || isCurrentlyPlaying ? "floating" : "idle"}
           whileHover={{
             scale: 1.1,
             boxShadow: `0 0 60px ${colors.primary}70`,
@@ -128,15 +176,15 @@ export default function TimelineMilestone({
           <motion.span
             className={`font-black ${isMobile ? 'text-xl' : isTablet ? 'text-2xl' : 'text-3xl'
               }`}
-            style={{ color: isActive ? 'white' : colors.primary }}
-            animate={isActive ? { scale: [1, 1.05, 1] } : {}}
+            style={{ color: (isActive || isCurrentlyPlaying) ? 'white' : colors.primary }}
+            animate={(isActive || isCurrentlyPlaying) ? { scale: [1, 1.05, 1] } : {}}
             transition={{ duration: 2, repeat: Infinity }}
           >
             {index + 1}
           </motion.span>
         </motion.div>
 
-        {isActive && (
+        {(isActive || isCurrentlyPlaying) && (
           <>
             {[1, 2, 3].map((ring) => (
               <motion.div
@@ -162,7 +210,7 @@ export default function TimelineMilestone({
         <TimelineMilestoneDateBadge
           date={milestone.date}
           title={milestone.title}
-          isActive={isActive}
+          isActive={isActive || isCurrentlyPlaying}
           colors={colors}
         />
       </motion.div>
@@ -177,26 +225,26 @@ export default function TimelineMilestone({
         variants={itemVariants}
       >
         <motion.div
-          animate={isActive ? { y: [-1, 1, -1] } : {}}
+          animate={(isActive || isCurrentlyPlaying) ? { y: [-1, 1, -1] } : {}}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         >
           <GlassContainer
             style="frosted"
-            border={isActive ? "glow" : "visible"}
+            border={(isActive || isCurrentlyPlaying) ? "glow" : "visible"}
             shadow="xl"
             rounded="2xl"
             className={isMobile ? 'p-5' : 'p-7'}
-            overlay={isActive}
+            overlay={isActive || isCurrentlyPlaying}
             overlayOpacity={0.08}
           >
             <motion.h2
               className={`font-black tracking-tight leading-tight mb-6 ${isMobile ? 'text-xl' : isTablet ? 'text-2xl' : 'text-3xl'
                 }`}
               style={{
-                color: isActive ? colors.primary : colors.foreground,
+                color: (isActive || isCurrentlyPlaying) ? colors.primary : colors.foreground,
                 letterSpacing: '-0.025em'
               }}
-              animate={isActive ? {
+              animate={(isActive || isCurrentlyPlaying) ? {
                 textShadow: [`0 0 20px ${colors.primary}40`, `0 0 30px ${colors.primary}60`, `0 0 20px ${colors.primary}40`]
               } : {}}
               transition={{ duration: 2, repeat: Infinity }}
@@ -210,7 +258,13 @@ export default function TimelineMilestone({
                   }`}
                 style={{ color: colors.foreground }}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 0.9, y: 0 }}
+                animate={{ 
+                  opacity: 0.9, 
+                  y: 0,
+                  backgroundColor: isCurrentlyPlaying ? colors.primary + '08' : 'transparent',
+                  padding: isCurrentlyPlaying ? '12px' : '0px',
+                  borderRadius: isCurrentlyPlaying ? '8px' : '0px'
+                }}
                 transition={{ delay: 0.3, duration: 0.6 }}
               >
                 {milestone.context}
@@ -223,7 +277,7 @@ export default function TimelineMilestone({
               >
                 <TimelineMilestonePersons
                   persons={milestone.key_persons}
-                  isActive={isActive}
+                  isActive={isActive || isCurrentlyPlaying}
                   isMobile={isMobile}
                   colors={colors}
                 />
@@ -236,7 +290,7 @@ export default function TimelineMilestone({
               >
                 <TimelineMilestoneImpact
                   consequence={milestone.consequence}
-                  isActive={isActive}
+                  isActive={isActive || isCurrentlyPlaying}
                   isMobile={isMobile}
                   colors={colors}
                 />
@@ -253,7 +307,7 @@ export default function TimelineMilestone({
                     key={dot}
                     className="w-2 h-2 rounded-full"
                     style={{ backgroundColor: colors.primary }}
-                    animate={isActive ? {
+                    animate={(isActive || isCurrentlyPlaying) ? {
                       scale: [1, 1.4, 1],
                       opacity: [0.6, 1, 0.6]
                     } : {}}
@@ -268,7 +322,7 @@ export default function TimelineMilestone({
                 <motion.span
                   className={`font-semibold mx-4 ${isMobile ? 'text-sm' : 'text-base'}`}
                   style={{ color: colors.primary }}
-                  animate={isActive ? {
+                  animate={(isActive || isCurrentlyPlaying) ? {
                     scale: [1, 1.02, 1]
                   } : {}}
                   transition={{ duration: 2, repeat: Infinity }}

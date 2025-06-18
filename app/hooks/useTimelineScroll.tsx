@@ -2,18 +2,13 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useScroll, useSpring, animate, MotionValue } from 'framer-motion';
 import { useViewport } from './useViewport';
-import { Milestone } from '../types/timeline';
+import { Milestone, Timeline } from '../types/timeline';
 
 interface ScrollTarget {
   id: string;
   type: 'milestone' | 'event' | 'hero';
   offsetTop: number;
   milestoneId?: string;
-}
-
-interface UseTimelineScrollOptions {
-  milestones: Milestone[];
-  containerRef: React.RefObject<HTMLDivElement>;
 }
 
 interface UseTimelineScrollReturn {
@@ -28,19 +23,33 @@ interface UseTimelineScrollReturn {
   // Scroll progress
   scrollYProgress: MotionValue<number>;
   smoothScrollProgress: MotionValue<number>;
+  scrollProgress: MotionValue<number>; // Alias for compatibility
+  
+  // Navigation methods
+  scrollToNextMilestone: () => void;
+  scrollToPreviousMilestone: () => void;
+  scrollToMilestone: (id: string) => void;
+  scrollToEvent: (eventId: string, milestoneId: string) => void;
+  scrollToTop: () => void;
   
   // Handlers
   setActiveEventId: (id: string | null) => void;
   setActiveMilestoneId: (id: string | null) => void;
   handleNavigateToMilestone: (milestoneId: string) => void;
   handleNavigateToEvent: (eventId: string, milestoneId: string) => void;
+  
+  // Utility
+  scrollToElement: (elementId: string) => void;
 }
 
-export function useTimelineScroll({ 
-  milestones, 
-  containerRef 
-}: UseTimelineScrollOptions): UseTimelineScrollReturn {
+export function useTimelineScroll(
+  containerRef: React.RefObject<HTMLDivElement>,
+  timeline: Timeline
+): UseTimelineScrollReturn {
   const { isDesktop } = useViewport();
+  
+  // Extract milestones from timeline
+  const milestones = timeline?.milestones || [];
   
   // State management
   const [activeEventId, setActiveEventId] = useState<string | null>(null);
@@ -205,6 +214,7 @@ export function useTimelineScroll({
     });
   }, [scrollTargets]);
 
+  // Wheel event handler
   useEffect(() => {
     if (!isDesktop || scrollTargets.length === 0) return;
 
@@ -262,6 +272,8 @@ export function useTimelineScroll({
       };
     }
   }, [isDesktop, scrollTargets, scrollToTarget, containerRef]);
+
+  // Intersection observer for active element tracking
   useEffect(() => {
     if (scrollTargets.length === 0) return;
 
@@ -332,6 +344,39 @@ export function useTimelineScroll({
     isScrollingRef.current = isScrolling;
   }, [isScrolling]);
 
+  // Navigation methods
+  const scrollToNextMilestone = useCallback(() => {
+    const nextIndex = Math.min(scrollTargets.length - 1, currentIndexRef.current + 1);
+    if (nextIndex !== currentIndexRef.current) {
+      scrollToTarget(nextIndex);
+    }
+  }, [scrollTargets, scrollToTarget]);
+
+  const scrollToPreviousMilestone = useCallback(() => {
+    const prevIndex = Math.max(0, currentIndexRef.current - 1);
+    if (prevIndex !== currentIndexRef.current) {
+      scrollToTarget(prevIndex);
+    }
+  }, [scrollToTarget]);
+
+  const scrollToTop = useCallback(() => {
+    scrollToTarget(0);
+  }, [scrollToTarget]);
+
+  const scrollToMilestone = useCallback((milestoneId: string) => {
+    const targetIndex = scrollTargets.findIndex(t => t.id === milestoneId && t.type === 'milestone');
+    if (targetIndex !== -1) {
+      scrollToTarget(targetIndex);
+    }
+  }, [scrollTargets, scrollToTarget]);
+
+  const scrollToEvent = useCallback((eventId: string, milestoneId: string) => {
+    const targetIndex = scrollTargets.findIndex(t => t.id === eventId && t.type === 'event');
+    if (targetIndex !== -1) {
+      scrollToTarget(targetIndex);
+    }
+  }, [scrollTargets, scrollToTarget]);
+
   // Memoized navigation handlers
   const handleNavigateToMilestone = useCallback((milestoneId: string) => {
     const targetIndex = scrollTargets.findIndex(t => t.id === milestoneId && t.type === 'milestone');
@@ -347,6 +392,24 @@ export function useTimelineScroll({
     }
   }, [scrollTargets, scrollToTarget]);
 
+  // Utility function for scrolling to elements by ID
+  const scrollToElement = useCallback((elementId: string) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      const offsetTop = window.pageYOffset + rect.top;
+      const targetPosition = Math.max(0, offsetTop - window.innerHeight * 0.15);
+      
+      animate(window.pageYOffset, targetPosition, {
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1],
+        onUpdate: (value) => {
+          window.scrollTo(0, value);
+        }
+      });
+    }
+  }, []);
+
   return {
     // State
     activeEventId,
@@ -359,11 +422,22 @@ export function useTimelineScroll({
     // Scroll progress
     scrollYProgress,
     smoothScrollProgress,
+    scrollProgress: smoothScrollProgress, // Alias for compatibility
+    
+    // Navigation methods
+    scrollToNextMilestone,
+    scrollToPreviousMilestone,
+    scrollToMilestone,
+    scrollToEvent,
+    scrollToTop,
     
     // Handlers
     setActiveEventId,
     setActiveMilestoneId,
     handleNavigateToMilestone,
     handleNavigateToEvent,
+    
+    // Utility
+    scrollToElement
   };
 }
