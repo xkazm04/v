@@ -1,6 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
-import TimelineMilestone from './TimelineMilestone';
+import TimelineMilestone from '../../../components/timeline/TimelineMilestone/TimelineMilestone';
 import { Milestone } from '../sampleData';
 
 interface TimelineContainerProps {

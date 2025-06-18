@@ -1,0 +1,307 @@
+{
+  "id": "iraq-war-2003-2011",
+  "title": "Iraq War: From WMD Claims to Occupation",
+  "timeSpan": "2001-2011",
+  "conclusion": "The Iraq War stemmed from post-9/11 geopolitical ambitions masked as WMD prevention, resulting in regional destabilization, hundreds of thousands of casualties, and massive financial costs while achieving few stated objectives. The conflict exposed how intelligence can be manipulated to justify predetermined policy goals.",
+  "leftSide": "United States & Coalition Forces",
+  "rightSide": "Iraqi Government & Insurgent Forces",
+  "milestones": [
+    {
+      "id": "wmd-intelligence-buildup",
+      "date": "2002-09-01",
+      "title": "WMD Intelligence Campaign",
+      "context": "Following 9/11, the Bush administration began building a case for military action against Iraq, claiming Saddam Hussein possessed weapons of mass destruction that posed an imminent threat to regional and global security.",
+      "order": 1,
+      "consequence": "Created public and international support for military intervention despite significant skepticism from UN weapons inspectors and several allied nations.",
+      "key_persons": ["George W. Bush", "Dick Cheney", "Colin Powell", "Donald Rumsfeld", "Saddam Hussein"],
+      "events": [
+        {
+          "id": "bush-un-speech-2002",
+          "milestone_id": "wmd-intelligence-buildup",
+          "title": "Bush addresses UN General Assembly claiming Iraq has WMDs and poses imminent threat",
+          "left_type": "psychic",
+          "right_type": "dredd", 
+          "left_opinion": "The Bush administration orchestrated a sophisticated propaganda campaign, using carefully selected intelligence fragments while suppressing contradictory evidence. The timing coincided with midterm elections, suggesting domestic political calculations influenced national security messaging.",
+          "right_opinion": "Saddam Hussein's regime deliberately maintained ambiguity about WMD capabilities as a deterrent strategy, refusing full cooperation with UN inspectors and maintaining dual-use facilities that could be interpreted as weapons programs.",
+          "left_source_url": "https://www.un.org/webcast/ga/57/statements/020912usaE.htm",
+          "right_source_url": "https://www.un.org/Depts/unmovic/documents/1284.pdf",
+          "all_opinions": [
+            {
+              "id": "bush-un-nerd-1",
+              "event_id": "bush-un-speech-2002",
+              "opinion": "Defense contractors saw immediate stock price increases following Bush's speech, with Halliburton, Lockheed Martin, and Raytheon gaining billions in market value. The speech triggered massive defense spending authorization requests that would ultimately cost taxpayers over $2 trillion.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "bush-un-joe-1", 
+              "event_id": "bush-un-speech-2002",
+              "opinion": "Most Americans, still traumatized by 9/11, trusted their president's claims about imminent threats. However, millions globally protested the rush to war, sensing the evidence was thin and the motivations questionable.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "bush-un-psychic-1",
+              "event_id": "bush-un-speech-2002", 
+              "opinion": "The speech employed classic fear-based persuasion techniques, connecting 9/11 trauma to Iraqi threats without establishing direct links. The administration amplified uncertainty into certainty, using definitive language about 'gathering threats' despite intelligence community disagreements.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "bush-un-dredd-1",
+              "event_id": "bush-un-speech-2002",
+              "opinion": "The legal basis for preemptive war was constitutionally questionable, as Congress hadn't declared war and UN authorization was absent. However, Saddam's violations of previous UN resolutions and obstruction of weapons inspections provided some legal justification.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "bush-un-president-1",
+              "event_id": "bush-un-speech-2002",
+              "opinion": "The speech aimed to isolate Iraq diplomatically while signaling American resolve to allies and adversaries. However, it strained relationships with France, Germany, and Russia, who viewed the intelligence as insufficient for military action.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "bush-un-conspirator-1",
+              "event_id": "bush-un-speech-2002",
+              "opinion": "The speech was part of a broader 'Project for a New American Century' agenda to reshape the Middle East. Key neoconservatives had advocated regime change in Iraq since the 1990s, using 9/11 as the catalyst for predetermined policies.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "powell-un-presentation",
+          "milestone_id": "wmd-intelligence-buildup", 
+          "title": "Colin Powell presents WMD evidence to UN Security Council with vials and satellite photos",
+          "left_type": "psychic",
+          "right_type": "president",
+          "left_opinion": "Powell's presentation was a masterclass in visual manipulation, using props, satellite imagery, and intercepted communications taken out of context. The CIA later admitted much of the evidence was fabricated or misinterpreted, yet Powell's reputation gave it undeserved credibility.",
+          "right_opinion": "Iraqi officials knew they had eliminated WMD stockpiles but maintained facilities and documentation that could be misinterpreted, calculating that ambiguity would deter both internal uprisings and external threats from Iran.",
+          "left_source_url": "https://www.un.org/press/en/2003/sc7658.doc.htm",
+          "right_source_url": "https://www.cia.gov/library/reports/general-reports-1/iraq_wmd_2004/",
+          "all_opinions": [
+            {
+              "id": "powell-nerd-1",
+              "event_id": "powell-un-presentation",
+              "opinion": "The presentation cost Powell his political future but secured billions in military contracts. Reconstruction companies like Bechtel and Halliburton had already positioned themselves for post-war contracts, suggesting the outcome was predetermined regardless of evidence quality.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "powell-joe-1",
+              "event_id": "powell-un-presentation", 
+              "opinion": "Powell was the most trusted figure in the Bush administration, so his presentation convinced many skeptical Americans. People thought 'if Colin Powell says it, it must be true' - his credibility was weaponized to sell the war to a divided public.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "powell-psychic-1",
+              "event_id": "powell-un-presentation",
+              "opinion": "The presentation used sophisticated visual rhetoric - satellite photos, audio recordings, and physical props created an illusion of overwhelming evidence. The performance was designed for television audiences, not UN delegates who remained largely unconvinced.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "powell-dredd-1",
+              "event_id": "powell-un-presentation",
+              "opinion": "Powell presented intelligence that hadn't been verified through proper legal channels, essentially making a prosecutor's case without allowing cross-examination. However, Iraq's documented history of chemical weapons use and UN resolution violations provided some legal foundation.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "powell-president-1",
+              "event_id": "powell-un-presentation",
+              "opinion": "The presentation was meant to provide diplomatic cover for military action, giving allies justification to support or at least not oppose the invasion. Yet it backfired diplomatically, with France, Germany, and Russia becoming more opposed to unilateral action.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "powell-conspirator-1",
+              "event_id": "powell-un-presentation",
+              "opinion": "Powell was deliberately kept out of the loop on the intelligence fabrication, chosen precisely because his reputation would sell a predetermined policy. His later regret suggests he was used as an unwitting front man for more calculating officials.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "invasion-and-aftermath",
+      "date": "2003-03-20",
+      "title": "Invasion and Immediate Aftermath", 
+      "context": "Coalition forces launched 'Operation Iraqi Freedom' with aerial bombardment followed by ground invasion, quickly overwhelming Iraqi military forces and toppling Saddam Hussein's government within weeks.",
+      "order": 2,
+      "consequence": "Rapid military victory was followed by prolonged insurgency, sectarian violence, and state collapse, demonstrating the gap between military planning and post-war governance preparation.",
+      "key_persons": ["George W. Bush", "Tommy Franks", "Paul Bremer", "Saddam Hussein", "Jay Garner"],
+      "events": [
+        {
+          "id": "shock-and-awe-bombing",
+          "milestone_id": "invasion-and-aftermath",
+          "title": "Shock and Awe bombing campaign begins targeting government and military infrastructure",
+          "left_type": "dredd",
+          "right_type": "joe",
+          "left_opinion": "The bombing campaign violated international law by targeting civilian infrastructure including power plants, water treatment facilities, and telecommunications, constituting collective punishment of Iraqi civilians for their government's actions.",
+          "right_opinion": "Iraqi military forces used human shields and positioned military assets in civilian areas, making precision strikes difficult and forcing coalition forces to accept higher civilian casualties to achieve military objectives.",
+          "left_source_url": "https://www.hrw.org/reports/2003/usa1203/",
+          "right_source_url": "https://www.defense.gov/News/Special-Reports/0303_iraq/",
+          "all_opinions": [
+            {
+              "id": "shock-awe-nerd-1",
+              "event_id": "shock-and-awe-bombing",
+              "opinion": "The bombing campaign cost $1 billion per day while destroying infrastructure that would cost $50 billion to rebuild - contracts that went primarily to American companies. This represented a massive transfer of taxpayer money to defense and reconstruction contractors.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "shock-awe-joe-1",
+              "event_id": "shock-and-awe-bombing",
+              "opinion": "Iraqi civilians endured terror bombing that destroyed their daily life - no electricity, water, or communications. Yet many also celebrated the end of Saddam's brutal dictatorship, creating complex emotions about their 'liberation' through violence.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "shock-awe-psychic-1",
+              "event_id": "shock-and-awe-bombing",
+              "opinion": "The campaign was designed as psychological warfare, using overwhelming force to break Iraqi will to resist. However, it also traumatized civilian populations and created lasting resentment that fueled insurgency recruitment for years.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "shock-awe-dredd-1",
+              "event_id": "shock-and-awe-bombing",
+              "opinion": "The targeting violated Geneva Convention protections for civilian infrastructure essential to population survival. However, Iraq's military strategy of embedding assets in civilian areas created legal grey zones that coalition forces exploited.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "shock-awe-president-1",
+              "event_id": "shock-and-awe-bombing",
+              "opinion": "The campaign aimed to demonstrate American military supremacy to regional adversaries like Iran and Syria, signaling that regime change was swift and inevitable. However, it also alarmed allies who worried about American unilateralism.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "shock-awe-conspirator-1",
+              "event_id": "shock-and-awe-bombing",
+              "opinion": "The destruction of Iraqi infrastructure was intentional to create dependency on American reconstruction firms and ensure long-term economic control. The Pentagon's post-war planning documents show this was calculated, not accidental.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "baghdad-falls",
+          "milestone_id": "invasion-and-aftermath",
+          "title": "Baghdad falls as Saddam's government collapses and mass looting begins",
+          "left_type": "conspirator",
+          "right_type": "nerd",
+          "left_opinion": "The Pentagon deliberately allowed looting to destroy Iraqi state records and institutional memory, facilitating the complete dismantling of the existing order. Only the Oil Ministry was protected, revealing true priorities behind the 'liberation' narrative.",
+          "right_opinion": "Coalition forces prioritized securing oil infrastructure and WMD sites over general law and order, having insufficient troops for broader security missions. The economic value of destroyed institutions was secondary to strategic military objectives.",
+          "left_source_url": "https://www.theguardian.com/world/2003/apr/11/iraq.arts",
+          "right_source_url": "https://www.defense.gov/News/Transcripts/Transcript/Article/606836/",
+          "all_opinions": [
+            {
+              "id": "baghdad-nerd-1",
+              "event_id": "baghdad-falls",
+              "opinion": "The looting caused $12 billion in damages while destroying Iraq's cultural heritage and administrative capacity. Meanwhile, oil production facilities were immediately secured, generating billions for international energy companies within months.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "baghdad-joe-1",
+              "event_id": "baghdad-falls",
+              "opinion": "Iraqi people experienced both liberation and chaos simultaneously - freedom from Saddam's tyranny but also the collapse of basic services and security. Many initially welcomed Americans but quickly became disillusioned with the occupation's failures.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "baghdad-psychic-1",
+              "event_id": "baghdad-falls",
+              "opinion": "The iconic toppling of Saddam's statue was carefully staged propaganda with a small crowd and American equipment, designed for global television audiences. This manufactured moment became the defining image despite representing a tiny fraction of Iraqi sentiment.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "baghdad-dredd-1",
+              "event_id": "baghdad-falls",
+              "opinion": "Occupying forces have legal obligations under international law to maintain order and protect civilian property, which coalition forces clearly failed to meet. However, resistance forces also violated laws of war by embedding among civilians.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "baghdad-president-1",
+              "event_id": "baghdad-falls",
+              "opinion": "The rapid collapse demonstrated American military effectiveness but also revealed inadequate post-war planning. Regional powers like Iran and Syria began positioning themselves to fill the power vacuum left by Iraqi state collapse.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "baghdad-conspirator-1",
+              "event_id": "baghdad-falls",
+              "opinion": "The selective protection of oil infrastructure while allowing cultural and administrative destruction was part of a broader plan to remake Iraq as a client state dependent on American corporations and military protection.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "de-baathification-order",
+          "milestone_id": "invasion-and-aftermath",
+          "title": "Paul Bremer issues de-Baathification order dissolving Iraqi army and government institutions",
+          "left_type": "president",
+          "right_type": "psychic",
+          "left_opinion": "The order was a catastrophic strategic blunder that created a power vacuum and armed insurgency by simultaneously unemploying 400,000 trained soldiers and dismantling functional state institutions. Even Pentagon officials opposed this decision as dangerously destabilizing.",
+          "right_opinion": "De-Baathification was necessary to prevent the return of Saddam loyalists and demonstrate a clean break from the brutal dictatorship. However, the implementation was too broad and eliminated technocratic expertise needed for basic governance.",
+          "left_source_url": "https://nsarchive2.gwu.edu/NSAEBB/NSAEBB418/",
+          "right_source_url": "https://2001-2009.state.gov/p/nea/rls/rm/32395.htm",
+          "all_opinions": [
+            {
+              "id": "debaath-nerd-1",
+              "event_id": "de-baathification-order",
+              "opinion": "The order eliminated 85,000 government jobs and removed 40,000 military officers, creating massive unemployment that cost the Iraqi economy $500 million monthly while providing recruits for insurgent groups offering payment for attacks.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "debaath-joe-1",
+              "event_id": "de-baathification-order",
+              "opinion": "Many Iraqis supported removing Saddam loyalists but were shocked when teachers, doctors, and engineers were also fired just for party membership. Families lost income while basic services collapsed, turning hope into resentment.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "debaath-psychic-1",
+              "event_id": "de-baathification-order",
+              "opinion": "The policy reflected American ignorance of Iraqi society, where Baath Party membership was often required for professional advancement rather than ideological commitment. The blanket approach created unnecessary enemies while satisfying American desires for moral clarity.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "debaath-dredd-1",
+              "event_id": "de-baathification-order",
+              "opinion": "The order violated international law regarding occupying powers' obligations to maintain existing institutions and civil administration. However, prosecution of war criminals and human rights violators was legally justified and necessary.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "debaath-president-1",
+              "event_id": "de-baathification-order",
+              "opinion": "The decision ignored CIA and State Department warnings about creating insurgency, reflecting ideological preferences over strategic analysis. Regional allies like Jordan and Saudi Arabia privately warned this would destabilize the entire region.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "debaath-conspirator-1",
+              "event_id": "de-baathification-order",
+              "opinion": "The order served neoconservative goals of permanent American presence by ensuring Iraq remained weak and dependent. A functional Iraqi state would have demanded American withdrawal, so institutional destruction was strategically beneficial for occupation planners.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
