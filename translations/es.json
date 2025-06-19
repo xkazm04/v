@@ -1,0 +1,55 @@
+{
+  "navigation": {
+    "home": "Inicio",
+    "dashboard": "Panel", 
+    "reel": "Carrete",
+    "upload": "Subir",
+    "education": "Educación"
+  },
+  "settings": {
+    "language": {
+      "title": "Idioma del Contenido",
+      "description": "Selecciona tu idioma preferido para el consumo de contenido",
+      "loading": "Cargando idiomas...",
+      "badges": {
+        "original": "Original",
+        "translated": "Traducido por IA"
+      },
+      "summary": {
+        "english": "Leyendo contenido en inglés original",
+        "translated": "El contenido será traducido a {language}"
+      }
+    },
+    "appearance": {
+      "title": "Selección de Tema",
+      "description": "Elige tu modo de tema preferido para la experiencia de visualización perfecta",
+      "themes": {
+        "light": {
+          "label": "Claro",
+          "description": "Limpio y brillante"
+        },
+        "dark": {
+          "label": "Oscuro",
+          "description": "Fácil para los ojos"
+        },
+        "system": {
+          "label": "Sistema",
+          "description": "Coincide con tu dispositivo"
+        }
+      },
+      "subtones": {
+        "title": "Subtonos de Color",
+        "description": "Añade gradientes de color sutiles para mejorar tu experiencia de lectura",
+        "preview": "Vista Previa en Vivo",
+        "previewDescription": "Ve cómo tu subtono seleccionado afecta la interfaz"
+      }
+    }
+  },
+  "common": {
+    "loading": "Cargando...",
+    "active": "Activo",
+    "available": "Disponible",
+    "enhanced": "Mejorado",
+    "live": "En Vivo"
+  }
+}

@@ -7,19 +7,15 @@ import { Sidebar } from '@/app/components/sidebar/sidebar';
 import { FeaturedVideos } from '@/app/sections/home/FeaturedVideos';
 import { Divider } from './components/ui/divider';
 import FeedHeader from './sections/feed/FeedHeader';
-import { FilterLayout } from './components/filters/FilterLayout';
 import LogoSectionDecor from './components/ui/Decorative/LogoSectionDecor';
 import { FirstTimeUserModal } from './sections/onboarding/FirstTimeUserModal';
 import { useOnboarding } from './hooks/use-onboarding';
 import { useTheme } from 'next-themes';
-import LightEffect from './components/animations/LightEffect';
 
-// Simple loading fallbacks
 const SimpleSkeleton = () => (
   <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-32" />
 );
 
-// Dynamic import with simple fallback
 const FeaturedNews = dynamic(() => import('./sections/home/FeaturedNews'), {
   loading: () => <SimpleSkeleton />,
   ssr: false
@@ -100,16 +96,12 @@ export default function Home() {
 
         {/* Main Content */}
         <motion.div className="flex-1 relative" variants={itemVariants}>
-          {/* Filter Layout */}
-          <div className="mb-6">
-            <FilterLayout />
+           {/* Featured Videos */}
+          <div className="mb-8 px-8">
+            <Suspense fallback={<></>}>
+              <FeedHeader />
+            </Suspense>
           </div>
-
-          {/* Feed Header */}
-          <div className="mb-6 px-4">
-            <FeedHeader />
-          </div>
-
           {/* Featured Videos */}
           <div className="mb-8 px-8">
             <Suspense fallback={<></>}>
@@ -129,7 +121,6 @@ export default function Home() {
             </Suspense>
           </div>
         </motion.div>
-
         {/* Background Logo */}
         <LogoSectionDecor condition={true} />
       </motion.div>

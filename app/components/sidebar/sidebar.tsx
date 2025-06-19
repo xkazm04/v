@@ -1,10 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Settings } from 'lucide-react';
-import { Button } from '@/app/components/ui/button';
 import { cn } from '@/app/lib/utils';
 import { motion } from 'framer-motion';
 import SideCat from './SideCat';
@@ -16,35 +12,15 @@ interface SidebarProps {
 
 export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
-  const { colors, sidebarColors, isDark, mounted: themeReady } = useLayoutTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
+  const { sidebarColors, isDark, mounted: themeReady } = useLayoutTheme();
 
   const isActive = (path: string) => pathname === path;
-
-  if (!mounted || !themeReady) {
-    return (
-      <div
-        className={cn(
-          'h-[calc(100vh-3.5rem)] border-r transition-all duration-300 hidden md:block w-[100px]',
-          className
-        )}
-        style={{
-          backgroundColor: '#1e293b',
-          borderColor: '#334155'
-        }}
-      />
-    );
-  }
 
   return (
     <motion.div
       className={cn(
-        'h-[calc(100vh-3.5rem)] border-r transition-all duration-300 hidden md:block relative overflow-hidden w-[180px]',
+        'min-h-full border-r transition-all duration-300 hidden md:block relative overflow-hidden',
+        'w-[200px]',
         className
       )}
       style={{
@@ -55,85 +31,90 @@ export function Sidebar({ className }: SidebarProps) {
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Enhanced background */}
+      {/* ✅ Enhanced vintage newspaper background */}
       <div className="absolute inset-0">
-        <div
-          className="absolute inset-0"
-          style={{
-            background: isDark
-              ? `linear-gradient(180deg, 
-                  ${sidebarColors.background} 0%, 
-                  rgba(30, 41, 59, 0.98) 50%, 
-                  ${sidebarColors.background} 100%
-                )`
-              : `linear-gradient(180deg, 
-                  ${sidebarColors.background} 0%, 
-                  rgba(248, 250, 252, 0.98) 50%, 
-                  ${sidebarColors.background} 100%
-                )`
-          }}
-        />
-
-        {/* Subtle pattern overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.02]"
-          style={{
-            backgroundImage: isDark
-              ? `radial-gradient(circle at 2px 2px, rgba(148, 163, 184, 0.4) 1px, transparent 0)`
-              : `radial-gradient(circle at 2px 2px, rgba(71, 85, 105, 0.3) 1px, transparent 0)`,
-            backgroundSize: '24px 24px'
-          }}
-        />
-
-        {/* Right border accent */}
-        <div
-          className="absolute right-0 top-0 h-full"
-          style={{
-            background: isDark
-              ? `linear-gradient(to bottom, transparent 0%, rgba(59, 130, 246, 0.3) 50%, transparent 100%)`
-              : `linear-gradient(to bottom, transparent 0%, rgba(59, 130, 246, 0.2) 50%, transparent 100%)`
-          }}
-        />
-      </div>
-
-      {/* Main content */}
-      <div className="relative z-10 h-full flex flex-col justify-start">
-        <div className="overflow-hidden">
-          <SideCat
-            isActive={isActive}
-          />
-        </div>
-                  <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-xl transition-all duration-200 group"
+        {isDark ? (
+          // Dark mode background (keep existing)
+          <>
+            <div
+              className="absolute inset-0"
               style={{
-                color: sidebarColors.muted,
-                backgroundColor: 'transparent'
+                background: `linear-gradient(180deg, 
+                  ${sidebarColors.background} 0%, 
+                  rgba(30, 41, 59, 0.95) 30%, 
+                  rgba(15, 23, 42, 0.98) 70%,
+                  ${sidebarColors.background} 100%
+                )`
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = isDark
-                  ? 'rgba(59, 130, 246, 0.1)'
-                  : 'rgba(59, 130, 246, 0.05)';
-                e.currentTarget.style.color = colors.primary;
+            />
+            <div
+              className="absolute inset-0 opacity-[0.03]"
+              style={{
+                backgroundImage: `radial-gradient(circle at 1px 1px, rgba(148, 163, 184, 0.4) 1px, transparent 0)`,
+                backgroundSize: '20px 20px'
               }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                //@ts-expect-error Ignore
-                e.currentTarget.style.color = sidebarColors.muted;
+            />
+          </>
+        ) : (
+          // ✅ NEW: Vintage newspaper light mode
+          <>
+            {/* Base aged paper background */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: `linear-gradient(180deg, 
+                  #f8f6f0 0%, 
+                  #f4f1ec 25%, 
+                  #f0ebe1 50%,
+                  #eae3d2 75%,
+                  #e8dcc0 100%
+                )`
               }}
-              asChild
-            >
-              <Link href="/settings">
-                <Settings className="h-4 w-4 transition-transform group-hover:rotate-45" />
-              </Link>
-            </Button>
-          </motion.div>
+            />
+            
+            {/* Paper texture overlay */}
+            <div
+              className="absolute inset-0 opacity-[0.15]"
+              style={{
+                backgroundImage: `
+                  radial-gradient(circle at 25% 25%, rgba(139, 69, 19, 0.05) 2px, transparent 0),
+                  radial-gradient(circle at 75% 75%, rgba(205, 133, 63, 0.03) 1px, transparent 0),
+                  linear-gradient(45deg, rgba(139, 69, 19, 0.02) 1px, transparent 1px),
+                  linear-gradient(-45deg, rgba(205, 133, 63, 0.02) 1px, transparent 1px)
+                `,
+                backgroundSize: '30px 30px, 20px 20px, 40px 40px, 40px 40px'
+              }}
+            />
+            
+            {/* Coffee stain effects */}
+            <div className="absolute top-12 left-4 w-8 h-8 rounded-full opacity-[0.08]" 
+                 style={{ background: 'radial-gradient(circle, rgba(139, 69, 19, 0.3) 0%, transparent 70%)' }} />
+            <div className="absolute top-32 right-2 w-6 h-6 rounded-full opacity-[0.06]" 
+                 style={{ background: 'radial-gradient(circle, rgba(160, 82, 45, 0.4) 0%, transparent 60%)' }} />
+            <div className="absolute bottom-20 left-6 w-4 h-4 rounded-full opacity-[0.05]" 
+                 style={{ background: 'radial-gradient(circle, rgba(139, 69, 19, 0.5) 0%, transparent 50%)' }} />
+            
+          </>
+        )}
+
+        {/* Enhanced border accent */}
+        <div
+          className="absolute right-0 top-0 h-full w-px"
+          style={{
+            background: isDark
+              ? `linear-gradient(to bottom, transparent 0%, rgba(59, 130, 246, 0.4) 20%, rgba(147, 51, 234, 0.3) 80%, transparent 100%)`
+              : `linear-gradient(to bottom, transparent 0%, rgba(139, 69, 19, 0.3) 10%, rgba(205, 133, 63, 0.4) 30%, rgba(160, 82, 45, 0.3) 70%, rgba(139, 69, 19, 0.2) 90%, transparent 100%)`
+          }}
+        />
+        
       </div>
+
+      <div className="relative z-10 min-h-full">
+        <SideCat
+          isCollapsed={false}
+          isActive={isActive}
+        />
+      </div>      
     </motion.div>
   );
 }

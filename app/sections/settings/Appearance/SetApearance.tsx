@@ -5,15 +5,11 @@ import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
 import { ColorSubtoneSelector } from './ColorSubtoneSelector';
 import { 
-  Palette,
   Monitor,
   Sun,
   Moon,
   Sparkles,
   Eye,
-  Brush,
-  Zap,
-  Star,
   Settings
 } from 'lucide-react';
 
@@ -41,7 +37,7 @@ const SetAppearance = memo(function SetAppearance() {
       y: 0, 
       scale: 1,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 300,
         damping: 25
       }
@@ -106,7 +102,7 @@ const SetAppearance = memo(function SetAppearance() {
         border="glow"
         rounded="3xl"
         shadow="glow"
-        className="relative overflow-hidden"
+        className="relative overflow-hidden p-2"
       >
         {/* Content Sections */}
         <div className="relative z-10 px-8 pb-12 space-y-16">
@@ -154,7 +150,7 @@ const SetAppearance = memo(function SetAppearance() {
                     className="relative group cursor-pointer disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     <motion.div
-                      className="relative p-6 rounded-2xl border-2 transition-all duration-300 overflow-hidden"
+                      className="relative p-6 rounded-2xl border transition-all duration-300 overflow-hidden"
                       style={{
                         background: isSelected || isHovered
                           ? `linear-gradient(135deg, ${option.color}20, ${option.color}10)`

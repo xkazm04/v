@@ -1,0 +1,55 @@
+{
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard", 
+    "reel": "Reel",
+    "upload": "Upload",
+    "education": "Education"
+  },
+  "settings": {
+    "language": {
+      "title": "Content Language",
+      "description": "Select your preferred language for content consumption",
+      "loading": "Loading languages...",
+      "badges": {
+        "original": "Original",
+        "translated": "AI Translated"
+      },
+      "summary": {
+        "english": "Reading content in original English",
+        "translated": "Content will be translated to {language}"
+      }
+    },
+    "appearance": {
+      "title": "Theme Selection",
+      "description": "Choose your preferred theme mode for the perfect viewing experience",
+      "themes": {
+        "light": {
+          "label": "Light",
+          "description": "Clean and bright"
+        },
+        "dark": {
+          "label": "Dark", 
+          "description": "Easy on the eyes"
+        },
+        "system": {
+          "label": "System",
+          "description": "Matches your device"
+        }
+      },
+      "subtones": {
+        "title": "Color Subtones",
+        "description": "Add subtle color gradients to enhance your reading experience",
+        "preview": "Live Preview",
+        "previewDescription": "See how your selected subtone affects the interface"
+      }
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "active": "Active",
+    "available": "Available",
+    "enhanced": "Enhanced",
+    "live": "Live"
+  }
+}

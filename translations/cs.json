@@ -1,0 +1,55 @@
+{
+  "navigation": {
+    "home": "Domů",
+    "dashboard": "Panel", 
+    "reel": "Videa",
+    "upload": "Nahrát",
+    "education": "Vzdělání"
+  },
+  "settings": {
+    "language": {
+      "title": "Jazyk Obsahu",
+      "description": "Vyberte preferovaný jazyk pro konzumaci obsahu",
+      "loading": "Načítání jazyků...",
+      "badges": {
+        "original": "Originál",
+        "translated": "Přeloženo AI"
+      },
+      "summary": {
+        "english": "Čtení obsahu v původní angličtině",
+        "translated": "Obsah bude přeložen do {language}"
+      }
+    },
+    "appearance": {
+      "title": "Výběr Tématu",
+      "description": "Vyberte preferovaný režim tématu pro dokonalý zážitek ze sledování",
+      "themes": {
+        "light": {
+          "label": "Světlé",
+          "description": "Čisté a jasné"
+        },
+        "dark": {
+          "label": "Tmavé",
+          "description": "Šetrné k očím"
+        },
+        "system": {
+          "label": "Systém",
+          "description": "Odpovídá vašemu zařízení"
+        }
+      },
+      "subtones": {
+        "title": "Barevné Podtóny",
+        "description": "Přidejte jemné barevné přechody pro vylepšení vašeho čtecího zážitku",
+        "preview": "Živý Náhled",
+        "previewDescription": "Podívejte se, jak vybraný podtón ovlivňuje rozhraní"
+      }
+    }
+  },
+  "common": {
+    "loading": "Načítání...",
+    "active": "Aktivní",
+    "available": "Dostupné",
+    "enhanced": "Vylepšené",
+    "live": "Živě"
+  }
+}

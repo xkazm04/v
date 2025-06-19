@@ -1,6 +1,3 @@
-// app/sections/feed/NewsCardWrapper.tsx
-'use client';
-
 import { useCallback, useRef, ReactNode } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from 'framer-motion';
 import { cn } from '@/app/lib/utils';
@@ -195,32 +192,6 @@ const NewsCardWrapper = ({
     }
   };
 
-  // ✅ **NEW: Enhanced card glow effect**
-  const getCardGlow = () => {
-    if (!isHovered || isMobile) return cardStyles.boxShadow;
-    
-    const baseGlow = isDark 
-      ? `0 8px 32px -8px rgba(0, 0, 0, 0.4), 0 0 0 1px ${colors.border}`
-      : `0 8px 32px -8px rgba(0, 0, 0, 0.15), 0 0 0 1px ${colors.border}`;
-    
-    const primaryGlow = `0 0 24px ${colors.primary}40, 0 0 48px ${colors.primary}20`;
-    
-    // Add status-specific glow for important content
-    if (research.status === 'FALSE') {
-      const statusGlow = isDark 
-        ? '0 0 24px rgba(239, 68, 68, 0.3)' 
-        : '0 0 24px rgba(220, 38, 38, 0.3)';
-      return `${baseGlow}, ${primaryGlow}, ${statusGlow}`;
-    } else if (research.status === 'MISLEADING') {
-      const statusGlow = isDark 
-        ? '0 0 24px rgba(245, 158, 11, 0.3)' 
-        : '0 0 24px rgba(217, 119, 6, 0.3)';
-      return `${baseGlow}, ${primaryGlow}, ${statusGlow}`;
-    }
-    
-    return `${baseGlow}, ${primaryGlow}`;
-  };
-
   if (isRead) {
     return null;
   }
@@ -266,25 +237,6 @@ const NewsCardWrapper = ({
     >
       {children}
 
-      {/* ✅ **NEW: Subtle inner glow overlay for hover state** */}
-      <AnimatePresence>
-        {isHovered && !isMobile && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 rounded-xl pointer-events-none"
-            style={{
-              background: `radial-gradient(circle at 50% 0%, 
-                ${colors.primary}08 0%, 
-                transparent 50%
-              )`,
-              zIndex: 5
-            }}
-            transition={{ duration: 0.3 }}
-          />
-        )}
-      </AnimatePresence>
 
       {/* Mobile read button */}
       {isMobile && (

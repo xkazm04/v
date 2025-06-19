@@ -1,6 +1,5 @@
 import { AlertTriangle, CheckCircle, XCircle } from "lucide-react";
 
-// Define proper types for color configurations
 export interface ComponentColors {
   background?: string;
   foreground?: string;
@@ -40,6 +39,18 @@ interface CardColors {
   accent?: string;
 }
 
+// ✅ NEW: Vintage color palette interface
+export interface VintageColors {
+  paper: string;
+  ink: string;
+  faded: string;
+  aged: string;
+  sepia: string;
+  highlight: string;
+  shadow: string;
+  crease: string;
+}
+
 export interface ThemeColors {
   primary: string;
   secondary: string;
@@ -55,6 +66,8 @@ export interface ThemeColors {
   sidebar: ComponentColors;
   card: CardColors;
   overlay: OverlayColors;
+  // ✅ NEW: Add vintage colors to theme
+  vintage: VintageColors;
   active?: string;
   inactive?: string;
   iconBg?: string;
@@ -69,33 +82,45 @@ export interface ThemeColors {
 
 export const colors: { light: ThemeColors; dark: ThemeColors } = {
   light: {
-    // Existing colors
-    primary: '#3b82f6',
-    secondary: '#64748b', 
-    accent: '#f59e0b',
-    background: '#fefefe',
-    foreground: '#0f172a',
-    muted: '#f1f5f9',
-    mutedForeground: '#64748b',
-    border: '#e2e8f0',
+    // Enhanced vintage-inspired colors
+    primary: '#8b4513', // Rich saddle brown
+    secondary: '#6b5b73', // Muted lavender gray
+    accent: '#cd853f', // Peru/antique brass
+    background: '#faf9f7', // Warm off-white
+    foreground: '#2c1810', // Dark brown ink
+    muted: '#f4f1ec', // Cream paper
+    mutedForeground: '#8b7355', // Faded brown
+    border: '#d4c4a8', // Aged paper border
     input: '#ffffff',
-    ring: '#3b82f6',
+    ring: '#8b4513',
     
-    // Layout-specific colors
+    // ✅ NEW: Dedicated vintage color palette for light mode
+    vintage: {
+      paper: '#f8f6f0', // Main paper color
+      ink: '#2c1810', // Primary text color
+      faded: '#7a6f47', // Aged text
+      aged: '#e8dcc0', // Old paper edges
+      sepia: '#d4c4a8', // Sepia tones
+      highlight: '#fff8e7', // Paper highlight
+      shadow: 'rgba(139, 69, 19, 0.15)', // Brown shadow
+      crease: '#e0d5c0', // Paper fold lines
+    },
+    
+    sidebar: {
+      background: '#f8f6f0', // Aged newsprint
+      foreground: '#2c1810', // Dark ink
+      border: '#e0d5c0', // Coffee stain border
+      hover: '#f1ede4', // Light paper hover
+      active: '#eae3d2', // Pressed paper
+      muted: '#a0956b', // Faded text
+      accent: '#8b4513', // Rich brown accent
+    },
     navbar: {
       background: 'hsl(45 25% 94%)', // Aged cream paper
       foreground: 'hsl(0 0% 8%)', // Deep black ink
       border: 'hsl(35 8% 75%)', // Subtle newsprint lines
       accent: 'hsl(25 85% 35%)', // Classic red ink
       muted: 'hsl(40 12% 88%)', // Light sepia tone
-    },
-    sidebar: {
-      background: 'hsl(42 20% 96%)', // Slightly whiter paper
-      foreground: 'hsl(0 0% 8%)',
-      border: 'hsl(35 8% 75%)',
-      hover: 'hsl(40 12% 88%)',
-      active: 'hsl(35 15% 85%)',
-      muted: 'hsl(0 0% 35%)',
     },
     card: {
       background: 'hsl(42 20% 96%)',
@@ -111,7 +136,7 @@ export const colors: { light: ThemeColors; dark: ThemeColors } = {
     }
   },
   dark: {
-    // Existing colors
+    // Keep existing dark theme
     primary: '#60a5fa',
     secondary: '#94a3b8',
     accent: '#fbbf24', 
@@ -123,7 +148,18 @@ export const colors: { light: ThemeColors; dark: ThemeColors } = {
     input: '#1e293b',
     ring: '#60a5fa',
     
-    // Layout-specific colors for dark mode
+    // ✅ NEW: Dark mode vintage colors (more muted, tech-like)
+    vintage: {
+      paper: '#1e293b', // Dark slate background
+      ink: '#f8fafc', // Light text
+      faded: '#94a3b8', // Muted slate text
+      aged: '#334155', // Darker edges
+      sepia: '#475569', // Darker sepia
+      highlight: '#64748b', // Subtle highlight
+      shadow: 'rgba(0, 0, 0, 0.3)', // Dark shadow
+      crease: '#475569', // Border lines
+    },
+    
     navbar: {
       background: 'hsl(222.2 84% 4.9%)',
       foreground: 'hsl(210 40% 98%)',
@@ -176,6 +212,10 @@ export const getCardColors = (theme: 'light' | 'dark'): CardColors =>
 
 export const getOverlayColors = (theme: 'light' | 'dark'): OverlayColors => 
   colors[theme].overlay;
+
+// ✅ NEW: Vintage color getter
+export const getVintageColors = (theme: 'light' | 'dark'): VintageColors => 
+  colors[theme].vintage;
 
 export const statusColorConfig = {
     light: {

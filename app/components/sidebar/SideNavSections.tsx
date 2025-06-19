@@ -2,21 +2,18 @@ import { AnimatePresence, motion } from "framer-motion"
 import NavItem from "./SideNavItem";
 import { 
   Home, 
-  TrendingUp as Trending, 
   Bookmark, 
 } from 'lucide-react';
 
 type Props = {
-    expandedSections: Set<string>;
     isActive: (path: string) => boolean;
     isCollapsed: boolean;
     mounted: boolean;
 }
 
-const SideNavMainSection = ({expandedSections, isActive, isCollapsed, mounted}: Props) => {
+const SideNavMainSection = ( {isActive, mounted}: Props) => {
     return (
         <AnimatePresence initial={false}>
-            {expandedSections.has('main') && (
                 <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
@@ -34,7 +31,7 @@ const SideNavMainSection = ({expandedSections, isActive, isCollapsed, mounted}: 
                         {
                             href: "/profiles",
                             icon: Bookmark,
-                            label: "Subscribed",
+                            label: "Profiles",
                             itemId: "profiles"
                         }
                     ].map((item, index) => (
@@ -53,13 +50,10 @@ const SideNavMainSection = ({expandedSections, isActive, isCollapsed, mounted}: 
                                 icon={item.icon}
                                 label={item.label}
                                 isActiveRoute={isActive(item.href)}
-                                isCollapsed={isCollapsed}
-                                mounted={mounted}
                             />
                         </motion.div>
                     ))}
                 </motion.div>
-            )}
         </AnimatePresence>
     );
 };

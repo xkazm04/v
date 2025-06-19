@@ -125,7 +125,7 @@ const FloatingIconsConstellation = memo(function FloatingIconsConstellation({
           >
             <FloatingVerdictIcon
               size="sm"
-              confidence={75 + index * 5}
+              confidence={5 + index * 5}
               customIcon="/logos/logo_spray_white.png"
               delay={satellite.delay}
               colors={{ 

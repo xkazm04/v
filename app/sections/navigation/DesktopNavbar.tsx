@@ -6,8 +6,6 @@ import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useNavigationContext } from '@/app/providers/navigation-provider';
 import { ThemeToggle } from '../../components/theme/theme-toggle';
 import DesktopNavbarMain from './DesktopNavbarMain';
-import Image from 'next/image';
-import { useTheme } from 'next-themes';
 
 const navbarVariants = {
   hidden: { y: -100, opacity: 0 },
@@ -25,7 +23,6 @@ const navbarVariants = {
 
 export function DesktopNavbar() {
   const pathname = usePathname();
-  const { theme } = useTheme();
   const { colors, mounted, getColors } = useLayoutTheme();
   const {
     isNavigating,
@@ -67,27 +64,7 @@ export function DesktopNavbar() {
           WebkitBackdropFilter: 'blur(24px) saturate(1.8)'
         }}
       >
-        {/* Gradient overlay for depth */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: `linear-gradient(to bottom, ${navbarColors.background}00, ${navbarColors.background}20)`
-          }}
-        />
-
         <div className="container relative flex h-16 max-w-screen-2xl items-center px-6">
-              <motion.div
-                className="absolute opacity-10"
-                style={{ color: navbarColors.foreground }}
-              >
-                {theme === 'dark' && <Image
-                  src="/logos/logo_glow_white.png"
-                  alt="Logo"
-                  width={300}
-                  height={300}
-                  className="transition-all duration-300"
-                />}
-              </motion.div>
           {/* Main Navigation - Remove router prop and let component use its own useRouter */}
           <DesktopNavbarMain
             //@ts-expect-error Ignore

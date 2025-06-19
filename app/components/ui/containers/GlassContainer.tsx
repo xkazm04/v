@@ -3,6 +3,7 @@
 import { motion, Variants } from 'framer-motion';
 import { ReactNode, forwardRef } from 'react';
 import { cn } from '@/app/lib/utils';
+import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 
 interface GlassContainerProps {
   children: ReactNode;
@@ -12,13 +13,14 @@ interface GlassContainerProps {
   animate?: string;
   exit?: string;
   style?: 'default' | 'frosted' | 'crystal' | 'subtle' | 'intense';
-  border?: 'none' | 'subtle' | 'visible' | 'glow';
+  border?: 'none' | 'subtle' | 'visible' | 'glow' | 'subtone';
   backdrop?: 'light' | 'medium' | 'heavy';
   rounded?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full';
-  shadow?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'glow';
+  shadow?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'glow' | 'subtone';
   theme?: 'light' | 'dark' | 'auto';
   overlay?: boolean;
   overlayOpacity?: number;
+  subtoneEnhanced?: boolean; // ✅ NEW: Enable subtone enhancements
   [key: string]: any;
 }
 
@@ -58,7 +60,8 @@ const borderStyles = {
   glow: {
     light: 'border border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.1)]',
     dark: 'border border-white/30 shadow-[0_0_20px_rgba(255,255,255,0.05)]'
-  }
+  },
+  subtone: 'border' 
 };
 
 const shadowStyles = {
@@ -67,7 +70,8 @@ const shadowStyles = {
   md: 'shadow-md',
   lg: 'shadow-lg shadow-black/5',
   xl: 'shadow-xl shadow-black/10',
-  glow: 'shadow-[0_8px_32px_rgba(0,0,0,0.1)] dark:shadow-[0_8px_32px_rgba(255,255,255,0.05)]'
+  glow: 'shadow-[0_8px_32px_rgba(0,0,0,0.1)] dark:shadow-[0_8px_32px_rgba(255,255,255,0.05)]',
+  subtone: '' 
 };
 
 const roundedStyles = {
@@ -95,18 +99,43 @@ export const GlassContainer = forwardRef<HTMLDivElement, GlassContainerProps>(({
   theme = 'auto',
   overlay = false,
   overlayOpacity = 0.1,
+  subtoneEnhanced = false, 
   ...props
 }, ref) => {
+  const { isDark, subtone } = useLayoutTheme();
+  
   // Determine theme
   const currentTheme = theme === 'auto' 
-    ? (typeof window !== 'undefined' && document.documentElement.classList.contains('dark') ? 'dark' : 'light')
+    ? (isDark ? 'dark' : 'light')
     : theme;
 
   // Build glass effect classes
   const glassClass = glassStyles[style][currentTheme];
-  const borderClass = border === 'none' ? '' : borderStyles[border][currentTheme];
-  const shadowClass = shadowStyles[shadow as keyof typeof shadowStyles];
   const roundedClass = roundedStyles[rounded as keyof typeof roundedStyles];
+  
+  // ✅ Enhanced border and shadow with subtone support
+  const getBorderStyle = () => {
+    if (border === 'subtone' && subtoneEnhanced && subtone.isActive) {
+      return {
+        borderColor: `${subtone.color}40`,
+        borderWidth: '1px',
+        borderStyle: 'solid'
+      };
+    }
+    return border === 'none' ? {} : { className: borderStyles[border as keyof typeof borderStyles][currentTheme] };
+  };
+  
+  const getShadowStyle = () => {
+    if (shadow === 'subtone' && subtoneEnhanced && subtone.isActive) {
+      return {
+        boxShadow: subtone.effects.borderGlow.medium
+      };
+    }
+    return shadow === 'none' ? {} : { className: shadowStyles[shadow as keyof typeof shadowStyles] };
+  };
+
+  const borderStyleObj = getBorderStyle();
+  const shadowStyleObj = getShadowStyle();
 
   return (
     <motion.div
@@ -118,8 +147,8 @@ export const GlassContainer = forwardRef<HTMLDivElement, GlassContainerProps>(({
       className={cn(
         'relative overflow-hidden',
         glassClass,
-        borderClass,
-        shadowClass,
+        borderStyleObj.className,
+        shadowStyleObj.className,
         roundedClass,
         'transition-all duration-300 ease-out',
         className
@@ -127,10 +156,37 @@ export const GlassContainer = forwardRef<HTMLDivElement, GlassContainerProps>(({
       style={{
         backdropFilter: 'blur(3px) saturate(1.5)',
         WebkitBackdropFilter: 'blur(5px) saturate(1.5)',
+        ...borderStyleObj,
+        ...shadowStyleObj,
+        ...(subtoneEnhanced && subtone.isActive && {
+          background: `${subtone.effects.glassBackground}, ${glassClass.includes('bg-white') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`
+        }),
         ...props.style
       }}
       {...props}
     >
+      {/* Subtone background tint */}
+      {subtoneEnhanced && subtone.isActive && subtone.effects.backgroundTint !== 'none' && (
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: subtone.effects.backgroundTint,
+            opacity: 0.6
+          }}
+        />
+      )}
+      
+      {/* Enhanced pattern overlay with subtone */}
+      {subtoneEnhanced && (
+        <div 
+          className="absolute inset-0 pointer-events-none opacity-[0.03]"
+          style={{
+            backgroundImage: subtone.effects.dotPattern,
+            backgroundSize: '20px 20px'
+          }}
+        />
+      )}
+
       {/* Optional overlay for enhanced glass effect */}
       {overlay && (
         <div 

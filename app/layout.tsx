@@ -117,7 +117,7 @@ export default function RootLayout({
         <link rel="prefetch" href="/reel" />
         <link rel="prefetch" href="/upload" />
         <link rel="prefetch" href="/timeline" />
-        <link rel="prefetch" href="/settings" />
+        <link rel="prefetch" href="/" />
       </head>
       
       <body className="min-h-screen bg-background font-sans antialiased relative overflow-x-hidden">

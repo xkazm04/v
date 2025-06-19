@@ -8,13 +8,24 @@ interface PageTransitionProps {
   children: ReactNode;
 }
 
+// ✅ Helper to normalize pathname by removing locale prefix
+const normalizePathname = (pathname: string): string => {
+  // Remove locale prefix if present (/en, /es, /cs)
+  const localePattern = /^\/(en|es|cs)(?=\/|$)/;
+  return pathname.replace(localePattern, '') || '/';
+};
+
 const getTransitionVariants = (pathname: string, previousPath?: string): Variants => {
   const getDirection = () => {
     if (!previousPath) return 'neutral';
     
-    const routeOrder = ['/', '/reel', '/upload'];
-    const currentIndex = routeOrder.findIndex(route => pathname.startsWith(route));
-    const previousIndex = routeOrder.findIndex(route => previousPath.startsWith(route));
+    // ✅ Normalize both paths to compare routes without locale
+    const normalizedCurrent = normalizePathname(pathname);
+    const normalizedPrevious = normalizePathname(previousPath);
+    
+    const routeOrder = ['/', '/reel', '/upload', '/timeline', '/dashboard'];
+    const currentIndex = routeOrder.findIndex(route => normalizedCurrent.startsWith(route));
+    const previousIndex = routeOrder.findIndex(route => normalizedPrevious.startsWith(route));
     
     if (currentIndex === -1 || previousIndex === -1) return 'neutral';
     return currentIndex > previousIndex ? 'left' : 'right';
@@ -66,7 +77,7 @@ export function PageTransition({ children }: PageTransitionProps) {
       onExitComplete={handleExitComplete}
     >
       <motion.div
-        key={pathname}
+        key={normalizePathname(pathname)} // ✅ Use normalized pathname as key
         initial="initial"
         animate="animate"
         exit="exit"

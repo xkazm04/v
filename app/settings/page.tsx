@@ -12,9 +12,11 @@ import SetApearance from '../sections/settings/Appearance/SetApearance';
 import SettingLayout from '../sections/settings/Preferences/SettingLayout';
 import FloatingIconsConstellation from '@/app/components/ui/Decorative/FloatingIconsConstellation';
 import { motion } from 'framer-motion';
+import { useLayoutTheme } from '../hooks/use-layout-theme';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('language');
+  const { isDark } = useLayoutTheme();
 
   const getConstellationVariant = (tab: string) => {
     switch (tab) {
@@ -26,11 +28,13 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="flex min-h-screen relative">
+    <div className={`flex min-h-screen relative`}>
+      <div className={`${isDark ? 'text-white' : 'opacity-30'}`}>
       <FloatingIconsConstellation 
         variant={getConstellationVariant(activeTab)}
         className="z-0"
       />
+      </div>
       
       {/* Main Content */}
       <Sidebar />

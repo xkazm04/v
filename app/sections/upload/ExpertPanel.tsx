@@ -73,7 +73,7 @@ export function ExpertPanel({ experts, isLoading = false }: ExpertPanelProps) {
           <span>Expert Panel Analysis</span>
         </h3>
         <p className="text-sm sm:text-lg max-w-2xl mx-auto px-4" style={{ color: colors.mutedForeground }}>
-          Our diverse panel of experts provides multiple perspectives on your statement
+          Diverse panel of experts provides multiple perspectives on your statement
         </p>
         {isLoading && (
           <motion.div
@@ -174,7 +174,7 @@ export function ExpertPanel({ experts, isLoading = false }: ExpertPanelProps) {
                         className="text-sm font-semibold uppercase tracking-wide"
                         style={{ color: colors.mutedForeground }}
                       >
-                        Analysis
+                        {profile.title}
                       </span>
                     </div>
                     <div 

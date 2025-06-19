@@ -72,29 +72,6 @@ const FeaturedNews = memo(({
     return filtered;
   }, [researchResults]);
 
-  // Stable display title
-  const displayTitle = useMemo(() => {
-    if (showBreaking || newsFilters.breaking) return 'Breaking Fact Checks';
-    if (newsFilters.categoryFilter && newsFilters.categoryFilter !== 'all') {
-      const categoryLabels: Record<string, string> = {
-        politics: 'Politics',
-        economy: 'Economy', 
-        environment: 'Environment',
-        military: 'Military',
-        healthcare: 'Healthcare',
-        education: 'Education',
-        technology: 'Technology',
-        social: 'Social',
-        international: 'International',
-        other: 'Other'
-      };
-      return `${categoryLabels[newsFilters.categoryFilter] || newsFilters.categoryFilter} Research`;
-    }
-    if (newsFilters.countryFilter && newsFilters.countryFilter !== 'worldwide' && newsFilters.countryFilter !== 'all') {
-      return `Research from ${countryLabels[newsFilters.countryFilter] || newsFilters.countryFilter}`;
-    }
-    return 'Latest Research Results';
-  }, [newsFilters, showBreaking]);
 
   return (
     <div className="space-y-6 max-w-[1600px]">
@@ -104,12 +81,12 @@ const FeaturedNews = memo(({
           <motion.h2 
             className="text-2xl font-bold"
             style={{ color: colors.foreground }}
-            key={displayTitle}
+            key={'featured-news-title'}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {displayTitle}
+            Researched statements
           </motion.h2>
         </div>
 
@@ -171,7 +148,7 @@ const FeaturedNews = memo(({
           </motion.div>
         ) : (
           <motion.div
-            key={`research-${displayTitle}-${validResearchResults.length}`}
+            key={`research-news-${validResearchResults.length}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}

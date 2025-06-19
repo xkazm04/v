@@ -1,7 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { cn } from "@/app/lib/utils";
-import { EnhancedBadge } from "../ui/enhanced-badge";
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
 
 type Props = {
@@ -9,8 +8,6 @@ type Props = {
     icon: React.ComponentType<{ className?: string, style?: React.CSSProperties }>;
     label: string;
     isActiveRoute: boolean;
-    isCollapsed: boolean;
-    mounted: boolean;
 }
 
 const NavItem = ({ 
@@ -18,21 +15,18 @@ const NavItem = ({
     icon: Icon, 
     label, 
     isActiveRoute, 
-    isCollapsed, 
-    mounted
 }: Props) => {
     const { colors, sidebarColors, isDark } = useLayoutTheme();
 
     return (
         <motion.div
-            whileHover={{ x: isCollapsed ? 0 : 4 }}
+            whileHover={{ x: 4 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
         >
             <Link href={href}>
                 <motion.button
                     className={cn(
-                        'w-full justify-start flex flex-row p-3 relative overflow-hidden group transition-all duration-200 rounded-lg',
-                        isCollapsed && 'justify-center px-3'
+                        'w-full justify-start flex flex-row p-3 relative overflow-hidden group transition-all duration-200 rounded-lg justify-center px-3'
                     )}
                     style={{
                         background: isActiveRoute 
@@ -79,9 +73,7 @@ const NavItem = ({
                             />
                         </motion.div>
                         
-                        {mounted && (
                             <AnimatePresence initial={false}>
-                                {!isCollapsed && (
                                     <motion.div
                                         initial={{ opacity: 0, width: 0 }}
                                         animate={{ opacity: 1, width: 'auto' }}
@@ -100,9 +92,7 @@ const NavItem = ({
                                             </span>
                                         </div>
                                     </motion.div>
-                                )}
                             </AnimatePresence>
-                        )}
                     </div>
 
                     {/* Active indicator */}
