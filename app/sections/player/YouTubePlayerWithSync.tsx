@@ -74,7 +74,9 @@ export function YouTubePlayerWithSync({
         modestbranding: 1,
         playsinline: 1,
         enablejsapi: 1,
-        origin: window.location.origin
+        origin: window.location.origin,
+        iv_load_policy: 3,
+        cc_load_policy: 0,
       },
       events: {
         onReady: onPlayerReady,

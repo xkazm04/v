@@ -1,13 +1,14 @@
 'use client';
 
 import { memo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useUserPreferences } from '@/app/hooks/use-user-preferences';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
 import SettingLanguage from './SettingLanguage';
 import SettingCountry from './SettingCountry';
 import { AVAILABLE_LANGUAGES } from '@/app/helpers/countries';
+import Divider from '@/app/components/ui/divider';
 
 const SettingLayout = memo(function SettingLayout() {
   const { colors } = useLayoutTheme();
@@ -30,7 +31,7 @@ const SettingLayout = memo(function SettingLayout() {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20, scale: 0.95 },
     visible: { 
       opacity: 1, 
@@ -51,7 +52,7 @@ const SettingLayout = memo(function SettingLayout() {
       animate="visible"
     >
       <GlassContainer
-        style="frosted"
+        style="crystal"
         border="glow"
         rounded="3xl"
         shadow="glow"
@@ -63,9 +64,9 @@ const SettingLayout = memo(function SettingLayout() {
           <motion.div variants={itemVariants} className="mb-16">
             <SettingLanguage />
           </motion.div>
-
+          <Divider />
           {/* Country Settings */}
-          <motion.div variants={itemVariants} className="mb-16">
+          <motion.div variants={itemVariants} className="my-8">
             <SettingCountry />
           </motion.div>
 

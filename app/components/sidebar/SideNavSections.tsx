@@ -2,7 +2,8 @@ import { AnimatePresence, motion } from "framer-motion"
 import NavItem from "./SideNavItem";
 import { 
   Home, 
-  Bookmark, 
+  Bookmark,
+  NewspaperIcon, 
 } from 'lucide-react';
 
 type Props = {
@@ -24,7 +25,7 @@ const SideNavMainSection = ( {isActive, mounted}: Props) => {
                     {[
                         {
                             href: "/",
-                            icon: Home,
+                            icon: NewspaperIcon,
                             label: "Home",
                             itemId: "home"
                         },

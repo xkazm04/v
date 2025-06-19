@@ -107,10 +107,10 @@ const SettingLanguage = memo(function SettingLanguage() {
               whileTap={{ scale: 0.98 }}
             >
               <motion.div
-                className="relative p-6 rounded-2xl border-2 transition-all duration-300 overflow-hidden"
+                className="relative p-6 rounded-2xl border-2 transition-all duration-300 overflow-hidden ease-linear"
                 style={{
                   background: isSelected || isHovered
-                    ? `linear-gradient(135deg, ${colors.primary}15, ${colors.primary}08)`
+                    ? `linear-gradient(135deg, ${colors.primary}85, ${colors.primary}08)`
                     : isDark 
                       ? 'linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))'
                       : 'linear-gradient(135deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01))',

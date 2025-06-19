@@ -11,6 +11,7 @@ import LogoSectionDecor from './components/ui/Decorative/LogoSectionDecor';
 import { FirstTimeUserModal } from './sections/onboarding/FirstTimeUserModal';
 import { useOnboarding } from './hooks/use-onboarding';
 import { useTheme } from 'next-themes';
+import { useViewport } from './hooks/useViewport';
 
 const SimpleSkeleton = () => (
   <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-32" />
@@ -58,6 +59,7 @@ NewsBackground.displayName = 'NewsBackground';
 
 export default function Home() {
   const { hasCompletedOnboarding, isLoading, completeOnboarding, skipOnboarding } = useOnboarding();
+  const { isDesktop } = useViewport();
   const {
     theme
   } = useTheme();
@@ -96,18 +98,16 @@ export default function Home() {
 
         {/* Main Content */}
         <motion.div className="flex-1 relative" variants={itemVariants}>
-           {/* Featured Videos */}
           <div className="mb-8 px-8">
             <Suspense fallback={<></>}>
               <FeedHeader />
             </Suspense>
           </div>
-          {/* Featured Videos */}
-          <div className="mb-8 px-8">
+          {isDesktop && <div className="mb-8 px-8">
             <Suspense fallback={<></>}>
               <FeaturedVideos />
             </Suspense>
-          </div>
+          </div>}
 
           {/* Divider */}
           <div className="my-8">

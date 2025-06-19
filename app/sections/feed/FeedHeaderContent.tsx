@@ -1,7 +1,9 @@
 
+import NewsCardSpeaker from "@/app/components/news/NewsCardSpeaker";
 import { FloatingVerdictIcon } from "@/app/components/ui/Decorative/FloatingVerdictIcon";
 import { Divider } from "@/app/components/ui/divider";
-import { motion } from "framer-motion";
+import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
+import { motion, Variants } from "framer-motion";
 import { Calendar } from "lucide-react";
 
 type Props = {
@@ -22,13 +24,13 @@ type Props = {
     text: string;
     verdict: string;
     source: string;
-    reach: string;
   };
 }
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { 
     opacity: 0, 
+    y: 30,
     y: 30,
     scale: 0.95
   },
@@ -44,6 +46,7 @@ const itemVariants = {
 };
 
 const FeedHeaderContent = ({ config, currentTheme, textColors, mockStatement }: Props) => {
+  const { colors} = useLayoutTheme();
   return (
     <>
       <div className="relative z-10 p-8 h-full flex flex-col">
@@ -73,12 +76,7 @@ const FeedHeaderContent = ({ config, currentTheme, textColors, mockStatement }: 
                 Statement of the Day
               </h1>
               <div className={`flex items-center gap-2 ${textColors.tertiary} text-sm`}>
-                <Calendar className="w-4 h-4" />
-                <span>{new Date().toLocaleDateString('en-US', { 
-                  weekday: 'long', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}</span>
+                {mockStatement.source}
               </div>
             </div>
           </div>
@@ -102,10 +100,10 @@ const FeedHeaderContent = ({ config, currentTheme, textColors, mockStatement }: 
           </motion.blockquote>
           
           {/* Quick Verdict with enhanced styling */}
-          <motion.div className="relative">
+          <motion.div className="relative pl-1.5">
             <motion.p
-              className={`${textColors.secondary} leading-relaxed max-w-3xl px-2 relative z-10`}
-              style={{ fontSize: '1.1rem' }}
+              className={`${textColors.secondary} font-serif leading-relaxed max-w-3xl px-2 relative z-10`}
+              style={{ background: `${colors.background}80`, fontSize: '1.1rem' }}
             >
               {mockStatement.verdict}
             </motion.p>
@@ -137,19 +135,7 @@ const FeedHeaderContent = ({ config, currentTheme, textColors, mockStatement }: 
               className="w-2 h-2 rounded-full"
               style={{ backgroundColor: config.color }}
             />
-            Source: <span className="font-medium">{mockStatement.source}</span>
-          </motion.div>
-          
-          <motion.div 
-            className={`${textColors.tertiary} text-sm flex items-center gap-2`}
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.2 }}
-          >
-            <div 
-              className="w-2 h-2 rounded-full"
-              style={{ backgroundColor: config.color }}
-            />
-            Reach: <span className="font-medium">{mockStatement.reach}</span>
+            <NewsCardSpeaker research={mockStatement} />
           </motion.div>
         </motion.div>
       </div>

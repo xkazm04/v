@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Sidebar } from '@/app/components/sidebar/sidebar';
 import {
   Tabs,
@@ -13,6 +13,20 @@ import SettingLayout from '../sections/settings/Preferences/SettingLayout';
 import FloatingIconsConstellation from '@/app/components/ui/Decorative/FloatingIconsConstellation';
 import { motion } from 'framer-motion';
 import { useLayoutTheme } from '../hooks/use-layout-theme';
+
+const SettingsBackground = memo(() => (
+  <div 
+    className="fixed inset-0 opacity-5 bg-cover bg-center bg-no-repeat"
+    style={{
+      backgroundImage: `url('/background/settings_bg.jpg')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed'
+    }}
+  />
+));
+
+SettingsBackground.displayName = 'SettingsBackground';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('language');
@@ -29,6 +43,7 @@ export default function SettingsPage() {
 
   return (
     <div className={`flex min-h-screen relative`}>
+       <SettingsBackground />
       <div className={`${isDark ? 'text-white' : 'opacity-30'}`}>
       <FloatingIconsConstellation 
         variant={getConstellationVariant(activeTab)}

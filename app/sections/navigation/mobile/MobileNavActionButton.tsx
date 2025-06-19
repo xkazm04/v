@@ -1,7 +1,7 @@
 import { fabVariants } from '@/app/components/animations/variants/mobileNavVariants';
 import { Plus, Sparkles,  } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, Variants } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 
 type Props = {

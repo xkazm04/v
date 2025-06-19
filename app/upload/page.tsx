@@ -126,7 +126,7 @@ const Page = () => {
                             transition={{ delay: 0.3 }}
                         >
                             <GlassContainer
-                                style="frosted"
+                                style="subtle"
                                 rounded="2xl"
                                 shadow="glow"
                                 theme={isDark ? 'dark' : 'light'}

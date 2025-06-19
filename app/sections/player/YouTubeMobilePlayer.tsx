@@ -6,7 +6,7 @@ import { VideoWithTimestamps } from '@/app/types/video_api';
 import { PlayerTimeline } from '@/app/sections/player/timeline/PlayerTimeline';
 import { VideoPlayerHeader } from '@/app/components/video/VideoPlayerHeader';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-import { MobileNavbar } from '@/app/sections/navigation/MobileNavbar';
+import { MobileNavbar } from '@/app/sections/navigation/mobile/MobileNavbar';
 import { YouTubePlayerWithSync } from './YouTubePlayerWithSync';
 import YouTubeMobileContainer from './YouTubeMobileContainer';
 import PlayerOverlayUi from './PlayerOverlayUi';

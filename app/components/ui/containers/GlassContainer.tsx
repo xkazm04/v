@@ -31,15 +31,15 @@ const glassStyles = {
   },
   frosted: {
     light: 'bg-white/30 backdrop-blur-lg',
-    dark: 'bg-white/8 backdrop-blur-lg'
+    dark: 'bg-white/10 backdrop-blur-lg'
   },
   crystal: {
     light: 'bg-white/40 backdrop-blur-xl',
-    dark: 'bg-white/10 backdrop-blur-xl'
+    dark: 'bg-black/40 backdrop-blur-xl'
   },
   subtle: {
     light: 'bg-white/10 backdrop-blur-sm',
-    dark: 'bg-white/3 backdrop-blur-sm'
+    dark: 'bg-blue-900/20 backdrop-blur-sm'
   },
   intense: {
     light: 'bg-white/50 backdrop-blur-2xl',

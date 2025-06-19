@@ -223,6 +223,7 @@ export default function TimelineVertical() {
           isDark={isDark}
           colors={colors}
         />
+        
 
         {isDesktop && (
           <>

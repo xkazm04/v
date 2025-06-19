@@ -8,7 +8,7 @@ import { getFactCheckVerdict } from '@/app/utils/videoUtils';
 import { headerVariants } from '../animations/variants/playerVariants';
 import { VideoWithTimestamps } from '@/app/types/video_api';
 import { FloatingVerdictIcon } from '../ui/Decorative/FloatingVerdictIcon';
-import VideoPlayerVoting from './header/VideoPlaterVoting';
+import VideoPlayerVoting from './header/VideoPlayerVoting';
 
 interface VideoPlayerHeaderProps {
   video: VideoWithTimestamps;
@@ -161,9 +161,6 @@ export const VideoPlayerHeader = memo(function VideoPlayerHeader({
                   isMobile={isMobile}
                   />
             </div>
-
-            {/* Enhanced Shimmer Effect */}
-            <ShimmerEffect />
           </div>
         </motion.div>
       )}

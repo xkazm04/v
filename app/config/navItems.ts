@@ -1,4 +1,5 @@
-import { Home, Newspaper, Film, Clock10Icon } from 'lucide-react';
+import { Clock10Icon, NewspaperIcon } from 'lucide-react';
+import ReelIcon from '../components/icons/nav/icon_reel';
 
 export const NAVIGATION_CONFIG = {
   mainNav: [
@@ -41,23 +42,26 @@ interface TabItem {
   icon: React.ElementType;
   href: string;
   isSpecial?: boolean;
-  translationKey?: string; // ✅ NEW: Translation key
+  translationKey?: string;
+  isCustomIcon?: boolean; // New property to identify custom icons
 }
 
 export const MOBILE_NAV: TabItem[] = [
   {
     id: 'home',
-    label: 'Home',
-    icon: Home,
+    label: 'News',
+    icon: NewspaperIcon,
     href: '/',
-    translationKey: 'navigation.home'
+    translationKey: 'navigation.home',
+    isCustomIcon: false
   },
   {
     id: 'reel',
     label: 'Reel',
-    icon: Film,
+    icon: ReelIcon,
     href: '/reel',
-    translationKey: 'navigation.reel'
+    translationKey: 'navigation.reel',
+    isCustomIcon: true
   },
   {
     id: 'edu',
@@ -65,11 +69,11 @@ export const MOBILE_NAV: TabItem[] = [
     icon: Clock10Icon,
     href: '/timeline',
     isSpecial: true,
-    translationKey: 'navigation.education'
+    translationKey: 'navigation.education',
+    isCustomIcon: false
   }
 ];
 
-// ✅ NEW: Navigation translation keys for easy reference
 export const NAV_TRANSLATION_KEYS = {
   home: 'navigation.home',
   dashboard: 'navigation.dashboard', 

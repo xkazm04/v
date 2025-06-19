@@ -1,4 +1,4 @@
-import { motion, useTransform, MotionValue } from 'framer-motion';
+import { motion, useTransform, MotionValue, Variants } from 'framer-motion';
 import { useMemo } from 'react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useViewport } from '@/app/hooks/useViewport';
@@ -83,7 +83,7 @@ export default function TimelineMilestone({
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30, scale: 0.98 },
     visible: {
       opacity: 1,
@@ -229,7 +229,7 @@ export default function TimelineMilestone({
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         >
           <GlassContainer
-            style="frosted"
+            style="crystal"
             border={(isActive || isCurrentlyPlaying) ? "glow" : "visible"}
             shadow="xl"
             rounded="2xl"

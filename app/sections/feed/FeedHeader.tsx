@@ -60,7 +60,7 @@ const FeedHeader = ({ className = "" }: StatementOfDayProps) => {
     };
 
     return (
-        <div className={`relative max-w-[1600px] ${className}`}>
+        <div className={`relative my-2 max-w-[1600px] ${className}`}>
             {/* Background Layer */}
             <div className="absolute inset-0 -z-10">
                 <DynamicBackground
@@ -88,23 +88,7 @@ const FeedHeader = ({ className = "" }: StatementOfDayProps) => {
                 overlayOpacity={currentTheme === 'light' ? 0.15 : 0.08}
                 className="h-full relative"
             >
-                {/* Enhanced inner glow effect */}
-                <div 
-                    className="absolute inset-0 rounded-3xl pointer-events-none"
-                    style={{
-                        background: currentTheme === 'light'
-                            ? `radial-gradient(circle at 50% 50%, 
-                                rgba(255,255,255,0.3) 0%, 
-                                rgba(255,255,255,0.1) 30%, 
-                                transparent 70%
-                              )`
-                            : `radial-gradient(circle at 50% 50%, 
-                                rgba(255,255,255,0.1) 0%, 
-                                rgba(255,255,255,0.05) 30%, 
-                                transparent 70%
-                              )`
-                    }}
-                />
+
 
                 {/* Status stamp - only visible in light theme */}
                 {currentTheme === 'light' && (

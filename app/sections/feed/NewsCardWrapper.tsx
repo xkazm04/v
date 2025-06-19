@@ -228,7 +228,7 @@ const NewsCardWrapper = ({
         borderColor: { duration: 0.3, ease: "easeOut" }
       }}
       className={cn(
-        'group relative flex flex-col justify-between',
+        'group relative flex flex-col justify-between outline-none focus:outline-none',
         cardStyles.height,
         'rounded-xl transition-all duration-300 overflow-hidden transform-gpu',
         'touch-manipulation select-none',
