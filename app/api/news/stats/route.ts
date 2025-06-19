@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+//@ts-expect-error
 import { newsService } from '@/app/lib/services/news-service';
 // import { fetchNewsStats, fetchAvailableCategories } from '@/app/lib/services/news-service';
 

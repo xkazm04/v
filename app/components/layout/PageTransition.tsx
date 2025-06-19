@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { ReactNode, useRef } from 'react';
 
@@ -8,8 +8,7 @@ interface PageTransitionProps {
   children: ReactNode;
 }
 
-// Simplified transition variants
-const getTransitionVariants = (pathname: string, previousPath?: string) => {
+const getTransitionVariants = (pathname: string, previousPath?: string): Variants => {
   const getDirection = () => {
     if (!previousPath) return 'neutral';
     
@@ -23,7 +22,6 @@ const getTransitionVariants = (pathname: string, previousPath?: string) => {
 
   const direction = getDirection();
   
-  // Fast, simple transitions
   return {
     initial: { 
       opacity: 0,

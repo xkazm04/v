@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { MessageSquare, AlertTriangle, CheckCircle, XCircle, HelpCircle } from "lucide-react";
 import { LLMResearchResponse } from "@/app/types/research";
 
@@ -9,7 +9,7 @@ interface FactCheckAnalysisProps {
   config: any;
 }
 
-const sectionVariants = {
+const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { 
     opacity: 1, 

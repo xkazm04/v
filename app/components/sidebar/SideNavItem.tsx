@@ -9,7 +9,6 @@ type Props = {
     icon: React.ComponentType<{ className?: string, style?: React.CSSProperties }>;
     label: string;
     isActiveRoute: boolean;
-    badge?: number;
     isCollapsed: boolean;
     mounted: boolean;
 }
@@ -19,7 +18,6 @@ const NavItem = ({
     icon: Icon, 
     label, 
     isActiveRoute, 
-    badge,
     isCollapsed, 
     mounted
 }: Props) => {
@@ -101,34 +99,9 @@ const NavItem = ({
                                                 {label}
                                             </span>
                                         </div>
-                                        {badge && badge > 0 && (
-                                            <motion.div
-                                                initial={{ scale: 0 }}
-                                                animate={{ scale: 1 }}
-                                                transition={{ delay: 0.1, type: "spring" }}
-                                            >
-                                                <EnhancedBadge 
-                                                    variant="secondary" 
-                                                    className="ml-2 text-xs font-bold"
-                                                >
-                                                    {badge > 999 ? '999+' : badge}
-                                                </EnhancedBadge>
-                                            </motion.div>
-                                        )}
                                     </motion.div>
                                 )}
                             </AnimatePresence>
-                        )}
-                        
-                        {!mounted && !isCollapsed && (
-                            <div className="flex items-center justify-between flex-1 ml-3">
-                                <span className="text-sm font-medium">{label}</span>
-                                {badge && badge > 0 && (
-                                    <EnhancedBadge variant="secondary" className="ml-2 text-xs">
-                                        {badge > 999 ? '999+' : badge}
-                                    </EnhancedBadge>
-                                )}
-                            </div>
                         )}
                     </div>
 

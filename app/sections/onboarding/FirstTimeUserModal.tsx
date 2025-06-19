@@ -5,10 +5,13 @@ import { ChevronRight } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import DynamicBackground from '@/app/components/ui/Decorative/DynamicBackground';
 import OnboardingHeader from './OnboardingHeader';
-import OnboardingSelectionButton from './OnboardingSelectionButton';
+import FeaturesShowcase from './FeaturesShowcase';
+import CompactThemeSwitcher from './CompactThemeSwitcher';
+import CompactCategorySelector from './CompactCategorySelector';
 import { useUserPreferences } from '@/app/hooks/use-user-preferences';
-import { CATEGORIES, COUNTRIES, THEMES } from '@/app/constants/onboarding';
 import LanguageSelector from '@/app/components/userPreferences/LanguageSelector';
+import Divider from '@/app/components/ui/divider';
+import FloatingIconsConstellation from '@/app/components/ui/Decorative/FloatingIconsConstellation';
 
 interface FirstTimeUserModalProps {
   isOpen: boolean;
@@ -17,45 +20,34 @@ interface FirstTimeUserModalProps {
 }
 
 export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUserModalProps) {
-  const { setTheme } = useTheme();
+  const { setTheme, theme } = useTheme();
   const { completeOnboarding } = useUserPreferences();
   const [currentStep, setCurrentStep] = useState(0);
-  
-  // Local state for onboarding preferences
+
+  // Local state for onboarding preferences - default to light theme
   const [tempPreferences, setTempPreferences] = useState({
     language: 'en',
-    countries: ['worldwide'],
-    categories: ['politics', 'environment', 'military'],
+    categories: ['politics', 'environment'],
     theme: 'light' as 'light' | 'dark'
   });
 
   const steps = [
-    { title: 'Choose Your Language', subtitle: 'Select your preferred language for news content' },
-    { title: 'Choose Your Regions', subtitle: 'Where would you like to see fact-checks from?' },
-    { title: 'Select Categories', subtitle: 'What topics interest you most?' },
-    { title: 'Pick Your Theme', subtitle: 'How would you like the app to look?' },
+    {
+      title: 'Personalize Your Experience',
+      subtitle: 'Choose your language, interests, and preferred theme to get started'
+    },
+    {
+      title: 'Discover Powerful Features',
+      subtitle: 'Explore the comprehensive fact-checking tools at your disposal'
+    },
   ];
 
   const handleLanguageChange = (language: string) => {
     setTempPreferences(prev => ({ ...prev, language }));
   };
 
-  const handleCountryToggle = (countryId: string) => {
-    setTempPreferences(prev => ({
-      ...prev,
-      countries: prev.countries.includes(countryId)
-        ? prev.countries.filter(id => id !== countryId)
-        : [...prev.countries, countryId]
-    }));
-  };
-
-  const handleCategoryToggle = (categoryId: string) => {
-    setTempPreferences(prev => ({
-      ...prev,
-      categories: prev.categories.includes(categoryId)
-        ? prev.categories.filter(id => id !== categoryId)
-        : [...prev.categories, categoryId]
-    }));
+  const handleCategoriesChange = (categories: string[]) => {
+    setTempPreferences(prev => ({ ...prev, categories }));
   };
 
   const handleThemeSelect = (themeId: 'light' | 'dark') => {
@@ -70,7 +62,7 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
       // Complete onboarding with all preferences
       completeOnboarding({
         language: tempPreferences.language,
-        countries: tempPreferences.countries,
+        countries: ['worldwide'], // Default to worldwide
         categories: tempPreferences.categories,
         theme: tempPreferences.theme,
       });
@@ -85,7 +77,7 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
   };
 
   const handleSkip = () => {
-    // Complete onboarding with minimal preferences
+    // Complete onboarding with minimal preferences (light theme default)
     completeOnboarding({
       language: 'en',
       countries: ['worldwide'],
@@ -97,20 +89,18 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
 
   const canProceed = () => {
     switch (currentStep) {
-      case 0: return true; // Language always has a default
-      case 1: return tempPreferences.countries.length > 0;
-      case 2: return tempPreferences.categories.length > 0;
-      case 3: return true;
+      case 0: return tempPreferences.categories.length > 0;
+      case 1: return true; 
       default: return false;
     }
   };
 
   const getBackgroundConfig = () => ({
-    color: currentStep === 0 ? '#10b981' : currentStep === 1 ? '#3b82f6' : currentStep === 2 ? '#22c55e' : '#8b5cf6',
+    color: currentStep === 0 ? '#10b981' : '#3b82f6',
     bgGradient: `linear-gradient(135deg, 
       rgba(15, 23, 42, 0.95) 0%, 
       rgba(30, 41, 59, 0.98) 30%, 
-      rgba(${currentStep === 0 ? '16, 185, 129' : currentStep === 1 ? '59, 130, 246' : currentStep === 2 ? '34, 197, 94' : '139, 92, 246'}, 0.15) 100%
+      rgba(${currentStep === 0 ? '16, 185, 129' : '59, 130, 246'}, 0.15) 100%
     )`,
     stampOpacity: '0.03'
   });
@@ -119,60 +109,60 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
     switch (currentStep) {
       case 0:
         return (
-          <LanguageSelector
-            value={tempPreferences.language}
-            onChange={handleLanguageChange}
-            variant="onboarding"
-            label="Content Language"
-            description="News articles will be translated to your preferred language"
-          />
+          <div className="space-y-8">
+            <div className={`
+              ${theme === 'dark' ? 'opacity-70' : 'opacity-20'} `}>
+              <FloatingIconsConstellation />
+            </div>
+            <div className="lg:ml-8 lg:mt-12">
+              <div className="flex flex-row absolute top-0 right-0 space-y-3 justify-center">
+                <CompactThemeSwitcher
+                  value={tempPreferences.theme}
+                  onChange={handleThemeSelect}
+                />
+              </div>
+            </div>
+            <Divider/>
+            {/* Top Section: Language Selection + Theme Switcher */}
+            <div className="space-y-6">
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
+                <div className="flex-1 max-w-2xl">
+                  <LanguageSelector
+                    value={tempPreferences.language}
+                    onChange={handleLanguageChange}
+                    variant="onboarding"
+                    label="Content Language"
+                    description="News articles will be translated to your preferred language"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200 dark:border-gray-700" />
+              </div>
+              <div className="relative flex justify-center">
+                <span className="bg-white dark:bg-gray-900 px-4 text-sm text-gray-500 dark:text-gray-400">
+                  What interests you most?
+                </span>
+              </div>
+            </div>
+
+            {/* Bottom Section: Categories - Compact Icons */}
+            <div className="max-w-4xl mx-auto">
+              <CompactCategorySelector
+                selectedCategories={tempPreferences.categories}
+                onChange={handleCategoriesChange}
+              />
+            </div>
+          </div>
         );
-      
+
       case 1:
-        return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-2xl mx-auto">
-            {COUNTRIES.map((country) => (
-              <OnboardingSelectionButton
-                key={country.id}
-                item={country}
-                isSelected={tempPreferences.countries.includes(country.id)}
-                onClick={() => handleCountryToggle(country.id)}
-                type="country"
-              />
-            ))}
-          </div>
-        );
-      
-      case 2:
-        return (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
-            {CATEGORIES.map((category) => (
-              <OnboardingSelectionButton
-                key={category.id}
-                item={category}
-                isSelected={tempPreferences.categories.includes(category.id)}
-                onClick={() => handleCategoryToggle(category.id)}
-                type="category"
-              />
-            ))}
-          </div>
-        );
-      
-      case 3:
-        return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-2xl mx-auto">
-            {THEMES.map((theme) => (
-              <OnboardingSelectionButton
-                key={theme.id}
-                item={theme}
-                isSelected={tempPreferences.theme === theme.id}
-                onClick={() => handleThemeSelect(theme.id as 'light' | 'dark')}
-                type="theme"
-              />
-            ))}
-          </div>
-        );
-      
+        return <FeaturesShowcase />;
+
       default:
         return null;
     }
@@ -197,20 +187,20 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
 
           {/* Modal */}
           <motion.div
-            className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-3xl border-2 border-gray-200 dark:border-gray-700"
+            className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-3xl border-2 border-gray-200 dark:border-gray-700"
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
             {/* Dynamic Background */}
-            <DynamicBackground 
+            <DynamicBackground
               config={getBackgroundConfig()}
               currentTheme={tempPreferences.theme}
             />
-            
+
             {/* Content */}
-            <div className="relative z-20 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm">
+            <div className="relative z-20 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm h-full flex flex-col">
               {/* Header */}
               <OnboardingHeader
                 onSkip={handleSkip}
@@ -220,29 +210,31 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
                 preferences={tempPreferences}
               />
 
-              {/* Step Content */}
-              <div className="p-6 md:p-8">
-                <motion.div
-                  key={currentStep}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-6"
-                >
-                  {/* Step Title */}
-                  <div className="text-center space-y-2">
-                    <h2 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-gray-100">
-                      {steps[currentStep].title}
-                    </h2>
-                    <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">
-                      {steps[currentStep].subtitle}
-                    </p>
-                  </div>
+              {/* Step Content - Scrollable */}
+              <div className="flex-1 overflow-y-auto relative">
+                <div className="p-6 md:p-8">
+                  <motion.div
+                    key={currentStep}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="space-y-6"
+                  >
+                    {/* Step Title */}
+                    <div className="text-center space-y-2">
+                      <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
+                        {steps[currentStep].title}
+                      </h2>
+                      <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                        {steps[currentStep].subtitle}
+                      </p>
+                    </div>
 
-                  {/* Step Content */}
-                  {renderStepContent()}
-                </motion.div>
+                    {/* Step Content */}
+                    {renderStepContent()}
+                  </motion.div>
+                </div>
               </div>
 
               {/* Footer */}
@@ -264,7 +256,7 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
                       backgroundColor: canProceed() ? getBackgroundConfig().color : undefined
                     }}
                   >
-                    {currentStep === steps.length - 1 ? 'Complete Setup' : 'Next'}
+                    {currentStep === steps.length - 1 ? 'Start Using Vaai' : 'Continue'}
                     <ChevronRight className="w-4 h-4 ml-2" />
                   </Button>
                 </div>

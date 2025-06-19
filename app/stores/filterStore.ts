@@ -65,7 +65,7 @@ type FilterStore = FilterState & FilterActions;
 
 const initialState: FilterState = {
   selectedCategories: [],
-  selectedCountry: 'all',
+  selectedCountry: 'worldwide', // ✅ Default to 'worldwide' instead of 'all'
   searchText: '',
   statusFilter: 'all',
   sourceFilter: 'all',
@@ -142,7 +142,7 @@ export const useFilterStore = create<FilterStore>()(
           let count = 0;
           
           if (state.selectedCategories.length > 0) count++;
-          if (state.selectedCountry !== 'all') count++;
+          if (state.selectedCountry !== 'worldwide') count++; // ✅ Changed from 'all' to 'worldwide'
           if (state.searchText.trim()) count++;
           if (state.statusFilter !== 'all') count++;
           if (state.sourceFilter !== 'all') count++;
@@ -161,8 +161,8 @@ export const useFilterStore = create<FilterStore>()(
             filters.categoryFilter = state.selectedCategories[0];
           }
 
-          // Add country filter
-          if (state.selectedCountry !== 'all') {
+          // Add country filter - only set if not 'worldwide' or 'all'
+          if (state.selectedCountry !== 'worldwide' && state.selectedCountry !== 'all') {
             filters.countryFilter = state.selectedCountry;
           }
 

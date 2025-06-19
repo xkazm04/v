@@ -12,6 +12,7 @@ import LogoSectionDecor from './components/ui/Decorative/LogoSectionDecor';
 import { FirstTimeUserModal } from './sections/onboarding/FirstTimeUserModal';
 import { useOnboarding } from './hooks/use-onboarding';
 import { useTheme } from 'next-themes';
+import LightEffect from './components/animations/LightEffect';
 
 // Simple loading fallbacks
 const SimpleSkeleton = () => (

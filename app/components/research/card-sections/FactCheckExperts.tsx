@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Quote } from "lucide-react";
 import { LLMResearchResponse } from "@/app/types/research";
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
@@ -12,7 +12,7 @@ interface FactCheckExpertsProps {
   factCheck: LLMResearchResponse;
 }
 
-const sectionVariants = {
+const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { 
     opacity: 1, 

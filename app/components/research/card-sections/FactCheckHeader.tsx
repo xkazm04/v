@@ -1,6 +1,4 @@
-"use client";
-
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { X } from "lucide-react";
 import { LLMResearchResponse } from "@/app/types/research";
 import { getCategoryIcon } from "../utils/statusConfig";
@@ -13,7 +11,7 @@ interface FactCheckHeaderProps {
 }
 
 
-const sectionVariants = {
+const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { 
     opacity: 1, 
@@ -34,11 +32,9 @@ export function FactCheckHeader({ factCheck, config, onDismiss }: FactCheckHeade
                  bg-gradient-to-br from-white/95 to-slate-50/90 dark:from-slate-900/90 dark:to-slate-800/95"
     >
 
-      {/* Content Layer */}
       <div className="relative z-10">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            {/* Status Icon with Enhanced Glow */}
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}

@@ -26,7 +26,8 @@ export function useApiWithPreferences() {
    */
   const createUrlWithPreferences = useCallback((
     baseUrl: string,
-    additionalParams: Record<string, string> = {}
+    additionalParams: Record<string, string> = {},
+    options: { includeTheme?: boolean } = {}
   ): string => {
     const url = new URL(baseUrl, window.location.origin);
     
@@ -36,8 +37,8 @@ export function useApiWithPreferences() {
       url.searchParams.set('lang', translationTarget);
     }
     
-    // Add theme parameter
-    if (preferences.theme && preferences.theme !== 'system') {
+    // ✅ Only add theme parameter if explicitly requested
+    if (options.includeTheme && preferences.theme && preferences.theme !== 'system') {
       url.searchParams.set('theme', preferences.theme);
     }
     

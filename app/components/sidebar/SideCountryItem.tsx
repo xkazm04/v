@@ -1,9 +1,55 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/app/lib/utils';
-import { EnhancedBadge } from '../ui/enhanced-badge';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useFilterStore, useSelectedCountry } from '@/app/stores/filterStore';
+import { getCountryFlagSvg } from '@/app/helpers/countries';
+import Image from 'next/image';
+import { useState } from 'react';
+import { cn } from '@/app/lib/utils';
 
+const CountryFlagBackground = ({ 
+  flagSvg, 
+  alt, 
+  isFilterActive, 
+  isHovered 
+}: { 
+  flagSvg: string; 
+  alt: string; 
+  isFilterActive: boolean;
+  isHovered: boolean;
+}) => {
+  const [imageError, setImageError] = useState(false);
+  
+  if (imageError) {
+    return null;
+  }
+  
+  return (
+    <motion.div 
+      className="absolute max-w-[100px] inset-0 overflow-hidden rounded-lg"
+      animate={{
+        opacity: isFilterActive ? 0.55 : isHovered ? 0.35 : 0.28
+      }}
+      transition={{ duration: 0.3 }}
+    >
+      <Image
+        src={flagSvg}
+        alt={alt}
+        fill
+        className="object-cover"
+        onError={() => setImageError(true)}
+      />
+      {/* Overlay gradient for better text readability */}
+      <div 
+        className="absolute inset-0 bg-gradient-to-br from-black/10 via-transparent to-black/20"
+        style={{
+          background: isFilterActive 
+            ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05), rgba(59, 130, 246, 0.1))'
+            : 'linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.02), rgba(0,0,0,0.1))'
+        }}
+      />
+    </motion.div>
+  );
+};
 
 type Props = {
     country: {
@@ -19,25 +65,19 @@ type Props = {
 }
 
 const SideCountryItem = ({ country, isActiveRoute, isCollapsed, mounted }: Props) => {
-    const { colors, sidebarColors, isDark } = useLayoutTheme();
+    const { isDark } = useLayoutTheme();
+    const [isHovered, setIsHovered] = useState(false);
     
     // Get current filter state
     const selectedCountry = useSelectedCountry();
     const { setSelectedCountry } = useFilterStore();
-    
-    // Get real country counts from API
-    // const { data: countryCounts = {}, isLoading: countsLoading } = useCountryCounts();
-    
-    // Check if this country is currently selected in filters
+
     const isFilterActive = selectedCountry === country.code;
-    
-    // Get the actual count for this country from API (don't show count for worldwide/default)
-    // const actualCount = country.isDefault ? 0 : (countryCounts[country.code] || 0);
+    const flagSvgPath = country.code !== 'worldwide' ? getCountryFlagSvg(country.code) : null;
 
     const handleCountryClick = (e: React.MouseEvent) => {
         e.preventDefault();
-        
-        // Handle worldwide/default countries
+
         if (country.isDefault || country.code === 'worldwide') {
             setSelectedCountry('worldwide');
         } else {
@@ -46,96 +86,84 @@ const SideCountryItem = ({ country, isActiveRoute, isCollapsed, mounted }: Props
     };
 
     return (
-        <motion.div
-            whileHover={{ x: isCollapsed ? 0 : 6 }}
-            transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        >
-            <motion.button
-                onClick={handleCountryClick}
-                className={cn(
-                    'w-full justify-start relative overflow-hidden group h-10 flex flex-row p-2 rounded-lg transition-all duration-200',
-                    isCollapsed && 'justify-center px-2',
-                    country.isDefault && 'font-medium'
-                )}
-                style={{
-                    background: isFilterActive 
-                        ? isDark 
-                            ? `linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%)`
-                            : `linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%)`
-                        : 'transparent',
-                    color: isFilterActive 
-                        ? isDark ? '#4ade80' : '#16a34a'
-                        : sidebarColors.foreground,
-                    borderLeft: isFilterActive 
-                        ? `3px solid ${isDark ? '#4ade80' : '#16a34a'}` 
-                        : '3px solid transparent'
+        <AnimatePresence mode="wait">
+            <motion.div
+                key={country.code} 
+                layout 
+                initial={{ opacity: 0, x: -20, scale: 0.95 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: -20, scale: 0.95 }}
+                transition={{ 
+                    type: "spring", 
+                    stiffness: 400, 
+                    damping: 25,
+                    opacity: { duration: 0.2 },
+                    layout: { duration: 0.3 }
                 }}
-                whileHover={{
-                    backgroundColor: isDark 
-                        ? 'rgba(71, 85, 105, 0.08)' 
-                        : 'rgba(248, 250, 252, 0.6)'
-                }}
+                whileHover={{ x: isCollapsed ? 0 : 6 }}
+                onHoverStart={() => setIsHovered(true)}
+                onHoverEnd={() => setIsHovered(false)}
             >
-                {/* Hover background effect */}
-                <motion.div
-                    className="absolute inset-0"
-                    style={{
-                        background: isDark
-                            ? `linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(59, 130, 246, 0.03) 100%)`
-                            : `linear-gradient(135deg, rgba(34, 197, 94, 0.03) 0%, rgba(59, 130, 246, 0.02) 100%)`
-                    }}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileHover={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.2 }}
-                />
-
-                <div className="relative z-10 flex items-center w-full">
-                    <motion.span 
-                        className="text-lg mr-2 flex-shrink-0"
-                        whileHover={{ scale: 1.2 }}
-                        transition={{ type: "spring", stiffness: 400 }}
-                    >
-                        {country.flag}
-                    </motion.span>
-
-                    {mounted && (
-                        <AnimatePresence initial={false}>
-                            {!isCollapsed && (
-                                <motion.div
-                                    initial={{ opacity: 0, width: 0 }}
-                                    animate={{ opacity: 1, width: 'auto' }}
-                                    exit={{ opacity: 0, width: 0 }}
-                                    transition={{ duration: 0.2, ease: "easeInOut" }}
-                                    className="flex items-center justify-between flex-1 overflow-hidden"
-                                >
-                                    <span 
-                                        className="whitespace-nowrap text-sm font-medium transition-colors duration-200"
-                                        style={{
-                                            color: isFilterActive 
-                                                ? isDark ? '#4ade80' : '#16a34a'
-                                                : sidebarColors.foreground
-                                        }}
-                                    >
-                                        {country.name}
-                                    </span>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                <motion.button
+                    onClick={handleCountryClick}
+                    className={cn(
+                        'w-full justify-start relative overflow-hidden group h-12 flex flex-row p-3 rounded-lg transition-all duration-300',
+                        isCollapsed && 'justify-center px-2 h-10',
+                        country.isDefault && 'font-medium'
                     )}
-                </div>
+                    whileHover={{
+                        backgroundColor: isFilterActive
+                            ? isDark 
+                                ? 'rgba(34, 197, 94, 0.25)' 
+                                : 'rgba(34, 197, 94, 0.18)'
+                            : isDark 
+                                ? 'rgba(71, 85, 105, 0.12)' 
+                                : 'rgba(248, 250, 252, 0.8)'
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                >
+                    {/* ✅ SVG Flag Background (only for non-worldwide countries) */}
+                    {flagSvgPath && (
+                        <CountryFlagBackground 
+                            flagSvg={flagSvgPath}
+                            alt={country.name}
+                            isFilterActive={isFilterActive}
+                            isHovered={isHovered}
+                        />
+                    )}
 
-                {/* Active indicator */}
-                {isFilterActive && (
+                    {/* Hover background effect */}
                     <motion.div
-                        className="absolute right-2 top-1/2 w-1 h-4 rounded-full"
-                        style={{ backgroundColor: isDark ? '#4ade80' : '#16a34a' }}
-                        initial={{ scale: 0, y: '-50%' }}
-                        animate={{ scale: 1, y: '-50%' }}
-                        transition={{ type: "spring", stiffness: 400 }}
+                        className="absolute inset-0 rounded-lg"
+                        style={{
+                            background: isDark
+                                ? `linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(59, 130, 246, 0.05) 100%)`
+                                : `linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(59, 130, 246, 0.03) 100%)`
+                        }}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileHover={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.2 }}
                     />
-                )}
-            </motion.button>
-        </motion.div>
+
+                    {/* Selection pulse effect */}
+                    {isFilterActive && (
+                        <motion.div
+                            className="absolute inset-0 rounded-lg border-2 pointer-events-none"
+                            style={{ borderColor: isDark ? '#4ade80' : '#16a34a' }}
+                            animate={{
+                                opacity: [0, 0.3, 0],
+                                scale: [1, 1.02, 1]
+                            }}
+                            transition={{
+                                duration: 2.5,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            }}
+                        />
+                    )}
+                </motion.button>
+            </motion.div>
+        </AnimatePresence>
     );
 };
 

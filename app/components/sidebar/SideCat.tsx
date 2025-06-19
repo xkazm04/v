@@ -6,12 +6,13 @@ import {
 } from 'lucide-react';
 import { ScrollArea } from '@/app/components/ui/scroll-area';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import SideSectionHeader from './SideSectionHeader';
 import SideCountryItem from './SideCountryItem';
 import SideNavMainSection from './SideNavSections';
-import { COUNTRY_SECTIONS } from '@/app/constants/countriesMock';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import { useUserPreferences } from '@/app/hooks/use-user-preferences';
+import { getCountryFlag, getCountryName } from '@/app/helpers/countries';
 
 type Props = {
     isCollapsed: boolean;
@@ -22,6 +23,10 @@ const SideCat = ({ isCollapsed, isActive }: Props) => {
     const [mounted, setMounted] = useState(false);
     const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['main', 'countries']));
     const { colors, sidebarColors, isDark } = useLayoutTheme();
+    
+    // ✅ Get user's preferred countries from preferences with real-time updates
+    const { preferences, getAvailableCountries } = useUserPreferences();
+    const availableCountries = getAvailableCountries();
 
     useEffect(() => {
         setMounted(true);
@@ -38,6 +43,38 @@ const SideCat = ({ isCollapsed, isActive }: Props) => {
             return newSet;
         });
     };
+
+    // ✅ Get only user's preferred countries, fallback to worldwide if none
+    const userPreferredCountries = preferences.countries && preferences.countries.length > 0 
+        ? preferences.countries 
+        : ['worldwide'];
+
+    // ✅ Memoize sidebar countries for performance and stable references
+    const sidebarCountries = useMemo(() => {
+        return userPreferredCountries.map(countryCode => {
+            // Find the full country data from available countries
+            const countryData = availableCountries.find(c => c.code === countryCode);
+            
+            if (countryData) {
+                return {
+                    name: countryData.name,
+                    flag: countryData.flag,
+                    href: `/?country=${countryData.code}`,
+                    code: countryData.code,
+                    isDefault: countryData.code === 'worldwide'
+                };
+            }
+            
+            // Fallback for countries not in the available list
+            return {
+                name: getCountryName(countryCode) || countryCode.toUpperCase(),
+                flag: getCountryFlag(countryCode),
+                href: `/?country=${countryCode}`,
+                code: countryCode,
+                isDefault: countryCode === 'worldwide'
+            };
+        });
+    }, [userPreferredCountries, availableCountries]);
 
     return (
         <div className="relative h-full">
@@ -77,7 +114,7 @@ const SideCat = ({ isCollapsed, isActive }: Props) => {
 
                     {/* Countries Section */}
                     <SideSectionHeader 
-                        title="Countries" 
+                        title="Country" 
                         icon={Globe} 
                         sectionId="countries"
                         isExpanded={expandedSections.has('countries')}
@@ -93,32 +130,75 @@ const SideCat = ({ isCollapsed, isActive }: Props) => {
                                 animate={{ height: 'auto', opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
                                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                                className="space-y-1 overflow-hidden"
+                                className="space-y-3 overflow-hidden"
                             >
-                                {COUNTRY_SECTIONS.map((country, index) => (
+                                    {sidebarCountries.map((country, index) => (
+                                        <motion.div
+                                            key={`${country.code}-${preferences.lastUpdated}`} 
+                                            layout
+                                            initial={{ x: -30, opacity: 0, scale: 0.9 }}
+                                            animate={{ x: 0, opacity: 1, scale: 1 }}
+                                            exit={{ x: -30, opacity: 0, scale: 0.9 }}
+                                            transition={{ 
+                                                type: "spring",
+                                                stiffness: 400,
+                                                damping: 25,
+                                                delay: index * 0.05,
+                                                layout: { duration: 0.3 }
+                                            }}
+                                        >
+                                            <SideCountryItem 
+                                                mounted={mounted}
+                                                isCollapsed={isCollapsed}
+                                                country={country}
+                                                isActiveRoute={isActive(country.href.split('?')[0]) && 
+                                                    typeof window !== 'undefined' && 
+                                                    window.location.search.includes(`country=${country.code}`)}
+                                            />
+                                        </motion.div>
+                                    ))}
+
+                                {/* ✅ Empty state with animation */}
+                                {sidebarCountries.length === 0 && (
                                     <motion.div
-                                        key={country.code}
-                                        initial={{ x: -20, opacity: 0 }}
-                                        animate={{ x: 0, opacity: 1 }}
-                                        transition={{ 
-                                            duration: 0.3, 
-                                            delay: index * 0.03,
-                                            ease: "easeOut"
-                                        }}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        className="text-center py-4 px-2"
                                     >
-                                        <SideCountryItem 
-                                            mounted={mounted}
-                                            isCollapsed={isCollapsed}
-                                            country={country}
-                                            isActiveRoute={isActive(country.href.split('?')[0]) && 
-                                                typeof window !== 'undefined' && 
-                                                window.location.search.includes(`country=${country.code}`)}
-                                        />
+                                        <p 
+                                            className="text-sm"
+                                            style={{ color: colors.mutedForeground }}
+                                        >
+                                            No countries selected
+                                        </p>
                                     </motion.div>
-                                ))}
+                                )}
                             </motion.div>
                         )}
                     </AnimatePresence>
+
+                    {/* Country count indicator */}
+                    {mounted && expandedSections.has('countries') && sidebarCountries.length > 1 && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.4 }}
+                            className="px-3 py-2"
+                        >
+                            <div
+                                className="text-xs text-center px-2 py-1 rounded-full"
+                                style={{
+                                    background: isDark 
+                                        ? 'rgba(71, 85, 105, 0.3)' 
+                                        : 'rgba(148, 163, 184, 0.2)',
+                                    color: colors.mutedForeground
+                                }}
+                            >
+                                {sidebarCountries.length} region{sidebarCountries.length > 1 ? 's' : ''} active
+                            </div>
+                        </motion.div>
+                    )}
 
                     {/* Another Divider */}
                     <div className="my-6 px-2">

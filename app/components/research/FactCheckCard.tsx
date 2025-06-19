@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { X } from "lucide-react";
 import { LLMResearchResponse } from "@/app/types/research";
 import { FactCheckHeader } from "./card-sections/FactCheckHeader";
@@ -20,7 +20,7 @@ interface FactCheckCardProps {
 }
 
 // Smoother animation variants with proper stagger
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -36,7 +36,7 @@ const containerVariants = {
   }
 };
 
-const sectionVariants = {
+const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 15 },
   visible: {
     opacity: 1,

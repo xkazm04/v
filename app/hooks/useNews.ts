@@ -68,8 +68,8 @@ export function useNews(filters: UseNewsFilters = {}): UseNewsReturn {
       setLoading(true);
       setError(null);
       
-      // ✅ **Create URL with user preferences automatically applied**
-      const apiUrl = createUrlWithPreferences('/api/news', stableFilters);
+      // ✅ **Create URL with user preferences but NO theme parameter**
+      const apiUrl = createUrlWithPreferences('/api/news', stableFilters, { includeTheme: false });
 
       console.log(`🔄 Fetching news with preferences:`, {
         url: apiUrl,

@@ -16,11 +16,12 @@ export type ResearchResult = {
   resources_agreed?: ResourceAnalysis;
   resources_disagreed?: ResourceAnalysis;
   profile_id?: string; 
+  profileId?: string; 
   processed_at: string;
   created_at: string;
   updated_at: string;
-  resources?: string[]; // Legacy URLs from view
-  category?: string; // Added for better category filtering
+  resources?: string[];
+  category?: string; 
   __meta?: {
     source?: string;
     fetchTime?: number;

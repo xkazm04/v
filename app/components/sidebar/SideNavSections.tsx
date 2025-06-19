@@ -34,7 +34,7 @@ const SideNavMainSection = ({expandedSections, isActive, isCollapsed, mounted}: 
                         {
                             href: "/profiles",
                             icon: Bookmark,
-                            label: "Liked profiles",
+                            label: "Subscribed",
                             itemId: "profiles"
                         }
                     ].map((item, index) => (
@@ -53,7 +53,6 @@ const SideNavMainSection = ({expandedSections, isActive, isCollapsed, mounted}: 
                                 icon={item.icon}
                                 label={item.label}
                                 isActiveRoute={isActive(item.href)}
-                                badge={item.badge}
                                 isCollapsed={isCollapsed}
                                 mounted={mounted}
                             />

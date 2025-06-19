@@ -1,4 +1,3 @@
-
 import { memo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUserPreferences } from '@/app/hooks/use-user-preferences';
@@ -8,25 +7,49 @@ import {
   Check,
   Star
 } from 'lucide-react';
+import { AVAILABLE_COUNTRIES } from '@/app/helpers/countries';
 import Image from 'next/image';
 
-// Countries with their flag emojis and regions
-const AVAILABLE_COUNTRIES = [
-  { code: 'worldwide', name: 'Worldwide', nativeName: 'Global', flag: '🌍', region: 'Global' },
-  { code: 'us', name: 'United States', nativeName: 'United States', flag: '🇺🇸', region: 'North America' },
-  { code: 'uk', name: 'United Kingdom', nativeName: 'United Kingdom', flag: '🇬🇧', region: 'Europe' },
-  { code: 'ca', name: 'Canada', nativeName: 'Canada', flag: '🇨🇦', region: 'North America' },
-  { code: 'au', name: 'Australia', nativeName: 'Australia', flag: '🇦🇺', region: 'Oceania' },
-  { code: 'de', name: 'Germany', nativeName: 'Deutschland', flag: '🇩🇪', region: 'Europe' },
-  { code: 'fr', name: 'France', nativeName: 'France', flag: '🇫🇷', region: 'Europe' },
-  { code: 'es', name: 'Spain', nativeName: 'España', flag: '🇪🇸', region: 'Europe' },
-  { code: 'it', name: 'Italy', nativeName: 'Italia', flag: '🇮🇹', region: 'Europe' },
-  { code: 'jp', name: 'Japan', nativeName: '日本', flag: '🇯🇵', region: 'Asia' },
-  { code: 'cn', name: 'China', nativeName: '中国', flag: '🇨🇳', region: 'Asia' },
-  { code: 'in', name: 'India', nativeName: 'भारत', flag: '🇮🇳', region: 'Asia' },
-  { code: 'br', name: 'Brazil', nativeName: 'Brasil', flag: '🇧🇷', region: 'South America' },,
-  { code: 'ru', name: 'Russia', nativeName: 'Россия', flag: '🇷🇺', region: 'Europe/Asia' },
-];
+// Country Flag SVG Background Component
+const CountryFlagBackground = ({ flagSvg, alt, isSelected, isHovered }: { 
+  flagSvg: string; 
+  alt: string; 
+  isSelected: boolean;
+  isHovered: boolean;
+}) => {
+  const [imageError, setImageError] = useState(false);
+  
+  if (imageError) {
+    return null;
+  }
+  
+  return (
+    <motion.div 
+      className="absolute inset-0 overflow-hidden rounded-xl"
+      animate={{
+        opacity: isSelected ? 0.7 : isHovered ? 0.7 : 0.15
+      }}
+      transition={{ duration: 0.3 }}
+    >
+      <Image
+        src={flagSvg}
+        alt={alt}
+        fill
+        className="object-cover"
+        onError={() => setImageError(true)}
+      />
+      {/* Overlay gradient for better text readability */}
+      <div 
+        className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-black/20"
+        style={{
+          background: isSelected 
+            ? 'linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.1), rgba(0,0,0,0.3))'
+            : 'linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.05), rgba(0,0,0,0.2))'
+        }}
+      />
+    </motion.div>
+  );
+};
 
 const SettingCountry = memo(function SettingCountry() {
   const { colors, isDark } = useLayoutTheme();
@@ -116,13 +139,13 @@ const SettingCountry = memo(function SettingCountry() {
               whileTap={{ scale: 0.97 }}
             >
               <motion.div
-                className="relative p-4 rounded-xl border-2 transition-all duration-300 overflow-hidden"
+                className="relative p-4 rounded-xl border-2 transition-all duration-300 overflow-hidden backdrop-blur-sm"
                 style={{
                   background: isSelected || isHovered
-                    ? `linear-gradient(135deg, ${colors.primary}15, ${colors.primary}08)`
+                    ? `linear-gradient(135deg, ${colors.primary}25, ${colors.primary}15)`
                     : isDark 
-                      ? 'linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))'
-                      : 'linear-gradient(135deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01))',
+                      ? 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))'
+                      : 'linear-gradient(135deg, rgba(0,0,0,0.08), rgba(0,0,0,0.03))',
                   borderColor: isSelected ? colors.primary : 'transparent',
                   boxShadow: isSelected 
                     ? `0 8px 25px ${colors.primary}20`
@@ -131,77 +154,76 @@ const SettingCountry = memo(function SettingCountry() {
                       : 'none'
                 }}
               >
-                {/* Flag and Selection Check */}
-                <div className="flex items-center justify-between mb-3">
-                  <motion.div
-                    className="text-2xl"
-                    animate={{
-                      scale: isSelected || isHovered ? 1.15 : 1,
-                      rotate: isHovered ? 5 : 0
-                    }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  >
-                    {country.flag}
+                {/* Flag Background */}
+                <CountryFlagBackground 
+                  flagSvg={country.flagSvg}
+                  alt={country.name}
+                  isSelected={isSelected}
+                  isHovered={isHovered}
+                />
 
-                    <Image
-                      src={`/flags/${country.code.toLowerCase()}.svg`}
-                      alt={`${country.name} flag`}
-                      width={32}
-                      height={32}
-                      className="inline-block ml-2 rounded opacity-70"
-                      />
-                  </motion.div>
-                  
-                  <div className="w-5 h-5 flex items-center justify-center">
-                    <AnimatePresence>
-                      {isSelected && (
-                        <motion.div
-                          className="w-5 h-5 rounded-full flex items-center justify-center"
-                          style={{ background: colors.primary }}
-                          initial={{ scale: 0, rotate: -90 }}
-                          animate={{ scale: 1, rotate: 0 }}
-                          exit={{ scale: 0, rotate: 90 }}
-                          transition={{ type: "spring", stiffness: 400 }}
-                        >
-                          <Check className="w-2.5 h-2.5 text-white" />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </div>
-
-                {/* Country Information */}
-                <div className="space-y-2">
-                  <motion.h4 
-                    className="text-sm font-bold leading-tight"
-                    style={{ 
-                      color: isSelected ? colors.primary : colors.foreground 
-                    }}
-                    animate={{
-                      color: isSelected ? colors.primary : colors.foreground
-                    }}
-                  >
-                    {country.nativeName}
-                  </motion.h4>
-                  
-                  <div className="text-xs text-muted-foreground">
-                    {country.region}
-                  </div>
-
-                  {/* Special Badge for Global */}
-                  {isGlobal && (
+                {/* Content Layer */}
+                <div className={`relative z-10 ${isSelected && 'text-transparent'} font-bold`}>
+                  {/* Flag Icon and Selection Check */}
+                  <div className="flex items-center justify-between mb-3">
                     <motion.div
-                      className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
-                      style={{
-                        background: `rgba(147, 51, 234, 0.15)`,
-                        border: `1px solid rgba(147, 51, 234, 0.3)`
+                      className="text-3xl drop-shadow-lg"
+                      animate={{
+                        scale: isSelected || isHovered ? 1.15 : 1,
+                        rotate: isHovered ? 5 : 0
                       }}
-                      whileHover={{ scale: 1.05 }}
+                      transition={{ type: "spring", stiffness: 300 }}
                     >
-                      <Star className="w-2.5 h-2.5" style={{ color: '#9333ea' }} />
-                      <span style={{ color: '#9333ea' }}>Global</span>
+                      {country.flag}
                     </motion.div>
-                  )}
+                    
+                    <div className="w-5 h-5 flex items-center justify-center">
+                      <AnimatePresence>
+                        {isSelected && (
+                          <motion.div
+                            className="w-5 h-5 rounded-full flex items-center justify-center shadow-lg"
+                            style={{ background: colors.primary }}
+                            initial={{ scale: 0, rotate: -90 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            exit={{ scale: 0, rotate: 90 }}
+                            transition={{ type: "spring", stiffness: 400 }}
+                          >
+                            <Check className="w-2.5 h-2.5 text-white" />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </div>
+
+                  {/* Country Information */}
+                  <div className="space-y-2">
+                    <div
+                      className={`text-sm font-bold leading-tight drop-shadow-sm`}
+                    >
+                      {country.nativeName}
+                    </div>
+                    
+                    <div 
+                      className="text-xs font-medium drop-shadow-sm"
+                    >
+                      {country.region}
+                    </div>
+
+                    {/* Special Badge for Global */}
+                    {isGlobal && (
+                      <motion.div
+                        className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm"
+                        style={{
+                          background: `rgba(147, 51, 234, 0.25)`,
+                          border: `1px solid rgba(147, 51, 234, 0.4)`
+                        }}
+                        whileHover={{ scale: 1.05 }}
+                      >
+                        <Star className="w-2.5 h-2.5" style={{ color: '#9333ea' }} />
+                        <span style={{ color: '#9333ea' }}>Global</span>
+                      </motion.div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Selection Pulse */}
@@ -227,7 +249,7 @@ const SettingCountry = memo(function SettingCountry() {
                     <motion.div
                       className="absolute inset-0 rounded-xl pointer-events-none"
                       style={{
-                        background: `radial-gradient(circle at center, ${colors.primary}10, transparent 70%)`
+                        background: `radial-gradient(circle at center, ${colors.primary}15, transparent 70%)`
                       }}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -250,10 +272,10 @@ const SettingCountry = memo(function SettingCountry() {
         transition={{ delay: 0.6 }}
       >
         <div
-          className="inline-flex items-center gap-3 px-6 py-3 rounded-full border"
+          className="inline-flex items-center gap-3 px-6 py-3 rounded-full border backdrop-blur-sm"
           style={{
-            background: `linear-gradient(135deg, ${colors.primary}10, ${colors.primary}05)`,
-            borderColor: `${colors.primary}30`
+            background: `linear-gradient(135deg, ${colors.primary}15, ${colors.primary}08)`,
+            borderColor: `${colors.primary}40`
           }}
         >
           <MapPin className="w-5 h-5" style={{ color: colors.primary }} />

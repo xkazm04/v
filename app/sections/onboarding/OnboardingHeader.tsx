@@ -1,6 +1,5 @@
-import LogoCard from "@/app/components/ui/Decorative/LogoCard";
-import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { FloatingVerdictIcon } from "@/app/components/ui/Decorative/FloatingVerdictIcon";
 
 type Props = {
     onSkip?: () => void;
@@ -15,18 +14,18 @@ const OnboardingHeader = ({onSkip, currentStep, steps, getBackgroundConfig, pref
         <div className="p-6 md:p-8 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                    <LogoCard
-                        config={{
-                            color: getBackgroundConfig().color,
-                            icon: Sparkles,
-                            label: 'Welcome'
-                        }}
-                        //@ts-expect-error Ignore
-                        currentTheme={preferences.theme}
-                    />
+                    <FloatingVerdictIcon
+                        showConfidenceRing={false}
+                        colors={
+                            {
+                                light: getBackgroundConfig().color,
+                                dark: getBackgroundConfig().color
+                            }
+                        }
+                        />
                     <div>
                         <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
-                            Welcome to FactCheck
+                            Welcome to Vaai
                         </h1>
                         <p className="text-sm text-gray-500 dark:text-gray-400">
                             Let's personalize your experience

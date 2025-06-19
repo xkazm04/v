@@ -39,7 +39,7 @@ export class ProfileApiService {
       
       // Handle both response formats: { data: Profile } or Profile directly
       const profile = 'data' in result ? result.data : result;
-      
+      //@ts-expect-error Ignore
       return { data: profile };
     } catch (error: any) {
       console.error('Failed to fetch profile:', error);

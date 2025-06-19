@@ -1,5 +1,5 @@
 import { memo, useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { ResearchResult } from '@/app/types/article';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
@@ -15,7 +15,7 @@ interface NewsCardHeaderProps {
   isHovered: boolean;
 }
 
-const headerVariants = {
+const headerVariants: Variants = {
   hidden: { opacity: 0, scale: 0.9, y: -10 },
   visible: {
     opacity: 1,

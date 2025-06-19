@@ -69,6 +69,7 @@ export async function GET(request: NextRequest) {
     });
     
     // Convert mock to ResearchResult format
+    //@ts-expect-error Ignore
     results = mockResults.map(article => ({
       id: article.id,
       statement: article.headline,

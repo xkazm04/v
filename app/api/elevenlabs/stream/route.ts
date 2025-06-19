@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
 import { supabaseAdmin } from '@/app/lib/supabase';
+import { getVoiceIdForLanguage } from '@/app/helpers/countries';
 import crypto from 'crypto';
 
 const client = new ElevenLabsClient({ 
   apiKey: process.env.ELEVENLABS_API_KEY!
 });
 
-// Default voice ID (you can make this configurable)
-const DEFAULT_VOICE_ID = "JBFqnCBsd6RMkjVDRZzb"; // Rachel voice
+// Default voice ID (English)
+const DEFAULT_VOICE_ID = "JBFqnCBsd6RMkjVDRZzb"; 
 
 interface AudioCacheEntry {
   id?: string;
@@ -30,6 +31,7 @@ function generateTextHash(text: string, voiceId: string): string {
  * Get cached audio from Supabase
  */
 async function getCachedAudio(textHash: string): Promise<string | null> {
+  if (!supabaseAdmin) return null;
   try {
     const { data, error } = await supabaseAdmin
       .from('elevenlabs_audio_cache')
@@ -59,6 +61,10 @@ async function cacheAudio(
   format: string
 ): Promise<void> {
   try {
+    if (!supabaseAdmin) {
+      console.warn('Supabase client not initialized');
+      return;
+    }
     const cacheEntry: AudioCacheEntry = {
       text_hash: textHash,
       voice_id: voiceId,
@@ -84,7 +90,7 @@ async function cacheAudio(
 
 export async function POST(request: NextRequest) {
   try {
-    const { text, voiceId = DEFAULT_VOICE_ID } = await request.json();
+    const { text, voiceId, languageCode } = await request.json();
 
     if (!text || text.trim() === '') {
       return NextResponse.json(
@@ -93,11 +99,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Determine voice ID from multiple sources (priority order)
+    let finalVoiceId = DEFAULT_VOICE_ID;
+    
+    if (voiceId) {
+      // Direct voice ID provided
+      finalVoiceId = voiceId;
+    } else if (languageCode) {
+      // Get voice ID from language code
+      finalVoiceId = getVoiceIdForLanguage(languageCode);
+    }
+
     // Generate hash for caching
-    const textHash = generateTextHash(text, voiceId);
+    const textHash = generateTextHash(text, finalVoiceId);
     
     // Check cache first
-    console.log(`🎵 Generating audio for: "${text.slice(0, 50)}..."`);
+    console.log(`🎵 Generating audio for: "${text.slice(0, 50)}..." with voice: ${finalVoiceId}`);
     const cachedAudio = await getCachedAudio(textHash);
     
     if (cachedAudio) {
@@ -112,15 +129,16 @@ export async function POST(request: NextRequest) {
           'Content-Type': 'audio/mpeg',
           'Content-Length': audioBuffer.length.toString(),
           'Cache-Control': 'public, max-age=31536000', // Cache for 1 year
-          'X-Audio-Source': 'cache'
+          'X-Audio-Source': 'cache',
+          'X-Voice-ID': finalVoiceId
         },
       });
     }
 
     // Generate new audio
-    console.log(`🎤 Calling ElevenLabs API for voice: ${voiceId}`);
+    console.log(`🎤 Calling ElevenLabs API for voice: ${finalVoiceId}`);
     
-    const audioStream = await client.textToSpeech.stream(voiceId, {
+    const audioStream = await client.textToSpeech.stream(finalVoiceId, {
       outputFormat: "mp3_44100_128",
       text: text,
       modelId: "eleven_multilingual_v2",
@@ -143,10 +161,10 @@ export async function POST(request: NextRequest) {
     
     // Cache the audio (fire and forget)
     const base64Audio = audioBuffer.toString('base64');
-    cacheAudio(textHash, voiceId, base64Audio, 'mp3_44100_128')
+    cacheAudio(textHash, finalVoiceId, base64Audio, 'mp3_44100_128')
       .catch(error => console.warn('Background caching failed:', error));
 
-    console.log(`✅ Generated audio: ${audioBuffer.length} bytes`);
+    console.log(`✅ Generated audio: ${audioBuffer.length} bytes with voice: ${finalVoiceId}`);
 
     return new NextResponse(audioBuffer, {
       status: 200,
@@ -154,7 +172,8 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'audio/mpeg',
         'Content-Length': audioBuffer.length.toString(),
         'Cache-Control': 'public, max-age=86400', // Cache for 24 hours
-        'X-Audio-Source': 'elevenlabs'
+        'X-Audio-Source': 'elevenlabs',
+        'X-Voice-ID': finalVoiceId
       },
     });
 
@@ -176,7 +195,12 @@ export async function GET() {
     { 
       message: 'ElevenLabs Audio API',
       endpoints: {
-        POST: '/api/elevenlabs/stream - Generate audio from text'
+        POST: '/api/elevenlabs/stream - Generate audio from text',
+        supportedParams: {
+          text: 'string (required) - Text to convert to speech',
+          voiceId: 'string (optional) - Direct voice ID to use',
+          languageCode: 'string (optional) - Language code to auto-select voice'
+        }
       }
     },
     { status: 200 }

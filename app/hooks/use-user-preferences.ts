@@ -1,10 +1,10 @@
-// app/hooks/use-user-preferences.ts
 'use client';
 
 import { useLocalStorage } from './use-local-storage';
+import { AVAILABLE_COUNTRIES, AVAILABLE_LANGUAGES, isValidCountryCode, isValidLanguageCode } from '@/app/helpers/countries';
+
 export interface UserPreferences {
   language: string;
-
   countries: string[];
   categories: string[];
   theme: 'light' | 'dark' | 'system';
@@ -20,8 +20,8 @@ export interface UserPreferences {
 const DEFAULT_PREFERENCES: UserPreferences = {
   language: 'en',
   countries: ['worldwide'],
-  categories: ['politics', 'environment', 'military'],
-  theme: 'system',
+  categories: ['politics', 'environment'],
+  theme: 'light', // Default to light theme instead of system
   hasCompletedOnboarding: false,
   autoRefresh: true,
   notificationsEnabled: false,
@@ -35,8 +35,13 @@ export function useUserPreferences() {
     DEFAULT_PREFERENCES
   );
 
-  // Update language preference
+  // Update language preference with validation
   const setLanguage = (language: string) => {
+    if (!isValidLanguageCode(language)) {
+      console.warn(`Invalid language code: ${language}`);
+      return;
+    }
+    
     setPreferences(prev => ({
       ...prev,
       language,
@@ -44,11 +49,22 @@ export function useUserPreferences() {
     }));
   };
 
-  // Update countries preference
+  // Update countries preference with validation
   const setCountries = (countries: string[]) => {
+    // Validate all country codes
+    const validCountries = countries.filter(code => isValidCountryCode(code));
+    
+    if (validCountries.length !== countries.length) {
+      console.warn('Some invalid country codes were filtered out:', 
+        countries.filter(code => !isValidCountryCode(code)));
+    }
+    
+    // Ensure at least one country is selected, default to worldwide
+    const finalCountries = validCountries.length > 0 ? validCountries : ['worldwide'];
+    
     setPreferences(prev => ({
       ...prev,
-      countries,
+      countries: finalCountries,
       lastUpdated: new Date().toISOString()
     }));
   };
@@ -112,16 +128,46 @@ export function useUserPreferences() {
   const importPreferences = (preferencesJson: string) => {
     try {
       const imported = JSON.parse(preferencesJson);
-      setPreferences({
+      
+      // Validate imported preferences
+      const validatedPreferences = {
         ...DEFAULT_PREFERENCES,
         ...imported,
+        language: isValidLanguageCode(imported.language) ? imported.language : 'en',
+        countries: Array.isArray(imported.countries) 
+          ? imported.countries.filter(isValidCountryCode)
+          : ['worldwide'],
         lastUpdated: new Date().toISOString()
-      });
+      };
+      
+      // Ensure at least one country is selected
+      if (validatedPreferences.countries.length === 0) {
+        validatedPreferences.countries = ['worldwide'];
+      }
+      
+      setPreferences(validatedPreferences);
       return true;
     } catch (error) {
       console.error('Failed to import preferences:', error);
       return false;
     }
+  };
+
+  // Get available options for validation
+  const getAvailableLanguages = () => AVAILABLE_LANGUAGES;
+  const getAvailableCountries = () => AVAILABLE_COUNTRIES;
+
+  // Get user's preferred countries with details
+  const getUserCountries = () => {
+    const allCountries = getAvailableCountries();
+    
+    if (!preferences.countries || preferences.countries.length === 0) {
+      return allCountries.filter(c => c.code === 'worldwide');
+    }
+    
+    return allCountries.filter(country => 
+      preferences.countries.includes(country.code)
+    );
   };
 
   return {
@@ -136,6 +182,9 @@ export function useUserPreferences() {
     getTranslationTarget,
     exportPreferences,
     importPreferences,
+    getAvailableLanguages,
+    getAvailableCountries,
+    getUserCountries,
     
     // Computed values
     isFirstTimeUser: !preferences.hasCompletedOnboarding,

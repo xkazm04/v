@@ -1,9 +1,12 @@
 'use client';
-import { useRef, useCallback, useEffect, useState } from 'react';
+
+import { useRef, useState, useCallback, useEffect } from 'react';
 import { useTimelineAudioStore } from '@/app/stores/useTimelineAudioStore';
 
 interface UseElevenLabsAudioOptions {
   autoPlay?: boolean;
+  voiceId?: string;
+  languageCode?: string;
   onPlayStart?: (title?: string) => void;
   onPlayEnd?: () => void;
   onError?: (error: string) => void;
@@ -16,6 +19,8 @@ interface UseElevenLabsAudioOptions {
 export function useElevenLabsAudio(options: UseElevenLabsAudioOptions = {}) {
   const {
     autoPlay = false,
+    voiceId,
+    languageCode,
     onPlayStart,
     onPlayEnd,
     onError,
@@ -68,43 +73,55 @@ export function useElevenLabsAudio(options: UseElevenLabsAudioOptions = {}) {
     else {
       const element = document.getElementById(track.progressId);
       if (element) {
-        const rect = element.getBoundingClientRect();
-        const offsetTop = window.pageYOffset + rect.top;
-        const targetPosition = Math.max(0, offsetTop - window.innerHeight * 0.15);
-        
-        window.scrollTo({
-          top: targetPosition,
-          behavior: 'smooth'
+        element.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
         });
       } else {
-        console.warn('Could not find element with ID:', track.progressId);
+        console.warn(`Element with ID "${track.progressId}" not found`);
       }
     }
   }, [scrollToMilestone, scrollToEvent]);
 
   // Generate audio from text using ElevenLabs API
-  const generateAudio = useCallback(async (text: string): Promise<string> => {
+  const generateAudio = useCallback(async (text: string, overrideVoiceId?: string, overrideLanguageCode?: string): Promise<string> => {
     try {
       setError(null);
       setPlaybackState({ isLoading: true });
 
       console.log('Generating audio for text:', text.substring(0, 100) + '...');
 
+      // Build request payload with voice preference
+      const requestPayload: any = { text };
+      
+      // Priority: override params > hook options > defaults
+      if (overrideVoiceId || voiceId) {
+        requestPayload.voiceId = overrideVoiceId || voiceId;
+      } else if (overrideLanguageCode || languageCode) {
+        requestPayload.languageCode = overrideLanguageCode || languageCode;
+      }
+
+      console.log('Audio generation request:', requestPayload);
+
       const response = await fetch('/api/elevenlabs/stream', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify(requestPayload),
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `API request failed: ${response.status}`);
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
 
       const blob = await response.blob();
       console.log('Audio blob received, size:', blob.size);
+      
+      // Get voice ID from response headers for logging
+      const usedVoiceId = response.headers.get('X-Voice-ID');
+      console.log('Used voice ID:', usedVoiceId);
       
       const url = URL.createObjectURL(blob);
       setAudioUrl(url);
@@ -120,7 +137,7 @@ export function useElevenLabsAudio(options: UseElevenLabsAudioOptions = {}) {
     } finally {
       setPlaybackState({ isLoading: false });
     }
-  }, [setError, setPlaybackState, onError]);
+  }, [setError, setPlaybackState, onError, voiceId, languageCode]);
 
   // Play audio from URL
   const play = useCallback(async (url?: string) => {
@@ -144,27 +161,22 @@ export function useElevenLabsAudio(options: UseElevenLabsAudioOptions = {}) {
       await new Promise((resolve, reject) => {
         const audio = audioRef.current!;
         
-        const onLoadedData = () => {
-          audio.removeEventListener('loadeddata', onLoadedData);
-          audio.removeEventListener('error', onError);
+        const handleCanPlay = () => {
+          audio.removeEventListener('canplay', handleCanPlay);
+          audio.removeEventListener('error', handleError);
           resolve(void 0);
         };
         
-        const onError = () => {
-          audio.removeEventListener('loadeddata', onLoadedData);
-          audio.removeEventListener('error', onError);
-          reject(new Error('Failed to load audio'));
+        const handleError = () => {
+          audio.removeEventListener('canplay', handleCanPlay);
+          audio.removeEventListener('error', handleError);
+          reject(new Error('Audio failed to load'));
         };
         
-        audio.addEventListener('loadeddata', onLoadedData);
-        audio.addEventListener('error', onError);
+        audio.addEventListener('canplay', handleCanPlay);
+        audio.addEventListener('error', handleError);
         
-        // If already loaded, resolve immediately
-        if (audio.readyState >= 2) {
-          audio.removeEventListener('loadeddata', onLoadedData);
-          audio.removeEventListener('error', onError);
-          resolve(void 0);
-        }
+        audio.load();
       });
 
       await audioRef.current.play();
@@ -202,10 +214,10 @@ export function useElevenLabsAudio(options: UseElevenLabsAudioOptions = {}) {
   }, [setPlaybackState, setProgress]);
 
   // Generate and play audio in one step
-  const generateAndPlay = useCallback(async (text: string) => {
+  const generateAndPlay = useCallback(async (text: string, overrideVoiceId?: string, overrideLanguageCode?: string) => {
     try {
       console.log('Generating and playing audio...');
-      const url = await generateAudio(text);
+      const url = await generateAudio(text, overrideVoiceId, overrideLanguageCode);
       
       if (autoPlay) {
         await play(url);
@@ -229,16 +241,18 @@ export function useElevenLabsAudio(options: UseElevenLabsAudioOptions = {}) {
       const nextTrack = getNextTrack(currentTrack.id);
       if (nextTrack) {
         console.log('Auto-advancing to next track:', nextTrack.title);
-        setTimeout(() => {
-          // Use enhanced scroll method that properly updates timeline state
-          scrollToSection(nextTrack);
-          
-          // Auto-play next track after scroll
-          setTimeout(async () => {
-            storePlayTrack(nextTrack.id);
-            await generateAndPlay(nextTrack.text);
-          }, 800);
-        }, 1000);
+        
+        // Scroll to the next section first
+        scrollToSection(nextTrack);
+        
+        // Generate and play the next track
+        generateAndPlay(nextTrack.text)
+          .then(() => {
+            storePlayTrack(nextTrack);
+          })
+          .catch(error => {
+            console.error('Failed to auto-advance to next track:', error);
+          });
       }
     }
   }, [setPlaybackState, onPlayEnd, onTrackEnd, currentTrack, getNextTrack, scrollToSection, generateAndPlay, storePlayTrack]);
@@ -316,8 +330,6 @@ export function useElevenLabsAudio(options: UseElevenLabsAudioOptions = {}) {
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = isMuted ? 0 : volume;
-      // Set preload to metadata for better loading behavior
-      audioRef.current.preload = 'metadata';
     }
   }, [volume, isMuted]);
 

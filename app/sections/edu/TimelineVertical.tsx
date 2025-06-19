@@ -16,6 +16,8 @@ import { FloatingVerdictIcon } from '@/app/components/ui/Decorative/FloatingVerd
 import { Timeline } from '../../types/timeline';
 import exampleData from './data/example.json';
 import TimelineHeader from '../../components/timeline/TimelineVertical/TimelineHeader';
+import { useUserPreferences } from '@/app/hooks/use-user-preferences';
+import { getVoiceIdForLanguage } from '@/app/helpers/countries';
 
 // Memoized components for performance
 const MemoizedTimelineBackground = React.memo(TimelineBackground);
@@ -82,6 +84,11 @@ export default function TimelineVertical() {
   const { isMobile, isDesktop } = useViewport();
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Get user preferences for language-based voice selection
+  const { preferences } = useUserPreferences();
+  const userLanguage = preferences.language || 'en';
+  const voiceId = useMemo(() => getVoiceIdForLanguage(userLanguage), [userLanguage]);
+
   const timeline: Timeline = useMemo(() => exampleData as Timeline, []);
   
   // Initialize audio store
@@ -99,9 +106,11 @@ export default function TimelineVertical() {
     scrollToEvent,
   } = useTimelineScroll(containerRef, timeline);
 
-  // Initialize audio functionality with scroll utilities
+  // Initialize audio functionality with scroll utilities and language preference
   const { audioRef, generateAndPlay, pause } = useElevenLabsAudio({
     autoPlay: true,
+    languageCode: userLanguage,
+    voiceId: voiceId,
     scrollToMilestone,
     scrollToEvent,
     onError: (error) => {
@@ -115,8 +124,11 @@ export default function TimelineVertical() {
       const { track } = event.detail;
       try {
         console.log('Handling audio play for track:', track.title);
+        console.log('Using language:', userLanguage, 'voiceId:', voiceId);
         console.log('Track text:', track.text);
-        await generateAndPlay(track.text);
+        
+        // Pass language and voice information for this specific track
+        await generateAndPlay(track.text, voiceId, userLanguage);
       } catch (error) {
         console.error('Failed to play audio:', error);
       }
@@ -135,11 +147,19 @@ export default function TimelineVertical() {
       window.removeEventListener('timeline-audio-play', handleAudioPlay as EventListener);
       window.removeEventListener('timeline-audio-pause', handleAudioPause as EventListener);
     };
-  }, [generateAndPlay, pause]);
+  }, [generateAndPlay, pause, userLanguage, voiceId]);
 
   useEffect(() => {
     initializeTracklist(timeline);
   }, [timeline, initializeTracklist]);
+
+  // Log language changes
+  useEffect(() => {
+    console.log('📢 Timeline language preference changed:', {
+      language: userLanguage,
+      voiceId: voiceId
+    });
+  }, [userLanguage, voiceId]);
 
   const sortedMilestones = useMemo(() => 
     [...timeline.milestones].sort((a, b) => a.order - b.order), 
@@ -221,11 +241,11 @@ export default function TimelineVertical() {
             </motion.div>
 
             <motion.div
-              className="relative z-5" 
+              className="relative z-5"
               style={{ opacity: sideOpacity }}
               initial={{ x: 50, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+              transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
             >
               <MemoizedTimelineVerticalRight
                 sideOpacity={sideOpacity}
@@ -305,23 +325,24 @@ export default function TimelineVertical() {
 
         {isDesktop && showScrollHint && (
           <motion.div
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40" 
+            className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-30"
+            style={scrollHintStyle}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ delay: 2, duration: 0.6 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
           >
-            <motion.div
-              className="px-4 py-2 rounded-full backdrop-blur-md border text-sm font-medium shadow-xl"
-              style={scrollHintStyle}
-              animate={{ opacity: [1, 0.7, 1] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <div className="flex items-center gap-2">
-                <span>🎯</span>
-                <span>Snap Scroll Active • Wheel to navigate</span>
+            <div className="px-4 py-2 rounded-full border text-sm flex items-center gap-2">
+              <div className="w-4 h-6 flex flex-col justify-center items-center">
+                <motion.div
+                  className="w-1 h-3 rounded-full"
+                  style={{ backgroundColor: colors.primary }}
+                  animate={{ scaleY: [0.5, 1, 0.5] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                />
               </div>
-            </motion.div>
+              Scroll to explore timeline
+            </div>
           </motion.div>
         )}
       </div>

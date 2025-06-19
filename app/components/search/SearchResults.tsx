@@ -1,7 +1,7 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, FileText, Video, Clock, ExternalLink } from 'lucide-react';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { Loader2, FileText, Video, Clock } from 'lucide-react';
 import { Badge } from '@/app/components/ui/badge';
 import { cn } from '@/app/lib/utils';
 import { NewsArticle } from '@/app/types/article';
@@ -19,7 +19,7 @@ interface SearchResultsProps {
   className?: string;
 }
 
-const resultVariants = {
+const resultVariants: Variants = {
   hidden: { opacity: 0, y: -10, scale: 0.95 },
   visible: { 
     opacity: 1, 
@@ -43,7 +43,7 @@ const resultVariants = {
   }
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, x: -20 },
   visible: (index: number) => ({
     opacity: 1,

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { Globe, BookOpen, Building, Heart, ExternalLink, TrendingUp, TrendingDown, Shield, AlertTriangle } from "lucide-react";
 import { LLMResearchResponse } from "@/app/types/research";
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
@@ -10,7 +10,7 @@ interface FactCheckSourcesProps {
   config: any;
 }
 
-const sectionVariants = {
+const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { 
     opacity: 1, 

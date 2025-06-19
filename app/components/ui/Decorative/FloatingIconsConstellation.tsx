@@ -155,21 +155,6 @@ const FloatingIconsConstellation = memo(function FloatingIconsConstellation({
 
       {/* Corner Accent Icons */}
       <motion.div
-        className="absolute top-10 left-10"
-        initial={{ opacity: 0, x: -20, y: -20 }}
-        animate={{ opacity: 1, x: 0, y: 0 }}
-        transition={{ delay: 1.8, type: "spring" }}
-      >
-        <FloatingVerdictIcon
-          size="xs"
-          confidence={60}
-          customIcon="/logos/logo_spray_white.png"
-          delay={1.8}
-          colors={{ glowColor: '#64748b' }}
-        />
-      </motion.div>
-
-      <motion.div
         className="absolute top-10 right-10"
         initial={{ opacity: 0, x: 20, y: -20 }}
         animate={{ opacity: 1, x: 0, y: 0 }}
@@ -177,7 +162,7 @@ const FloatingIconsConstellation = memo(function FloatingIconsConstellation({
       >
         <FloatingVerdictIcon
           size="xs"
-          confidence={70}
+          showConfidenceRing={false}
           customIcon="/logos/logo_spray_white.png"
           delay={2.0}
           colors={{ glowColor: '#64748b' }}
@@ -192,7 +177,7 @@ const FloatingIconsConstellation = memo(function FloatingIconsConstellation({
       >
         <FloatingVerdictIcon
           size="xs"
-          confidence={55}
+          showConfidenceRing={false}
           customIcon="/logos/logo_spray_white.png"
           delay={2.2}
           colors={{ glowColor: '#64748b' }}
@@ -207,7 +192,7 @@ const FloatingIconsConstellation = memo(function FloatingIconsConstellation({
       >
         <FloatingVerdictIcon
           size="xs"
-          confidence={65}
+          showConfidenceRing={false}
           customIcon="/logos/logo_spray_white.png"
           delay={2.4}
           colors={{ glowColor: '#64748b' }}

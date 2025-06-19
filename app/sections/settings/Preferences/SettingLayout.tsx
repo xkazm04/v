@@ -7,17 +7,17 @@ import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
 import SettingLanguage from './SettingLanguage';
 import SettingCountry from './SettingCountry';
-import { AVAILABLE_LANGUAGES } from '@/app/components/userPreferences/LanguageSelector';
+import { AVAILABLE_LANGUAGES } from '@/app/helpers/countries';
 
 const SettingLayout = memo(function SettingLayout() {
-  const { colors, isDark } = useLayoutTheme();
+  const { colors } = useLayoutTheme();
   const {
     preferences,
     needsTranslation,
     getTranslationTarget
   } = useUserPreferences();
 
-  const selectedLanguage = AVAILABLE_LANGUAGES.find(lang => lang.code === preferences.language);
+  const selectedLanguage = AVAILABLE_LANGUAGES?.find(lang => lang.code === preferences.language) || AVAILABLE_LANGUAGES?.[0];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -71,7 +71,7 @@ const SettingLayout = memo(function SettingLayout() {
 
           {/* Translation Status Banner */}
           <AnimatePresence>
-            {needsTranslation && (
+            {needsTranslation && selectedLanguage && (
               <motion.div
                 variants={itemVariants}
                 initial={{ opacity: 0, height: 0 }}
@@ -85,7 +85,21 @@ const SettingLayout = memo(function SettingLayout() {
                   shadow="glow"
                   className="relative overflow-hidden"
                 >
-                  <div className="absolute inset-0 overflow-hidden">
+                  <div className="p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="text-2xl">{selectedLanguage.flag}</div>
+                      <div>
+                        <h3 className="font-semibold" style={{ color: colors.foreground }}>
+                          Translation Active
+                        </h3>
+                        <p className="text-sm opacity-70" style={{ color: colors.foreground }}>
+                          Content will be translated to {selectedLanguage.nativeName}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     {[...Array(12)].map((_, i) => (
                       <motion.div
                         key={i}
