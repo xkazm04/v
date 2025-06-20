@@ -12,6 +12,7 @@ import YtResult from './YtResult';
 import { ProcessingStatus, ProcessingUpdate, StatementResult, VideoProcessingRequest } from '@/app/types/processing';
 import { useSSE } from '@/app/hooks/useSSE';
 import { CardContent } from '@/app/components/ui/card';
+import AnalyzeButton from '@/app/components/ui/Buttons/AnalyzeButton';
 
 const containerVariants = {
   hidden: { opacity: 0, y: 30, scale: 0.95 },
@@ -170,11 +171,11 @@ const UploadVideo: React.FC = () => {
         >          
 
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-red-500 to-pink-600 bg-clip-text text-transparent mb-2">
-            YouTube Video Analysis
+            Video breakdown
           </h1>
 
           <p className="text-sm sm:text-base text-muted-foreground font-normal max-w-md mx-auto leading-relaxed">
-            Extract and fact-check statements from YouTube videos
+            Research statements from YouTube videos
           </p>
 
         </motion.div>
@@ -243,24 +244,7 @@ const UploadVideo: React.FC = () => {
               whileHover={!(isProcessing || !formData.url.trim()) ? { scale: 1.02 } : {}}
               whileTap={!(isProcessing || !formData.url.trim()) ? { scale: 0.98 } : {}}
             >
-              {isProcessing ? (
-                <>
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  >
-                    <Video className="h-5 w-5 sm:h-6 sm:w-6" />
-                  </motion.div>
-                  <span className="hidden sm:inline">Processing Video...</span>
-                  <span className="sm:hidden">Processing...</span>
-                </>
-              ) : (
-                <>
-                  <Play className="h-5 w-5 sm:h-6 sm:w-6" />
-                  <span className="hidden sm:inline">Start Video Analysis</span>
-                  <span className="sm:hidden">Start Analysis</span>
-                </>
-              )}
+             <AnalyzeButton isLoading={isProcessing} />
             </motion.button>
 
             {(isProcessing || finalResult) && (

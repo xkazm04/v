@@ -9,6 +9,7 @@ export const useViewport = () => {
     isTablet: false,
     isDesktop: false,
     isLoaded: false, 
+    isHd: false,
   });
 
   useEffect(() => {
@@ -22,6 +23,7 @@ export const useViewport = () => {
         isMobile: width < 640,
         isTablet: width >= 640 && width < 1024,
         isDesktop: width >= 1024,
+        isHd: width >= 2500,
         isLoaded: true,
       });
     };

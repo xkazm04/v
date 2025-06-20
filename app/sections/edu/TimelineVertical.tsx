@@ -10,8 +10,6 @@ import { useElevenLabsAudio } from '@/app/hooks/useElevenLabsAudio';
 import TimelineMilestone from '../../components/timeline/TimelineMilestone/TimelineMilestone';
 import TimelineProgress from '../../components/timeline/TimelineProgress/TimelineProgress';
 import TimelineBackground from '../../components/timeline/TimelineVertical/TimelineBackground';
-import TimelineVerticalLeft from '../../components/timeline/TimelineVertical/TimelineVerticalLeft';
-import TimelineVerticalRight from '../../components/timeline/TimelineVertical/TimelineVerticalRight';
 import { FloatingVerdictIcon } from '@/app/components/ui/Decorative/FloatingVerdictIcon';
 import { Timeline } from '../../types/timeline';
 import exampleData from './data/example.json';
@@ -19,12 +17,9 @@ import TimelineHeader from '../../components/timeline/TimelineVertical/TimelineH
 import { useUserPreferences } from '@/app/hooks/use-user-preferences';
 import { getVoiceIdForLanguage } from '@/app/helpers/countries';
 
-// Memoized components for performance
 const MemoizedTimelineBackground = React.memo(TimelineBackground);
 const MemoizedTimelineHeader = React.memo(TimelineHeader);
 const MemoizedTimelineProgress = React.memo(TimelineProgress);
-const MemoizedTimelineVerticalLeft = React.memo(TimelineVerticalLeft);
-const MemoizedTimelineVerticalRight = React.memo(TimelineVerticalRight);
 
 const OptimizedTimelineMilestone = React.memo(({ 
   milestone, 
@@ -57,10 +52,8 @@ const FixedTimelineProgress = React.memo(({
   activeEventId, 
   handleNavigateToMilestone, 
   handleNavigateToEvent,
-  isDesktop 
 }: any) => {
-  // Only render on client side and if desktop
-  if (typeof window === 'undefined' || !isDesktop) return null;
+  if (typeof window === 'undefined') return null;
 
   const progressComponent = (
     <MemoizedTimelineProgress
@@ -168,7 +161,6 @@ export default function TimelineVertical() {
 
   const progressWidth = useTransform(smoothScrollProgress, [0, 1], ['0%', '100%']);
   const headerOpacity = useTransform(smoothScrollProgress, [0, 0.2], [1, 0]); 
-  const sideOpacity = useTransform(smoothScrollProgress, [0.1, 0.3, 0.8, 1], [0, 1, 1, 0.8]); 
 
   const backgroundGradient = useMemo(() => 
     isDark
@@ -206,7 +198,6 @@ export default function TimelineVertical() {
         activeEventId={activeEventId}
         handleNavigateToMilestone={handleNavigateToMilestone}
         handleNavigateToEvent={handleNavigateToEvent}
-        isDesktop={isDesktop}
       />
 
       <div
@@ -223,40 +214,6 @@ export default function TimelineVertical() {
           isDark={isDark}
           colors={colors}
         />
-        
-
-        {isDesktop && (
-          <>
-            <motion.div
-              className="relative z-5"
-              style={{ opacity: sideOpacity }}
-              initial={{ x: -50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
-            >
-              <MemoizedTimelineVerticalLeft
-                sideOpacity={sideOpacity}
-                leftSide={timeline.leftSide}
-                colors={colors}
-              />
-            </motion.div>
-
-            <motion.div
-              className="relative z-5"
-              style={{ opacity: sideOpacity }}
-              initial={{ x: 50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
-            >
-              <MemoizedTimelineVerticalRight
-                sideOpacity={sideOpacity}
-                rightSide={timeline.rightSide}
-                colors={colors}
-              />
-            </motion.div>
-          </>
-        )}
-
         <div 
           className="fixed left-1/2 top-0 w-px h-full -translate-x-1/2 z-10 opacity-60"
           style={{ willChange: 'transform' }}

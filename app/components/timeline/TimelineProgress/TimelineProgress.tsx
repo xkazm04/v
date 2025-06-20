@@ -4,6 +4,7 @@ import { Milestone } from '../../../types/timeline';
 import TimelineProgressHeader from './TimelineProgressHeader';
 import TimelineProgressContent from './TimelineProgressContent';
 import TimelineProgressFooter from './TimelineProgressFooter';
+import { useViewport } from '@/app/hooks/useViewport';
 interface TimelineProgressProps {
   scrollProgress: MotionValue<number>;
   milestones: Milestone[];
@@ -22,25 +23,17 @@ export default function TimelineProgress({
   onNavigateToEvent
 }: TimelineProgressProps) {
   const { colors, isDark } = useLayoutTheme();
-
+  const { isHd } = useViewport()
   const indicatorOpacity = useTransform(scrollProgress, [0, 0.08, 0.92, 1], [0, 1, 1, 1]);
   const indicatorScale = useTransform(scrollProgress, [0, 0.08], [0.9, 1]);
   const scrollProgressPercentage = useTransform(scrollProgress, [0, 1], [0, 100]);
   const progressLineHeight = useTransform(scrollProgress, [0, 1], ['0%', '100%']);
 
-
   return (
     <div
-      className="fixed right-6 top-1/2 -translate-y-1/2 z-[9999] 2xl:block hidden"
-      style={{
-        position: 'fixed',
-        right: '1.5rem',
-        top: '20%',
-        transform: 'translateY(-50%)',
-        zIndex: 9999,
-        pointerEvents: 'auto',
-        isolation: 'isolate'
-      }}
+      className={`fixed right-6 -translate-y-1/2 z-[9999] 2xl:block hidden isolate
+          ${isHd ? 'pr-[10%] top-[50%]' : 'pr-6 top-[30%]'}
+        `}
     >
       <motion.div
         style={{

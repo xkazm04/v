@@ -3,6 +3,7 @@ import { useCallback, useMemo } from 'react';
 import { useTimelineAudioStore } from '@/app/stores/useTimelineAudioStore';
 import { formatEventContent, formatMilestoneContent } from '@/app/helpers/timelineProgressHelpers';
 import TimelineProgressRowItem from './TimelineProgressRowItem';
+import { useViewport } from '@/app/hooks/useViewport';
 
 type Props = {
     milestones: {
@@ -34,7 +35,7 @@ const TimelineProgressContent = ({
         pauseTrack,
         stopTrack
     } = useTimelineAudioStore();
-
+    const { isHd } = useViewport();
     // Build timeline items including hero section
     const timelineItems = useMemo(() => {
         const items: any[] = [];
@@ -123,7 +124,9 @@ const TimelineProgressContent = ({
     }, [currentTrackId, isPlaying, playTrack, pauseTrack]);
 
     return (
-        <div className="p-4 overflow-y-auto max-h-[300px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+        <div className={`p-4 overflow-y-auto 
+            ${isHd ? 'max-h-[80vh]' : 'max-h-[40vh] '}
+            scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent`}>
             <div className="relative pl-2">
                 <motion.div
                     className="space-y-4" 

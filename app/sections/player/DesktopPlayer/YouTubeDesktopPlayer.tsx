@@ -1,7 +1,5 @@
-'use client';
-
 import { motion } from 'framer-motion';
-import { PlayerTimeline } from '@/app/sections/player/timeline/PlayerTimeline';
+import { PlayerTimeline } from '@/app/components/video/timeline/PlayerTimeline';
 import { VideoInfoHeader } from '@/app/sections/player/VideoInfoHeader';
 import { useState, useRef, useEffect } from 'react';
 import { VideoWithTimestamps } from '@/app/types/video_api'; // Single import!
@@ -38,7 +36,7 @@ export function YouTubeDesktopPlayer({
   onTimeUpdate,
   onPlayStateChange
 }: YouTubeDesktopPlayerProps) {
-  const { colors, isDark } = useLayoutTheme();
+  const { isDark } = useLayoutTheme();
   const [showTimeline, setShowTimeline] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -175,6 +173,7 @@ export function YouTubeDesktopPlayer({
       transition={{ duration: 0.5 }}
       className="w-full max-w-6xl mx-auto"
     >
+      <VideoInfoHeader video={video} />
       <div 
         className="relative rounded-2xl overflow-hidden shadow-2xl"
         style={{
@@ -204,21 +203,18 @@ export function YouTubeDesktopPlayer({
           )}
         </div>
 
-        {/* Direct usage - no conversion! */}
-        <VideoInfoHeader video={video} />
-
         {showTimeline && isPlayerReady && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="p-6"
+            className=""
             style={{
               background: containerColors.timelineBackground
             }}
           >
             <PlayerTimeline
-              videoData={video} // Direct usage!
+              videoData={video} 
               onSeekToTimestamp={handleSeekToTimestamp}
               isListenMode={true}
               currentVideoTime={currentTime}

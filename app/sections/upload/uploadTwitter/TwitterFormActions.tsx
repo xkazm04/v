@@ -4,6 +4,7 @@ import { useTwitterResearch } from '@/app/hooks/useTwitterResearch';
 import { motion } from 'framer-motion';
 import { Play, RotateCcw } from 'lucide-react';
 import { TwitterAnalysisRequest } from './TwitterForm';
+import AnalyzeButton from '@/app/components/ui/Buttons/AnalyzeButton';
 
 type Props = {
     mode: 'url' | 'predefined';
@@ -80,24 +81,7 @@ const TwitterFormActions = ({ mode, xService, formData, selectedTweet, resetForm
             whileHover={!(isResearching || (mode === 'url' && (!formData.tweet_url.trim() || !xService.validateTwitterUrl(formData.tweet_url))) || (mode === 'predefined' && !selectedTweet)) ? { scale: 1.02 } : {}}
             whileTap={!(isResearching || (mode === 'url' && (!formData.tweet_url.trim() || !xService.validateTwitterUrl(formData.tweet_url))) || (mode === 'predefined' && !selectedTweet)) ? { scale: 0.98 } : {}}
         >
-            {isResearching ? (
-                <>
-                    <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                    >
-                        <Play className="h-5 w-5" />
-                    </motion.div>
-                    <span className="hidden sm:inline">Researching...</span>
-                    <span className="sm:hidden">Researching...</span>
-                </>
-            ) : (
-                <>
-                    <Play className="h-5 w-5" />
-                    <span className="hidden sm:inline">Research Tweet</span>
-                    <span className="sm:hidden">Research</span>
-                </>
-            )}
+            <AnalyzeButton isLoading={isResearching} />
         </motion.button>
 
         {(isResearching || formData.tweet_url || selectedTweet) && (

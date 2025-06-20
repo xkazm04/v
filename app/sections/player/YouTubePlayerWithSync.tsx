@@ -33,116 +33,95 @@ export function YouTubePlayerWithSync({
   const [isPlaying, setIsPlaying] = useState(false);
   const timeUpdateIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const lastSeekRequestRef = useRef<number | null>(null);
-  const isSeekingRef = useRef<boolean>(false);
 
   // Load YouTube API
   useEffect(() => {
-    if (window.YT && window.YT.Player) {
-      initializePlayer();
-      return;
-    }
+    if (!videoId) return;
 
-    // Load YouTube API script if not already loaded
-    if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
-      const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
-      const firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-    }
+    const loadYouTubeAPI = () => {
+      return new Promise<void>((resolve) => {
+        if (window.YT && window.YT.Player) {
+          resolve();
+          return;
+        }
 
-    // Set up API ready callback
-    window.onYouTubeIframeAPIReady = initializePlayer;
+        const script = document.createElement('script');
+        script.src = 'https://www.youtube.com/iframe_api';
+        script.async = true;
+        document.body.appendChild(script);
+
+        window.onYouTubeIframeAPIReady = () => resolve();
+      });
+    };
+
+    const initializePlayer = async () => {
+      await loadYouTubeAPI();
+
+      if (!playerRef.current) return;
+
+      ytPlayerRef.current = new window.YT.Player(playerRef.current, {
+        height: '100%',
+        width: '100%',
+        videoId: videoId,
+        playerVars: {
+          autoplay: autoPlay ? 1 : 0,
+          rel: 0,
+          modestbranding: 1,
+          controls: 1,
+          playsinline: 1,
+          enablejsapi: 1,
+          origin: window.location.origin,
+          iv_load_policy: 3,
+          cc_load_policy: 0,
+        },
+        events: {
+          onReady: (event: any) => {
+            console.log('YouTube Player Ready (Mobile Sync)');
+            setIsReady(true);
+          },
+          onStateChange: (event: any) => {
+            const playing = event.data === window.YT.PlayerState.PLAYING;
+            setIsPlaying(playing);
+
+            // Match desktop implementation exactly
+            if (playing) {
+              startTimeTracking();
+            } else {
+              stopTimeTracking();
+            }
+          },
+          onError: (error: any) => {
+            console.error('YouTube Player Error (Mobile):', error);
+          }
+        }
+      });
+    };
+
+    initializePlayer();
 
     return () => {
-      if (timeUpdateIntervalRef.current) {
-        clearInterval(timeUpdateIntervalRef.current);
+      stopTimeTracking();
+      if (ytPlayerRef.current && ytPlayerRef.current.destroy) {
+        try {
+          ytPlayerRef.current.destroy();
+        } catch (error) {
+          console.warn('Error destroying player:', error);
+        }
       }
     };
-  }, []);
-
-  const initializePlayer = useCallback(() => {
-    if (!playerRef.current || !window.YT?.Player) return;
-
-    ytPlayerRef.current = new window.YT.Player(playerRef.current, {
-      videoId: videoId,
-      width: '100%',
-      height: '100%',
-      playerVars: {
-        autoplay: autoPlay ? 1 : 0,
-        controls: 1,
-        rel: 0,
-        modestbranding: 1,
-        playsinline: 1,
-        enablejsapi: 1,
-        origin: window.location.origin,
-        iv_load_policy: 3,
-        cc_load_policy: 0,
-      },
-      events: {
-        onReady: onPlayerReady,
-        onStateChange: onPlayerStateChange,
-        onError: onPlayerError
-      }
-    });
   }, [videoId, autoPlay]);
 
-  const onPlayerReady = useCallback((event: any) => {
-    console.log('YouTube Player Ready');
-    setIsReady(true);
-    
-    // Start time tracking immediately
-    startTimeTracking();
-  }, []);
-
-  const onPlayerStateChange = useCallback((event: any) => {
-    const playerState = event.data;
-    
-    console.log('Player state changed:', playerState);
-    
-    switch (playerState) {
-      case window.YT.PlayerState.PLAYING:
-        setIsPlaying(true);
-        startTimeTracking();
-        break;
-      case window.YT.PlayerState.PAUSED:
-        setIsPlaying(false);
-        // Continue tracking even when paused for accurate position
-        break;
-      case window.YT.PlayerState.ENDED:
-        setIsPlaying(false);
-        stopTimeTracking();
-        break;
-      case window.YT.PlayerState.BUFFERING:
-        // Keep tracking during buffering
-        if (!timeUpdateIntervalRef.current) {
-          startTimeTracking();
-        }
-        break;
-    }
-  }, []);
-
-  const onPlayerError = useCallback((error: any) => {
-    console.error('YouTube Player Error:', error);
-  }, []);
-
+  // Match desktop implementation exactly - 1000ms interval
   const startTimeTracking = useCallback(() => {
-    if (timeUpdateIntervalRef.current) {
-      clearInterval(timeUpdateIntervalRef.current);
-    }
+    if (timeUpdateIntervalRef.current) return;
 
     timeUpdateIntervalRef.current = setInterval(() => {
-      if (ytPlayerRef.current && isReady && !isSeekingRef.current) {
-        try {
-          const currentTime = ytPlayerRef.current.getCurrentTime();
-          if (typeof currentTime === 'number' && !isNaN(currentTime)) {
-            onTimeUpdate(currentTime);
-          }
-        } catch (error) {
-          console.warn('Error getting current time:', error);
-        }
+      if (ytPlayerRef.current && ytPlayerRef.current.getCurrentTime) {
+        const time = ytPlayerRef.current.getCurrentTime();
+        onTimeUpdate(time);
       }
-    }, 100); // Update every 100ms for smooth timeline
-  }, [isReady, onTimeUpdate]);
+    }, 1000); // Match desktop exactly - 1000ms
+  }, [onTimeUpdate]);
 
   const stopTimeTracking = useCallback(() => {
     if (timeUpdateIntervalRef.current) {
@@ -151,30 +130,24 @@ export function YouTubePlayerWithSync({
     }
   }, []);
 
+  // Handle seek requests - match desktop implementation
+  const handleSeekToTimestamp = useCallback((timestamp: number) => {
+    if (ytPlayerRef.current && ytPlayerRef.current.seekTo && isReady) {
+      console.log('Mobile seeking to:', timestamp);
+      ytPlayerRef.current.seekTo(timestamp, true);
+    }
+  }, [isReady]);
+
   // Handle seek requests from timeline
   useEffect(() => {
     if (onSeekRequest !== null && 
         onSeekRequest !== lastSeekRequestRef.current && 
-        ytPlayerRef.current && 
         isReady) {
       
-      console.log('Seeking to:', onSeekRequest);
-      
-      try {
-        isSeekingRef.current = true;
-        ytPlayerRef.current.seekTo(onSeekRequest, true);
-        lastSeekRequestRef.current = onSeekRequest ?? null;
-        
-        setTimeout(() => {
-          isSeekingRef.current = false;
-        }, 500);
-        
-      } catch (error) {
-        console.warn('Error seeking to time:', error);
-        isSeekingRef.current = false;
-      }
+      handleSeekToTimestamp(onSeekRequest);
+      lastSeekRequestRef.current = onSeekRequest;
     }
-  }, [onSeekRequest, isReady]);
+  }, [onSeekRequest, isReady, handleSeekToTimestamp]);
 
   return (
     <div className={className} style={{ position: 'relative' }}>
@@ -186,11 +159,19 @@ export function YouTubePlayerWithSync({
       
       {/* Loading overlay */}
       {!isReady && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm">
           <div className="text-white text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mb-2 mx-auto"></div>
-            <p className="text-sm">Loading player...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4 mx-auto"></div>
+            <p className="text-lg font-medium">Loading Video...</p>
+            <p className="text-sm text-white/70 mt-2">Syncing timeline</p>
           </div>
+        </div>
+      )}
+      
+      {/* Debug info - remove in production */}
+      {process.env.NODE_ENV === 'development' && isReady && (
+        <div className="absolute top-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+          {isPlaying ? '▶️ Playing' : '⏸️ Paused'} | Mobile Sync
         </div>
       )}
     </div>

@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { YouTubeMobilePlayer } from '@/app/sections/player/YouTubeMobilePlayer';
+import { YouTubeMobilePlayer } from '@/app/sections/player/MobilePlayer/YouTubeMobilePlayer';
 import { useVideoDataManager } from '@/app/utils/videoDataManager';
 import { VideoDataStates } from '@/app/components/video/VideoDataStates';
 import { Loader2 } from 'lucide-react';

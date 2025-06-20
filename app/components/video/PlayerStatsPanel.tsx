@@ -38,7 +38,7 @@ export function PlayerStatsPanel({ factCheck }: FactCheckPanelProps) {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
           <Shield className="h-5 w-5" />
-          Fact-Check Analysis
+          Analysis
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

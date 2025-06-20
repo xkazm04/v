@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { CardContent } from '../../../components/ui/card';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { Label } from '@/app/components/ui/label';
@@ -24,7 +24,7 @@ interface TwitterFormProps {
   onReset: () => void;
 }
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0, y: 30, scale: 0.95 },
   visible: {
     opacity: 1,
@@ -121,7 +121,7 @@ const TwitterForm: React.FC<TwitterFormProps> = ({ onSubmit, isLoading, error: s
           className="text-center mb-8"
         >
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-sky-500 to-blue-600 bg-clip-text text-transparent mb-2">
-            Twitter/X Analysis
+            Tweet check
           </h1>
 
           <p className="text-sm sm:text-base text-muted-foreground font-normal max-w-md mx-auto leading-relaxed">

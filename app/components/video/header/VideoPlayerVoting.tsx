@@ -1,11 +1,8 @@
-'use client';
-
-import { useState } from 'react';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { ThumbsUp, ThumbsDown } from 'lucide-react';
-import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-import { cn } from '@/app/lib/utils';
+import { useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import VideoPlayerVotingResults from './VideoPlayerVotingResults';
+import { resultsVariants, votingResultsContainerVariants, votingVariants } from '../../animations/variants/votingVariants';
+import VideoPlayerVotingButtons from './VideoPlayerVotingButtons';
 
 interface UserFeedback {
   agreed: number;
@@ -13,189 +10,114 @@ interface UserFeedback {
   userVote: 'agree' | 'disagree' | null;
   showResults: boolean;
 }
-
-import { easeOut } from "framer-motion";
-
-const likeButtonVariants = {
-  rest: { scale: 1, rotate: 0 },
-  hover: { scale: 1.05, rotate: 2 },
-  tap: { scale: 0.95, rotate: -2 },
-  liked: { 
-    scale: [1, 1.2, 1], 
-    rotate: [0, 10, 0],
-    transition: { duration: 0.6, ease: easeOut }
-  }
-};
-
 interface Props {
     isMobile?: boolean;
 }
 
 const VideoPlayerVoting = ({ isMobile = false }: Props) => {
-    const { isDark, vintage } = useLayoutTheme();
     const [feedback, setFeedback] = useState<UserFeedback>({
         agreed: 847,
         disagreed: 123,
         userVote: null,
         showResults: false
     });
+    
+    const [isTransitioning, setIsTransitioning] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const handleVote = (vote: 'agree' | 'disagree') => {
-        setFeedback(prev => {
-            const newFeedback = { ...prev };
+        setIsTransitioning(true);
 
-            // Remove previous vote if exists
-            if (prev.userVote === 'agree') {
-                newFeedback.agreed -= 1;
-            } else if (prev.userVote === 'disagree') {
-                newFeedback.disagreed -= 1;
-            }
+        setTimeout(() => {
+            setFeedback(prev => {
+                const newFeedback = { ...prev };
 
-            // Add new vote
-            if (vote === 'agree') {
-                newFeedback.agreed += 1;
-            } else {
-                newFeedback.disagreed += 1;
-            }
+                if (prev.userVote === 'agree') {
+                    newFeedback.agreed -= 1;
+                } else if (prev.userVote === 'disagree') {
+                    newFeedback.disagreed -= 1;
+                }
 
-            newFeedback.userVote = vote;
-            newFeedback.showResults = true;
+                if (vote === 'agree') {
+                    newFeedback.agreed += 1;
+                } else {
+                    newFeedback.disagreed += 1;
+                }
 
-            return newFeedback;
-        });
+                newFeedback.userVote = vote;
+                newFeedback.showResults = true;
+
+                return newFeedback;
+            });
+            
+            setTimeout(() => {
+                setIsTransitioning(false);
+            }, 200);
+        }, 300);
     };
 
     const totalVotes = feedback.agreed + feedback.disagreed;
     const agreePercentage = totalVotes > 0 ? (feedback.agreed / totalVotes) * 100 : 0;
     const disagreePercentage = totalVotes > 0 ? (feedback.disagreed / totalVotes) * 100 : 0;
 
-    // Theme-aware colors
-    const getVoteButtonStyles = (voteType: 'agree' | 'disagree', isActive: boolean) => {
-        const isAgree = voteType === 'agree';
-        
-        if (isDark) {
-            return {
-                backgroundColor: isActive 
-                    ? (isAgree ? '#22c55e25' : '#ef444425')
-                    : (isAgree ? 'rgba(34, 197, 94, 0.12)' : 'rgba(239, 68, 68, 0.12)'),
-                border: `2px solid ${isActive 
-                    ? (isAgree ? '#22c55e' : '#ef4444')
-                    : (isAgree ? '#22c55e50' : '#ef444450')
-                }`,
-                color: isActive 
-                    ? (isAgree ? '#22c55e' : '#ef4444')
-                    : (isAgree ? '#16a34a' : '#dc2626')
-            };
-        } else {
-            // Vintage styling for light mode
-            return {
-                backgroundColor: isActive 
-                    ? (isAgree ? 'rgba(34, 197, 94, 0.15)' : 'rgba(239, 68, 68, 0.15)')
-                    : (isAgree ? `${vintage.highlight}80` : `${vintage.aged}80`),
-                border: `2px solid ${isActive 
-                    ? (isAgree ? '#16a34a' : '#dc2626')
-                    : (isAgree ? `${vintage.sepia}80` : `${vintage.faded}60`)
-                }`,
-                color: isActive 
-                    ? (isAgree ? '#16a34a' : '#dc2626')
-                    : (isAgree ? '#15803d' : '#b91c1c'),
-                boxShadow: isActive 
-                    ? `0 4px 12px ${isAgree ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'}` 
-                    : vintage.shadow
-            };
-        }
+
+
+    const getContainerState = () => {
+        if (isTransitioning) return 'transitioning';
+        if (feedback.showResults) return 'results';
+        return 'voting';
     };
 
     return (
-        <div className="w-full" data-voting="true">
-            <AnimatePresence mode="wait">
-                {!feedback.showResults ? (
-                    <motion.div
-                        key="voting"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ delay: 0.7, duration: 0.6 }}
-                        className="grid grid-cols-2 gap-4"
-                        data-voting="true"
-                    >
-                        {/* Agree Button */}
-                        <motion.button
-                            variants={likeButtonVariants}
-                            initial="rest"
-                            whileHover="hover"
-                            whileTap="tap"
-                            animate={feedback.userVote === 'agree' ? "liked" : "rest"}
-                            onClick={(e) => {
-                                e.stopPropagation(); // Prevent event bubbling
-                                handleVote('agree');
-                            }}
-                            className={cn(
-                                "voting-button vote-agree flex items-center justify-center gap-2 rounded-2xl font-bold text-base transition-all duration-300 relative overflow-hidden",
-                                isMobile ? "py-4 px-3" : "py-3 px-4",
-                                isDark ? "backdrop-blur-md" : "backdrop-blur-sm"
-                            )}
-                            style={getVoteButtonStyles('agree', feedback.userVote === 'agree')}
+        <motion.div 
+            ref={containerRef}
+            className="w-full overflow-hidden" 
+            data-voting="true"
+            variants={votingResultsContainerVariants}
+            animate={getContainerState()}
+            style={{
+                minHeight: isMobile ? '80px' : '72px' // Consistent minimum height
+            }}
+        >
+            <div className="relative">
+                <AnimatePresence mode="wait">
+                    {!feedback.showResults ? (
+                        <motion.div
+                            key="voting"
+                            variants={votingVariants}
+                            initial="initial"
+                            animate="animate"
+                            exit="exit"
+                            className="grid grid-cols-2 gap-4"
                             data-voting="true"
                         >
-                            <ThumbsUp className={cn("transition-transform", isMobile ? "w-5 h-5" : "w-4 h-4")} />
-                            <span className={cn("font-semibold", isDark ? "" : "tracking-wide")}>
-                                {isDark ? "Agree" : "AGREE"}
-                            </span>
-                            
-                            {/* Ripple effect */}
-                            <motion.div
-                                className="absolute inset-0 rounded-2xl"
-                                style={{ backgroundColor: isDark ? 'rgba(34, 197, 94, 0.2)' : vintage.highlight }}
-                                initial={{ scale: 0, opacity: 0 }}
-                                animate={feedback.userVote === 'agree' ? { scale: 1, opacity: [0, 1, 0] } : { scale: 0, opacity: 0 }}
-                                transition={{ duration: 0.6 }}
+                            <VideoPlayerVotingButtons
+                                feedback={feedback}
+                                isTransitioning={isTransitioning}
+                                handleVote={handleVote}
                             />
-                        </motion.button>
 
-                        {/* Disagree Button */}
-                        <motion.button
-                            variants={likeButtonVariants}
-                            initial="rest"
-                            whileHover="hover"
-                            whileTap="tap"
-                            animate={feedback.userVote === 'disagree' ? "liked" : "rest"}
-                            onClick={(e) => {
-                                e.stopPropagation(); // Prevent event bubbling
-                                handleVote('disagree');
-                            }}
-                            className={cn(
-                                "voting-button vote-disagree flex items-center justify-center gap-2 rounded-2xl font-bold text-base transition-all duration-300 relative overflow-hidden",
-                                isMobile ? "py-4 px-3" : "py-3 px-4",
-                                isDark ? "backdrop-blur-md" : "backdrop-blur-sm"
-                            )}
-                            style={getVoteButtonStyles('disagree', feedback.userVote === 'disagree')}
-                            data-voting="true"
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="results"
+                            variants={resultsVariants}
+                            initial="initial"
+                            animate="animate"
+                            exit="exit"
                         >
-                            <ThumbsDown className={cn("transition-transform", isMobile ? "w-5 h-5" : "w-4 h-4")} />
-                            <span className={cn("font-semibold", isDark ? "" : "tracking-wide")}>
-                                {isDark ? "Disagree" : "DISAGREE"}
-                            </span>
-                            
-                            {/* Ripple effect */}
-                            <motion.div
-                                className="absolute inset-0 rounded-2xl"
-                                style={{ backgroundColor: isDark ? 'rgba(239, 68, 68, 0.2)' : vintage.aged }}
-                                initial={{ scale: 0, opacity: 0 }}
-                                animate={feedback.userVote === 'disagree' ? { scale: 1, opacity: [0, 1, 0] } : { scale: 0, opacity: 0 }}
-                                transition={{ duration: 0.6 }}
+                            <VideoPlayerVotingResults
+                                agreePercentage={agreePercentage}
+                                disagreePercentage={disagreePercentage}
+                                feedback={feedback}
+                                userVote={feedback.userVote}
+                                isMobile={isMobile}
                             />
-                        </motion.button>
-                    </motion.div>
-                ) : (
-                    <VideoPlayerVotingResults
-                        agreePercentage={agreePercentage}
-                        disagreePercentage={disagreePercentage}
-                        feedback={feedback}
-                        />
-                )}
-            </AnimatePresence>
-        </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+        </motion.div>
     );
 };
 

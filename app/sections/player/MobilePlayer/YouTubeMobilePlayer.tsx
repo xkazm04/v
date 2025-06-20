@@ -3,13 +3,13 @@
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { VideoWithTimestamps } from '@/app/types/video_api';
-import { PlayerTimeline } from '@/app/sections/player/timeline/PlayerTimeline';
+import { PlayerTimeline } from '@/app/components/video/timeline/PlayerTimeline';
 import { VideoPlayerHeader } from '@/app/components/video/VideoPlayerHeader';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { MobileNavbar } from '@/app/sections/navigation/mobile/MobileNavbar';
-import { YouTubePlayerWithSync } from './YouTubePlayerWithSync';
+import { YouTubePlayerWithSync } from '../YouTubePlayerWithSync';
 import YouTubeMobileContainer from './YouTubeMobileContainer';
-import PlayerOverlayUi from './PlayerOverlayUi';
+import PlayerOverlayUi from '../PlayerOverlayUi';
 
 interface YouTubeMobilePlayerProps {
   videos?: VideoWithTimestamps[];
@@ -33,14 +33,15 @@ export function YouTubeMobilePlayer({
 }: YouTubeMobilePlayerProps) {
   const { isDark } = useLayoutTheme();
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
-  const [showTimeline, setShowTimeline] = useState(false);
+  // Changed: Timeline is now open by default on mobile
+  const [showTimeline, setShowTimeline] = useState(true);
   const [navbarCollapsed, setNavbarCollapsed] = useState(false);
   
   // Header visibility state
   const [activeStatements, setActiveStatements] = useState<ActiveStatement[]>([]);
   const [headerVisibilityTimers, setHeaderVisibilityTimers] = useState<{ [key: string]: NodeJS.Timeout }>({});
   
-  // Sync state
+  // Sync state - Fixed: match desktop implementation exactly
   const [currentVideoTime, setCurrentVideoTime] = useState(0);
   const [seekRequest, setSeekRequest] = useState<number | null>(null);
 
@@ -49,21 +50,24 @@ export function YouTubeMobilePlayer({
   const HEADER_MIN_DISPLAY_TIME = 5000; // Minimum 5 seconds even if user interacts
   const STATEMENT_DETECTION_THRESHOLD = 2; // Seconds tolerance for statement detection
 
+  // Fixed: Match desktop player's time tracking approach exactly
   const handleTimeUpdate = useCallback((currentTime: number) => {
+    // Update the current time state immediately like desktop
     setCurrentVideoTime(currentTime);
     
     // Check for new statements at current time
     const currentVideo = videos?.[currentIndex];
     if (!currentVideo?.timestamps) return;
 
+    // Use the timestamp structure from video_api.ts
     const relevantTimestamps = currentVideo.timestamps.filter(timestamp => {
-      const timeDiff = Math.abs(timestamp.timestamp - currentTime);
+      const timeDiff = Math.abs(timestamp.startTime - currentTime);
       return timeDiff <= STATEMENT_DETECTION_THRESHOLD;
     });
 
     // Process each relevant timestamp
     relevantTimestamps.forEach(timestamp => {
-      const statementId = `${currentIndex}-${timestamp.timestamp}`;
+      const statementId = `${currentIndex}-${timestamp.startTime}`;
       
       // Check if this statement is already active
       const isAlreadyActive = activeStatements.some(stmt => stmt.id === statementId);
@@ -71,11 +75,11 @@ export function YouTubeMobilePlayer({
       if (!isAlreadyActive) {
         const newStatement: ActiveStatement = {
           id: statementId,
-          timestamp: timestamp.timestamp,
-          title: timestamp.title || 'Key Statement',
+          timestamp: timestamp.startTime,
+          title: 'Key Statement', // Use generic title since VideoTimestamp doesn't have title
           status: timestamp.factCheck?.status || 'UNVERIFIED',
-          truthPercentage: timestamp.factCheck?.truthPercentage || 0,
-          endTime: timestamp.timestamp + 30 // Statement context lasts 30 seconds
+          truthPercentage: timestamp.factCheck?.confidence || 0,
+          endTime: timestamp.endTime || timestamp.startTime + 30 // Use endTime or fallback
         };
 
         setActiveStatements(prev => {
@@ -112,7 +116,7 @@ export function YouTubeMobilePlayer({
   }, [currentIndex, videos, activeStatements]);
 
   const handleSeekToTimestamp = useCallback((timestamp: number) => {
-    console.log('Seek to timestamp:', timestamp);
+    console.log('Mobile seek to timestamp:', timestamp);
     setSeekRequest(timestamp);
     
     // Clear seek request after a short delay
@@ -268,7 +272,7 @@ export function YouTubeMobilePlayer({
         })}
       </YouTubeMobileContainer>
 
-      {/* Enhanced Timeline Overlay - Now Synced */}
+      {/* Enhanced Timeline Overlay - Now Fully Synced like Desktop */}
       {videos && currentVideo && (
         <AnimatePresence>
           {showTimeline && (
@@ -289,7 +293,9 @@ export function YouTubeMobilePlayer({
                 videoData={currentVideo}
                 onSeekToTimestamp={handleSeekToTimestamp}
                 isOverNavbar={true}
+                isListenMode={true} // Match desktop's isListenMode setting
                 currentVideoTime={currentVideoTime}
+                syncMode="external" // Enable external sync mode like desktop
                 setShowTimeline={setShowTimeline}
               />
             </motion.div>

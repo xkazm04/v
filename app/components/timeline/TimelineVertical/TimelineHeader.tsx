@@ -1,5 +1,5 @@
 'use client';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useViewport } from '@/app/hooks/useViewport';
 import { useTimelineAudioStore } from '@/app/stores/useTimelineAudioStore';
@@ -25,7 +25,7 @@ export default function TimelineHeader({ timeline }: TimelineHeaderProps) {
                             isPlaying && 
                             currentTrack?.type === 'conclusion';
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -36,7 +36,7 @@ export default function TimelineHeader({ timeline }: TimelineHeaderProps) {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20, scale: 0.98 },
     visible: {
       opacity: 1,

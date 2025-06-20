@@ -4,6 +4,7 @@ import { Button } from "@/app/components/ui/button";
 import { motion } from "framer-motion";
 import { Loader2, Search } from "lucide-react";
 import { ResearchRequest } from "../types";
+import AnalyzeButton from "@/app/components/ui/Buttons/AnalyzeButton";
 
 type Props = {
     formData: ResearchRequest;
@@ -61,30 +62,7 @@ const ResearchFormSubmit = ({ formData, isLoading }: Props) => {
                         </>
                     )}
 
-                    <div className="relative z-10 flex items-center justify-center gap-2 sm:gap-3">
-                        {isLoading ? (
-                            <>
-                                <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 animate-spin" />
-                                <span className="hidden sm:inline">Analyzing Statement...</span>
-                                <span className="sm:hidden">Analyzing...</span>
-                            </>
-                        ) : (
-                            <>
-                                <motion.div
-                                    animate={{ rotate: [0, 360] }}
-                                    transition={{ 
-                                        duration: 8, 
-                                        repeat: Infinity, 
-                                        ease: "linear"
-                                    }}
-                                >
-                                    <Search className="h-5 w-5 sm:h-6 sm:w-6" />
-                                </motion.div>
-                                <span className="hidden sm:inline">Start Fact-Check Analysis</span>
-                                <span className="sm:hidden">Start Analysis</span>
-                            </>
-                        )}
-                    </div>
+                    <AnalyzeButton isLoading={isLoading} />
                 </Button>
             </motion.div>
         </motion.div>

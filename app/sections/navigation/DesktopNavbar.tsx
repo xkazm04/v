@@ -1,13 +1,16 @@
 'use client';
 import { useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useNavigationContext } from '@/app/providers/navigation-provider';
 import { ThemeToggle } from '../../components/theme/theme-toggle';
 import DesktopNavbarMain from './DesktopNavbarMain';
+import Image from 'next/image';
+import Link from 'next/link';
+import TitleLogo from '@/app/components/icons/logo_title';
 
-const navbarVariants = {
+const navbarVariants: Variants = {
   hidden: { y: -100, opacity: 0 },
   visible: {
     y: 0,
@@ -23,7 +26,7 @@ const navbarVariants = {
 
 export function DesktopNavbar() {
   const pathname = usePathname();
-  const { colors, mounted, getColors } = useLayoutTheme();
+  const { colors, mounted, getColors, isDark } = useLayoutTheme();
   const {
     isNavigating,
     setIsNavigating,
@@ -64,8 +67,24 @@ export function DesktopNavbar() {
           WebkitBackdropFilter: 'blur(24px) saturate(1.8)'
         }}
       >
+        <Image
+          src={`
+            ${isDark ? '/background/header_dark.png' : '/background/header_vintage.png'}
+            `}
+          alt="vaai header background"
+          fill
+          objectFit='cover'
+          className=""
+        />
+          <Link href="/">
+            <div className='absolute right-0 opacity-80'>
+              <TitleLogo 
+                height={70} 
+                color={`${isDark ? 'white' : colors.vintage.ink}`} 
+                />
+            </div>
+          </Link>
         <div className="container relative flex h-16 max-w-screen-2xl items-center px-6">
-          {/* Main Navigation - Remove router prop and let component use its own useRouter */}
           <DesktopNavbarMain
             //@ts-expect-error Ignore
             navbarColors={navbarColors}

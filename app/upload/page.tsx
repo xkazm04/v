@@ -62,28 +62,6 @@ const Page = () => {
                 />
             {/* Main Container */}
             <div className="container mx-auto py-6 max-w-6xl">
-                {/* Header Section */}
-                <motion.div
-                    className="text-center mb-8"
-                    variants={itemVariants}
-                >
-                    <div className="flex items-center justify-center gap-3 mb-4">
-                        <motion.div
-                            className="p-2 rounded-lg bg-primary/10"
-                            whileHover={{ scale: 1.1, rotate: 5 }}
-                            transition={{ duration: 0.2 }}
-                        >
-                            <Sparkles className="h-6 w-6 text-primary" />
-                        </motion.div>
-                        <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-                            Fact-Check Analysis
-                        </h1>
-                    </div>
-                    <p className="text-muted-foreground max-w-2xl mx-auto text-sm md:text-base">
-                        Upload content for comprehensive fact-checking and credibility analysis
-                    </p>
-                </motion.div>
-
                 {/* Enhanced Tabs */}
                 <motion.div variants={itemVariants}>
                     <Tabs defaultValue="statement" className="w-full">

@@ -112,8 +112,8 @@ export function ResearchForm({ onSubmit, isLoading }: ResearchFormProps) {
         <motion.div
           className="text-center mb-8 flex flex-col items-center gap-2"
         >
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-yellow-500 to-yellow-700 bg-clip-text text-transparent mb-2">
-            Quote fast-check
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-yellow-500 bg-clip-text text-transparent mb-2">
+            Statement analysis
           </h1>
 
           <p className="text-sm sm:text-base text-muted-foreground font-normal max-w-md leading-relaxed">

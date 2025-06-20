@@ -12,19 +12,16 @@ interface LayoutShellProps {
 export function LayoutShell({ children }: LayoutShellProps) {
   const pathname = usePathname();
   
-  // Simple video mode detection
   const isVideoPlayerMode = pathname.startsWith('/watch') || 
-                           pathname.startsWith('/videos/') ||
-                           pathname.includes('/player/');
+                           pathname.startsWith('/reel/') 
 
   return (
     <div className="relative flex min-h-screen flex-col">
       {/* Desktop Navigation - Always visible */}
-      <div className="hidden md:block relative z-50">
+      <div className="hidden sm:block relative z-50">
         <DesktopNavbar />
       </div>
 
-      {/* Main Content with Transitions */}
       <main className="flex-1 relative z-10">
           {children}
       </main>
