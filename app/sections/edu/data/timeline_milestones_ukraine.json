@@ -1,0 +1,519 @@
+{
+  "id": "russia-ukraine-conflict-2014-2022",
+  "title": "Russia-Ukraine Conflict: From Euromaidan to Full-Scale War",
+  "timeSpan": "2013-2022",
+  "conclusion": "The eight-year conflict originated from Ukraine's European aspirations opposed by Russian geopolitical ambitions, resulting in territorial annexation, proxy warfare, and over 14,000 deaths while establishing precedent for Putin's 2022 invasion. The crisis exposed how democratic movements could trigger authoritarian responses and how international law could be systematically violated without effective consequences.",
+  "leftSide": "Ukraine & Western Allies",
+  "rightSide": "Russia & Proxy Forces",
+  "consequences": "**Total War Costs (2014-2022):**\n- **Russian Military Spending:** $211+ billion estimated\n- **International Aid to Ukraine:** €267 billion\n- **EU Sanctions Economic Impact:** $1.3+ trillion Russian losses projected\n- **Reconstruction Costs:** €100+ billion needed for Ukraine\n\n**Human Casualties:**\n- **Total Conflict Deaths:** 14,200-14,400 (including MH17)\n- **Civilian Deaths:** ~3,400+ verified\n- **Military Deaths:** ~10,800+ estimated\n- **MH17 Victims:** 298 international passengers/crew\n- **Internally Displaced:** 1.5+ million Ukrainians\n\n**Corporate/Financial Beneficiaries:**\n- **Russian Energy Sector:** Gazprom, Rosneft (leveraged gas/oil as weapons)\n- **Defense Contractors:** Both sides increased military spending\n- **Reconstruction Companies:** Anticipated billions in rebuilding contracts\n- **Sanctions Evasion Networks:** Gray market intermediaries profited\n- **Russian Oligarchs:** Asset consolidation during crisis periods",
+  "milestones": [
+    {
+      "id": "euromaidan-revolution-2014",
+      "date": "2013-11-21",
+      "title": "Euromaidan Revolution and Yanukovych's Flight",
+      "context": "President Yanukovych's sudden reversal on the EU Association Agreement triggered mass protests in Kyiv, leading to the largest democratic movement in Europe since 1989. After violent crackdowns killed over 100 protesters, Yanukovych fled to Russia, creating a power vacuum that Putin would exploit.",
+      "order": 1,
+      "consequence": "Created legitimacy crisis that Russia used to justify intervention, while demonstrating Ukrainian commitment to European integration over Russian influence.",
+      "key_persons": [
+        { "name": "Viktor Yanukovych", "role": "Ukrainian President (fled to Russia)" },
+        { "name": "Vitali Klitschko", "role": "Opposition leader" },
+        { "name": "Arseniy Yatsenyuk", "role": "Interim Prime Minister" },
+        { "name": "Vladimir Putin", "role": "Russian President" },
+        { "name": "Angela Merkel", "role": "German Chancellor" }
+      ],
+      "events": [
+        {
+          "id": "eu-association-reversal",
+          "milestone_id": "euromaidan-revolution-2014",
+          "title": "Yanukovych suspends EU Association Agreement under Russian pressure",
+          "left_type": "psychic",
+          "right_type": "president",
+          "left_opinion": "EU officials failed to provide sufficient financial incentives compared to Russia's $15 billion bailout, essentially allowing Moscow to outbid them for Ukrainian loyalty while underestimating the power of grassroots democratic movements.",
+          "right_opinion": "Yanukovych correctly calculated that Ukraine's economic dependence on Russian energy and trade made immediate EU integration economically devastating, but failed to anticipate the strength of popular opposition to his authoritarian tendencies.",
+          "left_source_url": "https://www.britannica.com/topic/Ukraine-crisis",
+          "right_source_url": "https://en.wikipedia.org/wiki/Euromaidan",
+          "all_opinions": [
+            {
+              "id": "eu-reversal-nerd-1",
+              "event_id": "eu-association-reversal",
+              "opinion": "The EU's €1.6 billion aid package was dwarfed by Russia's $15 billion bailout plus gas price cuts, exposing how Brussels prioritized legal compliance over strategic competition. Meanwhile, Ukrainian oligarchs saw their Russian business interests threatened by EU trade rules.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "eu-reversal-joe-1",
+              "event_id": "eu-association-reversal",
+              "opinion": "Regular Ukrainians felt betrayed after years of promises about European integration, while Russian-speaking citizens in eastern regions feared losing cultural ties and economic connections to Russia.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "eu-reversal-psychic-1",
+              "event_id": "eu-association-reversal",
+              "opinion": "Putin's timing was deliberate psychological warfare - waiting until the last moment to maximize pressure while Russian media amplified narratives about EU 'colonization' versus Slavic brotherhood to justify the intervention.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "eu-reversal-dredd-1",
+              "event_id": "eu-association-reversal",
+              "opinion": "Yanukovych's reversal violated parliamentary approval and constitutional procedures, but EU officials also failed to provide legal mechanisms for gradual integration that could accommodate Russian concerns about regional stability.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "eu-reversal-president-1",
+              "event_id": "eu-association-reversal",
+              "opinion": "The EU's miscalculation was treating Ukraine as a purely economic decision while Putin understood it as existential geopolitical competition. Brussels failed to anticipate Moscow's willingness to use force to maintain its sphere of influence.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "eu-reversal-conspirator-1",
+              "event_id": "eu-association-reversal",
+              "opinion": "This was the culmination of Putin's long-term strategy to prevent NATO expansion eastward. The timing coincided with Russian military modernization programs and domestic consolidation of power, suggesting years of preparation for confrontation.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "berkut-massacre-february",
+          "milestone_id": "euromaidan-revolution-2014",
+          "title": "Berkut forces kill over 100 protesters in Kyiv's deadliest days",
+          "left_type": "dredd",
+          "right_type": "psychic",
+          "left_opinion": "Yanukovych's security forces violated international human rights law by using lethal force against peaceful protesters, while European mediators failed to establish effective monitoring mechanisms or consequences for escalating violence.",
+          "right_opinion": "The escalation was deliberately provoked by radical elements seeking to create martyrs and internationalize the crisis, while Russian advisors calculated that violence would justify eventual intervention under 'responsibility to protect' doctrines.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Revolution_of_Dignity",
+          "right_source_url": "https://www.britannica.com/place/Ukraine/The-Maidan-protest-movement",
+          "all_opinions": [
+            {
+              "id": "berkut-massacre-nerd-1",
+              "event_id": "berkut-massacre-february",
+              "opinion": "The violence cost Ukraine billions in lost investment and economic stability, while Russian military contractors and advisors reportedly received payments for 'security consultation' during the crackdown.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "berkut-massacre-joe-1",
+              "event_id": "berkut-massacre-february",
+              "opinion": "Ordinary protesters risked their lives because they believed their children deserved a future free from corruption, while many police officers later defected because they couldn't shoot their own countrymen.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "berkut-massacre-psychic-1",
+              "event_id": "berkut-massacre-february",
+              "opinion": "The massacre was designed to break public morale through shock and terror, but instead created a powerful martyrdom narrative that unified Ukrainian national identity against perceived Russian influence.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "berkut-massacre-dredd-1",
+              "event_id": "berkut-massacre-february",
+              "opinion": "Yanukovych's orders to use lethal force constituted crimes against humanity under international law, yet European negotiators continued engaging with his government instead of immediately invoking accountability mechanisms.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "berkut-massacre-president-1",
+              "event_id": "berkut-massacre-february",
+              "opinion": "The violence was a strategic miscalculation that destroyed Yanukovych's legitimacy while providing Putin with the pretext for intervention, ultimately accelerating rather than preventing regime change.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "berkut-massacre-conspirator-1",
+              "event_id": "berkut-massacre-february",
+              "opinion": "Multiple investigations suggest coordination between Russian FSB advisors and Ukrainian security services in planning the crackdown, following playbooks used in Chechnya and Georgia to justify subsequent military intervention.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "crimea-annexation-2014",
+      "date": "2014-02-27",
+      "title": "Russian Annexation of Crimea",
+      "context": "Within days of Yanukovych's flight, unmarked Russian forces seized control of Crimean government buildings and military installations. Putin later admitted these were Russian troops, conducting the first forcible annexation of European territory since WWII through a staged referendum under military occupation.",
+      "order": 2,
+      "consequence": "Established Putin's doctrine of protecting 'Russian speakers' anywhere, created precedent for territorial seizure, and triggered the first major sanctions regime against Russia since the Cold War.",
+      "key_persons": [
+        { "name": "Vladimir Putin", "role": "Russian President" },
+        { "name": "Sergey Aksyonov", "role": "Crimean Prime Minister (appointed by Russia)" },
+        { "name": "Oleksandr Turchynov", "role": "Acting Ukrainian President" },
+        { "name": "Barack Obama", "role": "US President" },
+        { "name": "Petro Poroshenko", "role": "Ukrainian Presidential Candidate" }
+      ],
+      "events": [
+        {
+          "id": "little-green-men-operation",
+          "milestone_id": "crimea-annexation-2014",
+          "title": "Unmarked Russian forces seize Crimean airports and parliament buildings",
+          "left_type": "dredd",
+          "right_type": "conspirator",
+          "left_opinion": "Russia violated the 1994 Budapest Memorandum guaranteeing Ukraine's territorial integrity in exchange for nuclear disarmament, demonstrating that international treaties are worthless without enforcement mechanisms and making nuclear proliferation more likely globally.",
+          "right_opinion": "The operation was planned months in advance as part of Putin's broader strategy to prevent NATO expansion, using Yanukovych's fall as a pretext for a predetermined territorial grab disguised as protection of ethnic Russians.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Annexation_of_Crimea_by_the_Russian_Federation",
+          "right_source_url": "https://carnegieendowment.org/posts/2017/03/revisiting-the-2014-annexation-of-crimea?lang=en",
+          "all_opinions": [
+            {
+              "id": "little-green-men-nerd-1",
+              "event_id": "little-green-men-operation",
+              "opinion": "The operation cost Russia an estimated $7+ billion in immediate military deployment, but secured strategic naval assets worth hundreds of billions while demonstrating hybrid warfare techniques later exported globally.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "little-green-men-joe-1",
+              "event_id": "little-green-men-operation",
+              "opinion": "Most Crimeans were confused about who these unmarked soldiers were, while Ukrainian military personnel faced impossible choices between resistance that meant certain death or surrender that felt like betrayal.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "little-green-men-psychic-1",
+              "event_id": "little-green-men-operation",
+              "opinion": "The 'little green men' psychological operation was designed to create confusion and paralysis, making resistance seem futile while maintaining plausible deniability for international audiences during the critical first hours.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "little-green-men-dredd-1",
+              "event_id": "little-green-men-operation",
+              "opinion": "The use of unmarked forces violated Geneva Conventions on the conduct of warfare, while the seizure of foreign territory constituted illegal aggression under the UN Charter, yet international courts lacked enforcement power.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "little-green-men-president-1",
+              "event_id": "little-green-men-operation",
+              "opinion": "Putin's gamble was that Western powers would prioritize economic stability over territorial integrity, calculating correctly that sanctions would be limited and military response would be ruled out entirely.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "little-green-men-conspirator-1",
+              "event_id": "little-green-men-operation",
+              "opinion": "The seamless coordination suggests extensive pre-positioning of assets and long-term penetration of Ukrainian security services, following Russian intelligence playbooks developed since the 1990s for 'near abroad' operations.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "crimean-referendum-march",
+          "milestone_id": "crimea-annexation-2014",
+          "title": "Staged referendum reports 95.5% support for joining Russia under occupation",
+          "left_type": "psychic",
+          "right_type": "nerd",
+          "left_opinion": "The referendum was conducted under military occupation without international observation, using Soviet-style propaganda techniques and ballot options designed to guarantee Russian victory while creating a veneer of democratic legitimacy for international consumption.",
+          "right_opinion": "Moscow calculated that even if the referendum was internationally rejected, it would provide domestic Russian justification for annexation while exposing Western weakness in the face of accomplished facts supported by local population preferences.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Timeline_of_the_annexation_of_Crimea_by_the_Russian_Federation",
+          "right_source_url": "https://www.britannica.com/topic/Ukraine-crisis",
+          "all_opinions": [
+            {
+              "id": "crimean-referendum-nerd-1",
+              "event_id": "crimean-referendum-march",
+              "opinion": "Independent analysis suggested actual turnout was 30-50% with just over half supporting annexation, but the economic benefits of Russian citizenship and pensions provided material incentives beyond ethnic preferences.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "crimean-referendum-joe-1",
+              "event_id": "crimean-referendum-march",
+              "opinion": "Many Crimeans felt abandoned by Kyiv's neglect over decades but feared speaking against the referendum due to armed presence, while others genuinely preferred Russian rule due to cultural and economic ties.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "crimean-referendum-psychic-1",
+              "event_id": "crimean-referendum-march",
+              "opinion": "The referendum used classic authoritarian manipulation: no option for status quo, massive propaganda blitz, and armed intimidation combined with promises of immediate economic benefits to manufacture consent.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "crimean-referendum-dredd-1",
+              "event_id": "crimean-referendum-march",
+              "opinion": "Territorial changes through military occupation violate fundamental principles of international law regardless of popular support, setting precedent that any nuclear power can seize territory and legitimize it through staged votes.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "crimean-referendum-president-1",
+              "event_id": "crimean-referendum-march",
+              "opinion": "Putin successfully created a new international norm where territorial changes can be justified through ethnic protection and staged referendums, testing Western resolve before larger operations.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "crimean-referendum-conspirator-1",
+              "event_id": "crimean-referendum-march",
+              "opinion": "The referendum was the culmination of decade-long Russian influence operations through media, cultural organizations, and political parties designed to cultivate separatist sentiment as a pretext for intervention.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "donbas-war-outbreak-2014",
+      "date": "2014-04-12",
+      "title": "War in Donbas and MH17 Tragedy",
+      "context": "Russian military intelligence officer Igor Girkin led a small force to seize Sloviansk, sparking wider conflict in eastern Ukraine. The war escalated dramatically when Russian-backed forces shot down Malaysia Airlines Flight 17, killing 298 civilians and triggering international investigations that documented extensive Russian military involvement.",
+      "order": 3,
+      "consequence": "Established pattern of Russian hybrid warfare and proxy conflict that killed over 14,000 people while demonstrating limits of international law enforcement against nuclear powers.",
+      "key_persons": [
+        { "name": "Igor Girkin (Strelkov)", "role": "Russian GRU Officer/DPR Military Commander" },
+        { "name": "Alexander Borodai", "role": "DPR Prime Minister" },
+        { "name": "Petro Poroshenko", "role": "Ukrainian President" },
+        { "name": "Alexander Zakharchenko", "role": "DPR Leader" },
+        { "name": "Vladimir Putin", "role": "Russian President" }
+      ],
+      "events": [
+        {
+          "id": "girkin-sloviansk-operation",
+          "milestone_id": "donbas-war-outbreak-2014",
+          "title": "Russian GRU colonel Igor Girkin seizes Sloviansk with 50-man unit",
+          "left_type": "conspirator",
+          "right_type": "president",
+          "left_opinion": "Girkin later admitted he deliberately triggered the war to prevent Ukraine's stabilization, following Russian military intelligence plans developed months earlier to create 'Novorossiya' spanning from Donbas to Odessa using a small trigger force.",
+          "right_opinion": "Ukrainian authorities failed to secure the border after Crimea's annexation and underestimated local grievances about language policies and economic neglect that Russian operatives exploited to build initial separatist support.",
+          "left_source_url": "https://en.wikipedia.org/wiki/War_in_Donbas",
+          "right_source_url": "https://kyivindependent.com/the-origins-of-the-2014-war-in-donbas/",
+          "all_opinions": [
+            {
+              "id": "girkin-operation-nerd-1",
+              "event_id": "girkin-sloviansk-operation",
+              "opinion": "The operation was conducted on a shoestring budget of under $10 million initially, but Russian support eventually reached billions while Ukraine's military response was hampered by decades of defense spending cuts and corruption.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "girkin-operation-joe-1",
+              "event_id": "girkin-sloviansk-operation",
+              "opinion": "Most local residents were initially confused about who these armed men were and what they wanted, while many Ukrainian soldiers found themselves fighting neighbors who spoke the same language and shared the same cultural background.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "girkin-operation-psychic-1",
+              "event_id": "girkin-sloviansk-operation",
+              "opinion": "Girkin's psychological profile as a war reenactor and Russian nationalist made him the perfect patsy for Moscow's plausible deniability - appearing genuine while following FSB scripts about protecting Russian speakers.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "girkin-operation-dredd-1",
+              "event_id": "girkin-sloviansk-operation",
+              "opinion": "The use of active-duty Russian intelligence officers in foreign territory constituted illegal aggression under international law, yet legal mechanisms for prosecuting state-sponsored terrorism proved inadequate.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "girkin-operation-president-1",
+              "event_id": "girkin-sloviansk-operation",
+              "opinion": "Putin's strategy was to create multiple small conflicts that would overwhelm Ukrainian capacity while testing Western responses, using success in Sloviansk to justify escalation elsewhere.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "girkin-operation-conspirator-1",
+              "event_id": "girkin-sloviansk-operation",
+              "opinion": "The operation followed standard Russian 'active measures' doctrine: use minimal forces to create maximum chaos, then claim to be responding to local requests for protection while gradually escalating involvement.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "mh17-downing-july",
+          "milestone_id": "donbas-war-outbreak-2014",
+          "title": "Russian-backed forces shoot down MH17 with Buk missile, killing 298 civilians",
+          "left_type": "dredd",
+          "right_type": "psychic",
+          "left_opinion": "International investigations proved Russian military provided the Buk missile system and likely approved its use, constituting mass murder and violation of aviation safety conventions, yet Russia's UN Security Council veto prevented tribunal establishment.",
+          "right_opinion": "Moscow's immediate response was sophisticated disinformation including fake evidence and multiple alternative narratives designed to muddy international opinion while its state media blamed Ukraine despite clear evidence of Russian responsibility.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Malaysia_Airlines_Flight_17",
+          "right_source_url": "https://kyivindependent.com/the-downing-of-mh17-and-russias-responsibility/",
+          "all_opinions": [
+            {
+              "id": "mh17-downing-nerd-1",
+              "event_id": "mh17-downing-july",
+              "opinion": "The Buk missile system costs $100+ million and requires extensive training, proving this wasn't amateur separatist action but professional Russian military operation that miscalculated civilian aviation risks for propaganda gains.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "mh17-downing-joe-1",
+              "event_id": "mh17-downing-july",
+              "opinion": "Families lost loved ones including entire families and children going on vacation, while first responders at the crash site were horrified to find passports and luggage scattered across fields controlled by armed militants.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "mh17-downing-psychic-1",
+              "event_id": "mh17-downing-july",
+              "opinion": "Russian propaganda immediately deployed 'firehose of falsehood' tactics including claiming bodies were already dead, blaming Ukrainian jets, and staging fake evidence to overwhelm international media capacity for fact-checking.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "mh17-downing-dredd-1",
+              "event_id": "mh17-downing-july",
+              "opinion": "The downing constituted both a war crime and a violation of international aviation law, yet Russia's Security Council veto power prevented establishment of an international tribunal, exposing flaws in international justice systems.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "mh17-downing-president-1",
+              "event_id": "mh17-downing-july",
+              "opinion": "Putin likely authorized the Buk deployment to counter Ukrainian air superiority but failed to anticipate civilian aviation risks, then chose denial over accountability to avoid precedent for other international crimes.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "mh17-downing-conspirator-1",
+              "event_id": "mh17-downing-july",
+              "opinion": "Phone intercepts show Russian commanders discussing the missile system movement, while the sophisticated disinformation response was clearly pre-planned, suggesting institutional preparation for covering up war crimes.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "minsk-agreements-failure-2014-2015",
+      "date": "2014-09-05",
+      "title": "Minsk Agreements and Frozen Conflict",
+      "context": "After major Ukrainian military defeats at Ilovaisk and Debaltseve, where Russian regular forces covertly intervened, Ukraine was forced to sign ceasefire agreements. The Minsk protocols never fully ended fighting but reduced it to a frozen conflict that allowed Russia to maintain leverage over Ukrainian foreign policy for eight years.",
+      "order": 4,
+      "consequence": "Created legal framework that legitimized Russian proxies while imposing constitutional changes on Ukraine, establishing precedent for frozen conflicts as tools of geopolitical control.",
+      "key_persons": [
+        { "name": "Petro Poroshenko", "role": "Ukrainian President" },
+        { "name": "Vladimir Putin", "role": "Russian President" },
+        { "name": "Angela Merkel", "role": "German Chancellor" },
+        { "name": "François Hollande", "role": "French President" },
+        { "name": "Alexander Zakharchenko", "role": "DPR Leader" }
+      ],
+      "events": [
+        {
+          "id": "ilovaisk-defeat-august",
+          "milestone_id": "minsk-agreements-failure-2014-2015",
+          "title": "Russian regular forces destroy Ukrainian army at Ilovaisk, forcing first Minsk agreement",
+          "left_type": "president",
+          "right_type": "nerd",
+          "left_opinion": "Ukraine's Western partners failed to provide meaningful military assistance during critical moments, essentially abandoning Kyiv to negotiate from a position of weakness while Russia systematically violated ceasefire terms with impunity.",
+          "right_opinion": "Russian intervention costs were minimal compared to strategic gains of preventing Ukrainian NATO membership, while sanctions created profitable arbitrage opportunities for Putin's inner circle through import substitution and black market networks.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Minsk_agreements",
+          "right_source_url": "https://carnegieendowment.org/research/2025/02/ukraine-russia-ceasefire-security-agreement?lang=en",
+          "all_opinions": [
+            {
+              "id": "ilovaisk-defeat-nerd-1",
+              "event_id": "ilovaisk-defeat-august",
+              "opinion": "The Russian military intervention involved 3,500-6,500 regular troops and sophisticated weaponry worth hundreds of millions, while Ukrainian forces were equipped with Soviet-era equipment and received minimal Western financial support.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "ilovaisk-defeat-joe-1",
+              "event_id": "ilovaisk-defeat-august",
+              "opinion": "Ukrainian soldiers felt betrayed when promised humanitarian corridors became killing fields, while many families never learned the fate of missing sons who disappeared during the chaotic retreat.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "ilovaisk-defeat-psychic-1",
+              "event_id": "ilovaisk-defeat-august",
+              "opinion": "Russia's psychological warfare included deliberate targeting of evacuation routes to maximize trauma and demonstrate futility of resistance, while state media portrayed victories as proof of separatist strength.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "ilovaisk-defeat-dredd-1",
+              "event_id": "ilovaisk-defeat-august",
+              "opinion": "Russia's direct military intervention while denying involvement constituted perfidy under Geneva Conventions, yet international legal mechanisms proved inadequate for addressing hybrid warfare conducted by nuclear powers.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "ilovaisk-defeat-president-1",
+              "event_id": "ilovaisk-defeat-august",
+              "opinion": "Putin calculated that limited escalation would force Ukraine to negotiate while demonstrating to NATO that collective defense commitments were meaningless without actual political will to confront Russia.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "ilovaisk-defeat-conspirator-1",
+              "event_id": "ilovaisk-defeat-august",
+              "opinion": "The timing coincided with Russian military exercises, suggesting pre-planned intervention disguised as training maneuvers, while intercepted communications show coordination between FSB and separatist commands months before the battle.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "minsk-ii-agreement-february",
+          "milestone_id": "minsk-agreements-failure-2014-2015",
+          "title": "Minsk II signed after Ukrainian defeat at Debaltseve grants Russia political leverage",
+          "left_type": "dredd",
+          "right_type": "conspirator",
+          "left_opinion": "The agreement forced Ukraine to grant 'special status' to occupied territories while maintaining fiction of Ukrainian sovereignty, creating constitutional crisis that would permanently weaken central government and prevent NATO membership as intended.",
+          "right_opinion": "Moscow successfully transformed military victory into political control mechanism, using European mediation to legitimize proxy entities while maintaining plausible deniability about direct involvement in ongoing violations.",
+          "left_source_url": "https://ecfr.eu/article/ukraine-russia-and-the-minsk-agreements-a-post-mortem/",
+          "right_source_url": "https://www.aljazeera.com/news/2022/2/9/what-is-the-minsk-agreement-and-why-is-it-relevant-now",
+          "all_opinions": [
+            {
+              "id": "minsk-ii-nerd-1",
+              "event_id": "minsk-ii-agreement-february",
+              "opinion": "The agreement cost Ukraine an estimated €60+ billion in lost economic development while requiring massive reconstruction funding, yet provided Russia ongoing political leverage worth far more than military occupation costs.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "minsk-ii-joe-1",
+              "event_id": "minsk-ii-agreement-february",
+              "opinion": "Families separated by the contact line couldn't visit relatives for years, while pensioners in occupied territories saw their Ukrainian benefits cut off, forcing dependence on Russian social systems.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "minsk-ii-psychic-1",
+              "event_id": "minsk-ii-agreement-february",
+              "opinion": "The agreement's ambiguous language was deliberately crafted to allow conflicting interpretations, enabling Russia to claim Ukrainian non-compliance while portraying itself as a peace mediator rather than a party to the conflict.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "minsk-ii-dredd-1",
+              "event_id": "minsk-ii-agreement-february",
+              "opinion": "The constitutional amendments required by Minsk II would have violated Ukraine's sovereignty by giving foreign-controlled entities veto power over national foreign policy, setting precedent for dismantling nation-states through legal manipulation.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "minsk-ii-president-1",
+              "event_id": "minsk-ii-agreement-february",
+              "opinion": "European leaders prioritized short-term stability over long-term security, essentially rewarding Russian aggression with political concessions while failing to enforce even minimal compliance with ceasefire terms.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "minsk-ii-conspirator-1",
+              "event_id": "minsk-ii-agreement-february",
+              "opinion": "The agreement was designed to fail implementation while providing cover for continued Russian presence, following Moscow's playbook from South Ossetia and Transnistria to create permanent 'frozen conflicts' preventing Western integration.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

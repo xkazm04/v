@@ -1,0 +1,602 @@
+{
+    "id": "iraq-war-2003-2011",
+    "title": "Iraq War 2003-2011",
+    "timeSpan": "March 2003 - December 2011",
+    "conclusion": "The Iraq War stemmed from post-9/11 security fears and false intelligence about WMDs, leading to regime change but unleashing sectarian violence, insurgency, and massive reconstruction contracts that primarily benefited connected corporations. The conflict exposed the limits of military intervention in achieving political transformation while generating enormous profits for defense contractors and devastating costs for Iraqi civilians and American troops.",
+    "consequences": "",
+    "leftSide": "United States & Coalition Forces",
+    "rightSide": "Iraqi Government & Insurgents",
+    "milestones": [
+        {
+            "id": "wmd-claims-invasion-planning",
+            "date": "2002-09-01",
+            "title": "WMD Claims and Invasion Planning",
+            "context": "Following 9/11, the Bush administration linked Iraq to terrorism despite no credible evidence, using alleged weapons of mass destruction as the primary justification for war. Intelligence agencies produced flawed assessments while political pressure mounted for regime change, culminating in a UN presentation and congressional authorization.",
+            "order": 1,
+            "consequence": "Congress authorized the use of force based on false premises, setting the stage for an invasion that would last nearly nine years and cost hundreds of thousands of lives.",
+            "key_persons": [
+                {
+                    "name": "George W. Bush",
+                    "role": "President"
+                },
+                {
+                    "name": "Dick Cheney",
+                    "role": "Vice President, former Halliburton CEO"
+                },
+                {
+                    "name": "Colin Powell",
+                    "role": "Secretary of State"
+                },
+                {
+                    "name": "Donald Rumsfeld",
+                    "role": "Secretary of Defense"
+                },
+                {
+                    "name": "Saddam Hussein",
+                    "role": "Iraqi President"
+                }
+            ],
+            "events": [
+                {
+                    "id": "bush-admin-links-iraq-911",
+                    "milestone_id": "wmd-claims-invasion-planning",
+                    "title": "Bush Administration Falsely Links Iraq to Al-Qaeda Post-9/11",
+                    "left_type": "psychic",
+                    "right_type": "president",
+                    "left_opinion": "The Bush administration exploited America's post-9/11 trauma by deliberately conflating Iraq with terrorism, using repetitive messaging and selective intelligence briefings to create false associations in the public mind. Within hours of 9/11, Defense Secretary Rumsfeld was already directing staff to find ways to 'hit SH [Saddam Hussein] at same time - not only UBL [Usama bin Laden].' This psychological manipulation campaign ignored intelligence showing no credible Iraq-Al Qaeda connection.",
+                    "right_opinion": "Saddam Hussein's regime faced impossible choices as the US painted Iraq as a terrorism sponsor despite knowing this was false. The Iraqi leadership attempted multiple diplomatic overtures, including offering to allow 2,000 FBI agents to search for WMDs and providing petroleum concessions, but these peace offers were ignored because the Bush administration had already decided on regime change for broader Middle East strategic reasons.",
+                    "left_source_url": "https://www.britannica.com/event/Iraq-War",
+                    "right_source_url": "https://en.wikipedia.org/wiki/2003_invasion_of_Iraq",
+                    "all_opinions": [
+                        {
+                            "id": "iraq-911-nerd-1",
+                            "event_id": "bush-admin-links-iraq-911",
+                            "opinion": "The 9/11 attacks provided convenient political cover for predetermined military industrial complex expansion plans. Defense spending had declined after the Cold War, but linking Iraq to terrorism justified massive increases in military contracts and reconstruction spending, with companies like Halliburton already positioned to benefit from their government connections.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "iraq-911-joe-1",
+                            "event_id": "bush-admin-links-iraq-911",
+                            "opinion": "Regular Americans were told Iraq posed an imminent threat to homeland security, but intelligence agencies knew this was false. The public was manipulated through fear-based messaging while officials privately admitted there was no credible evidence of Iraq-Al Qaeda cooperation, betraying public trust during a vulnerable national moment.",
+                            "isLeft": true,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "iraq-911-psychic-1",
+                            "event_id": "bush-admin-links-iraq-911",
+                            "opinion": "The administration's claims violated international law principles requiring genuine self-defense justification for preemptive war. Intelligence was cherry-picked and distorted to manufacture legal pretenses, while UN weapons inspectors were finding no evidence of WMD programs that supposedly justified urgent military action.",
+                            "isLeft": true,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "iraq-911-dredd-1",
+                            "event_id": "bush-admin-links-iraq-911",
+                            "opinion": "The administration's claims violated international law principles requiring genuine self-defense justification for preemptive war. Intelligence was cherry-picked and distorted to manufacture legal pretenses, while UN weapons inspectors were finding no evidence of WMD programs that supposedly justified urgent military action.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "iraq-911-president-1",
+                            "event_id": "bush-admin-links-iraq-911",
+                            "opinion": "The Iraqi government's diplomatic overtures were rejected because the US had broader strategic objectives including regional transformation, demonstrating American power, and establishing permanent military presence in the Middle East. Iraq became a target of opportunity rather than necessity in the broader War on Terror strategy.",
+                            "isLeft": false,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "iraq-911-conspirator-1",
+                            "event_id": "bush-admin-links-iraq-911",
+                            "opinion": "The swift pivot from Afghanistan to Iraq suggests pre-existing regime change plans activated by 9/11 opportunity. Key architects like Cheney, Rumsfeld, and Wolfowitz had advocated Iraq invasion since the 1990s, using the terrorist attacks to implement long-held neoconservative Middle East transformation strategies.",
+                            "isLeft": true,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                },
+                {
+                    "id": "powell-un-wmd-presentation",
+                    "milestone_id": "wmd-claims-invasion-planning",
+                    "title": "Colin Powell Presents False WMD Evidence to UN Security Council",
+                    "left_type": "dredd",
+                    "right_type": "joe",
+                    "left_opinion": "Powell's February 2003 UN presentation violated international legal standards by presenting intelligence as fact when agencies privately acknowledged severe limitations and contradictions in their assessments. Two decades later, debate continues about whether the administration was the victim of flawed intelligence, or whether Bush and his senior advisers deliberately misled the public about its WMD capabilities. The presentation created false legal justification for war.",
+                    "right_opinion": "Iraqi officials desperately tried to demonstrate compliance with UN inspections, allowing unfettered access to suspected sites while weapons inspectors found no evidence of active WMD programs. The Iraqi government was trapped between impossible demands to prove a negative while facing inevitable invasion regardless of compliance efforts.",
+                    "left_source_url": "https://www.pewresearch.org/politics/2023/03/14/a-look-back-at-how-fear-and-false-beliefs-bolstered-u-s-public-support-for-war-in-iraq/",
+                    "right_source_url": "https://en.wikipedia.org/wiki/Iraq_War",
+                    "all_opinions": [
+                        {
+                            "id": "powell-un-nerd-1",
+                            "event_id": "powell-un-wmd-presentation",
+                            "opinion": "The timing of Powell's presentation coincided with massive pre-war contract preparations. In November 2002, the Army Corps of Engineers tasked KBR to develop a contingency plan for extinguishing oil well fires in Iraq months before the UN presentation, suggesting financial arrangements preceded legal justifications.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "powell-un-joe-1",
+                            "event_id": "powell-un-wmd-presentation",
+                            "opinion": "Iraqi civilians had no control over their government's alleged WMD programs and faced the prospect of devastating war based on evidence they couldn't verify. Many Iraqis knew their country had been weakened by years of sanctions and couldn't pose the threats claimed by American officials.",
+                            "isLeft": false,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "powell-un-psychic-1",
+                            "event_id": "powell-un-wmd-presentation",
+                            "opinion": "The presentation used sophisticated visual aids and authoritative delivery to manufacture credibility for questionable intelligence. Powell's reputation as a 'moderate' made him the ideal messenger for selling dubious evidence, exploiting public trust in his military credentials to legitimize predetermined political decisions.",
+                            "isLeft": true,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "powell-un-dredd-1",
+                            "event_id": "powell-un-wmd-presentation",
+                            "opinion": "The presentation violated due process principles by presenting unverified intelligence as established fact, while Iraq's legal rights under international law were ignored. The rush to judgment bypassed proper legal procedures for authorizing the use of force against a sovereign nation.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "powell-un-president-1",
+                            "event_id": "powell-un-wmd-presentation",
+                            "opinion": "The UN presentation served to isolate Iraq diplomatically while maintaining facade of multilateral consultation. Even as major allies like France and Germany opposed the war, the presentation created pressure for international support while preparing justification for unilateral action if diplomacy failed.",
+                            "isLeft": true,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "powell-un-conspirator-1",
+                            "event_id": "powell-un-wmd-presentation",
+                            "opinion": "Powell later called his UN presentation a 'blot' on his record, suggesting awareness that intelligence was manipulated. The presentation followed familiar patterns of manufacturing consent through authoritative presentation of selective evidence, similar to Gulf of Tonkin and other historical precedents for controversial military interventions.",
+                            "isLeft": true,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                },
+                {
+                    "id": "congressional-war-authorization",
+                    "milestone_id": "wmd-claims-invasion-planning",
+                    "title": "Congress Authorizes Iraq War Based on False WMD Intelligence",
+                    "left_type": "nerd",
+                    "right_type": "dredd",
+                    "left_opinion": "Congress authorized potentially unlimited military spending without proper cost-benefit analysis, setting stage for massive contractor windfalls. More than 70 American companies and individuals have won up to $8 billion in contracts for work in postwar Iraq and Afghanistan. The authorization enabled blank check military-industrial complex profits without adequate oversight mechanisms.",
+                    "right_opinion": "Iraqi leadership faced an impossible legal situation where compliance with UN resolutions couldn't prevent invasion because the US had already decided on regime change. The congressional authorization violated international law by approving aggressive war based on fabricated evidence, while Iraq's offers of complete compliance were ignored.",
+                    "left_source_url": "https://www.icij.org/investigations/windfalls-war/us-contractors-reap-windfalls-post-war-reconstruction-0/",
+                    "right_source_url": "https://en.wikipedia.org/wiki/Iraq_War",
+                    "all_opinions": [
+                        {
+                            "id": "congress-auth-nerd-1",
+                            "event_id": "congressional-war-authorization",
+                            "opinion": "The authorization process occurred without proper analysis of long-term financial costs or contractor oversight mechanisms. Defense industry lobbyists had unprecedented access to congressional decision-makers while cost projections were deliberately underestimated to ease passage.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "congress-auth-joe-1",
+                            "event_id": "congressional-war-authorization",
+                            "opinion": "American voters supported the war based on false information about imminent threats, with majorities of between 55% and 68% favoring military action to end Hussein's rule in Iraq. The public was betrayed by leaders who knew the WMD claims were unsupported by solid evidence.",
+                            "isLeft": true,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "congress-auth-psychic-1",
+                            "event_id": "congressional-war-authorization",
+                            "opinion": "The authorization process used manufactured urgency and fear-based messaging to rush Congress into approving war without adequate deliberation. Intelligence was selectively presented to lawmakers while contradictory assessments were suppressed, manipulating democratic processes through information control.",
+                            "isLeft": true,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "congress-auth-dredd-1",
+                            "event_id": "congressional-war-authorization",
+                            "opinion": "The authorization violated constitutional principles requiring Congressional declaration of war and proper deliberation based on accurate information. The process bypassed checks and balances designed to prevent executive branch from initiating unnecessary conflicts.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "congress-auth-president-1",
+                            "event_id": "congressional-war-authorization",
+                            "opinion": "The congressional authorization provided domestic political legitimacy for a war already planned for broader strategic reasons including regional transformation, oil control, and demonstrating American military dominance after 9/11. Legal formalities masked predetermined geopolitical objectives.",
+                            "isLeft": true,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "congress-auth-conspirator-1",
+                            "event_id": "congressional-war-authorization",
+                            "opinion": "The authorization followed patterns of executive branch manipulation during national security crises, with Congress essentially rubber-stamping predetermined military action. The process exposed systemic failures in oversight and separation of powers when intelligence agencies and military contractors have aligned interests.",
+                            "isLeft": true,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "invasion-regime-collapse",
+            "date": "2003-03-20",
+            "title": "Invasion and Regime Collapse",
+            "context": "The US-led coalition launched a massive air and ground assault on March 20, 2003, overwhelming Iraqi military forces and capturing Baghdad within weeks. Despite swift military victory, post-invasion planning proved catastrophically inadequate, leading to widespread looting, infrastructure collapse, and the disbanding of Iraqi security forces.",
+            "order": 2,
+            "consequence": "Regime collapse created a power vacuum that fueled insurgency and sectarian violence, while hasty de-Baathification policies alienated hundreds of thousands of former government and military personnel who later joined resistance movements.",
+            "key_persons": [
+                {
+                    "name": "George W. Bush",
+                    "role": "President"
+                },
+                {
+                    "name": "Tommy Franks",
+                    "role": "Coalition Forces Commander"
+                },
+                {
+                    "name": "Saddam Hussein",
+                    "role": "Deposed Iraqi President"
+                },
+                {
+                    "name": "Jay Garner",
+                    "role": "Initial Reconstruction Head"
+                },
+                {
+                    "name": "Paul Bremer",
+                    "role": "Coalition Provisional Authority Head"
+                }
+            ],
+            "events": [
+                {
+                    "id": "shock-awe-bombing",
+                    "milestone_id": "invasion-regime-collapse",
+                    "title": "Coalition Forces Launch 'Shock and Awe' Air Assault on Iraq",
+                    "left_type": "president",
+                    "right_type": "joe",
+                    "left_opinion": "The 'Shock and Awe' strategy aimed to demonstrate overwhelming American military superiority to deter future challenges from regional powers like Iran and Syria. The war began on March 20, 2003, when the US, joined by the UK, Australia, and Poland, initiated a 'shock and awe' bombing campaign. The massive display of force served broader strategic messaging beyond just toppling Saddam.",
+                    "right_opinion": "Iraqi civilians bore the brunt of the bombing campaign while having no control over their government's policies or ability to influence the conflict. The overwhelming military assault traumatized the population and destroyed critical infrastructure that ordinary Iraqis depended on for basic services, electricity, and security.",
+                    "left_source_url": "https://en.wikipedia.org/wiki/Iraq_War",
+                    "right_source_url": "https://apnews.com/article/iraq-invasion-war-timeline-saddam-hussein-50828061c98e410063753045179bdcfb",
+                    "all_opinions": [
+                        {
+                            "id": "shock-awe-nerd-1",
+                            "event_id": "shock-awe-bombing",
+                            "opinion": "The bombing campaign showcased expensive precision weaponry that generated massive profits for defense contractors while creating demand for reconstruction contracts worth billions. Each cruise missile cost approximately $1 million, demonstrating how modern warfare converts tax dollars into corporate profits through destruction followed by rebuilding.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "shock-awe-joe-1",
+                            "event_id": "shock-awe-bombing",
+                            "opinion": "Iraqi families huddled in their homes as American bombs destroyed government buildings, military installations, and infrastructure around them. Children experienced trauma that would last for years while parents struggled to protect their families from violence they couldn't control or escape.",
+                            "isLeft": false,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "shock-awe-psychic-1",
+                            "event_id": "shock-awe-bombing",
+                            "opinion": "The 'Shock and Awe' terminology was specifically chosen for its psychological impact on global audiences, designed to project American military dominance while intimidating other potential adversaries. The media spectacle served propaganda purposes beyond military necessity, creating compelling television coverage that influenced public opinion worldwide.",
+                            "isLeft": true,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "shock-awe-dredd-1",
+                            "event_id": "shock-awe-bombing",
+                            "opinion": "The preemptive bombing violated international law principles requiring immediate self-defense justification, as Iraq posed no imminent threat to coalition countries. The massive civilian infrastructure destruction exceeded military necessity requirements and constituted collective punishment against the Iraqi population for their government's actions.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "shock-awe-president-1",
+                            "event_id": "shock-awe-bombing",
+                            "opinion": "The coalition's overwhelming force demonstrated American military capabilities to regional powers while minimizing American casualties through technological superiority. However, the destruction of Iraqi state capacity created long-term stability challenges that military planners had underestimated.",
+                            "isLeft": true,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "shock-awe-conspirator-1",
+                            "event_id": "shock-awe-bombing",
+                            "opinion": "The bombing campaign followed familiar American military doctrine of using overwhelming force to minimize US casualties while maximizing psychological impact. The strategy reflected post-Vietnam lessons about maintaining domestic support through rapid, decisive action rather than prolonged ground combat that could generate anti-war sentiment.",
+                            "isLeft": true,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                },
+                {
+                    "id": "baghdad-fall-statue-toppling",
+                    "milestone_id": "invasion-regime-collapse",
+                    "title": "Coalition Forces Capture Baghdad as Saddam's Government Collapses",
+                    "left_type": "psychic",
+                    "right_type": "conspirator",
+                    "left_opinion": "The iconic statue-toppling scene was staged for maximum propaganda impact, with Iraqi civilians and U.S. soldiers pulling down a statue of Saddam in Baghdad's Firdos Square. The carefully orchestrated media event created powerful symbolic imagery of liberation while the broader city experienced chaos, looting, and infrastructure breakdown that received less coverage.",
+                    "right_opinion": "The regime's rapid collapse revealed the fragility of authoritarian systems but also exposed the coalition's lack of serious post-war planning. Iraqi military and government officials fled or changed sides, suggesting many had already lost faith in Saddam's leadership but leaving a dangerous power vacuum with no legitimate successor institutions.",
+                    "left_source_url": "https://www.pbs.org/newshour/world/a-timeline-of-the-iraq-war",
+                    "right_source_url": "https://totalmilitaryinsight.com/iraq-war-timeline/",
+                    "all_opinions": [
+                        {
+                            "id": "baghdad-fall-nerd-1",
+                            "event_id": "baghdad-fall-statue-toppling",
+                            "opinion": "Baghdad's fall opened Iraq's economy to foreign exploitation while destroying existing institutions that might have regulated reconstruction contracts. The collapse enabled favorable terms for American corporations while eliminating Iraqi competitors and oversight mechanisms that could have protected national resources.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "baghdad-fall-joe-1",
+                            "event_id": "baghdad-fall-statue-toppling",
+                            "opinion": "Iraqi civilians experienced the regime change as liberation from dictatorship but also as devastating loss of basic security, services, and order. While many welcomed Saddam's removal, the immediate aftermath brought lawlessness, looting, and uncertainty about the future that affected every family's daily survival.",
+                            "isLeft": false,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "baghdad-fall-psychic-1",
+                            "event_id": "baghdad-fall-statue-toppling",
+                            "opinion": "The statue-toppling was carefully choreographed for global media consumption, with camera angles and crowd management designed to suggest spontaneous celebration. The event became an iconic image of 'mission accomplished' while masking the chaos and resistance occurring throughout the rest of the city.",
+                            "isLeft": true,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "baghdad-fall-dredd-1",
+                            "event_id": "baghdad-fall-statue-toppling",
+                            "opinion": "The regime collapse created legal chaos as existing laws, courts, and administrative systems ceased functioning without adequate replacement institutions. Coalition forces assumed occupying power responsibilities under international law but proved unprepared for governance obligations in a complex society with deep sectarian divisions.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "baghdad-fall-president-1",
+                            "event_id": "baghdad-fall-statue-toppling",
+                            "opinion": "Baghdad's capture achieved the primary military objective but revealed fundamental misunderstanding of Iraqi society's complexity. The regime's swift collapse surprised even coalition planners who had prepared for prolonged urban warfare but not for managing a fragmented society with competing ethnic and religious factions.",
+                            "isLeft": true,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "baghdad-fall-conspirator-1",
+                            "event_id": "baghdad-fall-statue-toppling",
+                            "opinion": "The regime's collapse followed patterns of authoritarian systems where apparent strength masks internal weakness and popular dissatisfaction. However, the lack of prepared successor institutions suggests the coalition prioritized military victory over long-term stability, possibly indicating short-term thinking or deliberate destabilization strategy.",
+                            "isLeft": true,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                },
+                {
+                    "id": "mission-accomplished-declaration",
+                    "milestone_id": "invasion-regime-collapse",
+                    "title": "Bush Declares End of Major Combat Operations from Aircraft Carrier",
+                    "left_type": "joe",
+                    "right_type": "dredd",
+                    "left_opinion": "Bush's 2003 'Mission Accomplished' speech was later acknowledged as a mistake by Bush himself. The premature victory declaration misled American families about the dangers their loved ones would continue facing, undermining public trust when the insurgency proved the war was far from over.",
+                    "right_opinion": "The declaration violated international law obligations of occupying powers by suggesting military objectives were complete while failing to establish legitimate governance or security for Iraqi civilians. Occupying forces remained legally responsible for maintaining order and protecting the population despite the political theater.",
+                    "left_source_url": "https://www.pewresearch.org/politics/2023/03/14/a-look-back-at-how-fear-and-false-beliefs-bolstered-u-s-public-support-for-war-in-iraq/",
+                    "right_source_url": "https://en.wikipedia.org/wiki/Iraq_War",
+                    "all_opinions": [
+                        {
+                            "id": "mission-accomplished-nerd-1",
+                            "event_id": "mission-accomplished-declaration",
+                            "opinion": "The 'Mission Accomplished' declaration occurred just as the most lucrative reconstruction contracts were being awarded, suggesting political theater to distract from massive spending commitments. Shortly after Baghdad fell in 2003, huge contracts were awarded to several U.S. companies, some no-bid, such as the $1.4 billion contract handed to Halliburton to rebuild Iraq's oil industry.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "mission-accomplished-joe-1",
+                            "event_id": "mission-accomplished-declaration",
+                            "opinion": "American military families believed their loved ones would be coming home soon, based on the president's declaration that major combat was over. The false hope created additional trauma when deployments continued and casualties mounted during the subsequent insurgency phase.",
+                            "isLeft": true,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "mission-accomplished-psychic-1",
+                            "event_id": "mission-accomplished-declaration",
+                            "opinion": "The aircraft carrier staging and 'Mission Accomplished' banner created powerful visual propaganda for domestic consumption, designed to boost Bush's approval ratings and project successful military leadership. The elaborate production values revealed the administration's priority on managing public perception rather than Iraqi realities.",
+                            "isLeft": true,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "mission-accomplished-dredd-1",
+                            "event_id": "mission-accomplished-declaration",
+                            "opinion": "The premature declaration violated occupying power obligations under international humanitarian law to maintain security and establish functioning governance. The theatrical announcement prioritized domestic politics over legal responsibilities to Iraqi civilian population.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "mission-accomplished-president-1",
+                            "event_id": "mission-accomplished-declaration",
+                            "opinion": "The declaration served to claim victory for broader strategic objectives of demonstrating American military dominance in the Middle East while preparing to shift focus to other regional targets like Iran and Syria. Premature victory claims enabled attention to move beyond Iraq before insurgency complications emerged.",
+                            "isLeft": true,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "mission-accomplished-conspirator-1",
+                            "event_id": "mission-accomplished-declaration",
+                            "opinion": "The timing coincided with peak public support before the true costs and consequences became apparent, following historical patterns of declaring victory during the 'honeymoon period' of military interventions. The declaration aimed to lock in political gains before inevitable complications undermined public approval.",
+                            "isLeft": true,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "insurgency-sectarian-violence",
+            "date": "2004-04-01",
+            "title": "Insurgency and Sectarian Violence",
+            "context": "The revelation of prisoner abuse at Abu Ghraib prison in April 2004 damaged American credibility while Iraq descended into vicious sectarian warfare. The 2006 bombing of the Samarra mosque triggered widespread Sunni-Shia violence, creating ethnic cleansing campaigns that killed hundreds of thousands and displaced millions of Iraqis.",
+            "order": 3,
+            "consequence": "The sectarian bloodshed discredited the occupation and Iraqi government while demonstrating the failure of American nation-building efforts, ultimately forcing a change in strategy with the 2007 troop surge and Sunni Awakening movements.",
+            "key_persons": [
+                {
+                    "name": "Abu Musab al-Zarqawi",
+                    "role": "Al-Qaeda in Iraq leader"
+                },
+                {
+                    "name": "Nouri al-Maliki",
+                    "role": "Iraqi Prime Minister"
+                },
+                {
+                    "name": "Muqtada al-Sadr",
+                    "role": "Shia cleric and militia leader"
+                },
+                {
+                    "name": "Donald Rumsfeld",
+                    "role": "Defense Secretary"
+                },
+                {
+                    "name": "David Petraeus",
+                    "role": "Military Commander"
+                }
+            ],
+            "events": [
+                {
+                    "id": "abu-ghraib-scandal",
+                    "milestone_id": "insurgency-sectarian-violence",
+                    "title": "Photos Reveal Systematic Torture and Abuse at Abu Ghraib Prison",
+                    "left_type": "dredd",
+                    "right_type": "joe",
+                    "left_opinion": "The George W. Bush administration stated that the abuses at Abu Ghraib were isolated incidents and not indicative of U.S. policy. This was disputed by humanitarian organizations including the Red Cross, Amnesty International, and Human Rights Watch. The systematic nature of abuse revealed policy failures at the highest levels of command and violated Geneva Conventions.",
+                    "right_opinion": "Talib al-Majli believes he is one of the men in the human pyramid photograph. He remembers being forced to lie, naked, on the bare skin of another prisoner. Iraqi detainees, many held without charges, suffered devastating psychological trauma that continues affecting their lives decades later, with families living in shame and poverty without compensation or apologies.",
+                    "left_source_url": "https://en.wikipedia.org/wiki/Abu_Ghraib_torture_and_prisoner_abuse",
+                    "right_source_url": "https://www.npr.org/2023/04/11/1167341565/us-iraq-war-abu-ghraib-survivor",
+                    "all_opinions": [
+                        {
+                            "id": "abu-ghraib-nerd-1",
+                            "event_id": "abu-ghraib-scandal",
+                            "opinion": "The abuse scandal occurred while private contractors were earning billions from detention operations and security services, creating perverse financial incentives for mass imprisonment. Military intelligence officers from U.S.-led coalition forces later told the International Committee of the Red Cross that between 70% and 90% of Iraqis detained were held by mistake, representing massive waste of resources on wrongful detention.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "abu-ghraib-joe-1",
+                            "event_id": "abu-ghraib-scandal",
+                            "opinion": "Iraqi families discovered their relatives were being tortured in American custody, destroying any remaining trust in liberation promises. The images showed Iraqi men being humiliated and abused by the same forces that claimed to be bringing freedom and democracy to their country.",
+                            "isLeft": false,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "abu-ghraib-psychic-1",
+                            "event_id": "abu-ghraib-scandal",
+                            "opinion": "The photos' global circulation devastated America's moral authority and became recruitment tools for insurgent groups while demonstrating how digital media could undermine military objectives. The images became powerful propaganda tools for anti-American forces, proving that controlling information flows had become crucial for modern warfare success.",
+                            "isLeft": true,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "abu-ghraib-dredd-1",
+                            "event_id": "abu-ghraib-scandal",
+                            "opinion": "The systematic abuse violated the Geneva Conventions and U.S. military law, while the administration's claims of 'isolated incidents' contradicted evidence of institutional failures. The lack of high-level accountability demonstrated breakdown of military justice and rule of law principles.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "abu-ghraib-president-1",
+                            "event_id": "abu-ghraib-scandal",
+                            "opinion": "The scandal undermined coalition building efforts and provided justification for allies to distance themselves from American operations. Regional governments used Abu Ghraib to criticize US human rights record while insurgent groups exploited the imagery to recruit fighters and justify attacks against coalition forces.",
+                            "isLeft": true,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "abu-ghraib-conspirator-1",
+                            "event_id": "abu-ghraib-scandal",
+                            "opinion": "The timing and scale of abuse suggests systematic dehumanization training and institutional failures rather than individual misconduct, following patterns from previous conflicts where occupying forces develop contempt for local populations. The scandal exposed deeper problems with military culture and contractor oversight in asymmetric warfare environments.",
+                            "isLeft": true,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                },
+                {
+                    "id": "samarra-mosque-bombing",
+                    "milestone_id": "insurgency-sectarian-violence",
+                    "title": "Al-Qaeda Destroys Shia Shrine Sparking Nationwide Sectarian Violence",
+                    "left_type": "conspirator",
+                    "right_type": "president",
+                    "left_opinion": "Sunni Muslim extremists destroyed the gilded Shiite shrine in Samarra, unleashing waves of sectarian violence in Baghdad's Shiite district of Sadr City that spread across the country. The bombing achieved Al-Qaeda's strategic objective of triggering civil war that would make Iraq ungovernable, exposing American inability to provide basic security and forcing withdrawal.",
+                    "right_opinion": "The mosque bombing exploited Iraq's fundamental sectarian divisions that American planners had underestimated, revealing the coalition's failure to understand Iraqi society's complexity. Shia militias responded with revenge attacks against Sunni civilians, creating cycles of violence that overwhelmed security forces and undermined any possibility of national reconciliation.",
+                    "left_source_url": "https://www.cfr.org/timeline/iraq-war",
+                    "right_source_url": "https://en.wikipedia.org/wiki/Iraq_War",
+                    "all_opinions": [
+                        {
+                            "id": "samarra-bombing-nerd-1",
+                            "event_id": "samarra-mosque-bombing",
+                            "opinion": "The sectarian violence created additional security costs that benefited private military contractors while devastating Iraq's economy and oil production. Insurance costs for reconstruction projects skyrocketed as contractors demanded premium payments for operating in increasingly dangerous environments, multiplying war profiteering opportunities.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "samarra-bombing-joe-1",
+                            "event_id": "samarra-mosque-bombing",
+                            "opinion": "Iraqi families were forced to flee mixed neighborhoods as sectarian death squads conducted ethnic cleansing campaigns, with millions becoming refugees in their own country. Children grew up witnessing horrific violence while basic services like electricity, water, and healthcare collapsed under the chaos of civil war.",
+                            "isLeft": false,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "samarra-bombing-psychic-1",
+                            "event_id": "samarra-mosque-bombing",
+                            "opinion": "The mosque bombing used religious symbolism to trigger maximum emotional response and community mobilization, demonstrating sophisticated understanding of Iraqi psychological vulnerabilities. The attack timing and target selection showed how terrorist groups could manipulate sectarian identities to achieve strategic political objectives.",
+                            "isLeft": false,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "samarra-bombing-dredd-1",
+                            "event_id": "samarra-mosque-bombing",
+                            "opinion": "The sectarian violence constituted war crimes and crimes against humanity by all parties, while coalition forces failed in their legal obligations to protect civilian populations under international humanitarian law. Mass killings, torture, and forced displacement occurred while occupying powers proved unable to maintain basic law and order.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "samarra-bombing-president-1",
+                            "event_id": "samarra-mosque-bombing",
+                            "opinion": "The bombing revealed fundamental flaws in American understanding of Iraqi sectarian dynamics and exposed the limits of military force in preventing religious conflicts. The resulting civil war threatened to destabilize the entire region and undermined American strategic objectives in the Middle East.",
+                            "isLeft": true,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "samarra-bombing-conspirator-1",
+                            "event_id": "samarra-mosque-bombing",
+                            "opinion": "The attack followed Al-Qaeda's deliberate strategy of provoking sectarian conflict to make Iraq ungovernable and force American withdrawal. The bombing succeeded in triggering the civil war that previous insurgent tactics had failed to achieve, demonstrating sophisticated understanding of Iraqi social fractures.",
+                            "isLeft": false,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                },
+                {
+                    "id": "peak-sectarian-violence",
+                    "milestone_id": "insurgency-sectarian-violence",
+                    "title": "Iraq Experiences Massive Ethnic Cleansing and Death Squad Campaigns",
+                    "left_type": "president",
+                    "right_type": "nerd",
+                    "left_opinion": "The civil war exposed fundamental flaws in American nation-building doctrine and revealed the limits of military force in creating political stability. By 2007 the Iraqi Red Crescent estimated 2.3 million Iraqis were internally displaced, with an estimated 2 million Iraqis fleeing to neighboring countries, mostly to Syria and Jordan. The displacement crisis destabilized the entire region.",
+                    "right_opinion": "Iraqi civilians paid the ultimate price for political failures while contractors and security companies profited from the chaos through premium security contracts and emergency reconstruction spending. The violence justified higher billing rates and longer contract extensions, creating financial incentives to maintain rather than resolve instability.",
+                    "left_source_url": "https://en.wikipedia.org/wiki/Iraq_War",
+                    "right_source_url": "https://www.cnn.com/2013/03/19/business/iraq-war-contractors/index.html",
+                    "all_opinions": [
+                        {
+                            "id": "peak-violence-nerd-1",
+                            "event_id": "peak-sectarian-violence",
+                            "opinion": "Security contractors like Blackwater earned billions from the chaos while reconstruction projects stalled, creating perverse incentives where instability generated more profits than peace. The violence justified premium security rates and emergency spending that multiplied contractor revenues far beyond normal peacetime operations.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "peak-violence-joe-1",
+                            "event_id": "peak-sectarian-violence",
+                            "opinion": "Ordinary Iraqis faced impossible choices between staying in increasingly dangerous neighborhoods or abandoning homes and livelihoods to become refugees. Families were torn apart by sectarian identification cards that determined life or death at checkpoints, while children witnessed traumatic violence that would affect generations.",
+                            "isLeft": false,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "peak-violence-psychic-1",
+                            "event_id": "peak-sectarian-violence",
+                            "opinion": "The extreme violence was deliberately designed to terrorize populations into ethnic segregation through psychological warfare tactics including public executions, torture, and corpse displays. Death squads used fear as a weapon to achieve political objectives of demographic separation and territorial control.",
+                            "isLeft": false,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "peak-violence-dredd-1",
+                            "event_id": "peak-sectarian-violence",
+                            "opinion": "The widespread killings constituted genocide and crimes against humanity under international law, while coalition forces and Iraqi government failed to prevent mass atrocities despite legal obligations. The systematic nature of ethnic cleansing revealed state failure and collapse of rule of law in large areas of the country.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "peak-violence-president-1",
+                            "event_id": "peak-sectarian-violence",
+                            "opinion": "The sectarian war demonstrated the complete failure of American post-invasion planning and revealed that military occupation could not impose political solutions on deep social divisions. The conflict threatened to spread throughout the region and undermined American credibility globally.",
+                            "isLeft": true,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "peak-violence-conspirator-1",
+                            "event_id": "peak-sectarian-violence",
+                            "opinion": "The civil war followed predictable patterns of divide-and-conquer strategies, with some evidence suggesting external actors including Iran, Syria, and Saudi Arabia supported different factions to advance their regional interests. The conflict served various parties' objectives of weakening Iraqi state capacity and American influence.",
+                            "isLeft": false,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,152 @@
+[
+  {
+    "name": "George W. Bush",
+    "statements": [
+      {
+        "statement": "The Iraqi regime possesses biological and chemical weapons. It is seeking nuclear weapons. It has given shelter and support to terrorism, and practices terror against its own people.",
+        "context": "Bush delivered this statement in his Cincinnati speech at the Museum Center - Cincinnati Union Terminal, making the case for military action against Iraq. This was part of a comprehensive assessment of the alleged Iraqi threat to justify the coming invasion.",
+        "date": "October 7, 2002"
+      },
+      {
+        "statement": "We found the weapons of mass destruction. We found biological laboratories.",
+        "context": "Bush made this statement during an interview with Polish television when asked about WMD discoveries in Iraq. He was attempting to justify the invasion by claiming mobile biological labs had been found, which later proved to be weather balloon equipment.",
+        "date": "May 29, 2003"
+      },
+      {
+        "statement": "There's no question that Saddam Hussein had al-Qaeda ties.",
+        "context": "Bush made this statement during remarks after meeting with Congressional Conference Committee members on energy legislation. He was defending the administration's claims about Iraq-al Qaeda connections despite mounting evidence to the contrary.",
+        "date": "September 17, 2003"
+      },
+      {
+        "statement": "My fellow citizens, at this hour, American and coalition forces are in the early stages of military operations to disarm Iraq, to free its people and to defend the world from grave danger.",
+        "context": "Bush announced the beginning of the Iraq invasion in a televised address to the nation. He framed the military action as necessary to eliminate weapons of mass destruction that were never found.",
+        "date": "March 19, 2003"
+      },
+      {
+        "statement": "Major combat operations in Iraq have ended. In the battle of Iraq, the United States and our allies have prevailed.",
+        "context": "Bush delivered this statement aboard the USS Abraham Lincoln aircraft carrier beneath a 'Mission Accomplished' banner. The declaration proved premature as the insurgency and sectarian violence had only just begun.",
+        "date": "May 1, 2003"
+      }
+    ]
+  },
+  {
+    "name": "Dick Cheney", 
+    "statements": [
+      {
+        "statement": "Simply stated, there is no doubt that Saddam Hussein now has weapons of mass destruction. There is no doubt he is amassing them to use against our friends, against our allies, and against us.",
+        "context": "Cheney delivered this statement to the Veterans of Foreign Wars national convention, presenting absolute certainty about Iraqi WMD capabilities. This was part of the administration's campaign to build public support for military action.",
+        "date": "August 26, 2002"
+      },
+      {
+        "statement": "We do know, with absolute certainty, that he is using his procurement system to acquire the equipment he needs in order to enrich uranium to build a nuclear weapon.",
+        "context": "Cheney made this claim during an appearance on NBC's Meet the Press, asserting definitive knowledge of Iraqi nuclear weapons development. This statement was inconsistent with intelligence community assessments at the time.",
+        "date": "September 8, 2002"
+      },
+      {
+        "statement": "I think things have gotten so bad inside Iraq, from the standpoint of the Iraqi people, my belief is we will, in fact, be greeted as liberators.",
+        "context": "Cheney made this prediction during an interview with NBC's Meet the Press just days before the invasion. He was expressing confidence about Iraqi public reaction to American military intervention.",
+        "date": "March 16, 2003"
+      },
+      {
+        "statement": "We know the Iraqis have been engaged in such efforts over the years. We know they have biological and chemical weapons. We know they've used chemical weapons against Iran and against the Kurds.",
+        "context": "Cheney made these assertions during a press conference in Bahrain while building international support for military action. He conflated past Iraqi weapons use with present capabilities.",
+        "date": "March 17, 2002"
+      },
+      {
+        "statement": "His regime has reconstituted nuclear weapons.",
+        "context": "Cheney claimed on Meet the Press that Iraq had rebuilt its nuclear weapons program, despite no evidence supporting this assertion. This was part of the administration's effort to present Iraq as an imminent nuclear threat.",
+        "date": "March 16, 2003"
+      }
+    ]
+  },
+  {
+    "name": "Colin Powell",
+    "statements": [
+      {
+        "statement": "Every statement I make today is backed up by sources, solid sources. These are not assertions. What we're giving you are facts and conclusions based on solid intelligence.",
+        "context": "Powell made this claim during his presentation to the UN Security Council, where he displayed satellite imagery, audio recordings, and a vial of alleged anthrax. The presentation was later acknowledged as based on faulty intelligence and proved to be largely false.",
+        "date": "February 5, 2003"
+      },
+      {
+        "statement": "Saddam Hussein has not verifiably accounted for even one teaspoonful of this deadly material [anthrax]. This is evidence, not conjecture.",
+        "context": "Powell held up a small vial during his UN presentation, claiming it represented the amount of anthrax that could shut down the U.S. Senate. He presented this as proof of Iraqi biological weapons capabilities that did not exist.",
+        "date": "February 5, 2003"
+      },
+      {
+        "statement": "Iraq's weapons of mass destruction are controlled by a murderous tyrant who has already used chemical weapons to kill thousands of people.",
+        "context": "Powell made this statement to the UN Security Council as part of his comprehensive case for military intervention. He was referring to past Iraqi chemical weapons use to justify claims about present capabilities.",
+        "date": "February 5, 2003"
+      },
+      {
+        "statement": "We have firsthand descriptions of biological weapons factories on wheels and on rails.",
+        "context": "Powell described alleged mobile biological weapons laboratories during his UN presentation, showing illustrations and satellite imagery. These 'weapons factories' were later determined to be weather balloon equipment.",
+        "date": "February 5, 2003"
+      },
+      {
+        "statement": "What we are giving you are facts and conclusions based on solid intelligence... leaving little question that Iraq had weapons of mass destruction.",
+        "context": "Powell emphasized the reliability of his intelligence sources during his UN Security Council presentation. He was attempting to convince skeptical UN members of the certainty of Iraqi WMD programs.",
+        "date": "February 5, 2003"
+      }
+    ]
+  },
+  {
+    "name": "Donald Rumsfeld",
+    "statements": [
+      {
+        "statement": "We know where they [WMDs] are. They're in the area around Tikrit and Baghdad and east, west, south and north somewhat.",
+        "context": "Rumsfeld made this claim during an interview on ABC's This Week with George Stephanopoulos when asked about why coalition forces hadn't found weapons of mass destruction. He expressed certainty about their locations.",
+        "date": "March 30, 2003"
+      },
+      {
+        "statement": "The Gulf War in the 1990s lasted five days on the ground. I can't tell you if the use of force in Iraq today would last five days, or five weeks or five months. But it certainly isn't going to last any longer than that.",
+        "context": "Rumsfeld made this prediction about the duration of military operations in Iraq during a Pentagon briefing. The conflict lasted nearly nine years, far exceeding his estimates.",
+        "date": "November 14, 2002"
+      },
+      {
+        "statement": "It is possible to proceed perfectly logically from an inaccurate premise to an inaccurate and unfortunate conclusion.",
+        "context": "Rumsfeld wrote this in his book 'Rumsfeld's Rules' as advice about decision-making. Ironically, this precisely described the Iraq War decision-making process based on false WMD intelligence.",
+        "date": "2013"
+      },
+      {
+        "statement": "Stuff happens. It's untidy, and freedom's untidy, and free people are free to make mistakes and commit crimes and do bad things.",
+        "context": "Rumsfeld dismissed widespread looting and lawlessness in Baghdad after U.S. troops captured the capital. He was responding to questions about the breakdown of order following the invasion.",
+        "date": "April 11, 2003"
+      },
+      {
+        "statement": "I have seen intelligence over many months that leaves no doubt in my mind that they have biological and chemical weapons.",
+        "context": "Rumsfeld expressed absolute certainty about Iraqi WMD capabilities during a Pentagon press briefing. He was defending the administration's intelligence assessments against growing skepticism.",
+        "date": "January 30, 2003"
+      }
+    ]
+  },
+  {
+    "name": "Condoleezza Rice",
+    "statements": [
+      {
+        "statement": "We don't want the smoking gun to be a mushroom cloud.",
+        "context": "Rice made this dramatic statement during a CNN interview to emphasize the urgency of acting against Iraq's alleged nuclear weapons program. She was arguing that waiting for definitive proof would be too dangerous.",
+        "date": "September 8, 2002"
+      },
+      {
+        "statement": "The problem here is that there will always be some uncertainty about how quickly he [Hussein] can acquire nuclear weapons. But we don't want the smoking gun to be a mushroom cloud.",
+        "context": "Rice expanded on her 'mushroom cloud' warning during television appearances promoting the case for preemptive action. She was justifying military action based on uncertainty rather than evidence.",
+        "date": "September 2002"
+      },
+      {
+        "statement": "We have been reluctant to discuss this because sensitive intelligence sources and methods are involved. But now that this story is out, we can confirm that Iraq has made several attempts to buy high-strength aluminum tubes.",
+        "context": "Rice claimed on CNN that aluminum tubes were evidence of Iraqi nuclear weapons development. Intelligence agencies later determined these tubes were for conventional rockets, not nuclear centrifuges.",
+        "date": "September 8, 2002"
+      },
+      {
+        "statement": "The intelligence was clear that Saddam Hussein had stockpiles of biological and chemical weapons and was reconstituting his nuclear weapons program.",
+        "context": "Rice defended the administration's pre-war intelligence assessments during congressional testimony. She maintained that the intelligence clearly supported the WMD claims despite subsequent investigations proving otherwise.",
+        "date": "April 2004"
+      },
+      {
+        "statement": "Saddam Hussein's Iraq was a threat to the United States, to the region, and to the world.",
+        "context": "Rice made this assertion during various media appearances defending the invasion. She argued that Iraq posed multiple threats justifying military action, claims that proved largely unfounded.",
+        "date": "March 2003"
+      }
+    ]
+  }
+]

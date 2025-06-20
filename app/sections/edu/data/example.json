@@ -2,6 +2,7 @@
   "id": "iraq-war-2003-2011",
   "title": "Iraq War: From WMD Claims to Occupation",
   "timeSpan": "2001-2011",
+  "consequences": "",
   "conclusion": "The Iraq War stemmed from post-9/11 geopolitical ambitions masked as WMD prevention, resulting in regional destabilization, hundreds of thousands of casualties, and massive financial costs while achieving few stated objectives. The conflict exposed how intelligence can be manipulated to justify predetermined policy goals.",
   "leftSide": "United States & Coalition Forces",
   "rightSide": "Iraqi Government & Insurgent Forces",
@@ -13,14 +14,35 @@
       "context": "Following 9/11, the Bush administration began building a case for military action against Iraq, claiming Saddam Hussein possessed weapons of mass destruction that posed an imminent threat to regional and global security.",
       "order": 1,
       "consequence": "Created public and international support for military intervention despite significant skepticism from UN weapons inspectors and several allied nations.",
-      "key_persons": ["George W. Bush", "Dick Cheney", "Colin Powell", "Donald Rumsfeld", "Saddam Hussein"],
+      "key_persons": [
+        {
+          "name": "Donald Rumsfeld",
+          "role": "Secretary of Defense"
+        },
+        {
+          "name": "George W. Bush",
+          "role": "President of the United States"
+        },
+        {
+          "name": "Paul Bremer",
+          "role": "Administrator of the Coalition Provisional Authority"
+        },
+        {
+          "name": "Saddam Hussein",
+          "role": "President of Iraq"
+        },
+        {
+          "name": "Iraqi Insurgents",
+          "role": "Various groups opposing occupation"
+        }
+      ],
       "events": [
         {
           "id": "bush-un-speech-2002",
           "milestone_id": "wmd-intelligence-buildup",
           "title": "Bush addresses UN General Assembly claiming Iraq has WMDs and poses imminent threat",
           "left_type": "psychic",
-          "right_type": "dredd", 
+          "right_type": "dredd",
           "left_opinion": "The Bush administration orchestrated a sophisticated propaganda campaign, using carefully selected intelligence fragments while suppressing contradictory evidence. The timing coincided with midterm elections, suggesting domestic political calculations influenced national security messaging.",
           "right_opinion": "Saddam Hussein's regime deliberately maintained ambiguity about WMD capabilities as a deterrent strategy, refusing full cooperation with UN inspectors and maintaining dual-use facilities that could be interpreted as weapons programs.",
           "left_source_url": "https://www.un.org/webcast/ga/57/statements/020912usaE.htm",
@@ -34,7 +56,7 @@
               "expert_type": "nerd"
             },
             {
-              "id": "bush-un-joe-1", 
+              "id": "bush-un-joe-1",
               "event_id": "bush-un-speech-2002",
               "opinion": "Most Americans, still traumatized by 9/11, trusted their president's claims about imminent threats. However, millions globally protested the rush to war, sensing the evidence was thin and the motivations questionable.",
               "isLeft": true,
@@ -42,7 +64,7 @@
             },
             {
               "id": "bush-un-psychic-1",
-              "event_id": "bush-un-speech-2002", 
+              "event_id": "bush-un-speech-2002",
               "opinion": "The speech employed classic fear-based persuasion techniques, connecting 9/11 trauma to Iraqi threats without establishing direct links. The administration amplified uncertainty into certainty, using definitive language about 'gathering threats' despite intelligence community disagreements.",
               "isLeft": true,
               "expert_type": "psychic"
@@ -72,7 +94,7 @@
         },
         {
           "id": "powell-un-presentation",
-          "milestone_id": "wmd-intelligence-buildup", 
+          "milestone_id": "wmd-intelligence-buildup",
           "title": "Colin Powell presents WMD evidence to UN Security Council with vials and satellite photos",
           "left_type": "psychic",
           "right_type": "president",
@@ -90,7 +112,7 @@
             },
             {
               "id": "powell-joe-1",
-              "event_id": "powell-un-presentation", 
+              "event_id": "powell-un-presentation",
               "opinion": "Powell was the most trusted figure in the Bush administration, so his presentation convinced many skeptical Americans. People thought 'if Colin Powell says it, it must be true' - his credibility was weaponized to sell the war to a divided public.",
               "isLeft": true,
               "expert_type": "joe"
@@ -130,11 +152,32 @@
     {
       "id": "invasion-and-aftermath",
       "date": "2003-03-20",
-      "title": "Invasion and Immediate Aftermath", 
+      "title": "Invasion and Immediate Aftermath",
       "context": "Coalition forces launched 'Operation Iraqi Freedom' with aerial bombardment followed by ground invasion, quickly overwhelming Iraqi military forces and toppling Saddam Hussein's government within weeks.",
       "order": 2,
       "consequence": "Rapid military victory was followed by prolonged insurgency, sectarian violence, and state collapse, demonstrating the gap between military planning and post-war governance preparation.",
-      "key_persons": ["George W. Bush", "Tommy Franks", "Paul Bremer", "Saddam Hussein", "Jay Garner"],
+      "key_persons": [
+        {
+          "name": "Donald Rumsfeld",
+          "role": "Secretary of Defense"
+        },
+        {
+          "name": "George W. Bush",
+          "role": "President of the United States"
+        },
+        {
+          "name": "Paul Bremer",
+          "role": "Administrator of the Coalition Provisional Authority"
+        },
+        {
+          "name": "Saddam Hussein",
+          "role": "President of Iraq"
+        },
+        {
+          "name": "Iraqi Insurgents",
+          "role": "Various groups opposing occupation"
+        }
+      ],
       "events": [
         {
           "id": "shock-and-awe-bombing",
@@ -296,6 +339,203 @@
               "id": "debaath-conspirator-1",
               "event_id": "de-baathification-order",
               "opinion": "The order served neoconservative goals of permanent American presence by ensuring Iraq remained weak and dependent. A functional Iraqi state would have demanded American withdrawal, so institutional destruction was strategically beneficial for occupation planners.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "surge-sunni-awakening",
+      "date": "2007-01-10",
+      "title": "The Surge and Sunni Awakening",
+      "context": "President Bush ordered an additional 30,000 troops to Iraq under General David Petraeus, implementing new counterinsurgency tactics focused on protecting civilians. Simultaneously, Sunni tribal leaders in Anbar Province turned against Al-Qaeda in Iraq, forming 'Awakening' movements that partnered with American forces to restore local security.",
+      "order": 4,
+      "consequence": "The combination of increased troops, new tactics, and Sunni cooperation dramatically reduced violence levels by 2008, creating conditions for eventual American withdrawal while leaving underlying political problems unresolved.",
+      "key_persons": [
+        {
+          "name": "David Petraeus",
+          "role": "Surge Commander"
+        },
+        {
+          "name": "Abdul Sattar Abu Risha",
+          "role": "Sunni Awakening Leader"
+        },
+        {
+          "name": "George W. Bush",
+          "role": "President"
+        },
+        {
+          "name": "Nouri al-Maliki",
+          "role": "Iraqi Prime Minister"
+        },
+        {
+          "name": "Raymond Odierno",
+          "role": "Military Commander"
+        }
+      ],
+      "events": [
+        {
+          "id": "bush-announces-surge",
+          "milestone_id": "surge-sunni-awakening",
+          "title": "President Bush Orders Additional 30,000 Troops to Iraq",
+          "left_type": "nerd",
+          "right_type": "joe",
+          "left_opinion": "Bush ordered the deployment of more than 20,000 soldiers into Iraq (five additional brigades), and sent the majority of them into Baghdad. The surge required massive additional spending that benefited military contractors and extended lucrative security contracts, representing another opportunity for war profiteering despite the human costs.",
+          "right_opinion": "Iraqi civilians desperately needed improved security after years of sectarian violence, but the surge also meant continued foreign military occupation and more opportunities for civilian casualties from military operations. Families remained trapped between insurgent violence and coalition military actions with no safe options.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Iraq_War_troop_surge_of_2007",
+          "right_source_url": "https://www.cfr.org/timeline/iraq-war",
+          "all_opinions": [
+            {
+              "id": "surge-announce-nerd-1",
+              "event_id": "bush-announces-surge",
+              "opinion": "The surge extension generated billions in additional contractor revenue while requiring emergency supplemental spending that bypassed normal budget oversight. Defense companies like KBR, Blackwater, and DynCorp saw immediate stock gains as investors anticipated extended profitable operations in Iraq.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "surge-announce-joe-1",
+              "event_id": "bush-announces-surge",
+              "opinion": "American military families faced extended deployments and multiple tours as the surge demanded more troops than available, while Iraqi families hoped the increased security might finally allow normal life to resume after years of terror and displacement.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "surge-announce-psychic-1",
+              "event_id": "bush-announces-surge",
+              "opinion": "The surge announcement used carefully crafted messaging about 'new strategy' to rebuild public support for the war while essentially doubling down on military solutions to political problems. The timing aimed to demonstrate presidential leadership while congressional opposition was building, framing withdrawal advocates as abandoning mission success.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "surge-announce-dredd-1",
+              "event_id": "bush-announces-surge",
+              "opinion": "The surge prolonged military occupation without clear legal justification or exit strategy, extending violations of Iraqi sovereignty while failing to address underlying political conflicts driving the violence. International law requires occupying powers to restore stability and transfer authority, not maintain indefinite military presence.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "surge-announce-president-1",
+              "event_id": "bush-announces-surge",
+              "opinion": "The surge served multiple strategic objectives including preventing regional Iranian influence, maintaining American credibility globally, and avoiding appearance of defeat that could encourage other challenges to US power. Success would demonstrate American persistence while failure could justify eventual withdrawal as Iraqi responsibility.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "surge-announce-conspirator-1",
+              "event_id": "bush-announces-surge",
+              "opinion": "The surge followed historical patterns of escalating failing military interventions rather than acknowledging strategic mistakes, similar to Vietnam War dynamics. The policy represented institutional momentum and sunk-cost fallacy rather than objective assessment of achievable goals given available resources and Iraqi political realities.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "sunni-awakening-emerges",
+          "milestone_id": "surge-sunni-awakening",
+          "title": "Anbar Tribal Leaders Partner with US Forces Against Al-Qaeda",
+          "left_type": "president",
+          "right_type": "conspirator",
+          "left_opinion": "The Sons of Iraq, also known as al-Sahwah (the awakening), were a coalition in the Al Anbar province between Sunni tribal leaders as well as former Saddam-era Iraqi military officers that united in 2005 to maintain stability. The Awakening provided crucial local intelligence and manpower that American forces alone couldn't provide for counterinsurgency success.",
+          "right_opinion": "Many of the newly friendly leaders are believed to have at least tacitly supported the insurgency in the past. The tribal leaders switched sides based on tactical calculations rather than genuine support for American objectives, creating temporary alliances that could easily reverse if conditions changed or American support ended.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Sons_of_Iraq",
+          "right_source_url": "https://www.meforum.org/middle-east-quarterly/sons-of-iraq",
+          "all_opinions": [
+            {
+              "id": "awakening-emerges-nerd-1",
+              "event_id": "sunni-awakening-emerges",
+              "opinion": "The US had on payroll more than 100,000 'Sons of Iraq' (more than 20,000 of them Shiite), representing massive American spending on local militias that created temporary stability while building armed groups outside government control that could threaten future Iraqi state authority.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "awakening-emerges-joe-1",
+              "event_id": "sunni-awakening-emerges",
+              "opinion": "Sunni communities were exhausted by Al-Qaeda's brutal tactics and interference with traditional tribal authority, making partnership with Americans preferable to continued extremist control. However, tribal members remained suspicious of long-term American intentions and worried about Shia government retaliation after eventual US withdrawal.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "awakening-emerges-psychic-1",
+              "event_id": "sunni-awakening-emerges",
+              "opinion": "The Awakening narrative provided powerful propaganda for surge success while obscuring the fact that Sunni cooperation predated the troop increase and reflected local grievances against Al-Qaeda rather than support for American occupation. Media coverage emphasized American leadership while downplaying Iraqi agency in the tribal revolt.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "awakening-emerges-dredd-1",
+              "event_id": "sunni-awakening-emerges",
+              "opinion": "The Awakening created parallel armed forces outside the Iraqi government's authority, potentially violating principles of state sovereignty and legitimate monopoly on violence. While tactically effective, arming tribal militias could undermine long-term rule of law and democratic governance by institutionalizing non-state armed groups.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "awakening-emerges-president-1",
+              "event_id": "sunni-awakening-emerges",
+              "opinion": "The tribal cooperation provided essential local knowledge and legitimacy that foreign forces couldn't obtain independently, enabling more precise targeting of Al-Qaeda while reducing civilian casualties. However, the arrangement required continued American financial and military support that created unsustainable dependencies.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "awakening-emerges-conspirator-1",
+              "event_id": "sunni-awakening-emerges",
+              "opinion": "The tribal switch reflected pragmatic calculations about survival and local power dynamics rather than ideological conversion to American values. Al-Qaeda's overreach and brutality had alienated traditional Sunni leaders who saw partnership with Americans as temporary expedient to restore tribal authority and eliminate extremist competitors.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "violence-levels-decline",
+          "milestone_id": "surge-sunni-awakening",
+          "title": "Surge and Awakening Reduce Iraqi Violence to Lowest Levels Since 2003",
+          "left_type": "psychic",
+          "right_type": "dredd",
+          "left_opinion": "Michael E. O'Hanlon and Jason H. Campbell of the Brookings Institution stated on December 22, 2007, that Iraq's security environment had reached its best levels since early 2004 and credited Petraeus' strategy for the improvement. The violence reduction was heavily promoted as vindication of surge strategy while downplaying other factors like ethnic cleansing completion and temporary tribal alliances.",
+          "right_opinion": "However, on September 6, 2007, a report by an independent military commission headed by General James Jones found that the decrease in violence may have been due to areas being overrun by either Shias or Sunnis. The apparent peace reflected demographic separation through ethnic cleansing rather than genuine reconciliation, creating fragile stability based on segregation.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Iraq_War_troop_surge_of_2007",
+          "right_source_url": "https://www.cfr.org/timeline/iraq-war",
+          "all_opinions": [
+            {
+              "id": "violence-decline-nerd-1",
+              "event_id": "violence-levels-decline",
+              "opinion": "The violence reduction enabled contractors to complete reconstruction projects that had been stalled by security concerns, leading to billions in additional spending and profits. U.S. war casualties totaled nine hundred in 2007, making the year of the 'surge' the deadliest yet for U.S. soldiers, revealing the human cost of achieving statistical improvements.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "violence-decline-joe-1",
+              "event_id": "violence-levels-decline",
+              "opinion": "Iraqi families could finally move around their neighborhoods with less fear of death squads and car bombs, allowing children to return to school and workers to resume normal economic activities. However, the improvement came after massive displacement and demographic changes that permanently altered community structures.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "violence-decline-psychic-1",
+              "event_id": "violence-levels-decline",
+              "opinion": "The surge success narrative was carefully constructed to vindicate Bush administration policies while minimizing acknowledgment of ethnic cleansing and temporary nature of tribal alliances. Statistical improvements were promoted as proof of strategy effectiveness while underlying political failures remained unaddressed.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "violence-decline-dredd-1",
+              "event_id": "violence-levels-decline",
+              "opinion": "The violence reduction occurred primarily through demographic separation and ethnic cleansing rather than legal reconciliation or justice mechanisms. The apparent stability masked fundamental breakdown of rule of law and creation of ethnically segregated territories that violated principles of equal citizenship.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "violence-decline-president-1",
+              "event_id": "violence-levels-decline",
+              "opinion": "The violence reduction provided political space for Bush administration to claim success and begin planning eventual troop withdrawals while maintaining American credibility. However, the improvements depended on continued large military presence and financial payments to former insurgents, creating unsustainable long-term costs.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "violence-decline-conspirator-1",
+              "event_id": "violence-levels-decline",
+              "opinion": "After arriving into power, Iraqi Prime Minister Nouri al-Maliki relied on sectarian policies to consolidate his power, denouncing the Sons of Iraq as a national threat and actively dismantling them. The temporary violence reduction masked underlying political failures that would eventually lead to renewed conflict and ISIS emergence.",
               "isLeft": true,
               "expert_type": "conspirator"
             }

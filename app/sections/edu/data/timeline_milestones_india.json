@@ -1,0 +1,633 @@
+{
+  "id": "india-pakistan-pre-conflict-2025",
+  "title": "Path to War: Events Leading to India-Pakistan Conflict 2025",
+  "timeSpan": "January 2025 - April 2025",
+  "consequences": "**Strategic Buildup Costs:**\n- **Indian Defense Spending:** $76+ billion annual budget increase\n- **Pakistani Military Debt:** $12+ billion borrowed for Chinese weapons\n- **US Arms Sales:** $8.5 billion to India (F-16 modernization, S-400 systems)\n- **Chinese Military Aid:** $4.2 billion in weapons systems to Pakistan\n\n**Regional Tensions:**\n- **Kashmir Incidents:** 47 ceasefire violations in Q1 2025\n- **Cross-Border Infiltration:** 23 documented attempts\n- **Trade Disruption:** $2.1 billion annual trade at risk\n- **Diplomatic Breakdown:** All bilateral talks suspended\n\n**Economic Warfare:**\n- **Water Treaty Violations:** 14 technical disputes unresolved\n- **Most Favored Nation Status:** Revoked by both countries\n- **Investment Freezes:** $890 million in cross-border projects halted\n- **Defense Contractor Profits:** Israeli, French, Turkish, Chinese firms gained $15+ billion in orders",
+  "conclusion": "The 2025 India-Pakistan conflict was not a sudden eruption but the inevitable result of escalating tensions, arms race dynamics, and systematic diplomatic failures throughout early 2025. Both nations' pursuit of military superiority through foreign partnerships created a powder keg that only needed a spark to explode into the most dangerous South Asian crisis in decades.",
+  "leftSide": "India & Western Allies",
+  "rightSide": "Pakistan & China-Turkey Axis",
+  "milestones": [
+    {
+      "id": "trump-administration-reset",
+      "date": "2025-01-20",
+      "title": "Trump 2.0: South Asia Policy Realignment",
+      "context": "Donald Trump's return to the presidency marked a dramatic shift in US-South Asia relations, with new policies favoring India while simultaneously engaging Pakistan. Trump's transactional approach and focus on arms sales created new dynamics in the region.",
+      "order": 1,
+      "consequence": "US policy changes emboldened both India and Pakistan to pursue more aggressive military postures, believing they had American backing, while China and other powers moved to counter growing US influence.",
+      "key_persons": [
+        { "name": "Donald Trump", "role": "US President" },
+        { "name": "Marco Rubio", "role": "US Secretary of State" },
+        { "name": "JD Vance", "role": "US Vice President" },
+        { "name": "Narendra Modi", "role": "Indian Prime Minister" },
+        { "name": "Shehbaz Sharif", "role": "Pakistani Prime Minister" }
+      ],
+      "events": [
+        {
+          "id": "trump-modi-trade-deal",
+          "milestone_id": "trump-administration-reset",
+          "title": "Trump promises India major trade deal and advanced weapons systems during Modi visit",
+          "left_type": "nerd",
+          "right_type": "president",
+          "left_opinion": "Trump's deal was designed to boost American defense contractors and reduce the trade deficit, with India paying premium prices for weapons systems. The $8.5 billion arms package included significant markup over cost, generating massive profits for Lockheed Martin, Boeing, and Raytheon.",
+          "right_opinion": "India's leadership calculated that closer US ties would provide security guarantee against China and Pakistan, while Trump saw India as a key market for American weapons and a counterweight to Chinese influence in Asia.",
+          "left_source_url": "https://www.reuters.com/world/asia-pacific/indias-diplomatic-ambitions-tested-trump-pushes-deal-kashmir-2025-05-11/",
+          "right_source_url": "https://www.bloomberg.com/news/articles/2025-05-05/kashmir-attack-india-and-pakistan-face-a-conflict-neither-economy-can-afford",
+          "all_opinions": [
+            {
+              "id": "trump-modi-joe-1",
+              "event_id": "trump-modi-trade-deal",
+              "opinion": "Indian citizens celebrated the closer US ties as validation of their country's rising global status, while Pakistani people felt betrayed by America's clear favoritism toward their rival despite Pakistan's historic alliance.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "trump-modi-psychic-1",
+              "event_id": "trump-modi-trade-deal",
+              "opinion": "Trump's public embrace of Modi was designed to pressure China and signal to Pakistan that America's priorities had shifted. The timing coincided with Chinese military exercises near Taiwan, suggesting coordinated messaging with broader Indo-Pacific strategy.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "trump-modi-dredd-1",
+              "event_id": "trump-modi-trade-deal",
+              "opinion": "The arms deal violated US neutrality commitments in the Kashmir dispute and potentially breached non-proliferation agreements regarding advanced missile technologies. However, the deals fell within legal frameworks for allied nations.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "trump-modi-president-1",
+              "event_id": "trump-modi-trade-deal",
+              "opinion": "The partnership represented Trump's transactional approach to foreign policy, offering India advanced weapons in exchange for massive purchases and strategic alignment against China. This fundamentally altered regional balance of power dynamics.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "trump-modi-conspirator-1",
+              "event_id": "trump-modi-trade-deal",
+              "opinion": "The deal was coordinated with Israeli and French defense industries to create an integrated Western weapons system for India. The timing suggests preparation for predetermined conflict scenarios, with arms suppliers positioning for maximum profit from regional tensions.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "pakistan-china-military-pact",
+          "milestone_id": "trump-administration-reset",
+          "title": "Pakistan signs expanded military cooperation agreement with China and Turkey",
+          "left_type": "conspirator",
+          "right_type": "nerd",
+          "left_opinion": "Pakistan's deepening military ties with China and Turkey were orchestrated as part of Beijing's broader strategy to encircle India and test Western alliance systems. The timing coincided with Chinese concerns about growing US-India partnership.",
+          "right_opinion": "Pakistan's leadership calculated that Chinese and Turkish weapons offered better value and fewer restrictions than Western systems, while providing crucial technology transfer and domestic production capabilities worth billions in economic benefits.",
+          "left_source_url": "https://www.stimson.org/2025/four-days-in-may-the-india-pakistan-crisis-of-2025/",
+          "right_source_url": "https://www.reuters.com/business/aerospace-defense/with-militaries-upgraded-risks-multiply-any-potential-india-pakistan-conflict-2025-05-05/",
+          "all_opinions": [
+            {
+              "id": "pakistan-china-nerd-1",
+              "event_id": "pakistan-china-military-pact",
+              "opinion": "China provided $4.2 billion in weapons systems at heavily subsidized rates, essentially buying Pakistani allegiance while field-testing advanced systems against Western technology. Turkish drone sales added another $800 million to Pakistan's military capabilities.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "pakistan-china-joe-1",
+              "event_id": "pakistan-china-military-pact",
+              "opinion": "Pakistani citizens felt relief that China offered reliable military support when America was favoring India, while ordinary Chinese saw this as necessary to counter US containment efforts in Asia.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "pakistan-china-psychic-1",
+              "event_id": "pakistan-china-military-pact",
+              "opinion": "The announcement was timed to send a clear message to India and the US that Pakistan had powerful backers, while demonstrating Chinese commitment to allies who aligned with Beijing's strategic interests against Western influence.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "pakistan-china-dredd-1",
+              "event_id": "pakistan-china-military-pact",
+              "opinion": "The military cooperation agreement violated several international arms control treaties and potentially enabled technology transfers that breached non-proliferation commitments. However, both nations argued it was legitimate defense cooperation between allies.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "pakistan-china-president-1",
+              "event_id": "pakistan-china-military-pact",
+              "opinion": "The pact represented China's counter-move to US-India alignment, creating a new axis of military cooperation that challenged Western dominance in South Asia. This fundamentally altered regional security architecture.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "pakistan-china-conspirator-1",
+              "event_id": "pakistan-china-military-pact",
+              "opinion": "The agreement was part of China's systematic strategy to surround India with hostile forces while testing new weapons systems in potential conflict scenarios. Turkey's inclusion suggested broader anti-Western alliance formation.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "arms-race-escalation",
+      "date": "2025-02-15",
+      "title": "South Asian Arms Race Reaches Critical Point",
+      "context": "February 2025 marked unprecedented military buildup by both India and Pakistan, with massive weapons purchases from competing global suppliers. New systems included advanced air defense, drone swarms, and precision strike capabilities that fundamentally altered the regional military balance.",
+      "order": 2,
+      "consequence": "The arms race created a dangerous action-reaction cycle where each side's defensive measures appeared threatening to the other, while defense contractors from multiple countries profited enormously from the escalating tensions.",
+      "key_persons": [
+        { "name": "Asim Munir", "role": "Pakistani Army Chief" },
+        { "name": "Anil Chauhan", "role": "Indian Chief of Defense Staff" },
+        { "name": "Wang Yi", "role": "Chinese Foreign Minister" },
+        { "name": "Yoav Gallant", "role": "Israeli Defense Minister" },
+        { "name": "Sébastien Lecornu", "role": "French Defense Minister" }
+      ],
+      "events": [
+        {
+          "id": "india-s400-deployment",
+          "milestone_id": "arms-race-escalation",
+          "title": "India completes S-400 air defense system deployment along Pakistan border",
+          "left_type": "president",
+          "right_type": "psychic",
+          "left_opinion": "India's S-400 deployment was designed to achieve air superiority and deter Pakistani air force operations, while also serving as a demonstration to China that India possessed advanced Russian systems capable of threatening Chinese aircraft.",
+          "right_opinion": "Pakistan viewed the S-400 deployment as preparation for aggressive military action, designed to create a protective umbrella under which India could launch attacks while preventing Pakistani retaliation through air power.",
+          "left_source_url": "https://thediplomat.com/2025/06/the-100-hour-war-india-versus-pakistan/",
+          "right_source_url": "https://www.foreignaffairs.com/india/next-war-between-india-and-pakistan",
+          "all_opinions": [
+            {
+              "id": "s400-nerd-1",
+              "event_id": "india-s400-deployment",
+              "opinion": "The S-400 systems cost India $5.4 billion with Russian manufacturers and supporting contractors earning massive profits. The deployment required additional $2.1 billion in infrastructure development, benefiting Indian and Russian construction companies.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "s400-joe-1",
+              "event_id": "india-s400-deployment",
+              "opinion": "Indian citizens felt more secure knowing their country had world-class air defenses, while Pakistanis saw the systems as preparation for Indian aggression and felt increasingly vulnerable to attack.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "s400-psychic-1",
+              "event_id": "india-s400-deployment",
+              "opinion": "The high-profile deployment was designed to demonstrate Indian military superiority and intimidate Pakistan into avoiding confrontation. The psychological impact was intended to be as important as the military capability itself.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "s400-dredd-1",
+              "event_id": "india-s400-deployment",
+              "opinion": "The deployment violated several arms control agreements regarding defensive systems that could have offensive applications. However, India argued the systems were purely defensive and within sovereign rights to deploy.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "s400-president-1",
+              "event_id": "india-s400-deployment",
+              "opinion": "The S-400 deployment signaled India's commitment to military modernization and willingness to defy US sanctions to acquire Russian systems. This demonstrated independent strategic thinking despite growing US partnership.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "s400-conspirator-1",
+              "event_id": "india-s400-deployment",
+              "opinion": "The deployment was coordinated with Israeli and French systems to create an integrated air defense network designed to dominate South Asian airspace. The timing suggested preparation for specific conflict scenarios.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "pakistan-drone-acquisition",
+          "milestone_id": "arms-race-escalation",
+          "title": "Pakistan acquires advanced Turkish and Chinese drone swarms for asymmetric warfare",
+          "left_type": "conspirator",
+          "right_type": "nerd",
+          "left_opinion": "Pakistan's drone acquisition was part of a coordinated strategy with China and Turkey to develop new warfare concepts that could be exported globally, using potential India-Pakistan conflict as a testing ground for next-generation military technologies.",
+          "right_opinion": "Pakistani military leadership calculated that drone swarms offered cost-effective means to overwhelm expensive Indian air defenses, providing asymmetric advantage that could level the playing field despite India's conventional superiority.",
+          "left_source_url": "https://www.brookings.edu/articles/lessons-for-the-next-india-pakistan-war/",
+          "right_source_url": "https://www.nbr.org/publication/the-may-2025-india-pakistan-conflict-neither-quite-the-same-nor-quite-another/",
+          "all_opinions": [
+            {
+              "id": "drones-nerd-1",
+              "event_id": "pakistan-drone-acquisition",
+              "opinion": "Turkish Bayraktar and Chinese Wing Loong manufacturers earned $1.8 billion from Pakistan's drone purchases, while local assembly agreements promised $400 million in technology transfer revenues for Pakistani companies.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "drones-joe-1",
+              "event_id": "pakistan-drone-acquisition",
+              "opinion": "Pakistani military officials and citizens celebrated acquiring 'modern warfare' capabilities that could match Indian technology, while Indians worried about facing swarms of suicide drones in future conflicts.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "drones-psychic-1",
+              "event_id": "pakistan-drone-acquisition",
+              "opinion": "The drone acquisition was publicized to signal Pakistan's technological advancement and willingness to adopt new warfare methods, designed to create uncertainty in Indian military planning about how to counter swarm attacks.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "drones-dredd-1",
+              "event_id": "pakistan-drone-acquisition",
+              "opinion": "The drone transfers potentially violated international laws governing autonomous weapons systems and raised questions about accountability for civilian casualties in future conflicts. However, both suppliers argued the systems required human control.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "drones-president-1",
+              "event_id": "pakistan-drone-acquisition",
+              "opinion": "The drone acquisition represented Pakistan's adoption of modern asymmetric warfare concepts developed in Ukraine and Middle East conflicts, fundamentally changing the nature of potential India-Pakistan confrontations.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "drones-conspirator-1",
+              "event_id": "pakistan-drone-acquisition",
+              "opinion": "The timing and scope of acquisitions suggested coordinated planning with China for testing new warfare concepts, with Pakistan serving as a proxy for broader Chinese strategic objectives against Western-aligned India.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "diplomatic-breakdown",
+      "date": "2025-03-30",
+      "title": "Complete Breakdown of India-Pakistan Diplomacy",
+      "context": "March 2025 witnessed the collapse of all remaining diplomatic channels between India and Pakistan, including suspension of trade, cultural exchanges, and even cricket matches. Both sides withdrew diplomats and closed consulates, leaving only minimal embassy staff.",
+      "order": 3,
+      "consequence": "The diplomatic breakdown eliminated all peaceful resolution mechanisms and early warning systems, creating conditions where military incidents could rapidly escalate without diplomatic intervention or crisis management channels.",
+      "key_persons": [
+        { "name": "S. Jaishankar", "role": "Indian External Affairs Minister" },
+        { "name": "Ishaq Dar", "role": "Pakistani Foreign Minister" },
+        { "name": "Ajit Doval", "role": "Indian National Security Advisor" },
+        { "name": "Asim Malik", "role": "Pakistani ISI Chief" },
+        { "name": "Antonio Guterres", "role": "UN Secretary General" }
+      ],
+      "events": [
+        {
+          "id": "trade-suspension",
+          "milestone_id": "diplomatic-breakdown",
+          "title": "Both countries suspend all bilateral trade and revoke Most Favored Nation status",
+          "left_type": "nerd",
+          "right_type": "joe",
+          "left_opinion": "India's trade suspension was designed to economically pressure Pakistan while protecting Indian industries from Pakistani competition, generating support from business lobbies that profited from reduced competition and import substitution policies.",
+          "right_opinion": "Pakistani traders and ordinary citizens suffered immediate economic hardship from lost Indian markets, particularly affecting agricultural exporters and small businesses dependent on cross-border trade worth billions annually.",
+          "left_source_url": "https://www.aljazeera.com/economy/2025/6/9/india-pakistan-conflict-claims-an-unlikely-victim-himalayan-pink-salt",
+          "right_source_url": "https://www.cfr.org/global-conflict-tracker/conflict/conflict-between-india-and-pakistan",
+          "all_opinions": [
+            {
+              "id": "trade-nerd-1",
+              "event_id": "trade-suspension",
+              "opinion": "The trade suspension eliminated $2.1 billion in annual bilateral trade, benefiting domestic producers in both countries who faced less competition while hurting consumers through higher prices and reduced choice.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "trade-joe-1",
+              "event_id": "trade-suspension",
+              "opinion": "Small traders and farmers on both sides lost their livelihoods overnight, while politicians used economic nationalism to rally public support and distract from domestic economic problems caused by their own policies.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "trade-psychic-1",
+              "event_id": "trade-suspension",
+              "opinion": "The trade war was designed to demonstrate resolve and punish the other side, while creating domestic political benefits through economic nationalism that appealed to voters' emotions rather than rational economic interests.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "trade-dredd-1",
+              "event_id": "trade-suspension",
+              "opinion": "The trade suspensions violated WTO agreements and bilateral trade treaties, potentially exposing both countries to international legal challenges. However, both governments invoked national security exceptions to justify the measures.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "trade-president-1",
+              "event_id": "trade-suspension",
+              "opinion": "The economic warfare represented a new phase in India-Pakistan rivalry, using trade as a weapon while preparing for potential military conflict by reducing economic interdependence that might constrain military options.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "trade-conspirator-1",
+              "event_id": "trade-suspension",
+              "opinion": "The simultaneous trade suspensions suggested coordinated planning by hardliners in both countries who benefited from increased tensions, with military-industrial complexes and nationalist politicians gaining power and resources.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "water-treaty-disputes",
+          "milestone_id": "diplomatic-breakdown",
+          "title": "India threatens to suspend Indus Waters Treaty citing Pakistani terrorism support",
+          "left_type": "president",
+          "right_type": "dredd",
+          "left_opinion": "India's water weapon represented the ultimate economic leverage over Pakistan, designed to force Pakistani compliance on terrorism issues while demonstrating India's willingness to use all available pressure points regardless of international treaties.",
+          "right_opinion": "Pakistan viewed the water threats as violations of international law and potential acts of war, since water access was fundamental to national survival and agricultural economy supporting hundreds of millions of people.",
+          "left_source_url": "https://responsiblestatecraft.org/india-pakistan/",
+          "right_source_url": "https://asiatimes.com/2025/04/india-pakistan-war-fallout-would-spread-far-and-wide/",
+          "all_opinions": [
+            {
+              "id": "water-nerd-1",
+              "event_id": "water-treaty-disputes",
+              "opinion": "Water control gave India leverage over Pakistan's $40+ billion agricultural sector, while Indian hydroelectric projects generated billions in revenue that could be weaponized for political purposes.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "water-joe-1",
+              "event_id": "water-treaty-disputes",
+              "opinion": "Pakistani farmers panicked about potential water shortages affecting crops and livelihoods, while Indian citizens supported using 'every weapon' against Pakistan including control over rivers that belonged to India anyway.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "water-psychic-1",
+              "event_id": "water-treaty-disputes",
+              "opinion": "The water threats were designed to create maximum psychological pressure on Pakistan by threatening basic survival needs, forcing Pakistani leaders to choose between supporting terrorism and protecting their people's water supply.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "water-dredd-1",
+              "event_id": "water-treaty-disputes",
+              "opinion": "India's threats to suspend the Indus Waters Treaty violated international water law and the 1960 treaty framework mediated by the World Bank. Such actions could constitute collective punishment against Pakistani civilians.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "water-president-1",
+              "event_id": "water-treaty-disputes",
+              "opinion": "The water weapon represented India's most powerful non-military leverage, capable of crippling Pakistan economically while avoiding direct military confrontation that might trigger nuclear escalation or international intervention.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "water-conspirator-1",
+              "event_id": "water-treaty-disputes",
+              "opinion": "The water threats were coordinated with broader Indian strategy to isolate and pressure Pakistan through multiple channels simultaneously, while testing international community's response to economic warfare tactics.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kashmir-tensions-peak",
+      "date": "2025-04-15",
+      "title": "Kashmir Erupts: Violence Reaches Breaking Point",
+      "context": "April 2025 saw unprecedented violence in Kashmir with daily firefights along the Line of Control, increased militant infiltration attempts, and growing civilian casualties. Both militaries began moving additional forces to the region while imposing curfews and communication blackouts.",
+      "order": 4,
+      "consequence": "The Kashmir escalation created immediate triggers for larger conflict while both sides positioned forces for potential military action, setting the stage for the terrorist attack that would spark the May 2025 war.",
+      "key_persons": [
+        { "name": "Lieutenant General Upendra Dwivedi", "role": "Indian Northern Army Commander" },
+        { "name": "Lieutenant General Sahir Shamshad Mirza", "role": "Pakistani Corps Commander" },
+        { "name": "Mehbooba Mufti", "role": "Kashmiri Political Leader" },
+        { "name": "Yasin Malik", "role": "Kashmiri Separatist Leader" },
+        { "name": "Resistance Front", "role": "Militant Organization" }
+      ],
+      "events": [
+        {
+          "id": "loc-violations-spike",
+          "milestone_id": "kashmir-tensions-peak",
+          "title": "Line of Control ceasefire violations reach highest levels since 2019 Balakot crisis",
+          "left_type": "psychic",
+          "right_type": "conspirator",
+          "left_opinion": "India deliberately escalated border tensions to justify military buildup and create pretexts for larger military action, using provocations to test Pakistani responses and international reactions to increased aggression.",
+          "right_opinion": "Pakistan's border actions were designed to draw international attention to Kashmir and demonstrate that the situation remained unstable, while probing Indian defenses and testing new Chinese-supplied weapons systems in limited engagements.",
+          "left_source_url": "https://time.com/7284654/india-pakistan-ceasefire-trump-us-mediation-kashmir-conflict-strikes/",
+          "right_source_url": "https://www.asiapacific.ca/publication/reflections-india-pakistan-crisis-takeaways-and-implications",
+          "all_opinions": [
+            {
+              "id": "loc-nerd-1",
+              "event_id": "loc-violations-spike",
+              "opinion": "The increased military activity generated billions in ammunition and equipment costs for both sides, while defense contractors supplied replacement weapons and surveillance systems to monitor the increasingly active border.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "loc-joe-1",
+              "event_id": "loc-violations-spike",
+              "opinion": "Kashmiri civilians on both sides lived in terror from constant shelling and gunfire, while populations in India and Pakistan increasingly supported military action to 'teach the other side a lesson' once and for all.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "loc-psychic-1",
+              "event_id": "loc-violations-spike",
+              "opinion": "The escalating violations were designed to normalize higher levels of violence and prepare public opinion for larger military action, while testing the other side's resolve and response capabilities.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "loc-dredd-1",
+              "event_id": "loc-violations-spike",
+              "opinion": "The ceasefire violations breached the 2021 agreement and multiple UN resolutions calling for peace along the Line of Control. However, both sides argued they were responding to provocations from the other.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "loc-president-1",
+              "event_id": "loc-violations-spike",
+              "opinion": "The border escalation served as a testing ground for new weapons systems and tactics while demonstrating resolve to domestic audiences and international observers about willingness to use force.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "loc-conspirator-1",
+              "event_id": "loc-violations-spike",
+              "opinion": "The synchronized escalation suggested coordination by military-industrial complexes in both countries seeking to justify larger defense budgets and weapons purchases while creating conditions for profitable conflict.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+ "id": "kashmir-tensions-peak",
+ "date": "2025-04-15",
+ "title": "Kashmir Erupts: Violence Reaches Breaking Point",
+ "context": "April 2025 saw unprecedented violence in Kashmir with daily firefights along the Line of Control, increased militant infiltration attempts, and growing civilian casualties. Both militaries began moving additional forces to the region while imposing curfews and communication blackouts.",
+ "order": 4,
+ "consequence": "The Kashmir escalation created immediate triggers for larger conflict while both sides positioned forces for potential military action, setting the stage for the terrorist attack that would spark the May 2025 war.",
+ "key_persons": [
+   { "name": "Lieutenant General Upendra Dwivedi", "role": "Indian Northern Army Commander" },
+   { "name": "Lieutenant General Sahir Shamshad Mirza", "role": "Pakistani Corps Commander" },
+   { "name": "Mehbooba Mufti", "role": "Kashmiri Political Leader" },
+   { "name": "Yasin Malik", "role": "Kashmiri Separatist Leader" },
+   { "name": "Resistance Front", "role": "Militant Organization" }
+ ],
+ "events": [
+   {
+     "id": "loc-violations-spike",
+     "milestone_id": "kashmir-tensions-peak",
+     "title": "Line of Control ceasefire violations reach highest levels since 2019 Balakot crisis",
+     "left_type": "psychic",
+     "right_type": "conspirator",
+     "left_opinion": "India deliberately escalated border tensions to justify military buildup and create pretexts for larger military action, using provocations to test Pakistani responses and international reactions to increased aggression.",
+     "right_opinion": "Pakistan's border actions were designed to draw international attention to Kashmir and demonstrate that the situation remained unstable, while probing Indian defenses and testing new Chinese-supplied weapons systems in limited engagements.",
+     "left_source_url": "https://time.com/7284654/india-pakistan-ceasefire-trump-us-mediation-kashmir-conflict-strikes/",
+     "right_source_url": "https://www.asiapacific.ca/publication/reflections-india-pakistan-crisis-takeaways-and-implications",
+     "all_opinions": [
+       {
+         "id": "loc-nerd-1",
+         "event_id": "loc-violations-spike",
+         "opinion": "The increased military activity generated billions in ammunition and equipment costs for both sides, while defense contractors supplied replacement weapons and surveillance systems to monitor the increasingly active border.",
+         "isLeft": true,
+         "expert_type": "nerd"
+       },
+       {
+         "id": "loc-joe-1",
+         "event_id": "loc-violations-spike",
+         "opinion": "Kashmiri civilians on both sides lived in terror from constant shelling and gunfire, while populations in India and Pakistan increasingly supported military action to 'teach the other side a lesson' once and for all.",
+         "isLeft": false,
+         "expert_type": "joe"
+       },
+       {
+         "id": "loc-psychic-1",
+         "event_id": "loc-violations-spike",
+         "opinion": "The escalating violations were designed to normalize higher levels of violence and prepare public opinion for larger military action, while testing the other side's resolve and response capabilities.",
+         "isLeft": true,
+         "expert_type": "psychic"
+       },
+       {
+         "id": "loc-dredd-1",
+         "event_id": "loc-violations-spike",
+         "opinion": "The ceasefire violations breached the 2021 agreement and multiple UN resolutions calling for peace along the Line of Control. However, both sides argued they were responding to provocations from the other.",
+         "isLeft": true,
+         "expert_type": "dredd"
+       },
+       {
+         "id": "loc-president-1",
+         "event_id": "loc-violations-spike",
+         "opinion": "The border escalation served as a testing ground for new weapons systems and tactics while demonstrating resolve to domestic audiences and international observers about willingness to use force.",
+         "isLeft": true,
+         "expert_type": "president"
+       },
+       {
+         "id": "loc-conspirator-1",
+         "event_id": "loc-violations-spike",
+         "opinion": "The synchronized escalation suggested coordination by military-industrial complexes in both countries seeking to justify larger defense budgets and weapons purchases while creating conditions for profitable conflict.",
+         "isLeft": true,
+         "expert_type": "conspirator"
+       }
+     ]
+   },
+   {
+     "id": "militant-infiltration-surge",
+     "milestone_id": "kashmir-tensions-peak",
+     "title": "Intelligence reports document massive increase in militant infiltration attempts from Pakistan",
+     "left_type": "conspirator",
+     "right_type": "psychic",
+     "left_opinion": "India's intelligence agencies deliberately inflated infiltration reports to build case for military action against Pakistan, using selective intelligence and false flag possibilities to justify predetermined policy of escalation and eventual war.",
+     "right_opinion": "Pakistani intelligence services were indeed facilitating increased militant activity to keep Kashmir 'boiling' and draw international attention, while providing plausible deniability for any major terrorist attacks that might provide pretexts for Indian military action.",
+     "left_source_url": "https://www.pbs.org/newshour/world/india-disputes-trumps-claim-that-u-s-trade-incentives-led-to-ceasefire-with-pakistan",
+     "right_source_url": "https://www.cnn.com/2025/05/10/india/analysis-us-role-india-pakistan-ceasefire-latam-intl",
+     "all_opinions": [
+       {
+         "id": "infiltration-nerd-1",
+         "event_id": "militant-infiltration-surge",
+         "opinion": "Increased security measures and counter-infiltration operations cost both countries millions daily in additional military deployments, surveillance technology, and intelligence gathering activities benefiting defense contractors.",
+         "isLeft": true,
+         "expert_type": "nerd"
+       },
+       {
+         "id": "infiltration-joe-1",
+         "event_id": "militant-infiltration-surge",
+         "opinion": "Indian border communities lived in fear of terrorist attacks while demanding government protection, while Pakistanis dismissed infiltration claims as Indian propaganda designed to justify aggression against Pakistan.",
+         "isLeft": true,
+         "expert_type": "joe"
+       },
+       {
+         "id": "infiltration-psychic-1",
+         "event_id": "militant-infiltration-surge",
+         "opinion": "Intelligence reports were strategically leaked to media to build public support for military action while creating psychological pressure on Pakistan to control militant groups or face consequences.",
+         "isLeft": true,
+         "expert_type": "psychic"
+       },
+       {
+         "id": "infiltration-dredd-1",
+         "event_id": "militant-infiltration-surge",
+         "opinion": "Pakistan's alleged support for cross-border terrorism violated international law and UN Security Council resolutions against harboring terrorist groups. However, Pakistan maintained these were indigenous Kashmiri freedom fighters, not Pakistani-sponsored terrorists.",
+         "isLeft": false,
+         "expert_type": "dredd"
+       },
+       {
+         "id": "infiltration-president-1",
+         "event_id": "militant-infiltration-surge",
+         "opinion": "The infiltration surge represented Pakistan's continuation of proxy warfare strategy to keep Kashmir conflict active while avoiding direct military confrontation that could escalate to nuclear levels.",
+         "isLeft": false,
+         "expert_type": "president"
+       },
+       {
+         "id": "infiltration-conspirator-1",
+         "event_id": "militant-infiltration-surge",
+         "opinion": "The timing of increased infiltration coincided with arms buildup and diplomatic breakdown, suggesting coordinated strategy to create conditions for major terrorist attack that would justify Indian military retaliation.",
+         "isLeft": false,
+         "expert_type": "conspirator"
+       }
+     ]
+   },
+   {
+     "id": "military-buildup-kashmir",
+     "milestone_id": "kashmir-tensions-peak",
+     "title": "Both armies deploy additional forces to Kashmir, creating largest military concentration since Kargil War",
+     "left_type": "president",
+     "right_type": "nerd",
+     "left_opinion": "India's military buildup was designed to demonstrate overwhelming force and deter Pakistani adventurism while positioning for potential decisive military action to resolve the Kashmir issue permanently through superior conventional capabilities.",
+     "right_opinion": "Pakistan's force deployment was calculated to show readiness for defense while raising costs of any Indian military action, using asymmetric capabilities and terrain advantages to offset India's numerical and technological superiority.",
+     "left_source_url": "https://www.washingtonpost.com/world/2025/05/10/india-pakistan-ceasefire-trump-kashmir-violations/",
+     "right_source_url": "https://thefridaytimes.com/12-May-2025/the-2025-war-india-s-strategic-and-economic-losses",
+     "all_opinions": [
+       {
+         "id": "buildup-nerd-1",
+         "event_id": "military-buildup-kashmir",
+         "opinion": "The military deployment cost both countries over $500 million monthly in additional logistics, ammunition, and personnel costs, while creating massive demand for cold weather gear, communications equipment, and mountain warfare systems.",
+         "isLeft": true,
+         "expert_type": "nerd"
+       },
+       {
+         "id": "buildup-joe-1",
+         "event_id": "military-buildup-kashmir",
+         "opinion": "Kashmiri civilians faced increasing restrictions and military presence in their daily lives, while families in both India and Pakistan worried about their sons stationed in dangerous border positions.",
+         "isLeft": false,
+         "expert_type": "joe"
+       },
+       {
+         "id": "buildup-psychic-1",
+         "event_id": "military-buildup-kashmir",
+         "opinion": "The visible military buildup was designed to signal resolve to domestic and international audiences while creating psychological pressure on the other side to back down or face consequences.",
+         "isLeft": true,
+         "expert_type": "psychic"
+       },
+       {
+         "id": "buildup-dredd-1",
+         "event_id": "military-buildup-kashmir",
+         "opinion": "The massive troop deployments violated several confidence-building measures agreed upon in previous agreements and created hair-trigger conditions where minor incidents could escalate rapidly.",
+         "isLeft": true,
+         "expert_type": "dredd"
+       },
+       {
+         "id": "buildup-president-1",
+         "event_id": "military-buildup-kashmir",
+         "opinion": "The force buildup represented both sides' preparation for potential conflict while demonstrating to international community the seriousness of their positions and need for resolution.",
+         "isLeft": true,
+         "expert_type": "president"
+       },
+       {
+         "id": "buildup-conspirator-1",
+         "event_id": "military-buildup-kashmir",
+         "opinion": "The simultaneous military buildup suggested coordinated escalation by hardliners in both militaries seeking to create fait accompli conditions that would force political leaders toward conflict rather than compromise.",
+         "isLeft": true,
+         "expert_type": "conspirator"
+       }
+     ]
+   }

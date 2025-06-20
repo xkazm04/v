@@ -1,0 +1,1 @@
+Now please try to retrieve 5 statements of each key actor, which turned out to be false, lies, or manipulatives in the hindsight. Output will be JSON with attributes: {name, statement, context (two sentences where it was stated), date}. Besides that, please summarize why these statements were particulary damaging.

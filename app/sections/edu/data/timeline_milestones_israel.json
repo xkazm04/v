@@ -1,0 +1,574 @@
+{
+  "id": "israel-iran-conflict-2017-2025",
+  "title": "Israel x Iran Conflict: From Shadow War to Open Warfare",
+  "timeSpan": "2017-2025",
+  "consequences": "**Military and Strategic Costs:**\n- **Iran's Nuclear Program Investment:** $100-500 billion estimated costs (2013-2025)\n- **Israeli Air Defense Expenditure:** $3 million per Arrow missile, billions in Iron Dome operations\n- **US Military Aid to Israel:** $3.8 billion annually, additional emergency funding\n- **Iranian Missile Arsenal:** ~2,000 long-range missiles capable of hitting Israel (pre-2025)\n- **Defense Contractor Benefits:** Rafael Advanced Defense Systems, Raytheon, Lockheed Martin\n\n**Human Casualties (2017-2025):**\n- **October 7, 2023 Attack:** 1,200 Israelis killed, 250+ hostages taken\n- **Gaza War Deaths:** 55,000+ Palestinians killed (2023-2025)\n- **Iran-Israel War (June 2025):** 600+ Iranians killed, 24+ Israelis killed\n- **Key Assassinations:** Qasem Soleimani (2020), Mohsen Fakhrizadeh (2020), 14+ Iranian nuclear scientists (2025)\n\n**Economic Impact:**\n- **Iranian Sanctions Costs:** Hundreds of billions in lost oil revenue\n- **Regional Oil Market Volatility:** Price spikes during escalations\n- **Defense Industry Profits:** Major gains for Israeli and US weapons manufacturers\n- **Nuclear Infrastructure Damage:** Billions in destroyed Iranian facilities",
+  "conclusion": "The Israel-Iran conflict evolved from covert operations and proxy warfare into direct military confrontation, driven by Israel's determination to prevent Iranian nuclear weapons capability and Iran's regional ambitions. The conflict exposed how intelligence operations, assassinations, and nuclear proliferation fears can escalate into open warfare with massive human and economic costs.",
+  "leftSide": "Israel & Allied Forces",
+  "rightSide": "Iran & Axis of Resistance",
+  "milestones": [
+    {
+      "id": "israeli-strikes-syria-2017",
+      "date": "2017-01-01",
+      "title": "Israeli Campaign Against Iran in Syria",
+      "context": "Following Iran's expanded presence in Syria during the civil war, Israel launched systematic airstrikes against Iranian forces and weapons convoys, marking the beginning of direct Israeli-Iranian military confrontation.",
+      "order": 1,
+      "consequence": "Established Israeli air superiority in Syrian airspace and prevented Iranian military entrenchment near Israeli borders, but failed to completely deter Iranian regional expansion.",
+      "key_persons": [
+        { "name": "Benjamin Netanyahu", "role": "Israeli Prime Minister" },
+        { "name": "Qasem Soleimani", "role": "Commander of Iran's Quds Force" },
+        { "name": "Gadi Eizenkot", "role": "IDF Chief of Staff" },
+        { "name": "Bashar al-Assad", "role": "Syrian President" },
+        { "name": "Hassan Nasrallah", "role": "Hezbollah Secretary-General" }
+      ],
+      "events": [
+        {
+          "id": "daily-strikes-syria-2017",
+          "milestone_id": "israeli-strikes-syria-2017",
+          "title": "Israel begins daily airstrikes against Iranian targets in Syria, dropping 2,000 bombs in 2018 alone",
+          "left_type": "president",
+          "right_type": "conspirator",
+          "left_opinion": "Israel's systematic bombing campaign in Syria was designed to prevent Iran from establishing a 'land bridge' from Tehran to Lebanon, protecting Israeli strategic interests while maintaining plausible deniability by rarely acknowledging specific strikes.",
+          "right_opinion": "Iran deliberately allowed Israel to target secondary infrastructure while protecting key personnel, calculating that limited Israeli strikes were preferable to full-scale war while Iran consolidated its regional proxy network through Hezbollah and other militias.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Iran%E2%80%93Israel_proxy_conflict",
+          "right_source_url": "https://en.wikipedia.org/wiki/Iran%E2%80%93Israel_proxy_conflict",
+          "all_opinions": [
+            {
+              "id": "syria-strikes-nerd-1",
+              "event_id": "daily-strikes-syria-2017",
+              "opinion": "Israeli defense contractors like Rafael Advanced Defense Systems and Israel Aerospace Industries saw massive profits from increased military operations, while Iranian infrastructure investments worth billions were systematically destroyed, creating a costly arms race dynamic.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "syria-strikes-joe-1",
+              "event_id": "daily-strikes-syria-2017",
+              "opinion": "Most Israelis supported the strikes as necessary for national security, while Syrian civilians caught in the crossfire suffered additional destruction. Iranian families lost sons serving in Syria with little public acknowledgment from Tehran.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "syria-strikes-psychic-1",
+              "event_id": "daily-strikes-syria-2017",
+              "opinion": "Israel's 'campaign between wars' strategy used controlled escalation and media silence to normalize attacks on Iranian targets, while Iran portrayed Israeli strikes as evidence of Zionist aggression to rally domestic and regional support.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "syria-strikes-dredd-1",
+              "event_id": "daily-strikes-syria-2017",
+              "opinion": "Israel operated in a legal gray area, claiming self-defense against Iranian military buildup while violating Syrian sovereignty. Iran's military presence in Syria, while invited by Assad, violated Israeli security redlines and UN resolutions regarding foreign forces.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "syria-strikes-president-1",
+              "event_id": "daily-strikes-syria-2017",
+              "opinion": "Israeli strikes aimed to prevent Iranian hegemony in Syria while maintaining Russian cooperation through deconfliction mechanisms. Iran's Syria strategy sought to create a permanent military presence threatening Israel's northern border and supporting Hezbollah.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "syria-strikes-conspirator-1",
+              "event_id": "daily-strikes-syria-2017",
+              "opinion": "The Syria campaign was part of Israel's broader strategy to fragment Iran's 'Axis of Resistance' before it could fully consolidate. Iran deliberately absorbed limited strikes while building an irreversible strategic position through proxy networks.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "mossad-nuclear-theft-2018",
+          "milestone_id": "israeli-strikes-syria-2017",
+          "title": "Mossad agents steal 50,000 pages of Iranian nuclear documents from Tehran warehouse",
+          "left_type": "conspirator",
+          "right_type": "dredd",
+          "left_opinion": "The Tehran nuclear archive theft was a masterpiece of intelligence tradecraft, providing Israel with comprehensive evidence of Iran's past nuclear weapons program while demonstrating Israeli operational capabilities deep inside Iran to deter future nuclear development.",
+          "right_opinion": "Iran's failure to properly secure critical nuclear documentation revealed systemic security weaknesses and provided Israel with propaganda material to undermine the JCPOA, while the theft itself violated Iranian sovereignty and international law.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Iran%E2%80%93Israel_proxy_conflict",
+          "right_source_url": "https://en.wikipedia.org/wiki/Iran%E2%80%93Israel_proxy_conflict",
+          "all_opinions": [
+            {
+              "id": "nuclear-theft-nerd-1",
+              "event_id": "mossad-nuclear-theft-2018",
+              "opinion": "The Mossad operation likely cost millions in planning and execution but provided intelligence worth billions by exposing Iran's past nuclear weapons research, justifying continued sanctions and military preparations against Iranian facilities.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "nuclear-theft-joe-1",
+              "event_id": "mossad-nuclear-theft-2018",
+              "opinion": "Israeli citizens felt pride in their intelligence services' capabilities, while Iranians experienced humiliation and fear that their government couldn't protect sensitive national security information from foreign penetration.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "nuclear-theft-psychic-1",
+              "event_id": "mossad-nuclear-theft-2018",
+              "opinion": "Israel's public revelation of the stolen documents was timed to undermine the JCPOA and influence American public opinion toward withdrawal. Iran's poor operational security became a propaganda gift to opponents of the nuclear deal.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "nuclear-theft-dredd-1",
+              "event_id": "mossad-nuclear-theft-2018",
+              "opinion": "While the documents revealed past Iranian nuclear weapons research, they provided no evidence of JCPOA violations. The theft constituted espionage and violation of Iranian sovereignty, though Iran's past deception justified international suspicion.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "nuclear-theft-president-1",
+              "event_id": "mossad-nuclear-theft-2018",
+              "opinion": "The operation served Israel's strategic goal of convincing the Trump administration to withdraw from the Iran nuclear deal, while demonstrating to Iran that no location was beyond Israeli reach. Iran's security failure weakened its regional credibility.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "nuclear-theft-conspirator-1",
+              "event_id": "mossad-nuclear-theft-2018",
+              "opinion": "The theft was part of a coordinated Israeli-American intelligence campaign to kill the JCPOA, with documents conveniently 'discovered' just as Trump was considering withdrawal. Iran's failure to destroy the archive suggests internal power struggles or incompetence.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "soleimani-assassination-2020",
+      "date": "2020-01-03",
+      "title": "Soleimani Assassination & Nuclear Escalation",
+      "context": "The US assassination of Qasem Soleimani, with Israeli intelligence assistance, marked a dramatic escalation in the conflict and prompted Iran to abandon uranium enrichment limits under the JCPOA.",
+      "order": 2,
+      "consequence": "Eliminated Iran's most capable military strategist but prompted Iran to accelerate its nuclear program and strengthen ties with proxy forces, while bringing the US and Iran to the brink of war.",
+      "key_persons": [
+        { "name": "Donald Trump", "role": "US President" },
+        { "name": "Qasem Soleimani", "role": "Commander of Iran's Quds Force" },
+        { "name": "Ali Khamenei", "role": "Iranian Supreme Leader" },
+        { "name": "Tamir Hayman", "role": "Israeli Military Intelligence Chief" },
+        { "name": "Esmail Qaani", "role": "Soleimani's Successor" }
+      ],
+      "events": [
+        {
+          "id": "soleimani-drone-strike",
+          "milestone_id": "soleimani-assassination-2020",
+          "title": "US drone strike kills Qasem Soleimani at Baghdad airport, with Israeli intelligence assistance",
+          "left_type": "conspirator",
+          "right_type": "president",
+          "left_opinion": "Israeli intelligence provided crucial targeting information to enable the Soleimani assassination, eliminating Iran's most effective military strategist and architect of regional proxy networks while maintaining plausible deniability about direct involvement in the operation.",
+          "right_opinion": "Iran's failure to protect Soleimani, despite his high profile and importance, revealed serious security vulnerabilities and intelligence penetration that emboldened further Israeli and American operations against Iranian leadership.",
+          "left_source_url": "https://apnews.com/article/middle-east-iran-jerusalem-israel-military-intelligence-cfba78c69ae656697684ab92c4cac5b9",
+          "right_source_url": "https://www.npr.org/2022/01/03/1069983221/2-years-after-the-u-s-killed-irans-qasem-soleimani-tensions-remain",
+          "all_opinions": [
+            {
+              "id": "soleimani-nerd-1",
+              "event_id": "soleimani-drone-strike",
+              "opinion": "The assassination cost minimal resources (one drone, one missile) but eliminated Iran's most valuable military asset, worth billions in operational knowledge and relationships. Defense contractors saw increased demand for precision strike capabilities following the operation's success.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "soleimani-joe-1",
+              "event_id": "soleimani-drone-strike",
+              "opinion": "Millions of Iranians mourned Soleimani as a national hero and war veteran, while many Americans worried about potential retaliation. The assassination created a martyr figure that Iran exploited for domestic and regional propaganda purposes.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "soleimani-psychic-1",
+              "event_id": "soleimani-drone-strike",
+              "opinion": "Trump's timing coincided with impeachment proceedings and electoral pressure, using the assassination to project strength. Iran's massive funeral ceremonies and revenge rhetoric served to rally domestic support around the regime during economic hardship.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "soleimani-dredd-1",
+              "event_id": "soleimani-drone-strike",
+              "opinion": "The targeted killing violated international law as assassination of a foreign official on third-country soil without imminent threat justification. However, Soleimani's designation as a terrorist leader and his role in attacks on US forces provided some legal cover.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "soleimani-president-1",
+              "event_id": "soleimani-drone-strike",
+              "opinion": "The operation aimed to re-establish deterrence and demonstrate American resolve, while severing Iran's most important operational link to regional proxies. Iran's measured retaliation showed both anger and desire to avoid full-scale war with superior American forces.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "soleimani-conspirator-1",
+              "event_id": "soleimani-drone-strike",
+              "opinion": "Israeli intelligence had been tracking Soleimani for years, providing flight information and communications intercepts to enable the strike. Iran's security apparatus was penetrated at the highest levels, explaining how Soleimani's location was precisely known.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "iran-nuclear-withdrawal-2020",
+          "milestone_id": "soleimani-assassination-2020",
+          "title": "Iran announces complete withdrawal from JCPOA uranium enrichment limits",
+          "left_type": "dredd",
+          "right_type": "nerd",
+          "left_opinion": "Iran's nuclear escalation violated its international commitments under the JCPOA and NPT, using Soleimani's death as justification to advance toward weapons-grade uranium enrichment capabilities that threatened regional stability and nuclear non-proliferation norms.",
+          "right_opinion": "Iran's uranium enrichment acceleration was a calculated response to maximize pressure for sanctions relief and demonstrate the costs of military confrontation, while remaining technically below weapons-grade levels to avoid triggering immediate military retaliation.",
+          "left_source_url": "https://www.aljazeera.com/news/2020/1/8/us-iran-tensions-timeline-of-events-leading-to-soleimani-killing",
+          "right_source_url": "https://gulfif.org/irans-nuclear-program-might-not-be-worth-the-cost/",
+          "all_opinions": [
+            {
+              "id": "nuclear-withdrawal-nerd-1",
+              "event_id": "iran-nuclear-withdrawal-2020",
+              "opinion": "Iran's enrichment expansion required billions in additional centrifuge investment and uranium stockpiling, while potential nuclear weapons capability increased Iran's strategic value despite massive economic sanctions costs. European companies lost billions in abandoned Iranian investments.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "nuclear-withdrawal-joe-1",
+              "event_id": "iran-nuclear-withdrawal-2020",
+              "opinion": "Iranian citizens faced increasingly severe economic sanctions as their government prioritized nuclear development over civilian needs. International observers worried about nuclear proliferation spreading to other regional powers in response to Iranian capabilities.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "nuclear-withdrawal-psychic-1",
+              "event_id": "iran-nuclear-withdrawal-2020",
+              "opinion": "Iran linked nuclear escalation directly to Soleimani's death to justify breaking international agreements while portraying itself as the victim. The regime used nuclear progress as a source of national pride to offset economic suffering from sanctions.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "nuclear-withdrawal-dredd-1",
+              "event_id": "iran-nuclear-withdrawal-2020",
+              "opinion": "Iran's JCPOA withdrawal violated binding international commitments and IAEA safeguards obligations, though the US had already breached the agreement first. Iran retained formal NPT membership while essentially nullifying its non-proliferation commitments.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "nuclear-withdrawal-president-1",
+              "event_id": "iran-nuclear-withdrawal-2020",
+              "opinion": "Iran's nuclear acceleration was designed to pressure European allies to provide sanctions relief and demonstrate the costs of American 'maximum pressure' policies. The move brought Iran closer to nuclear weapons capability as a deterrent against future attacks.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "nuclear-withdrawal-conspirator-1",
+              "event_id": "iran-nuclear-withdrawal-2020",
+              "opinion": "Iran's hardliners used Soleimani's death to eliminate remaining moderates and nuclear compromise advocates, accelerating toward weapons capability regardless of diplomatic costs. The nuclear program became irreversibly militarized under Revolutionary Guard control.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "october-7-regional-escalation",
+      "date": "2023-10-07",
+      "title": "October 7 Attack & Regional War",
+      "context": "Hamas launched the deadliest attack on Israel since its founding, killing 1,200 Israelis and taking 250+ hostages, triggering a massive Israeli response in Gaza and escalating tensions with Iran and its proxy network across the region.",
+      "order": 3,
+      "consequence": "Devastated Hamas's military capabilities and Gaza's infrastructure while killing 55,000+ Palestinians, while Iran's proxy network was systematically degraded, setting the stage for direct Israel-Iran confrontation.",
+      "key_persons": [
+        { "name": "Benjamin Netanyahu", "role": "Israeli Prime Minister" },
+        { "name": "Yahya Sinwar", "role": "Hamas Leader in Gaza" },
+        { "name": "Ismail Haniyeh", "role": "Hamas Political Leader" },
+        { "name": "Ali Khamenei", "role": "Iranian Supreme Leader" },
+        { "name": "Hassan Nasrallah", "role": "Hezbollah Secretary-General" }
+      ],
+      "events": [
+        {
+          "id": "hamas-october-7-attack",
+          "milestone_id": "october-7-regional-escalation",
+          "title": "Hamas launches coordinated attack killing 1,200 Israelis and taking 251 hostages",
+          "left_type": "psychic",
+          "right_type": "conspirator",
+          "left_opinion": "Israel's intelligence failure was partly due to overconfidence in technological solutions and dismissal of Hamas capabilities, while the attack's timing exploited Israeli political divisions over judicial reform and reduced military readiness due to internal protests.",
+          "right_opinion": "Hamas's attack was meticulously planned with Iranian support to derail Israeli-Saudi normalization and drag Israel into a costly war, while Iran calculated that sacrificing Hamas would strengthen its other proxies and nuclear negotiating position.",
+          "left_source_url": "https://en.wikipedia.org/wiki/October_7_Hamas-led_attack_on_Israel",
+          "right_source_url": "https://www.france24.com/en/middle-east/20241007-hamas-terrorist-attacks-7-october-deadliest-day-israel-history-anniversary",
+          "all_opinions": [
+            {
+              "id": "october-7-nerd-1",
+              "event_id": "hamas-october-7-attack",
+              "opinion": "Hamas invested years building tunnel networks and weapons capabilities with Iranian funding estimated at hundreds of millions annually. Israel's subsequent military response cost billions while defense contractors like Rafael and Elbit Systems saw massive revenue increases from Iron Dome operations.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "october-7-joe-1",
+              "event_id": "hamas-october-7-attack",
+              "opinion": "Israeli families experienced unprecedented trauma from mass kidnappings and civilian massacres, while Palestinian civilians in Gaza paid a devastating price for Hamas's military decisions. The attack shattered Israeli confidence in their military's protective capabilities.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "october-7-psychic-1",
+              "event_id": "hamas-october-7-attack",
+              "opinion": "Hamas's attack exploited Israeli overconfidence and internal political divisions, timing the assault during Simchat Torah when security was relaxed. Israel's intelligence establishment had dismissed Hamas's capabilities as insufficient for such a coordinated operation.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "october-7-dredd-1",
+              "event_id": "hamas-october-7-attack",
+              "opinion": "Hamas's deliberate targeting of civilians, hostage-taking, and use of sexual violence constituted war crimes and crimes against humanity. However, Israel's subsequent collective punishment of Gaza's civilian population also raised serious legal concerns under international humanitarian law.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "october-7-president-1",
+              "event_id": "hamas-october-7-attack",
+              "opinion": "Hamas's attack aimed to derail Abraham Accords expansion and Israeli-Saudi normalization by forcing Israel into a devastating Gaza war. Iran supported the operation to demonstrate its proxy capabilities while maintaining plausible deniability about direct involvement.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "october-7-conspirator-1",
+              "event_id": "hamas-october-7-attack",
+              "opinion": "Iranian intelligence had detailed knowledge of Hamas's attack plans and timing, using the operation to sacrifice Hamas while strengthening Iran's nuclear negotiating position. Israel's intelligence failure resulted from focusing on Iran's nuclear program while neglecting Hamas's conventional buildup.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "israel-gaza-war-response",
+          "milestone_id": "october-7-regional-escalation",
+          "title": "Israel launches massive military campaign in Gaza, killing 55,000+ Palestinians",
+          "left_type": "dredd",
+          "right_type": "psychic",
+          "left_opinion": "Israel's military response, while claiming self-defense, employed disproportionate force that killed thousands of civilians and destroyed essential infrastructure, potentially violating international humanitarian law regarding distinction between military and civilian targets.",
+          "right_opinion": "Hamas deliberately embedded military assets in civilian areas to maximize Palestinian casualties for propaganda purposes, using human shields strategy to turn inevitable civilian deaths into international pressure against Israel's right to self-defense.",
+          "left_source_url": "https://www.pbs.org/newshour/world/gaza-health-officials-say-55000-palestinians-have-died-in-israel-hamas-war",
+          "right_source_url": "https://www.britannica.com/event/Israel-Hamas-War",
+          "all_opinions": [
+            {
+              "id": "gaza-war-nerd-1",
+              "event_id": "israel-gaza-war-response",
+              "opinion": "Israel's military operation cost an estimated $10+ billion while destroying Gaza's $20+ billion economy completely. American military aid increased substantially, benefiting US defense contractors while Palestinian GDP was eliminated through systematic infrastructure destruction.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "gaza-war-joe-1",
+              "event_id": "israel-gaza-war-response",
+              "opinion": "Palestinian families lost everything—homes, businesses, family members—while Israeli families lived under constant rocket fire and trauma from hostage situations. International observers witnessed unprecedented destruction of civilian infrastructure and displacement of entire populations.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "gaza-war-psychic-1",
+              "event_id": "israel-gaza-war-response",
+              "opinion": "Israel's overwhelming military response was designed to restore deterrence and demonstrate the cost of attacking Israeli civilians. Hamas calculated that massive Palestinian casualties would generate international pressure for ceasefires while preserving Hamas leadership in tunnels.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "gaza-war-dredd-1",
+              "event_id": "israel-gaza-war-response",
+              "opinion": "Israel's bombing campaign and siege tactics raised serious questions about proportionality and distinction under international humanitarian law, particularly regarding civilian infrastructure destruction. Hamas's use of human shields, while condemned, did not absolve Israel of legal obligations.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "gaza-war-president-1",
+              "event_id": "israel-gaza-war-response",
+              "opinion": "Israel's military campaign aimed to eliminate Hamas's governing and military capabilities while demonstrating to Iran and other regional powers the costs of proxy warfare. The operation's scale was designed to deter future attacks and restore Israeli strategic deterrence.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "gaza-war-conspirator-1",
+              "event_id": "israel-gaza-war-response",
+              "opinion": "Israel's Gaza campaign was the opening phase of a broader strategy to dismantle Iran's proxy network systematically, using Hamas's attack as justification for regional war. Iran sacrificed Hamas to strengthen its nuclear program while Israel eliminated Iranian assets.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "direct-war-2025",
+      "date": "2025-06-13",
+      "title": "Israel-Iran Direct War",
+      "context": "After IAEA declared Iran non-compliant with nuclear obligations, Israel launched Operation Rising Lion, directly attacking Iranian nuclear facilities and military leadership, triggering the first open war between the two countries.",
+      "order": 4,
+      "consequence": "Israel achieved air superiority over Iran and significantly damaged its nuclear program and military capabilities, while Iran demonstrated its missile capabilities despite heavy losses, fundamentally altering Middle Eastern power dynamics.",
+      "key_persons": [
+        { "name": "Benjamin Netanyahu", "role": "Israeli Prime Minister" },
+        { "name": "Ali Khamenei", "role": "Iranian Supreme Leader" },
+        { "name": "Donald Trump", "role": "US President" },
+        { "name": "Rafael Grossi", "role": "IAEA Director General" },
+        { "name": "Israel Katz", "role": "Israeli Defense Minister" }
+      ],
+      "events": [
+        {
+          "id": "operation-rising-lion",
+          "milestone_id": "direct-war-2025",
+          "title": "Israel launches Operation Rising Lion targeting Iranian nuclear facilities and military leadership",
+          "left_type": "president",
+          "right_type": "nerd",
+          "left_opinion": "Israel's preemptive strike was calculated to prevent Iranian nuclear weapons capability while Iran was weakened by proxy losses, using advanced F-35 stealth fighters and precision munitions to achieve maximum strategic effect with minimal escalation risk.",
+          "right_opinion": "Iran's nuclear infrastructure represented decades of investment worth hundreds of billions, while Israeli strikes cost relatively little but achieved massive destruction. Iranian missile retaliation demonstrated costly but limited capabilities against Israeli air defenses.",
+          "left_source_url": "https://www.britannica.com/event/Israel-Iran-conflict",
+          "right_source_url": "https://time.com/7294919/israel-air-supremacy-tehran-iran/",
+          "all_opinions": [
+            {
+              "id": "rising-lion-nerd-1",
+              "event_id": "operation-rising-lion",
+              "opinion": "Israel's operation cost billions but destroyed Iranian nuclear investments worth hundreds of billions, while demonstrating the economic value of air superiority. Iranian missile responses cost millions per missile with limited damage, creating unsustainable cost ratios for Iran.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "rising-lion-joe-1",
+              "event_id": "operation-rising-lion",
+              "opinion": "Iranian civilians experienced unprecedented fear as Israeli jets flew over Tehran unchallenged, while Israeli families faced renewed missile threats despite iron dome protection. Both populations realized their governments had brought them to direct warfare.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "rising-lion-psychic-1",
+              "event_id": "operation-rising-lion",
+              "opinion": "Israel's operation was timed to exploit Iranian weakness after proxy defeats and nuclear deadline pressure, demonstrating overwhelming military superiority to force Iranian surrender. Iran's propaganda emphasized resistance despite massive losses to maintain regime legitimacy.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "rising-lion-dredd-1",
+              "event_id": "operation-rising-lion",
+              "opinion": "Israel's preemptive strikes violated international law regarding anticipatory self-defense, lacking evidence of imminent Iranian nuclear attack. However, Iran's repeated threats and nuclear program violations provided some justification under self-defense doctrines.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "rising-lion-president-1",
+              "event_id": "operation-rising-lion",
+              "opinion": "Israel's attack exploited optimal strategic timing—Iranian proxies defeated, nuclear deadlines approaching, and Trump's potential support. Iran's weak response demonstrated the collapse of its deterrence capabilities and regional influence.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "rising-lion-conspirator-1",
+              "event_id": "operation-rising-lion",
+              "opinion": "Israeli intelligence had spent years infiltrating Iran's nuclear program and military command, enabling precise targeting of key facilities and personnel. Iran's security apparatus was thoroughly penetrated, explaining the operation's devastating effectiveness.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "iran-missile-retaliation",
+          "milestone_id": "direct-war-2025",
+          "title": "Iran launches 400+ missiles and 1,000+ drones at Israel, hitting multiple targets",
+          "left_type": "nerd",
+          "right_type": "joe",
+          "left_opinion": "Iran's massive missile barrage represented a significant portion of its strategic arsenal, costing hundreds of millions while achieving limited military effect due to Israeli air defenses and US support, demonstrating the economic unsustainability of missile warfare against superior defenses.",
+          "right_opinion": "Iranian citizens rallied around their government despite military losses, while the missile attacks proved Iran could strike deep into Israel and overwhelm some defenses, maintaining national pride even as infrastructure was systematically destroyed by Israeli retaliation.",
+          "left_source_url": "https://www.washingtonpost.com/world/2025/06/17/israel-iran-missile-conflict/",
+          "right_source_url": "https://www.npr.org/2025/06/17/nx-s1-5436749/israel-iran-airstrikes-nuclear-attack-war",
+          "all_opinions": [
+            {
+              "id": "missile-retaliation-nerd-1",
+              "event_id": "iran-missile-retaliation",
+              "opinion": "Iran's 400+ missile salvo cost an estimated $200-400 million while achieving minimal strategic damage, demonstrating the economic futility of missile warfare against advanced air defenses. Israeli interceptor costs were substantial but manageable with US resupply support.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "missile-retaliation-joe-1",
+              "event_id": "iran-missile-retaliation",
+              "opinion": "Iranian families felt pride that their country could strike back despite massive attacks, while Israeli civilians experienced real fear as some missiles penetrated defenses. Both populations realized they were in a genuine war with potentially catastrophic consequences.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "missile-retaliation-psychic-1",
+              "event_id": "iran-missile-retaliation",
+              "opinion": "Iran's missile response was designed to demonstrate defiance and capability despite military defeats, using mass launches to overwhelm Israeli defenses and prove Iran could retaliate. The regime used successful strikes as propaganda victories despite overall strategic failure.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "missile-retaliation-dredd-1",
+              "event_id": "iran-missile-retaliation",
+              "opinion": "Iran's missile attacks on civilian areas and infrastructure constituted war crimes under international humanitarian law, though Iranian claims of targeting military sites provided some legal cover. Israel's disproportionate response also raised legal concerns.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "missile-retaliation-president-1",
+              "event_id": "iran-missile-retaliation",
+              "opinion": "Iran's missile response aimed to restore deterrence and demonstrate that attacks on Iranian soil would trigger massive retaliation, while proving Iran retained strategic strike capabilities despite Israeli air superiority. The attacks showed Iran's remaining arsenal depth.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "missile-retaliation-conspirator-1",
+              "event_id": "iran-missile-retaliation",
+              "opinion": "Iran's missile strikes were precisely targeted using intelligence gathered over years, hitting Israeli intelligence headquarters and military facilities to demonstrate sophisticated targeting capabilities. The scale of the barrage revealed Iran's true missile arsenal size.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "israeli-air-supremacy",
+          "milestone_id": "direct-war-2025",
+          "title": "Israel establishes air supremacy over Iran, destroying air defenses and nuclear facilities",
+          "left_type": "conspirator",
+          "right_type": "psychic",
+          "left_opinion": "Israel's achievement of air supremacy over Iran within days demonstrated years of preparation, intelligence gathering, and technological superiority, using stealth aircraft and precision munitions to systematically dismantle Iranian defenses while Iranian leadership failed to coordinate effective resistance.",
+          "right_opinion": "Iran's inability to defend its own airspace revealed the fundamental weakness of its military despite decades of investment, while the regime's propaganda emphasizing resistance masked the reality that Iran had lost control of its strategic environment and nuclear program.",
+          "left_source_url": "https://time.com/7294919/israel-air-supremacy-tehran-iran/",
+          "right_source_url": "https://www.washingtonpost.com/world/2025/06/20/israel-air-defense-iran-iron-dome-missile-arrow/",
+          "all_opinions": [
+            {
+              "id": "air-supremacy-nerd-1",
+              "event_id": "israeli-air-supremacy",
+              "opinion": "Israel's air supremacy achievement cost billions in advanced aircraft and precision munitions but destroyed Iranian investments worth hundreds of billions in air defenses and nuclear facilities. Defense contractors saw massive profits from advanced weapons system deployment and resupply contracts.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "air-supremacy-joe-1",
+              "event_id": "israeli-air-supremacy",
+              "opinion": "Iranian citizens experienced terror as Israeli aircraft flew unopposed over their capital, while Israeli civilians felt safer knowing their air force dominated Iranian skies. The psychological impact of air supremacy was as important as the military advantage.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "air-supremacy-psychic-1",
+              "event_id": "israeli-air-supremacy",
+              "opinion": "Israel's demonstration of air supremacy was designed to force Iranian psychological surrender by proving complete military dominance over Iranian territory. Iran's propaganda struggled to explain how Israeli jets could operate freely over Tehran despite claims of powerful defenses.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "air-supremacy-dredd-1",
+              "event_id": "israeli-air-supremacy",
+              "opinion": "Israel's establishment of air supremacy enabled systematic targeting of Iranian infrastructure and leadership, potentially violating sovereignty principles. However, Iran's nuclear program violations and military threats provided legal justification under self-defense doctrines.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "air-supremacy-president-1",
+              "event_id": "israeli-air-supremacy",
+              "opinion": "Israeli air supremacy fundamentally altered regional power dynamics by demonstrating Iran's inability to defend its territory or nuclear program. This achievement strengthened Israeli deterrence while exposing Iranian military weakness to regional rivals and proxies.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "air-supremacy-conspirator-1",
+              "event_id": "israeli-air-supremacy",
+              "opinion": "Israel's rapid achievement of air supremacy revealed years of intelligence preparation, including detailed mapping of Iranian air defenses and infiltration of command systems. Iranian military communications were likely compromised, enabling precision targeting of critical nodes.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

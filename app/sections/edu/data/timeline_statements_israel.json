@@ -1,0 +1,154 @@
+{
+  "false_statements": [
+    {
+      "name": "Benjamin Netanyahu",
+      "statement": "Iran will have nuclear weapons capability within 3-5 years",
+      "context": "Speaking to the Israeli Knesset in 1992, Netanyahu warned that Iran would become autonomous in developing nuclear weapons within this timeframe. He repeated similar warnings throughout the 1990s in his book 'Fighting Terrorism' and various speeches.",
+      "date": "1992-1996"
+    },
+    {
+      "name": "Benjamin Netanyahu", 
+      "statement": "Iraq is advancing towards nuclear weapons with centrifuges the size of washing machines",
+      "context": "Testifying before the US Congress in 2002, Netanyahu claimed Iraq had an advanced nuclear program with large-scale centrifuge operations. This was used to support arguments for military intervention in Iraq.",
+      "date": "2002"
+    },
+    {
+      "name": "Benjamin Netanyahu",
+      "statement": "Iran has a secret nuclear warehouse storing massive amounts of equipment in Tehran",
+      "context": "In his 2018 UN General Assembly speech, Netanyahu revealed what he described as a secret nuclear facility storing equipment from Iran's nuclear program. US intelligence officials later told reporters this claim was misleading.",
+      "date": "September 27, 2018"
+    },
+    {
+      "name": "Benjamin Netanyahu",
+      "statement": "By next spring, at most by next summer, Iran will finish medium enrichment and move to final stage",
+      "context": "Speaking at the UN General Assembly while holding a cartoon bomb drawing, Netanyahu warned that Iran was on the verge of completing its nuclear weapons program within months.",
+      "date": "September 27, 2012"
+    },
+    {
+      "name": "Benjamin Netanyahu",
+      "statement": "Iran could produce a nuclear weapon in a very short time - months, even weeks",
+      "context": "Shortly before launching Operation Rising Lion against Iran's nuclear facilities, Netanyahu claimed Iran was on the immediate verge of nuclear weapons capability, contradicting US intelligence assessments.",
+      "date": "June 2025"
+    },
+    {
+      "name": "Ali Khamenei",
+      "statement": "I have issued a fatwa declaring nuclear weapons religiously forbidden under Islamic law",
+      "context": "Iranian officials, particularly Hassan Rouhani, have repeatedly cited Khamenei's nuclear fatwa as evidence Iran will never pursue nuclear weapons. However, research shows no written fatwa was ever published on Khamenei's official websites.",
+      "date": "2003-2023"
+    },
+    {
+      "name": "Ali Khamenei",
+      "statement": "Iran's nuclear program is entirely for peaceful purposes and civilian energy production",
+      "context": "Throughout decades of nuclear development, Khamenei has consistently claimed Iran's nuclear activities are solely for peaceful energy and medical purposes, while Iran enriched uranium to 60% purity - far beyond civilian needs.",
+      "date": "2003-2025"
+    },
+    {
+      "name": "Ali Khamenei",
+      "statement": "We do not want nuclear weapons and have never pursued them",
+      "context": "Speaking at various public events, Khamenei has categorically denied Iran's pursuit of nuclear weapons capability, while intelligence documents stolen by Israel revealed Iran's past nuclear weapons research program (Project AMAD).",
+      "date": "2005-2023"
+    },
+    {
+      "name": "Ali Khamenei",
+      "statement": "Nuclear weapons have no place in Iran's military system",
+      "context": "Khamenei has repeatedly stated that nuclear weapons are not part of Iran's defense strategy, while Iran developed ballistic missiles capable of carrying nuclear warheads and advanced its uranium enrichment capabilities.",
+      "date": "2009-2020"
+    },
+    {
+      "name": "Ali Khamenei",
+      "statement": "If it were not an Islamic principle, we would build nuclear weapons and no one could stop us",
+      "context": "Speaking to nuclear industry officials, Khamenei simultaneously claimed religious prohibition while boasting of Iran's technical capabilities, revealing the conditional nature of Iran's nuclear restraint.",
+      "date": "June 11, 2023"
+    },
+    {
+      "name": "Barack Obama",
+      "statement": "I didn't set a red line on Syria chemical weapons - the world set a red line",
+      "context": "When questioned about his failure to act after Assad's chemical weapons use, Obama claimed he never personally established the 'red line,' contradicting his explicit 2012 statement that chemical weapons use would be 'a red line for us.'",
+      "date": "September 4, 2013"
+    },
+    {
+      "name": "Barack Obama",
+      "statement": "A red line for us is we start seeing a whole bunch of chemical weapons moving around or being utilized",
+      "context": "Obama's impromptu red line statement was made without consulting advisers and created expectations of military response that he later failed to fulfill when Assad used chemical weapons at Ghouta, killing 1,400 people.",
+      "date": "August 20, 2012"
+    },
+    {
+      "name": "Barack Obama",
+      "statement": "The Iran nuclear deal will prevent Iran from obtaining nuclear weapons",
+      "context": "Obama promoted the JCPOA as a permanent solution to Iran's nuclear threat, while the deal contained sunset clauses that would allow Iran to resume advanced nuclear activities after 2025-2030.",
+      "date": "2015"
+    },
+    {
+      "name": "Barack Obama",
+      "statement": "We have successfully removed Syria's chemical weapons through diplomacy",
+      "context": "Obama claimed the 2013 diplomatic agreement with Russia successfully eliminated Syria's chemical weapons threat, while Assad continued using chlorine and other chemical agents throughout the Syrian civil war.",
+      "date": "2014"
+    },
+    {
+      "name": "Barack Obama",
+      "statement": "Iran's Supreme Leader has indicated there is a fatwa which forbids nuclear weapons development",
+      "context": "Obama repeatedly referenced Khamenei's supposed nuclear fatwa during negotiations and public statements, lending credibility to a religious ruling that expert analysis suggests may not exist in formal written form.",
+      "date": "2013-2015"
+    },
+    {
+      "name": "Donald Trump",
+      "statement": "Maximum pressure will force Iran back to the negotiating table for a better deal",
+      "context": "Trump promised his sanctions campaign would pressure Iran into accepting a more comprehensive nuclear agreement, while Iran instead accelerated its nuclear program and enriched uranium to near-weapons grade levels.",
+      "date": "2018-2020"
+    },
+    {
+      "name": "Donald Trump",
+      "statement": "Iran's oil exports were driven to zero during my presidency",
+      "context": "Trump repeatedly claimed he eliminated Iran's oil revenue, while Iran continued selling significant quantities of oil through sanctions evasion networks, particularly to China.",
+      "date": "2018-2025"
+    },
+    {
+      "name": "Donald Trump",
+      "statement": "There would never have been an October 7 if I had remained president",
+      "context": "Trump claimed his Iran policy prevented Hamas from being funded and would have prevented the October 7 attack, while Hamas received funding from multiple sources and had been planning the attack for years.",
+      "date": "February 2025"
+    },
+    {
+      "name": "Donald Trump",
+      "statement": "The Iran nuclear deal was the worst deal ever negotiated",
+      "context": "Trump consistently characterized the JCPOA as catastrophically bad while it successfully limited Iran's nuclear activities, with IAEA confirming Iran's compliance until the US withdrawal.",
+      "date": "2015-2018"
+    },
+    {
+      "name": "Donald Trump",
+      "statement": "Maximum pressure contains Iran and reduces regional threats",
+      "context": "Trump argued his sanctions policy reduced Iranian threats, while Iran expanded its proxy networks, increased missile production, and advanced its nuclear program beyond JCPOA limits during his pressure campaign.",
+      "date": "2018-2020"
+    },
+    {
+      "name": "Hassan Rouhani",
+      "statement": "The nuclear fatwa is more important for us than the NPT",
+      "context": "As Iran's chief nuclear negotiator, Rouhani promoted Khamenei's supposed fatwa as binding religious law preventing nuclear weapons development, while later admitting he introduced the fatwa concept as a negotiating tactic without prior coordination.",
+      "date": "2004-2012"
+    },
+    {
+      "name": "Hassan Rouhani",
+      "statement": "Iran has never violated its nuclear commitments under international agreements",
+      "context": "Rouhani claimed Iran maintained its international nuclear obligations, while Iran was secretly developing nuclear weapons capabilities through the AMAD Project and later violated JCPOA enrichment limits.",
+      "date": "2013-2017"
+    },
+    {
+      "name": "Hassan Rouhani",
+      "statement": "Iran's nuclear program faces no legal or technical obstacles to peaceful development",
+      "context": "Rouhani argued Iran's nuclear activities were entirely legitimate and faced only political opposition, while Iran was concealing military dimensions of its nuclear program from international inspectors.",
+      "date": "2015"
+    },
+    {
+      "name": "Hassan Rouhani",
+      "statement": "The JCPOA ensures Iran's nuclear rights while building international confidence",
+      "context": "Rouhani promoted the nuclear deal as protecting Iran's rights while satisfying international concerns, but Iran continued developing advanced centrifuges and maintaining nuclear weapons knowledge during JCPOA implementation.",
+      "date": "2015"
+    },
+    {
+      "name": "Hassan Rouhani",
+      "statement": "Iran disclosed all aspects of its nuclear program to international inspectors",
+      "context": "Rouhani claimed full transparency with the IAEA, while Iran maintained undeclared nuclear sites and activities, as revealed by Israeli intelligence operations and subsequent IAEA investigations.",
+      "date": "2013-2017"
+    }
+  ]
+}

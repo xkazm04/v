@@ -1,0 +1,154 @@
+{
+  "false_statements": [
+    {
+      "name": "Narendra Modi",
+      "statements": [
+        {
+          "statement": "Pakistan has been defeated on the battlefield and Operation Sindoor has added a new dimension to India's victory",
+          "context": "Modi addressed the nation on May 12, 2025, claiming complete victory over Pakistan in Operation Sindoor. He stated that India had always defeated Pakistan on battlefields throughout history.",
+          "date": "2025-05-12"
+        },
+        {
+          "statement": "India eliminated over 100 Pakistani terrorists in Operation Sindoor without any military casualties",
+          "context": "In his national address, Modi claimed that Indian forces had killed over 100 terrorists in Pakistani camps. He failed to mention that India lost 4-6 fighter aircraft including advanced Rafale jets.",
+          "date": "2025-05-07"
+        },
+        {
+          "statement": "There was no US mediation in the ceasefire - it was achieved through direct bilateral military channels only",
+          "context": "Modi told Trump during their phone call that no third-party mediation occurred in the ceasefire negotiations. This contradicted extensive documentation of US diplomatic intervention by Rubio and Vance.",
+          "date": "2025-06-17"
+        },
+        {
+          "statement": "India targeted only terrorist infrastructure and avoided all civilian and military casualties",
+          "context": "Modi claimed that Operation Sindoor was precisely targeted at terrorist camps without hitting civilian areas. Pakistani sources documented 40+ civilian deaths including women and children.",
+          "date": "2025-05-08"
+        },
+        {
+          "statement": "Pakistan will face water and economic blockade until it stops all terrorist activities permanently",
+          "context": "Modi declared that 'water and blood cannot flow together' while suspending the Indus Waters Treaty. He presented this as a temporary measure when it was designed as permanent leverage.",
+          "date": "2025-04-23"
+        }
+      ]
+    },
+    {
+      "name": "Donald Trump",
+      "statements": [
+        {
+          "statement": "After a long night of talks mediated by the United States, India and Pakistan agreed to a full ceasefire",
+          "context": "Trump announced on Truth Social that the US had mediated extensive negotiations between India and Pakistan. Both countries later denied US mediation played a decisive role in their ceasefire agreement.",
+          "date": "2025-05-10"
+        },
+        {
+          "statement": "The ceasefire came about because I offered trade concessions to both India and Pakistan",
+          "context": "Trump claimed he used trade incentives as leverage to convince both countries to stop fighting. Indian Foreign Ministry spokesman explicitly denied any trade discussions during the crisis.",
+          "date": "2025-05-12"
+        },
+        {
+          "statement": "India and Pakistan have been fighting for a thousand years over Kashmir",
+          "context": "Trump repeatedly stated this historically inaccurate claim during his mediation offer. The Kashmir dispute began in 1947 with partition, not a thousand years ago.",
+          "date": "2025-05-11"
+        },
+        {
+          "statement": "The Pakistan-India dispute is now completely settled after my intervention",
+          "context": "Trump told US troops in Qatar that hostilities between the countries were permanently resolved. Fighting and tensions continued, with both sides accusing each other of ceasefire violations.",
+          "date": "2025-05-15"
+        },
+        {
+          "statement": "Both countries agreed to hold comprehensive talks at a neutral site on all issues including Kashmir",
+          "context": "Trump and Rubio announced that India had agreed to broad negotiations including Kashmir mediation. India immediately denied agreeing to any third-party mediation or neutral venue talks.",
+          "date": "2025-05-10"
+        }
+      ]
+    },
+    {
+      "name": "Shehbaz Sharif",
+      "statements": [
+        {
+          "statement": "Pakistani Air Force reduced Indian jets to smithereens in one hour, shooting down 5 aircraft including 3 Rafales",
+          "context": "Sharif claimed on national television that Pakistan had achieved decisive air victory over India. While Pakistan did down several Indian aircraft, the specific numbers and types remained disputed and unverified.",
+          "date": "2025-05-07"
+        },
+        {
+          "statement": "India deliberately targeted only civilian areas including mosques and schools, avoiding all military targets",
+          "context": "Sharif addressed parliament claiming India intentionally hit civilian infrastructure to terrorize Pakistani people. Evidence showed India struck both military and civilian targets with mixed precision.",
+          "date": "2025-05-07"
+        },
+        {
+          "statement": "Pakistan had no involvement whatsoever in the Pahalgam attack and calls for neutral international investigation",
+          "context": "Sharif categorically denied any Pakistani connection to the terrorist attack on Indian tourists. Intelligence reports suggested Pakistani ISI had prior knowledge and facilitated the attackers.",
+          "date": "2025-04-23"
+        },
+        {
+          "statement": "Pakistan achieved complete military victory and taught India a decisive lesson",
+          "context": "Sharif declared victory after the ceasefire, claiming Pakistan had defeated Indian aggression and forced them to seek US help to end the conflict. Military assessments showed mixed results for both sides.",
+          "date": "2025-05-10"
+        },
+        {
+          "statement": "All Pakistani casualties were innocent civilians killed by Indian terrorism, with no military losses",
+          "context": "Sharif claimed that only civilians died in Indian attacks while Pakistani military suffered no significant losses. Pakistani military later confirmed deaths of airmen and damage to multiple air bases.",
+          "date": "2025-05-08"
+        }
+      ]
+    },
+    {
+      "name": "Asim Munir",
+      "statements": [
+        {
+          "statement": "Pakistan successfully intercepted all Indian missiles and drones with zero damage to military infrastructure",
+          "context": "Army Chief Munir claimed Pakistani air defenses had neutralized all Indian attacks without damage to military installations. Satellite imagery later confirmed significant damage to multiple Pakistani air bases.",
+          "date": "2025-05-08"
+        },
+        {
+          "statement": "Pakistani forces never crossed into Indian airspace and only engaged in defensive operations",
+          "context": "Munir stated that Pakistan conducted purely defensive operations without crossing international boundaries. Evidence showed Pakistani drones and missiles targeted military bases deep inside Indian territory.",
+          "date": "2025-05-09"
+        },
+        {
+          "statement": "Chinese weapons systems performed flawlessly and exceeded all expectations in combat",
+          "context": "Munir praised Chinese-supplied PL-15 missiles and HQ-9 air defense systems for perfect performance. Some Chinese missiles failed to hit targets and were intercepted by Indian defenses.",
+          "date": "2025-05-11"
+        },
+        {
+          "statement": "Pakistan was prepared to use nuclear weapons if India continued aggression",
+          "context": "Munir implied Pakistan was ready for nuclear escalation during meetings with US officials. Pakistan's National Command Authority meeting was announced then canceled, suggesting nuclear threats were bluffs.",
+          "date": "2025-05-10"
+        },
+        {
+          "statement": "All Pakistani military operations were conducted under international law and rules of engagement",
+          "context": "Munir claimed full legal compliance while briefing international media. Pakistani attacks on civilian airports and non-military targets violated international humanitarian law.",
+          "date": "2025-05-12"
+        }
+      ]
+    },
+    {
+      "name": "Marco Rubio",
+      "statements": [
+        {
+          "statement": "India and Pakistan have agreed to start talks on a broad set of issues at a neutral site",
+          "context": "Rubio announced comprehensive bilateral talks as part of the ceasefire agreement during his State Department briefing. India immediately denied agreeing to any neutral venue or broad negotiations.",
+          "date": "2025-05-10"
+        },
+        {
+          "statement": "Both countries requested US mediation and were grateful for American diplomatic intervention",
+          "context": "Rubio claimed both India and Pakistan had sought US help in resolving their conflict. India consistently denied requesting or accepting any third-party mediation throughout the crisis.",
+          "date": "2025-05-11"
+        },
+        {
+          "statement": "The US prevented nuclear escalation by providing alternative communication channels",
+          "context": "Rubio suggested US diplomacy was essential to avoid nuclear war between the rivals. Both countries maintained their own military communication channels that were used for the ceasefire agreement.",
+          "date": "2025-05-12"
+        },
+        {
+          "statement": "Pakistan agreed to crack down on terrorist groups in exchange for ceasefire",
+          "context": "Rubio indicated Pakistan had committed to counter-terrorism measures as part of the agreement. No such Pakistani commitments were documented in the ceasefire arrangement.",
+          "date": "2025-05-10"
+        },
+        {
+          "statement": "The ceasefire includes provisions for addressing Kashmir dispute through negotiation",
+          "context": "Rubio suggested the agreement contained elements for resolving the Kashmir conflict. Both countries explicitly stated the ceasefire had no provisions regarding the territorial dispute.",
+          "date": "2025-05-10"
+        }
+      ]
+    }
+  ]
+}

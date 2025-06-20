@@ -164,7 +164,6 @@ export function YouTubeMobilePlayer({
   // Force show header for testing (remove in production)
   useEffect(() => {
     if (videos && videos[currentIndex]) {
-      // Mock statement for testing - remove this in production
       const mockStatement: ActiveStatement = {
         id: `mock-${currentIndex}`,
         timestamp: 30,
@@ -194,7 +193,6 @@ export function YouTubeMobilePlayer({
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-black">
-      {/* Video Container */}
       <YouTubeMobileContainer
         videos={videos}
         currentIndex={currentIndex}
