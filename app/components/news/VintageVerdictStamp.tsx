@@ -70,7 +70,7 @@ export const VintageVerdictStamp = memo(function VintageVerdictStamp({
     lg: 'w-24 h-24 text-base'
   };
 
-  const stampColor = isDark ? config.darkColor : config.color;
+  const stampColor = isDark ? config.darkColor : config.color || '#000000';
   
   return (
     <motion.div

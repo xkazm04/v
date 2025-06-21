@@ -450,184 +450,190 @@
               "expert_type": "conspirator"
             }
           ]
-        },
+        }
+      ]
+    },
         {
- "id": "kashmir-tensions-peak",
- "date": "2025-04-15",
- "title": "Kashmir Erupts: Violence Reaches Breaking Point",
- "context": "April 2025 saw unprecedented violence in Kashmir with daily firefights along the Line of Control, increased militant infiltration attempts, and growing civilian casualties. Both militaries began moving additional forces to the region while imposing curfews and communication blackouts.",
- "order": 4,
- "consequence": "The Kashmir escalation created immediate triggers for larger conflict while both sides positioned forces for potential military action, setting the stage for the terrorist attack that would spark the May 2025 war.",
- "key_persons": [
-   { "name": "Lieutenant General Upendra Dwivedi", "role": "Indian Northern Army Commander" },
-   { "name": "Lieutenant General Sahir Shamshad Mirza", "role": "Pakistani Corps Commander" },
-   { "name": "Mehbooba Mufti", "role": "Kashmiri Political Leader" },
-   { "name": "Yasin Malik", "role": "Kashmiri Separatist Leader" },
-   { "name": "Resistance Front", "role": "Militant Organization" }
- ],
- "events": [
-   {
-     "id": "loc-violations-spike",
-     "milestone_id": "kashmir-tensions-peak",
-     "title": "Line of Control ceasefire violations reach highest levels since 2019 Balakot crisis",
-     "left_type": "psychic",
-     "right_type": "conspirator",
-     "left_opinion": "India deliberately escalated border tensions to justify military buildup and create pretexts for larger military action, using provocations to test Pakistani responses and international reactions to increased aggression.",
-     "right_opinion": "Pakistan's border actions were designed to draw international attention to Kashmir and demonstrate that the situation remained unstable, while probing Indian defenses and testing new Chinese-supplied weapons systems in limited engagements.",
-     "left_source_url": "https://time.com/7284654/india-pakistan-ceasefire-trump-us-mediation-kashmir-conflict-strikes/",
-     "right_source_url": "https://www.asiapacific.ca/publication/reflections-india-pakistan-crisis-takeaways-and-implications",
-     "all_opinions": [
-       {
-         "id": "loc-nerd-1",
-         "event_id": "loc-violations-spike",
-         "opinion": "The increased military activity generated billions in ammunition and equipment costs for both sides, while defense contractors supplied replacement weapons and surveillance systems to monitor the increasingly active border.",
-         "isLeft": true,
-         "expert_type": "nerd"
-       },
-       {
-         "id": "loc-joe-1",
-         "event_id": "loc-violations-spike",
-         "opinion": "Kashmiri civilians on both sides lived in terror from constant shelling and gunfire, while populations in India and Pakistan increasingly supported military action to 'teach the other side a lesson' once and for all.",
-         "isLeft": false,
-         "expert_type": "joe"
-       },
-       {
-         "id": "loc-psychic-1",
-         "event_id": "loc-violations-spike",
-         "opinion": "The escalating violations were designed to normalize higher levels of violence and prepare public opinion for larger military action, while testing the other side's resolve and response capabilities.",
-         "isLeft": true,
-         "expert_type": "psychic"
-       },
-       {
-         "id": "loc-dredd-1",
-         "event_id": "loc-violations-spike",
-         "opinion": "The ceasefire violations breached the 2021 agreement and multiple UN resolutions calling for peace along the Line of Control. However, both sides argued they were responding to provocations from the other.",
-         "isLeft": true,
-         "expert_type": "dredd"
-       },
-       {
-         "id": "loc-president-1",
-         "event_id": "loc-violations-spike",
-         "opinion": "The border escalation served as a testing ground for new weapons systems and tactics while demonstrating resolve to domestic audiences and international observers about willingness to use force.",
-         "isLeft": true,
-         "expert_type": "president"
-       },
-       {
-         "id": "loc-conspirator-1",
-         "event_id": "loc-violations-spike",
-         "opinion": "The synchronized escalation suggested coordination by military-industrial complexes in both countries seeking to justify larger defense budgets and weapons purchases while creating conditions for profitable conflict.",
-         "isLeft": true,
-         "expert_type": "conspirator"
-       }
-     ]
-   },
-   {
-     "id": "militant-infiltration-surge",
-     "milestone_id": "kashmir-tensions-peak",
-     "title": "Intelligence reports document massive increase in militant infiltration attempts from Pakistan",
-     "left_type": "conspirator",
-     "right_type": "psychic",
-     "left_opinion": "India's intelligence agencies deliberately inflated infiltration reports to build case for military action against Pakistan, using selective intelligence and false flag possibilities to justify predetermined policy of escalation and eventual war.",
-     "right_opinion": "Pakistani intelligence services were indeed facilitating increased militant activity to keep Kashmir 'boiling' and draw international attention, while providing plausible deniability for any major terrorist attacks that might provide pretexts for Indian military action.",
-     "left_source_url": "https://www.pbs.org/newshour/world/india-disputes-trumps-claim-that-u-s-trade-incentives-led-to-ceasefire-with-pakistan",
-     "right_source_url": "https://www.cnn.com/2025/05/10/india/analysis-us-role-india-pakistan-ceasefire-latam-intl",
-     "all_opinions": [
-       {
-         "id": "infiltration-nerd-1",
-         "event_id": "militant-infiltration-surge",
-         "opinion": "Increased security measures and counter-infiltration operations cost both countries millions daily in additional military deployments, surveillance technology, and intelligence gathering activities benefiting defense contractors.",
-         "isLeft": true,
-         "expert_type": "nerd"
-       },
-       {
-         "id": "infiltration-joe-1",
-         "event_id": "militant-infiltration-surge",
-         "opinion": "Indian border communities lived in fear of terrorist attacks while demanding government protection, while Pakistanis dismissed infiltration claims as Indian propaganda designed to justify aggression against Pakistan.",
-         "isLeft": true,
-         "expert_type": "joe"
-       },
-       {
-         "id": "infiltration-psychic-1",
-         "event_id": "militant-infiltration-surge",
-         "opinion": "Intelligence reports were strategically leaked to media to build public support for military action while creating psychological pressure on Pakistan to control militant groups or face consequences.",
-         "isLeft": true,
-         "expert_type": "psychic"
-       },
-       {
-         "id": "infiltration-dredd-1",
-         "event_id": "militant-infiltration-surge",
-         "opinion": "Pakistan's alleged support for cross-border terrorism violated international law and UN Security Council resolutions against harboring terrorist groups. However, Pakistan maintained these were indigenous Kashmiri freedom fighters, not Pakistani-sponsored terrorists.",
-         "isLeft": false,
-         "expert_type": "dredd"
-       },
-       {
-         "id": "infiltration-president-1",
-         "event_id": "militant-infiltration-surge",
-         "opinion": "The infiltration surge represented Pakistan's continuation of proxy warfare strategy to keep Kashmir conflict active while avoiding direct military confrontation that could escalate to nuclear levels.",
-         "isLeft": false,
-         "expert_type": "president"
-       },
-       {
-         "id": "infiltration-conspirator-1",
-         "event_id": "militant-infiltration-surge",
-         "opinion": "The timing of increased infiltration coincided with arms buildup and diplomatic breakdown, suggesting coordinated strategy to create conditions for major terrorist attack that would justify Indian military retaliation.",
-         "isLeft": false,
-         "expert_type": "conspirator"
-       }
-     ]
-   },
-   {
-     "id": "military-buildup-kashmir",
-     "milestone_id": "kashmir-tensions-peak",
-     "title": "Both armies deploy additional forces to Kashmir, creating largest military concentration since Kargil War",
-     "left_type": "president",
-     "right_type": "nerd",
-     "left_opinion": "India's military buildup was designed to demonstrate overwhelming force and deter Pakistani adventurism while positioning for potential decisive military action to resolve the Kashmir issue permanently through superior conventional capabilities.",
-     "right_opinion": "Pakistan's force deployment was calculated to show readiness for defense while raising costs of any Indian military action, using asymmetric capabilities and terrain advantages to offset India's numerical and technological superiority.",
-     "left_source_url": "https://www.washingtonpost.com/world/2025/05/10/india-pakistan-ceasefire-trump-kashmir-violations/",
-     "right_source_url": "https://thefridaytimes.com/12-May-2025/the-2025-war-india-s-strategic-and-economic-losses",
-     "all_opinions": [
-       {
-         "id": "buildup-nerd-1",
-         "event_id": "military-buildup-kashmir",
-         "opinion": "The military deployment cost both countries over $500 million monthly in additional logistics, ammunition, and personnel costs, while creating massive demand for cold weather gear, communications equipment, and mountain warfare systems.",
-         "isLeft": true,
-         "expert_type": "nerd"
-       },
-       {
-         "id": "buildup-joe-1",
-         "event_id": "military-buildup-kashmir",
-         "opinion": "Kashmiri civilians faced increasing restrictions and military presence in their daily lives, while families in both India and Pakistan worried about their sons stationed in dangerous border positions.",
-         "isLeft": false,
-         "expert_type": "joe"
-       },
-       {
-         "id": "buildup-psychic-1",
-         "event_id": "military-buildup-kashmir",
-         "opinion": "The visible military buildup was designed to signal resolve to domestic and international audiences while creating psychological pressure on the other side to back down or face consequences.",
-         "isLeft": true,
-         "expert_type": "psychic"
-       },
-       {
-         "id": "buildup-dredd-1",
-         "event_id": "military-buildup-kashmir",
-         "opinion": "The massive troop deployments violated several confidence-building measures agreed upon in previous agreements and created hair-trigger conditions where minor incidents could escalate rapidly.",
-         "isLeft": true,
-         "expert_type": "dredd"
-       },
-       {
-         "id": "buildup-president-1",
-         "event_id": "military-buildup-kashmir",
-         "opinion": "The force buildup represented both sides' preparation for potential conflict while demonstrating to international community the seriousness of their positions and need for resolution.",
-         "isLeft": true,
-         "expert_type": "president"
-       },
-       {
-         "id": "buildup-conspirator-1",
-         "event_id": "military-buildup-kashmir",
-         "opinion": "The simultaneous military buildup suggested coordinated escalation by hardliners in both militaries seeking to create fait accompli conditions that would force political leaders toward conflict rather than compromise.",
-         "isLeft": true,
-         "expert_type": "conspirator"
-       }
-     ]
-   }
+          "id": "kashmir-tensions-peak",
+          "date": "2025-04-15",
+          "title": "Kashmir Erupts: Violence Reaches Breaking Point",
+          "context": "April 2025 saw unprecedented violence in Kashmir with daily firefights along the Line of Control, increased militant infiltration attempts, and growing civilian casualties. Both militaries began moving additional forces to the region while imposing curfews and communication blackouts.",
+          "order": 4,
+          "consequence": "The Kashmir escalation created immediate triggers for larger conflict while both sides positioned forces for potential military action, setting the stage for the terrorist attack that would spark the May 2025 war.",
+          "key_persons": [
+            { "name": "Lieutenant General Upendra Dwivedi", "role": "Indian Northern Army Commander" },
+            { "name": "Lieutenant General Sahir Shamshad Mirza", "role": "Pakistani Corps Commander" },
+            { "name": "Mehbooba Mufti", "role": "Kashmiri Political Leader" },
+            { "name": "Yasin Malik", "role": "Kashmiri Separatist Leader" },
+            { "name": "Resistance Front", "role": "Militant Organization" }
+          ],
+          "events": [
+            {
+              "id": "loc-violations-spike",
+              "milestone_id": "kashmir-tensions-peak",
+              "title": "Line of Control ceasefire violations reach highest levels since 2019 Balakot crisis",
+              "left_type": "psychic",
+              "right_type": "conspirator",
+              "left_opinion": "India deliberately escalated border tensions to justify military buildup and create pretexts for larger military action, using provocations to test Pakistani responses and international reactions to increased aggression.",
+              "right_opinion": "Pakistan's border actions were designed to draw international attention to Kashmir and demonstrate that the situation remained unstable, while probing Indian defenses and testing new Chinese-supplied weapons systems in limited engagements.",
+              "left_source_url": "https://time.com/7284654/india-pakistan-ceasefire-trump-us-mediation-kashmir-conflict-strikes/",
+              "right_source_url": "https://www.asiapacific.ca/publication/reflections-india-pakistan-crisis-takeaways-and-implications",
+              "all_opinions": [
+                {
+                  "id": "loc-nerd-1",
+                  "event_id": "loc-violations-spike",
+                  "opinion": "The increased military activity generated billions in ammunition and equipment costs for both sides, while defense contractors supplied replacement weapons and surveillance systems to monitor the increasingly active border.",
+                  "isLeft": true,
+                  "expert_type": "nerd"
+                },
+                {
+                  "id": "loc-joe-1",
+                  "event_id": "loc-violations-spike",
+                  "opinion": "Kashmiri civilians on both sides lived in terror from constant shelling and gunfire, while populations in India and Pakistan increasingly supported military action to 'teach the other side a lesson' once and for all.",
+                  "isLeft": false,
+                  "expert_type": "joe"
+                },
+                {
+                  "id": "loc-psychic-1",
+                  "event_id": "loc-violations-spike",
+                  "opinion": "The escalating violations were designed to normalize higher levels of violence and prepare public opinion for larger military action, while testing the other side's resolve and response capabilities.",
+                  "isLeft": true,
+                  "expert_type": "psychic"
+                },
+                {
+                  "id": "loc-dredd-1",
+                  "event_id": "loc-violations-spike",
+                  "opinion": "The ceasefire violations breached the 2021 agreement and multiple UN resolutions calling for peace along the Line of Control. However, both sides argued they were responding to provocations from the other.",
+                  "isLeft": true,
+                  "expert_type": "dredd"
+                },
+                {
+                  "id": "loc-president-1",
+                  "event_id": "loc-violations-spike",
+                  "opinion": "The border escalation served as a testing ground for new weapons systems and tactics while demonstrating resolve to domestic audiences and international observers about willingness to use force.",
+                  "isLeft": true,
+                  "expert_type": "president"
+                },
+                {
+                  "id": "loc-conspirator-1",
+                  "event_id": "loc-violations-spike",
+                  "opinion": "The synchronized escalation suggested coordination by military-industrial complexes in both countries seeking to justify larger defense budgets and weapons purchases while creating conditions for profitable conflict.",
+                  "isLeft": true,
+                  "expert_type": "conspirator"
+                }
+              ]
+            },
+            {
+              "id": "militant-infiltration-surge",
+              "milestone_id": "kashmir-tensions-peak",
+              "title": "Intelligence reports document massive increase in militant infiltration attempts from Pakistan",
+              "left_type": "conspirator",
+              "right_type": "psychic",
+              "left_opinion": "India's intelligence agencies deliberately inflated infiltration reports to build case for military action against Pakistan, using selective intelligence and false flag possibilities to justify predetermined policy of escalation and eventual war.",
+              "right_opinion": "Pakistani intelligence services were indeed facilitating increased militant activity to keep Kashmir 'boiling' and draw international attention, while providing plausible deniability for any major terrorist attacks that might provide pretexts for Indian military action.",
+              "left_source_url": "https://www.pbs.org/newshour/world/india-disputes-trumps-claim-that-u-s-trade-incentives-led-to-ceasefire-with-pakistan",
+              "right_source_url": "https://www.cnn.com/2025/05/10/india/analysis-us-role-india-pakistan-ceasefire-latam-intl",
+              "all_opinions": [
+                {
+                  "id": "infiltration-nerd-1",
+                  "event_id": "militant-infiltration-surge",
+                  "opinion": "Increased security measures and counter-infiltration operations cost both countries millions daily in additional military deployments, surveillance technology, and intelligence gathering activities benefiting defense contractors.",
+                  "isLeft": true,
+                  "expert_type": "nerd"
+                },
+                {
+                  "id": "infiltration-joe-1",
+                  "event_id": "militant-infiltration-surge",
+                  "opinion": "Indian border communities lived in fear of terrorist attacks while demanding government protection, while Pakistanis dismissed infiltration claims as Indian propaganda designed to justify aggression against Pakistan.",
+                  "isLeft": true,
+                  "expert_type": "joe"
+                },
+                {
+                  "id": "infiltration-psychic-1",
+                  "event_id": "militant-infiltration-surge",
+                  "opinion": "Intelligence reports were strategically leaked to media to build public support for military action while creating psychological pressure on Pakistan to control militant groups or face consequences.",
+                  "isLeft": true,
+                  "expert_type": "psychic"
+                },
+                {
+                  "id": "infiltration-dredd-1",
+                  "event_id": "militant-infiltration-surge",
+                  "opinion": "Pakistan's alleged support for cross-border terrorism violated international law and UN Security Council resolutions against harboring terrorist groups. However, Pakistan maintained these were indigenous Kashmiri freedom fighters, not Pakistani-sponsored terrorists.",
+                  "isLeft": false,
+                  "expert_type": "dredd"
+                },
+                {
+                  "id": "infiltration-president-1",
+                  "event_id": "militant-infiltration-surge",
+                  "opinion": "The infiltration surge represented Pakistan's continuation of proxy warfare strategy to keep Kashmir conflict active while avoiding direct military confrontation that could escalate to nuclear levels.",
+                  "isLeft": false,
+                  "expert_type": "president"
+                },
+                {
+                  "id": "infiltration-conspirator-1",
+                  "event_id": "militant-infiltration-surge",
+                  "opinion": "The timing of increased infiltration coincided with arms buildup and diplomatic breakdown, suggesting coordinated strategy to create conditions for major terrorist attack that would justify Indian military retaliation.",
+                  "isLeft": false,
+                  "expert_type": "conspirator"
+                }
+              ]
+            },
+            {
+              "id": "military-buildup-kashmir",
+              "milestone_id": "kashmir-tensions-peak",
+              "title": "Both armies deploy additional forces to Kashmir, creating largest military concentration since Kargil War",
+              "left_type": "president",
+              "right_type": "nerd",
+              "left_opinion": "India's military buildup was designed to demonstrate overwhelming force and deter Pakistani adventurism while positioning for potential decisive military action to resolve the Kashmir issue permanently through superior conventional capabilities.",
+              "right_opinion": "Pakistan's force deployment was calculated to show readiness for defense while raising costs of any Indian military action, using asymmetric capabilities and terrain advantages to offset India's numerical and technological superiority.",
+              "left_source_url": "https://www.washingtonpost.com/world/2025/05/10/india-pakistan-ceasefire-trump-kashmir-violations/",
+              "right_source_url": "https://thefridaytimes.com/12-May-2025/the-2025-war-india-s-strategic-and-economic-losses",
+              "all_opinions": [
+                {
+                  "id": "buildup-nerd-1",
+                  "event_id": "military-buildup-kashmir",
+                  "opinion": "The military deployment cost both countries over $500 million monthly in additional logistics, ammunition, and personnel costs, while creating massive demand for cold weather gear, communications equipment, and mountain warfare systems.",
+                  "isLeft": true,
+                  "expert_type": "nerd"
+                },
+                {
+                  "id": "buildup-joe-1",
+                  "event_id": "military-buildup-kashmir",
+                  "opinion": "Kashmiri civilians faced increasing restrictions and military presence in their daily lives, while families in both India and Pakistan worried about their sons stationed in dangerous border positions.",
+                  "isLeft": false,
+                  "expert_type": "joe"
+                },
+                {
+                  "id": "buildup-psychic-1",
+                  "event_id": "military-buildup-kashmir",
+                  "opinion": "The visible military buildup was designed to signal resolve to domestic and international audiences while creating psychological pressure on the other side to back down or face consequences.",
+                  "isLeft": true,
+                  "expert_type": "psychic"
+                },
+                {
+                  "id": "buildup-dredd-1",
+                  "event_id": "military-buildup-kashmir",
+                  "opinion": "The massive troop deployments violated several confidence-building measures agreed upon in previous agreements and created hair-trigger conditions where minor incidents could escalate rapidly.",
+                  "isLeft": true,
+                  "expert_type": "dredd"
+                },
+                {
+                  "id": "buildup-president-1",
+                  "event_id": "military-buildup-kashmir",
+                  "opinion": "The force buildup represented both sides' preparation for potential conflict while demonstrating to international community the seriousness of their positions and need for resolution.",
+                  "isLeft": true,
+                  "expert_type": "president"
+                },
+                {
+                  "id": "buildup-conspirator-1",
+                  "event_id": "military-buildup-kashmir",
+                  "opinion": "The simultaneous military buildup suggested coordinated escalation by hardliners in both militaries seeking to create fait accompli conditions that would force political leaders toward conflict rather than compromise.",
+                  "isLeft": true,
+                  "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

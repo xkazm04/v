@@ -1,0 +1,243 @@
+{
+  "false_statements": [
+    {
+      "actor": "Abdel Fattah al-Burhan (SAF Commander)",
+      "statements": [
+        {
+          "name": "Abdel Fattah al-Burhan",
+          "statement": "We are ready to participate in negotiations and prepared to meet Hemedti",
+          "context": "Al-Burhan told BBC after his speech at the 78th UN General Assembly in September 2023 that he was prepared to meet Hemedti for negotiations. He made similar commitments multiple times throughout 2023.",
+          "date": "2023-09-21"
+        },
+        {
+          "name": "Abdel Fattah al-Burhan", 
+          "statement": "We have no reconciliation with them, we have no agreement with them... no party with whom we can sit down to negotiate",
+          "context": "Al-Burhan rejected peace efforts and refused to meet Hemedti despite previous commitments. He called his rival a 'clown', 'traitor' and 'coward' while rejecting ceasefire deals.",
+          "date": "2024-01-05"
+        },
+        {
+          "name": "Abdel Fattah al-Burhan",
+          "statement": "Democracy does not come by the gun. The Sudanese people want freedom and democracy and know how to take their rights",
+          "context": "Al-Burhan made this statement while defending his military rule after having overthrown civilian government twice. He spoke to Al Jazeera during active fighting that he initiated.",
+          "date": "2023-04-20"
+        },
+        {
+          "name": "Abdel Fattah al-Burhan",
+          "statement": "We are defending the legitimate government and constitutional order against rebellion",
+          "context": "Al-Burhan framed the conflict as defending legitimacy despite having come to power through military coups in 2019 and 2021. He made this claim while using military force against former allies.",
+          "date": "2023-04-17"
+        },
+        {
+          "name": "Abdel Fattah al-Burhan",
+          "statement": "The RSF has received no external support from us, Wagner was brought to support the army, not the RSF",
+          "context": "Al-Burhan denied Wagner connections while his government was negotiating Russian naval base deals and receiving weapons. He made this statement during interviews about foreign interference.",
+          "date": "2023-04-20"
+        }
+      ]
+    },
+    {
+      "actor": "Mohamed Hamdan Dagalo 'Hemedti' (RSF Commander)",
+      "statements": [
+        {
+          "name": "Mohamed Hamdan Dagalo (Hemedti)",
+          "statement": "We are defending the realization of a true democratic transition in the country",
+          "context": "Hemedti claimed to fight for democracy while leading forces accused of genocide and having participated in military coups. He said this during Al Jazeera interview amid ethnic cleansing campaigns in Darfur.",
+          "date": "2023-04-20"
+        },
+        {
+          "name": "Mohamed Hamdan Dagalo (Hemedti)",
+          "statement": "There is no truth to us receiving any external support. We have not even requested external support",
+          "context": "Hemedti denied foreign support while receiving weapons and financing from UAE through Wagner Group networks. Multiple UN reports documented extensive external support to RSF during this period.",
+          "date": "2023-04-20"
+        },
+        {
+          "name": "Mohamed Hamdan Dagalo (Hemedti)",
+          "statement": "The RSF are fully prepared for a ceasefire throughout Sudan and to start serious and comprehensive political talks",
+          "context": "Hemedti made this commitment in his UN video message while RSF forces were conducting ethnic cleansing operations in Darfur. His forces continued attacking civilians despite ceasefire announcements.",
+          "date": "2023-09-21"
+        },
+        {
+          "name": "Mohamed Hamdan Dagalo (Hemedti)",
+          "statement": "I have no such intentions to rule Sudan, there should be a civilian government",
+          "context": "Hemedti claimed to support civilian rule while actively fighting to control Sudan's gold resources and establishing parallel government structures. He said this during CNN interview amid power grab attempts.",
+          "date": "2023-04-17"
+        },
+        {
+          "name": "Mohamed Hamdan Dagalo (Hemedti)",
+          "statement": "We are calling for a humanitarian truce but the other side does not want that",
+          "context": "Hemedti blamed SAF for ceasefire violations while RSF forces were systematically attacking civilian areas and hospitals. He made this claim during Al Jazeera phone interview while his forces targeted medical facilities.",
+          "date": "2023-04-20"
+        }
+      ]
+    },
+    {
+      "actor": "United Arab Emirates Government",
+      "statements": [
+        {
+          "name": "UAE Government",
+          "statement": "The UAE is gravely concerned about the devastating impacts of the conflict in Sudan and calls on warring parties to protect civilians",
+          "context": "UAE issued humanitarian statements while simultaneously providing weapons and funding to RSF forces conducting genocide in Darfur. This statement was made in official UN response defending against Sudan's accusations.",
+          "date": "2024-06-27"
+        },
+        {
+          "name": "UAE Government",
+          "statement": "The allegations made by the Sudanese representatives are nothing more than fabrications and the dubious photographs should be summarily disregarded",
+          "context": "UAE denied arms supply evidence presented to UN Security Council including photos of UAE passports and weapons shipments. Multiple UN expert panels had confirmed credible evidence of UAE weapons transfers.",
+          "date": "2024-06-27"
+        },
+        {
+          "name": "UAE Government",
+          "statement": "The UAE has sought to help meet the humanitarian needs of the Sudanese people through field hospitals and aid",
+          "context": "UAE promoted humanitarian assistance while using gold revenues from Sudan to finance weapons transfers to RSF. The 'humanitarian' aid represented fraction of weapons funding provided to warring parties.",
+          "date": "2024-06-27"
+        },
+        {
+          "name": "UAE Government",
+          "statement": "The UAE maintains neutrality in the Sudan conflict and supports all efforts for peaceful resolution",
+          "context": "UAE claimed neutrality while UN expert reports documented extensive weapons transfers to RSF through Chad corridor. This statement was made during diplomatic efforts to deny involvement in arms trafficking.",
+          "date": "2023-05-15"
+        },
+        {
+          "name": "UAE Government",
+          "statement": "The UAE's investments in Sudan are purely commercial and developmental, focused on economic growth",
+          "context": "UAE described resource extraction deals as development while using Sudanese gold mining revenues to finance military operations. This statement was made during investment announcements that directly funded war economy.",
+          "date": "2023-08-10"
+        }
+      ]
+    },
+    {
+      "actor": "Wagner Group/Russian Officials",
+      "statements": [
+        {
+          "name": "Yevgeny Prigozhin (Wagner Group Leader)",
+          "statement": "Let me reiterate once more: Wagner PMC is in no way involved in the Sudanese conflict",
+          "context": "Prigozhin denied Wagner involvement while his operatives were actively supplying weapons to RSF through Libya corridor. This statement was made on Wagner's official Telegram channel during documented arms transfers.",
+          "date": "2023-04-21"
+        },
+        {
+          "name": "Yevgeny Prigozhin (Wagner Group Leader)",
+          "statement": "There have been no Wagner employees in Sudan for more than two years. We haven't maintained contact with either Mohamed Hamdan Dagalo or Fattah al-Burhan",
+          "context": "Prigozhin claimed Wagner withdrawal while multiple sources confirmed ongoing operations and weapons supplies. US Treasury Department was simultaneously tracking Wagner gold smuggling operations worth $1.9 billion from Sudan.",
+          "date": "2023-04-30"
+        },
+        {
+          "name": "Russian Foreign Ministry",
+          "statement": "Russia maintains neutrality in Sudan's internal affairs and calls for peaceful resolution through dialogue",
+          "context": "Russian officials claimed neutrality while Wagner operatives supplied weapons to RSF and Moscow negotiated naval base deals with SAF. This statement was made during Sergei Lavrov's visits to both conflict parties.",
+          "date": "2023-04-15"
+        },
+        {
+          "name": "Wagner Group Official Statement",
+          "statement": "Wagner provides only security services for legitimate mining operations and has no military involvement in political conflicts",
+          "context": "Wagner described its operations as commercial security while providing surface-to-air missiles and military training to RSF. This statement was issued during US Treasury sanctions targeting Wagner's military activities.",
+          "date": "2023-05-25"
+        },
+        {
+          "name": "Yevgeny Prigozhin (Wagner Group Leader)",
+          "statement": "I'm always ready to help Sudan achieve peace and can mediate between the parties due to long-standing relationships",
+          "context": "Prigozhin offered mediation while his operatives were providing weapons that prolonged the conflict. He made this offer on Telegram while Wagner was actively fueling military operations through arms transfers.",
+          "date": "2023-04-22"
+        }
+      ]
+    },
+    {
+      "actor": "Saudi Arabia Government",
+      "statements": [
+        {
+          "name": "Saudi Arabia Government",
+          "statement": "Saudi Arabia maintains strict neutrality and only provides humanitarian assistance to Sudan",
+          "context": "Saudi officials claimed neutrality while providing military aid to SAF and hosting peace talks designed to legitimize their preferred faction. This statement was made during Jeddah talks that excluded civilian voices.",
+          "date": "2023-05-15"
+        },
+        {
+          "name": "Saudi Arabia Government",
+          "statement": "The Jeddah talks represent genuine international effort for peace without taking sides in the conflict",
+          "context": "Saudi Arabia presented talks as neutral mediation while coordinating with Egypt to support SAF military operations. The talks excluded civilian groups and focused on legitimizing military rule.",
+          "date": "2023-06-01"
+        },
+        {
+          "name": "Saudi Arabia Government",
+          "statement": "Saudi Arabia's support for Sudan is purely humanitarian and focused on civilian protection",
+          "context": "Saudi claimed humanitarian focus while providing military aid and intelligence to SAF forces conducting airstrikes on civilian areas. This statement was made during humanitarian appeals that masked military support.",
+          "date": "2023-07-20"
+        },
+        {
+          "name": "Saudi Arabia Government",
+          "statement": "Saudi investments in Sudan are commercial partnerships that benefit the Sudanese people",
+          "context": "Saudi described investments as beneficial while extracting resources during wartime and supporting military factions. These statements accompanied deals that primarily served Saudi strategic interests in Red Sea access.",
+          "date": "2023-09-10"
+        },
+        {
+          "name": "Saudi Arabia Government",
+          "statement": "The Kingdom supports Sudanese sovereignty and opposes all foreign interference in Sudan's affairs",
+          "context": "Saudi condemned foreign interference while actively supporting SAF military operations and coordinating with Egypt on military aid. This statement was made while providing intelligence and weapons to their preferred faction.",
+          "date": "2024-01-15"
+        }
+      ]
+    },
+    {
+      "actor": "Egyptian Government",
+      "statements": [
+        {
+          "name": "Abdel Fattah el-Sisi (Egyptian President)",
+          "statement": "Egypt would provide support for peace dialogue but would not intervene in the crisis in a way that fuels conflict",
+          "context": "El-Sisi claimed non-intervention while Egyptian fighter jets and military advisors were supporting SAF operations. This statement was made to Japanese media while Egypt was providing direct military assistance.",
+          "date": "2023-05-24"
+        },
+        {
+          "name": "Egyptian Government",
+          "statement": "Egypt's position is based solely on humanitarian concerns and regional stability",
+          "context": "Egyptian officials claimed humanitarian motivations while providing military support to protect economic interests in Nile water and regional influence. This was stated during diplomatic meetings while arms transfers continued.",
+          "date": "2023-06-15"
+        },
+        {
+          "name": "Egyptian Government",
+          "statement": "Egypt calls for immediate ceasefire and peaceful resolution without taking sides",
+          "context": "Egypt called for peace while actively supporting SAF with air power and military equipment. These statements were made during Arab League meetings while Egyptian military assets operated in Sudan.",
+          "date": "2023-07-13"
+        },
+        {
+          "name": "Egyptian Government",
+          "statement": "Egyptian military presence in Sudan is limited to protecting Egyptian nationals and facilities",
+          "context": "Egypt justified military presence as protective while Egyptian forces were captured by RSF at military airports during combat operations. This explanation was given after Egyptian soldiers were detained in active military zones.",
+          "date": "2023-04-17"
+        },
+        {
+          "name": "Egyptian Government",
+          "statement": "Egypt supports the Framework Agreement and democratic transition in Sudan",
+          "context": "Egypt claimed support for democracy while backing military ruler al-Burhan who had overthrown civilian government twice. This statement was made during regional summits while supporting authoritarian military control.",
+          "date": "2023-08-05"
+        }
+      ]
+    }
+  ],
+  "damage_analysis": {
+    "summary": "These false statements were particularly damaging because they created a web of plausible deniability that allowed the conflict to continue while preventing international accountability. Each actor maintained public narratives that contradicted their actual behavior, enabling them to pursue destructive agendas while avoiding consequences.",
+    "specific_damages": [
+      {
+        "category": "Humanitarian Obstruction",
+        "impact": "False peace commitments by Burhan and Hemedti prevented genuine negotiations while allowing continued military operations. Their competing claims about wanting peace misled international mediators and delayed effective intervention, contributing to 150,000+ deaths and 13+ million displaced people."
+      },
+      {
+        "category": "Arms Trafficking Facilitation", 
+        "impact": "UAE and Wagner denials of weapons transfers created diplomatic cover for continued arms flows worth billions of dollars. These false statements prevented international sanctions and arms embargos from being effectively enforced, directly fueling the war's continuation and escalation."
+      },
+      {
+        "category": "International Inaction Enablement",
+        "impact": "Foreign powers' false claims of neutrality and humanitarian concern provided justification for minimal international intervention. These statements allowed regional actors to pursue proxy war objectives while maintaining legitimacy, preventing coordinated international response to stop the genocide."
+      },
+      {
+        "category": "Resource Extraction Cover",
+        "impact": "False statements about commercial partnerships and development aid masked systematic resource plundering worth over $6 billion annually in gold alone. These lies enabled war economy profiteering while Sudanese civilians faced famine and displacement."
+      },
+      {
+        "category": "Democratic Transition Sabotage",
+        "impact": "Military leaders' false commitments to democracy and civilian rule provided cover for systematic destruction of Sudan's democratic institutions. These statements deceived international partners and delayed recognition that military actors had no intention of relinquishing power."
+      },
+      {
+        "category": "Genocide Denial Facilitation",
+        "impact": "False humanitarian claims and neutrality statements provided cover for systematic ethnic cleansing operations in Darfur. UAE's denials of RSF support directly enabled genocidal attacks against Masalit and other minority groups while maintaining international respectability."
+      }
+    ]
+  }
+}

@@ -1,0 +1,519 @@
+{
+  "id": "sudan-civil-war-2023-2025",
+  "title": "Sudan Civil War: Power Struggle Over Gold and Geopolitical Influence",
+  "timeSpan": "April 2023 - June 2025",
+  "consequences": "**Human Casualties:**\n- **Estimated Deaths:** 150,000+ people (conservative estimates suggest 15,000-30,000)\n- **Displaced Population:** 13+ million people (8.6 million internally displaced, 4+ million refugees)\n- **Children Affected:** 14+ million children need humanitarian assistance\n- **Famine Risk:** 25+ million people in acute food insecurity, 4.9 million on brink of famine\n\n**Economic Devastation:**\n- **GDP Contraction:** 40% decline in 2023, additional 28% expected in 2024\n- **State Revenue Loss:** 80% decrease in government revenues\n- **Gold Production:** 65 tonnes in 2024 (worth $6+ billion), fueling both sides\n- **International Trade:** 23% decline in 2023\n\n**Resource Control & Foreign Financing:**\n- **UAE Investment:** Billions in weapons/support to RSF via gold smuggling networks\n- **Russian Wagner/Africa Corps:** $1.9 billion in gold smuggled (2022-2023)\n- **Saudi/Egyptian Support:** Military aid and financing to SAF\n- **Gold Smuggling:** 50%+ of production smuggled to UAE, Russia, and regional partners\n- **War Economy:** Estimated $6+ billion annual gold revenue financing conflict",
+  "conclusion": "The Sudan conflict represents a proxy war between regional powers disguised as civil conflict, driven by competition for gold resources and geopolitical influence. Foreign actors have perpetuated violence by arming both sides while profiting from resource extraction, creating a self-sustaining war economy that has devastated Sudan's population.",
+  "leftSide": "Sudanese Armed Forces (SAF) & Allies",
+  "rightSide": "Rapid Support Forces (RSF) & Allies",
+  "milestones": [
+    {
+      "id": "power-struggle-eruption",
+      "date": "2023-04-15",
+      "title": "Power Struggle Erupts in Khartoum",
+      "context": "Tensions between SAF leader Abdel Fattah al-Burhan and RSF commander Mohamed Hamdan Dagalo (Hemedti) reached breaking point over military integration plans and control of Sudan's gold resources, triggering coordinated attacks across multiple strategic sites.",
+      "order": 1,
+      "consequence": "Transformed localized power struggle into nationwide civil war, triggering massive displacement and international proxy involvement within days.",
+      "key_persons": [
+        { "name": "Abdel Fattah al-Burhan", "role": "SAF Commander/De facto Head of State" },
+        { "name": "Mohamed Hamdan Dagalo (Hemedti)", "role": "RSF Commander" },
+        { "name": "Omar al-Bashir", "role": "Former President (architect of RSF)" },
+        { "name": "Abdalla Hamdok", "role": "Former Civilian Prime Minister" },
+        { "name": "Khamis Abakar", "role": "West Darfur Governor (assassinated June 2023)" }
+      ],
+      "events": [
+        {
+          "id": "coordinated-rsf-assault",
+          "milestone_id": "power-struggle-eruption",
+          "title": "RSF launches surprise coordinated assault on Presidential Palace, airports, and military bases across Sudan",
+          "left_type": "conspirator",
+          "right_type": "nerd",
+          "left_opinion": "The SAF's response revealed a calculated plan to eliminate the RSF as a political rival, using the integration talks as cover to position forces for a preemptive strike. Intelligence suggests both sides had been preparing for this confrontation for months, with foreign weapons already pre-positioned.",
+          "right_opinion": "Hemedti's 'surprise' attack was meticulously planned with UAE backing, timed to coincide with Ramadan when government attention was divided. The RSF's ability to simultaneously strike multiple strategic targets revealed extensive intelligence preparation and foreign logistical support.",
+          "left_source_url": "https://www.cnn.com/2023/04/17/africa/sudan-fighting-evacuation-suspension-intl-hnk/index.html",
+          "right_source_url": "https://www.cfr.org/global-conflict-tracker/conflict/power-struggle-sudan",
+          "all_opinions": [
+            {
+              "id": "rsf-assault-nerd-1",
+              "event_id": "coordinated-rsf-assault",
+              "opinion": "The timing of the assault coincided with peak gold market prices and UAE investment cycles, suggesting economic calculations drove the conflict's initiation. Defense contractors worldwide saw immediate stock increases as arms demand surged, particularly companies with Middle East exposure.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "rsf-assault-joe-1",
+              "event_id": "coordinated-rsf-assault",
+              "opinion": "Ordinary Sudanese were caught completely off-guard despite months of visible military buildup. Many families had no time to prepare for evacuation, highlighting how both sides prioritized military objectives over civilian safety and ignored early warning signs.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "rsf-assault-psychic-1",
+              "event_id": "coordinated-rsf-assault",
+              "opinion": "The narrative framing immediately positioned this as a 'coup attempt' by the RSF against 'legitimate government,' when both leaders were military usurpers. This psychological framing allowed the SAF to claim victimhood while obscuring their own role in escalating tensions.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "rsf-assault-dredd-1",
+              "event_id": "coordinated-rsf-assault",
+              "opinion": "Both forces violated constitutional principles by engaging in armed conflict within the capital, but the RSF's targeting of government buildings constituted a more severe breach of legal order. However, the SAF's use of air power against urban areas also violated international humanitarian law.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "rsf-assault-president-1",
+              "event_id": "coordinated-rsf-assault",
+              "opinion": "The assault's timing disrupted ongoing diplomatic efforts by regional powers to mediate integration talks, suggesting one or both sides actively sought to prevent peaceful resolution. International partners' evacuation plans had been prepared in advance, indicating foreknowledge of escalation.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "rsf-assault-conspirator-1",
+              "event_id": "coordinated-rsf-assault",
+              "opinion": "The simultaneous nature of attacks across multiple cities reveals extensive coordination that predates the official trigger. Pattern analysis suggests foreign intelligence services provided operational planning, with Wagner Group and UAE military advisors likely involved in targeting decisions.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "international-evacuation-abandonment",
+          "milestone_id": "power-struggle-eruption",
+          "title": "Foreign embassies evacuate staff within 72 hours, abandoning Sudanese civilians and halting humanitarian aid",
+          "left_type": "dredd",
+          "right_type": "psychic",
+          "left_opinion": "The mass diplomatic evacuation violated legal obligations to protect local embassy staff and visa applicants, leaving thousands stranded with documents trapped in closed embassies. This abandonment set a precedent that prioritized foreign nationals over legal commitments to Sudanese citizens.",
+          "right_opinion": "The RSF deliberately targeted diplomatic facilities to trigger international evacuation, calculating that isolation would prevent external mediation and allow military resolution. The speed of evacuation suggests foreign powers had predetermined scripts for abandoning Sudan when convenient.",
+          "left_source_url": "https://www.axios.com/2023/04/17/burhan-hemedti-rivalry-civil-war-sudan-explainer",
+          "right_source_url": "https://foreignpolicy.com/2023/04/17/sudan-clashes-fighting-burhan-hemeti-rsf-military-coup-democracy/",
+          "all_opinions": [
+            {
+              "id": "evacuation-nerd-1",
+              "event_id": "international-evacuation-abandonment",
+              "opinion": "The evacuation coincided with massive capital flight from Sudanese markets, with foreign investors liquidating positions worth billions. Embassy closures immediately halted visa processing revenue and international aid flows, accelerating economic collapse and dependency on war economy resources.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "evacuation-joe-1",
+              "event_id": "international-evacuation-abandonment",
+              "opinion": "Foreign workers and diplomats fled in military convoys while Sudanese civilians faced roadblocks and sniper fire trying to escape. The message was clear: international lives mattered more than Sudanese lives, despite years of promises about partnership and development cooperation.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "evacuation-psychic-1",
+              "event_id": "international-evacuation-abandonment",
+              "opinion": "The media coverage focused on dramatic foreign evacuations rather than Sudanese suffering, creating a narrative that the conflict was too dangerous for civilized intervention. This psychological distancing justified subsequent international inaction and abandonment of responsibility.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "evacuation-dredd-1",
+              "event_id": "international-evacuation-abandonment",
+              "opinion": "The blanket embassy closures violated Vienna Convention obligations to maintain consular services for local populations. However, both warring parties failed to provide adequate security guarantees, creating legal justification for temporary withdrawal under force majeure principles.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "evacuation-president-1",
+              "event_id": "international-evacuation-abandonment",
+              "opinion": "The coordinated evacuation demonstrated that Western powers had written off Sudan's democratic transition months earlier, maintaining only minimal presence for resource extraction oversight. The speed of departure revealed predetermined contingency plans that prioritized disengagement over conflict prevention.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "evacuation-conspirator-1",
+              "event_id": "international-evacuation-abandonment",
+              "opinion": "The evacuation pattern follows classic proxy war playbooks where external powers withdraw visible presence while maintaining covert support networks. Both the UAE and Russia had alternative diplomatic channels through private companies that remained operational throughout the 'evacuation crisis.'",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "foreign-proxy-escalation",
+      "date": "2023-06-01",
+      "title": "Foreign Powers Escalate Proxy War Involvement",
+      "context": "As initial ceasefire attempts failed, regional powers doubled down on supporting their preferred factions, with the UAE increasing arms supplies to RSF through Chad, while Egypt and Saudi Arabia provided military aid to SAF, transforming local conflict into regional proxy war.",
+      "order": 2,
+      "consequence": "Internationalized the conflict beyond local resolution, creating sustained arms flows and financial networks that made peace negotiations impossible while enriching foreign actors.",
+      "key_persons": [
+        { "name": "Mohamed bin Zayed", "role": "UAE President" },
+        { "name": "Abdel Fattah el-Sisi", "role": "Egyptian President" },
+        { "name": "Mohammed bin Salman", "role": "Saudi Crown Prince" },
+        { "name": "Yevgeny Prigozhin", "role": "Wagner Group Leader (deceased)" },
+        { "name": "Khalifa Haftar", "role": "Libyan General/RSF Ally" }
+      ],
+      "events": [
+        {
+          "id": "uae-wagner-arms-pipeline",
+          "milestone_id": "foreign-proxy-escalation",
+          "title": "UAE establishes arms pipeline to RSF through Chad using Wagner Group networks and Emirati shell companies",
+          "left_type": "president",
+          "right_type": "conspirator",
+          "left_opinion": "Egyptian intelligence services provided detailed intelligence to the SAF about UAE arms shipments, seeking to counter Emirati influence in their sphere of influence. Cairo's support for Burhan reflected broader concerns about Muslim Brotherhood-aligned groups potentially gaining power through RSF victory.",
+          "right_opinion": "The UAE-Wagner partnership represented a fusion of Gulf capital with Russian military expertise, creating a new model for proxy warfare that bypassed traditional arms control mechanisms. This network had been tested in Libya and Central African Republic before deployment in Sudan.",
+          "left_source_url": "https://www.middleeasteye.net/news/russia-sudan-war-saf-rsf-hedges-bets-both-sides-support",
+          "right_source_url": "https://www.cnn.com/2023/04/20/africa/wagner-sudan-russia-libya-intl/index.html",
+          "all_opinions": [
+            {
+              "id": "uae-wagner-nerd-1",
+              "event_id": "uae-wagner-arms-pipeline",
+              "opinion": "The arms pipeline generated estimated revenues of $500+ million for Wagner Group while the UAE leveraged $32.7 tonnes of smuggled Sudanese gold as payment. This barter system bypassed international sanctions and created self-financing war economy independent of traditional banking systems.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "uae-wagner-joe-1",
+              "event_id": "uae-wagner-arms-pipeline",
+              "opinion": "Sudanese civilians began seeing foreign-made weapons used against them in their own neighborhoods, with advanced anti-tank missiles destroying civilian buildings. Many questioned why international law couldn't stop foreign countries from fueling their suffering for profit.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "uae-wagner-psychic-1",
+              "event_id": "uae-wagner-arms-pipeline",
+              "opinion": "The UAE maintained public neutrality while privately arming one side, using humanitarian aid announcements to distract from weapons shipments. This psychological warfare technique allowed plausible deniability while pursuing strategic objectives through proxy violence.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "uae-wagner-dredd-1",
+              "event_id": "uae-wagner-arms-pipeline",
+              "opinion": "The arms transfers violated UN weapons embargoes and constituted clear violations of international law, yet enforcement mechanisms proved inadequate. However, the SAF's acceptance of Iranian weapons also violated sanctions, creating mutual legal violations that complicated prosecution efforts.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "uae-wagner-president-1",
+              "event_id": "uae-wagner-arms-pipeline",
+              "opinion": "The UAE calculated that supporting the RSF would weaken Egyptian influence in Sudan while securing access to gold mines and Red Sea ports. The partnership with Russia represented a broader shift toward non-Western security arrangements that challenged traditional alliance structures.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "uae-wagner-conspirator-1",
+              "event_id": "uae-wagner-arms-pipeline",
+              "opinion": "The Chad corridor was deliberately chosen because of existing Wagner operations and compliant local officials. Flight tracking data shows regular cargo flights from UAE to Amdjarass airport, with manifests listing 'construction materials' that later appeared as weapons in RSF hands.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "darfur-ethnic-cleansing-escalation",
+          "milestone_id": "foreign-proxy-escalation",
+          "title": "RSF and allied militias launch systematic ethnic cleansing campaign in West Darfur, killing thousands of Masalit civilians",
+          "left_type": "dredd",
+          "right_type": "nerd",
+          "left_opinion": "The systematic nature of atrocities in Darfur constituted clear war crimes and crimes against humanity, with evidence of coordinated planning to eliminate specific ethnic groups. The SAF's failure to intervene effectively demonstrated either complicity or strategic calculation to allow RSF overextension.",
+          "right_opinion": "The Darfur campaign served dual economic and military purposes: seizing control of lucrative gold mining areas while terrorizing populations into displacement, creating demographic changes that would benefit RSF long-term control. The systematic targeting generated immediate resource windfalls worth millions.",
+          "left_source_url": "https://www.hrw.org/world-report/2024/country-chapters/sudan",
+          "right_source_url": "https://www.cfr.org/global-conflict-tracker/conflict/power-struggle-sudan",
+          "all_opinions": [
+            {
+              "id": "darfur-cleansing-nerd-1",
+              "event_id": "darfur-ethnic-cleansing-escalation",
+              "opinion": "The ethnic cleansing campaign coincided with seizure of gold mining concessions worth an estimated $2+ billion annually. The systematic looting of homes, businesses, and infrastructure generated immediate cash flows while eliminating economic competitors from targeted ethnic groups.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "darfur-cleansing-joe-1",
+              "event_id": "darfur-ethnic-cleansing-escalation",
+              "opinion": "Families that had survived the 2003 genocide found themselves targeted again by the same militias, now wearing RSF uniforms. Children who had grown up in displacement camps were forced to flee again, creating generational trauma and hopelessness about ever living in peace.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "darfur-cleansing-psychic-1",
+              "event_id": "darfur-ethnic-cleansing-escalation",
+              "opinion": "The atrocities were deliberately documented and spread through social media to terrorize wider populations into submission without direct military confrontation. This psychological warfare amplified the impact of localized violence to control much larger areas through fear.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "darfur-cleansing-dredd-1",
+              "event_id": "darfur-ethnic-cleansing-escalation",
+              "opinion": "The systematic targeting of specific ethnic groups met the legal definition of genocide under international law, triggering obligations for international intervention. However, the SAF's own history of atrocities in Darfur complicated any legal response and prosecution efforts.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "darfur-cleansing-president-1",
+              "event_id": "darfur-ethnic-cleansing-escalation",
+              "opinion": "The international community's muted response to renewed genocide in Darfur demonstrated the failure of 'Responsibility to Protect' doctrine when major powers have competing interests. Regional powers prioritized resource access over humanitarian concerns, enabling continued atrocities.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "darfur-cleansing-conspirator-1",
+              "event_id": "darfur-ethnic-cleansing-escalation",
+              "opinion": "The targeted ethnic groups controlled traditional gold mining areas that both RSF and foreign partners wanted to exploit. The 'ethnic cleansing' served as cover for resource seizure, with displaced populations unable to return to reclaim their mineral rights or ancestral lands.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "economic-warfare-peak",
+      "date": "2024-01-01",
+      "title": "War Economy Reaches Self-Sustaining Peak",
+      "context": "By 2024, both sides had established autonomous financing mechanisms through gold exports, arms trading, and resource extraction, making them less dependent on foreign support while creating incentives to prolong conflict for economic gain rather than seek political resolution.",
+      "order": 3,
+      "consequence": "Transformed conflict from political dispute into profitable enterprise for both sides, reducing incentives for peace while creating regional networks that benefit from continued instability.",
+      "key_persons": [
+        { "name": "Jibril Ibrahim", "role": "Sudan Finance Minister" },
+        { "name": "Al-Junaid Family", "role": "RSF Business Empire" },
+        { "name": "Defense Industries System", "role": "SAF Commercial Arm" },
+        { "name": "Viktor Granov", "role": "UAE-linked Arms Broker" },
+        { "name": "Mining Companies", "role": "Foreign Resource Extractors" }
+      ],
+      "events": [
+        {
+          "id": "gold-production-surge",
+          "milestone_id": "economic-warfare-peak",
+          "title": "Sudan's gold production surges to 65+ tonnes worth $6+ billion, with both sides using mining revenues to purchase advanced weapons systems",
+          "left_type": "nerd",
+          "right_type": "conspirator",
+          "left_opinion": "The SAF's formal control of government allowed them to negotiate legitimate mining contracts with Chinese, Russian, and Qatari companies, generating $1.6 billion in official revenue while maintaining plausible deniability about war financing. Their partnership with Iranian drone suppliers created new revenue streams through weapons re-export.",
+          "right_opinion": "The RSF's informal mining network generated higher profit margins through smuggling operations that avoided taxes and regulations. Their control of Darfur's richest deposits, combined with UAE processing facilities, created a shadow economy worth billions that operated completely outside government oversight.",
+          "left_source_url": "https://www.bloomberg.com/news/articles/2025-02-24/sudan-s-gold-output-spikes-amid-civil-war-as-new-mining-deals-signed",
+          "right_source_url": "https://www.chathamhouse.org/2025/03/gold-and-war-sudan/03-gold-production-and-trade-during-war",
+          "all_opinions": [
+            {
+              "id": "gold-surge-nerd-1",
+              "event_id": "gold-production-surge",
+              "opinion": "Record gold prices created unprecedented revenue opportunities, with both sides earning more from 18 months of war economy than they had from years of peacetime governance. The financial incentives for conflict continuation now exceeded any reasonable peace dividend, creating economic addiction to warfare.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "gold-surge-joe-1",
+              "event_id": "gold-production-surge",
+              "opinion": "Local communities saw their lands turned into mining sites with toxic chemicals poisoning water supplies, while none of the gold wealth reached ordinary people. Families mining by hand with mercury faced death from chemical exposure while foreign companies and warlords got rich.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "gold-surge-psychic-1",
+              "event_id": "gold-production-surge",
+              "opinion": "Both sides promoted narratives about 'national resources' and 'economic sovereignty' while actually selling Sudan's gold to foreign buyers at below-market rates. The psychological manipulation convinced supporters that resource extraction served patriotic purposes rather than personal enrichment.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "gold-surge-dredd-1",
+              "event_id": "gold-production-surge",
+              "opinion": "The massive increase in artisanal mining violated environmental protection laws and endangered worker safety, but war conditions prevented legal enforcement. Both sides' use of mining revenues for weapons purchases technically constituted illegal arms trafficking under existing sanctions regimes.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "gold-surge-president-1",
+              "event_id": "gold-production-surge",
+              "opinion": "International gold markets became complicit in conflict financing by accepting Sudanese gold without adequate due diligence about its origins. The failure to implement effective sanctions on conflict minerals demonstrated how global commodity markets can perpetuate violence when profits are high enough.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "gold-surge-conspirator-1",
+              "event_id": "gold-production-surge",
+              "opinion": "The 'surge' in production actually represented formalization of existing smuggling networks rather than genuine increases. Both sides simply began reporting previously hidden output to demonstrate economic strength, while the real control networks remained unchanged and beneficial to the same foreign partners.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "famine-instrumentalization",
+          "milestone_id": "economic-warfare-peak",
+          "title": "Both sides deliberately weaponize food aid and humanitarian access, with official famine declared in Darfur affecting 25+ million people",
+          "left_type": "psychic",
+          "right_type": "joe",
+          "left_opinion": "The SAF's control of Port Sudan allowed them to manipulate international aid flows as political weapons, blocking supplies to RSF-controlled areas while claiming humanitarian concern. Their demands for aid oversight created bureaucratic barriers that served military objectives rather than civilian needs.",
+          "right_opinion": "The RSF's blockade of agricultural areas during harvest season was a calculated strategy to force urban populations into submission through starvation. Their targeting of aid warehouses wasn't random looting but systematic appropriation of resources to control population movements and loyalty.",
+          "left_source_url": "https://www.unocha.org/publications/report/sudan/sudan-one-year-conflict-key-facts-and-figures-15-april-2024",
+          "right_source_url": "https://www.rescue.org/article/crisis-sudan-what-happening-and-how-help",
+          "all_opinions": [
+            {
+              "id": "famine-instrumentalization-nerd-1",
+              "event_id": "famine-instrumentalization",
+              "opinion": "The weaponization of food aid created massive cost escalations for humanitarian operations, with agencies forced to pay protection money to both sides totaling hundreds of millions. The artificial scarcity also drove up local food prices, generating profitable trading opportunities for military-connected businesses.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "famine-instrumentalization-joe-1",
+              "event_id": "famine-instrumentalization",
+              "opinion": "Families watched their children waste away from malnutrition while both armies had plenty of food and weapons. Parents faced impossible choices between joining militias for rations or watching their families starve, turning hunger into a recruitment tool for continuation of violence.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "famine-instrumentalization-psychic-1",
+              "event_id": "famine-instrumentalization",
+              "opinion": "International media coverage focused on competing narratives about who was blocking aid rather than addressing the systematic nature of starvation as warfare. Both sides exploited humanitarian crises for propaganda purposes while preventing the very assistance that could alleviate suffering.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "famine-instrumentalization-dredd-1",
+              "event_id": "famine-instrumentalization",
+              "opinion": "The deliberate starvation of civilian populations constituted clear violations of international humanitarian law and crimes against humanity. However, the breakdown of legal institutions prevented any accountability mechanisms from functioning, creating impunity that encouraged further violations.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "famine-instrumentalization-president-1",
+              "event_id": "famine-instrumentalization",
+              "opinion": "The international community's response highlighted the failure of humanitarian intervention when major powers prefer proxy warfare to direct engagement. Foreign backers of both sides quietly supported famine strategies while publicly calling for humanitarian access they knew would be denied.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "famine-instrumentalization-conspirator-1",
+              "event_id": "famine-instrumentalization",
+              "opinion": "The famine followed classic siege warfare patterns designed to break civilian resistance through calculated suffering. Both sides maintained detailed intelligence about food supplies and population movements, suggesting systematic planning rather than chaotic breakdown of distribution systems.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "international-recognition-shift",
+      "date": "2025-01-30",
+      "title": "Global Powers Shift Toward Conflict Management Over Resolution",
+      "context": "By early 2025, international actors abandoned pretense of seeking peace, instead focusing on managing conflict to secure their own interests while preventing total state collapse that might threaten regional stability and resource access.",
+      "order": 4,
+      "consequence": "Institutionalized the conflict as a permanent feature of regional geopolitics, with international backing ensuring continued military capability while preventing either side from achieving decisive victory.",
+      "key_persons": [
+        { "name": "Tom Perriello", "role": "US Sudan Envoy" },
+        { "name": "António Guterres", "role": "UN Secretary-General" },
+        { "name": "African Union Leadership", "role": "Regional Mediators" },
+        { "name": "IGAD Officials", "role": "East African Mediators" },
+        { "name": "International Criminal Court", "role": "Accountability Mechanism" }
+      ],
+      "events": [
+        {
+          "id": "us-genocide-determination",
+          "milestone_id": "international-recognition-shift",
+          "title": "United States formally declares RSF actions constitute genocide while continuing diplomatic engagement with both sides",
+          "left_type": "dredd",
+          "right_type": "president",
+          "left_opinion": "The formal genocide determination carried legal obligations under international law that the US failed to fulfill, choosing symbolic condemnation over substantive intervention. The SAF's own documented atrocities in previous conflicts made selective prosecution appear politically motivated rather than legally principled.",
+          "right_opinion": "The genocide determination served domestic political purposes while providing diplomatic cover for continued engagement with all parties. The timing aligned with US strategic interests in countering UAE influence rather than genuine humanitarian concern, as evidenced by limited concrete follow-up actions.",
+          "left_source_url": "https://jamestown.org/program/russia-switches-sides-in-sudan-war/",
+          "right_source_url": "https://foreignpolicy.com/2023/12/14/sudan-war-uae-russia-arms-gold-hemeti-burhan-rsf/",
+          "all_opinions": [
+            {
+              "id": "genocide-determination-nerd-1",
+              "event_id": "us-genocide-determination",
+              "opinion": "The genocide determination had minimal economic impact since it avoided sanctioning UAE financial networks or gold trading mechanisms that actually fund the violence. US arms sales to UAE continued unabated, demonstrating that symbolic condemnation served to deflect pressure for substantive action that might cost billions in trade relationships.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "genocide-determination-joe-1",
+              "event_id": "us-genocide-determination",
+              "opinion": "Sudanese civilians felt betrayed that international recognition of genocide came with no concrete protection or assistance. People asked why their suffering was worth only words while Ukraine received billions in aid, highlighting perceived racial and geopolitical double standards in international response.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "genocide-determination-psychic-1",
+              "event_id": "us-genocide-determination",
+              "opinion": "The determination allowed Western powers to claim moral authority while continuing business-as-usual policies that enabled the violence. The psychological effect was to make publics feel their governments were 'doing something' without requiring costly intervention or disruption of profitable relationships.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "genocide-determination-dredd-1",
+              "event_id": "us-genocide-determination",
+              "opinion": "The legal determination triggered obligations under the Genocide Convention that the US has systematically ignored, undermining the credibility of international law. However, the RSF's systematic targeting of ethnic groups clearly met legal thresholds for genocide, making the determination factually accurate regardless of political motivations.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "genocide-determination-president-1",
+              "event_id": "us-genocide-determination",
+              "opinion": "The timing reflected US frustration with UAE policies across multiple theaters rather than Sudan-specific humanitarian concerns. Washington used the determination as diplomatic leverage while maintaining engagement with all parties, demonstrating how humanitarian law becomes subordinated to geopolitical competition.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "genocide-determination-conspirator-1",
+              "event_id": "us-genocide-determination",
+              "opinion": "The determination coincided with renewed US interest in Sudanese gold mining concessions and Red Sea access rights. Pattern analysis suggests the genocide finding was timed to justify increased US involvement while painting competitors as supporters of atrocities, creating moral justification for resource competition.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "libya-scenario-institutionalization",
+          "milestone_id": "international-recognition-shift",
+          "title": "International actors begin planning for permanent partition of Sudan along Libya model, with competing governments in different regions",
+          "left_type": "conspirator",
+          "right_type": "president",
+          "left_opinion": "The SAF's establishment of government functions in Port Sudan, combined with international recognition of their legitimacy, created a template for eastern Sudan becoming a client state of Egypt and Saudi Arabia. The systematic exclusion of RSF from diplomatic processes reflected predetermined partition plans rather than negotiation failures.",
+          "right_opinion": "International diplomatic efforts increasingly focused on managing humanitarian consequences rather than achieving reunification, signaling acceptance of permanent division. The establishment of separate aid coordination mechanisms for SAF and RSF territories created institutional infrastructure for de facto partition while maintaining fiction of unity.",
+          "left_source_url": "https://lordslibrary.parliament.uk/civil-war-in-sudan-is-there-a-path-to-peace/",
+          "right_source_url": "https://www.atlanticcouncil.org/blogs/menasource/sudan-rsf-saf-uae-intervention/",
+          "all_opinions": [
+            {
+              "id": "libya-scenario-nerd-1",
+              "event_id": "libya-scenario-institutionalization",
+              "opinion": "The partition scenario created opportunities for resource extraction companies to negotiate separate deals with different authorities, potentially doubling concession fees while reducing regulatory oversight. International financial institutions began developing parallel banking systems for different regions, institutionalizing economic division.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "libya-scenario-joe-1",
+              "event_id": "libya-scenario-institutionalization",
+              "opinion": "Ordinary Sudanese recognized that international acceptance of partition meant permanent family separation and loss of national identity. Many felt abandoned by the global community, which seemed more interested in managing the crisis than solving it, prioritizing foreign interests over Sudanese unity.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "libya-scenario-psychic-1",
+              "event_id": "libya-scenario-institutionalization",
+              "opinion": "The shift from 'peace talks' to 'humanitarian coordination' represented psychological conditioning to accept permanent division as inevitable. International media coverage increasingly presented partition as a realistic solution rather than a failure, normalizing the destruction of Sudanese sovereignty.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "libya-scenario-dredd-1",
+              "event_id": "libya-scenario-institutionalization",
+              "opinion": "The de facto partition violated principles of territorial integrity under international law, but the absence of effective central government created legal ambiguity about recognition of competing authorities. The precedent threatened to encourage similar divisions in other fragile states worldwide.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "libya-scenario-president-1",
+              "event_id": "libya-scenario-institutionalization",
+              "opinion": "The Libya model appealed to international actors because it provided stability for resource extraction while preventing refugee flows, even though it perpetuated conflict. Regional powers preferred manageable proxy competition to the uncertainty of unified Sudanese state that might pursue independent policies.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "libya-scenario-conspirator-1",
+              "event_id": "libya-scenario-institutionalization",
+              "opinion": "The partition planning predated the conflict's outbreak, with international actors having contingency maps and resource allocation schemes ready for implementation. The systematic nature of diplomatic separation suggests coordination among major powers to engineer permanent division for easier control.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

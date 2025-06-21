@@ -8,6 +8,11 @@ export interface Timeline {
   milestones: Milestone[];
 };
 
+// Person object with name and role
+export interface KeyPerson {
+  name: string;
+  role: string;
+}
 
 // Chronological timeline of events. Each milestone represents a key point in the story of the timeline
 export interface Milestone {
@@ -18,7 +23,7 @@ export interface Milestone {
   events: EventType[];
   order: number;
   consequence?: string; // Consequence of the milestone, e.g., "The war started"
-  key_persons?: string[]; // Key persons involved in the milestone, e.g., "John Doe, Jane Smith"
+  key_persons?: KeyPerson[]; // Key persons involved in the milestone with their roles
 };
 
 export type EventType = {
@@ -31,7 +36,7 @@ export type EventType = {
   right_opinion: string; // The strongest opinion exposing the right side of the conflict
   left_source_url?: string; // Source URL for the left opinion, e.g., "https://example.com/article1"
   right_source_url?: string; // Source URL for the right opinion, e.g., "https://example.com/article2"
-  all_opinions: ExpertOpinion[]; // Set with exactly 6 analyzed expert argumenets LLM finds from any perspective
+  all_opinions: ExpertOpinion[]; // Set with exactly 6 analyzed expert arguments LLM finds from any perspective
 };
 
 export type ExpertOpinion = {
@@ -42,12 +47,10 @@ export type ExpertOpinion = {
     expert_type: ExpertType
 }
 
-
-
 // Prompt, each expert type is communicated as a quote from a person with deep opinion in specific area
-// The goal to debunk unknown facts, expose hiddent turh, highlight the fact of dishonesty and past lies.
+// The goal to debunk unknown facts, expose hidden truth, highlight the fact of dishonesty and past lies.
 
-// Enum with perspectives, which can be provied to the event
+// Enum with perspectives, which can be provided to the event
 enum ExpertType {
     nerd = "nerd", 
     joe = "joe",

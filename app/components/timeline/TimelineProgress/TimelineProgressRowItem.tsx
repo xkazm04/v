@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Calendar, Hash, Pause, Loader2 } from 'lucide-react';
+import { Calendar, Hash, Pause, Loader2, PlayIcon } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 
 interface TimelineRowItemProps {
@@ -86,7 +86,7 @@ const TimelineProgressRowItem = ({
             item.type === 'event' ? (
               <Hash className="text-blue-500" style={{ color: colors.primary }} />
             ) : (
-              <Calendar className="w-3 h-3 text-blue-500" style={{ color: colors.primary }} />
+              <PlayIcon className="w-3 h-3 text-blue-500" style={{ color: colors.primary }} />
             )
           )
         ) : (

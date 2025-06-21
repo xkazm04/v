@@ -36,8 +36,8 @@ const TitleLogo = ({width, height, color}: Props) => {
 <path d="M193.539 335.6C193.739 338.3 194.339 340.8 194.939 341.4C195.539 342 195.739 341.3 195.339 339.4C195.139 337.7 194.839 335.2 194.839 333.6C194.739 332.1 194.439 330.9 193.939 330.9C193.539 330.9 193.339 333 193.539 335.6Z" fill={color}/>
 </g>
 <defs>
-<filter id="filter0_d_496_13" x="0" y="4.57764e-05" width="755.378" height="384.9" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<filter id="filter0_d_496_13" x="0" y="4.57764e-05" width="755.378" height="384.9" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+<feFlood floodOpacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
 <feOffset dy="4"/>
 <feGaussianBlur stdDeviation="10"/>

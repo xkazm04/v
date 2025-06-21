@@ -1,6 +1,6 @@
 Please research topic and generate output according to instructions below
 
-Topic: Israel x Iran conflict 2017-2025
+Topic: Sudanese civil war 2023-2025
 
 Instructions:
 # Timeline Generator 

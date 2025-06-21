@@ -1,5 +1,5 @@
 'use client'
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { motion, useTransform } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
@@ -10,6 +10,7 @@ import { useElevenLabsAudio } from '@/app/hooks/useElevenLabsAudio';
 import TimelineMilestone from '../../components/timeline/TimelineMilestone/TimelineMilestone';
 import TimelineProgress from '../../components/timeline/TimelineProgress/TimelineProgress';
 import TimelineBackground from '../../components/timeline/TimelineVertical/TimelineBackground';
+import TimelineSelector from '../../components/timeline/TimelineSelector/TimelineSelector';
 import { FloatingVerdictIcon } from '@/app/components/ui/Decorative/FloatingVerdictIcon';
 import { Timeline } from '../../types/timeline';
 import exampleData from './data/example.json';
@@ -28,18 +29,13 @@ const OptimizedTimelineMilestone = React.memo(({
   activeMilestoneId, 
   smoothScrollProgress 
 }: any) => (
-  <div
-    className="mb-12"
-    data-milestone-id={milestone.id}
-  >
-    <TimelineMilestone
-      milestone={milestone}
-      index={index}
-      activeEventId={activeEventId}
-      activeMilestoneId={activeMilestoneId}
-      scrollProgress={smoothScrollProgress}
-    />
-  </div>
+  <TimelineMilestone
+    milestone={milestone}
+    index={index}
+    activeEventId={activeEventId}
+    activeMilestoneId={activeMilestoneId}
+    scrollProgress={smoothScrollProgress}
+  />
 ));
 
 OptimizedTimelineMilestone.displayName = 'OptimizedTimelineMilestone';
@@ -77,12 +73,17 @@ export default function TimelineVertical() {
   const { isMobile, isDesktop } = useViewport();
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // State for timeline selection - simplified without file paths
+  const [currentTimeline, setCurrentTimeline] = useState<Timeline>(exampleData as Timeline);
+  const [isLoadingTimeline, setIsLoadingTimeline] = useState(false);
+
   // Get user preferences for language-based voice selection
   const { preferences } = useUserPreferences();
   const userLanguage = preferences.language || 'en';
   const voiceId = useMemo(() => getVoiceIdForLanguage(userLanguage), [userLanguage]);
 
-  const timeline: Timeline = useMemo(() => exampleData as Timeline, []);
+  // Use currentTimeline instead of exampleData
+  const timeline: Timeline = currentTimeline;
   
   // Initialize audio store
   const { initializeTracklist } = useTimelineAudioStore();
@@ -110,6 +111,24 @@ export default function TimelineVertical() {
       console.error('Timeline audio error:', error);
     }
   });
+
+  // Handle timeline selection - simplified to accept timeline data directly
+  const handleTimelineSelect = async (timelineData: Timeline) => {
+    if (timelineData.id === currentTimeline.id) return;
+    
+    setIsLoadingTimeline(true);
+    try {
+      setCurrentTimeline(timelineData);
+      
+      // Reset scroll position to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (error) {
+      console.error('Failed to load timeline:', error);
+      // Keep current timeline on error
+    } finally {
+      setIsLoadingTimeline(false);
+    }
+  };
 
   // Handle audio play and pause events from TimelineProgressContent
   useEffect(() => {
@@ -202,6 +221,8 @@ export default function TimelineVertical() {
 
       <div
         ref={containerRef}
+        id="timeline-container"
+        className="min-h-screen relative w-full overflow-hidden"
         style={{
           background: backgroundGradient,
           color: colors.foreground,
@@ -209,6 +230,10 @@ export default function TimelineVertical() {
           transform: 'translateZ(0)'
         }}
       >
+                        <TimelineSelector
+              onTimelineSelect={handleTimelineSelect}
+              currentTimeline={currentTimeline}
+            />
         <MemoizedTimelineBackground
           scrollProgress={smoothScrollProgress.get()}
           isDark={isDark}
@@ -260,7 +285,24 @@ export default function TimelineVertical() {
           transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
           data-scroll-target="hero" 
         >
-          <MemoizedTimelineHeader timeline={timeline} />
+          <MemoizedTimelineHeader timeline={timeline} />          
+          {/* Loading indicator */}
+          {isLoadingTimeline && (
+            <motion.div
+              className="text-center py-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div
+                className="inline-block w-6 h-6 border-2 border-current border-t-transparent rounded-full"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                style={{ borderColor: colors.primary }}
+              />
+              <p className="mt-2 text-sm opacity-60">Loading timeline...</p>
+            </motion.div>
+          )}
         </motion.div>
 
         <div 
