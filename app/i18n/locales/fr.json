@@ -1,0 +1,28 @@
+{
+  "feed": {
+    "statementOfTheDay": "Déclaration du Jour",
+    "loading": "Chargement...",
+    "error": "Erreur lors du chargement du contenu"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "timeline": "Chronologie",
+    "news": "Actualités",
+    "about": "À propos"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Quelque chose s'est mal passé",
+    "retry": "Réessayer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "close": "Fermer"
+  },
+  "errors": {
+    "validation": {
+      "required": "Ce champ est obligatoire",
+      "email": "Veuillez saisir un email valide",
+      "minLength": "Minimum {count} caractères requis"
+    }
+  }
+}

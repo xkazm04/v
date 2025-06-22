@@ -54,7 +54,43 @@ export const AVAILABLE_LANGUAGES: LanguageOption[] = [
     flagSvg: '/flags/cz.svg',
     description: 'Automatický překlad',
     voiceId: 'SZXidiHhq5QYe3jRboSZ'
-  }
+  },
+  {
+    code: 'ja',
+    name: 'Japanese',
+    nativeName: '日本語',
+    flag: '🇯🇵',
+    flagSvg: '/flags/jp.svg',
+    description: '自動翻訳',
+    voiceId: 'Mv8AjrYZCBkdsmDHNwcB'
+  },
+  {
+    code: 'fr',
+    name: 'French',
+    nativeName: 'Français',
+    flag: '🇫🇷',
+    flagSvg: '/flags/fr.svg',
+    description: 'Traduction automatique',
+    voiceId: 'ohItIVrXTBI80RrUECOD'
+  },
+  {
+    code: 'de',
+    name: 'German',
+    nativeName: 'Deutsch',
+    flag: '🇩🇪',
+    flagSvg: '/flags/de.svg',
+    description: 'Automatische Übersetzung',
+    voiceId: 'kkJxCnlRCckmfFvzDW5Q'
+  },
+  {
+    code: 'ru',
+    name: 'Russian',
+    nativeName: 'Русский',
+    flag: '🇷🇺',
+    flagSvg: '/flags/ru.svg',
+    description: 'Автоматический перевод',
+    voiceId: 'txnCCHHGKmYIwrn7HfHQ'
+  },
 ];
 
 export interface CountryOption {

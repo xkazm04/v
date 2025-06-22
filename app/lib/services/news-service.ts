@@ -1,5 +1,5 @@
 import { ResearchResult } from "@/app/types/article";
-import { supabase } from "../supabase"; // ✅ Use regular client, not admin
+import { supabase } from "../supabase"; 
 
 export interface SupabaseNewsFilters {
   limit?: number;
@@ -16,12 +16,12 @@ export interface SupabaseNewsFilters {
 
 // Client-side translation function that calls API route
 async function translateViaAPI(
-  statement: string,
+  text: string,
   sourceLocale: string = 'en',
   targetLocale: string = 'es'
 ): Promise<string | null> {
-  if (!statement || statement.trim() === '' || sourceLocale === targetLocale) {
-    return statement;
+  if (!text || text.trim() === '' || sourceLocale === targetLocale) {
+    return text;
   }
 
   try {
@@ -31,7 +31,7 @@ async function translateViaAPI(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        text: statement,
+        text: text,
         sourceLocale,
         targetLocale,
       }),
@@ -39,21 +39,18 @@ async function translateViaAPI(
 
     if (response.ok) {
       const data = await response.json();
-      return data.translatedText || statement;
+      return data.translatedText || text;
     } else {
       console.warn('Translation API failed:', response.status);
-      return statement;
+      return text;
     }
   } catch (error) {
     console.warn('Translation error:', error);
-    return statement;
+    return text;
   }
 }
 
 class SupabaseNewsService {
-  /**
-   * Get research results from Supabase research_results table (client-side safe)
-   */
   async getNews(filters: SupabaseNewsFilters = {}): Promise<ResearchResult[]> {
     try {
       // Test connection first
@@ -164,8 +161,8 @@ class SupabaseNewsService {
 
       // Apply translation if requested
       if (filters.translateTo) {
-        console.log(`🌐 Translating ${results.length} statements to ${filters.translateTo}`);
-        results = await this.translateStatements(results, filters.translateTo);
+        console.log(`🌐 Translating ${results.length} research results to ${filters.translateTo}`);
+        results = await this.translateResearchResults(results, filters.translateTo);
       }
 
       return results;
@@ -177,36 +174,69 @@ class SupabaseNewsService {
   }
 
   /**
-   * Translate statements in batch using API route
+   * ✅ ENHANCED: Translate multiple fields in research results
    */
-  private async translateStatements(results: ResearchResult[], targetLanguage: string): Promise<ResearchResult[]> {
+  private async translateResearchResults(results: ResearchResult[], targetLanguage: string): Promise<ResearchResult[]> {
     try {
       const translationPromises = results.map(async (result) => {
-        if (!result.statement || result.statement.trim() === '') {
-          return result;
+        const translatedFields: Partial<ResearchResult> = {};
+
+        if (result.statement && result.statement.trim() !== '') {
+          try {
+            const translatedStatement = await translateViaAPI(
+              result.statement,
+              'en',
+              targetLanguage
+            );
+            translatedFields.statement = translatedStatement || result.statement;
+          } catch (error) {
+            console.warn(`Statement translation failed for ${result.id}:`, error);
+            translatedFields.statement = result.statement;
+          }
         }
 
-        try {
-          const translatedStatement = await translateViaAPI(
-            result.statement,
-            'en', // Source language (English)
-            targetLanguage
-          );
-
-          return {
-            ...result,
-            statement: translatedStatement || result.statement, // Fallback to original if translation fails
-            __meta: {
-              ...result.__meta,
-              originalStatement: result.statement, // Keep original for debugging
-              translatedTo: targetLanguage,
-              translationSource: 'api'
-            }
-          };
-        } catch (translationError) {
-          console.warn(`Translation failed for statement ${result.id}:`, translationError);
-          return result; // Return original if translation fails
+        // ✅ NEW: Translate verdict if present
+        if (result.verdict && result.verdict.trim() !== '') {
+          try {
+            const translatedVerdict = await translateViaAPI(
+              result.verdict,
+              'en',
+              targetLanguage
+            );
+            translatedFields.verdict = translatedVerdict || result.verdict;
+          } catch (error) {
+            console.warn(`Verdict translation failed for ${result.id}:`, error);
+            translatedFields.verdict = result.verdict;
+          }
         }
+
+        // ✅ NEW: Translate context if present
+        if (result.context && result.context.trim() !== '') {
+          try {
+            const translatedContext = await translateViaAPI(
+              result.context,
+              'en',
+              targetLanguage
+            );
+            translatedFields.context = translatedContext || result.context;
+          } catch (error) {
+            console.warn(`Context translation failed for ${result.id}:`, error);
+            translatedFields.context = result.context;
+          }
+        }
+
+        return {
+          ...result,
+          ...translatedFields,
+          __meta: {
+            ...result.__meta,
+            originalStatement: result.statement,
+            originalVerdict: result.verdict,
+            originalContext: result.context,
+            translatedTo: targetLanguage,
+            translationSource: 'api'
+          }
+        };
       });
 
       const translatedResults = await Promise.allSettled(translationPromises);
@@ -264,26 +294,9 @@ class SupabaseNewsService {
       };
 
       // Translate single result if requested
-      if (translateTo && result.statement) {
-        try {
-          const translatedStatement = await translateViaAPI(
-            result.statement,
-            'en',
-            translateTo
-          );
-
-          result = {
-            ...result,
-            statement: translatedStatement || result.statement,
-            __meta: {
-              originalStatement: result.statement,
-              translatedTo: translateTo,
-              translationSource: 'api'
-            }
-          };
-        } catch (translationError) {
-          console.warn(`Single translation failed for ${id}:`, translationError);
-        }
+      if (translateTo) {
+        const translatedResults = await this.translateResearchResults([result], translateTo);
+        result = translatedResults[0];
       }
 
       return result;

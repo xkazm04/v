@@ -39,7 +39,7 @@ interface CardColors {
   accent?: string;
 }
 
-// ✅ NEW: Vintage color palette interface
+// ✅ Vintage color palette interface
 export interface VintageColors {
   paper: string;
   ink: string;
@@ -49,6 +49,27 @@ export interface VintageColors {
   highlight: string;
   shadow: string;
   crease: string;
+}
+
+// ✅ NEW: Universal card color states
+export interface UniversalCardColors {
+  default: {
+    background: string;
+    border: string;
+    shadow: string;
+  };
+  hover: {
+    background: string;
+    border: string;
+    shadow: string;
+  };
+  selected: {
+    background: string;
+    border: string;
+    shadow: string;
+  };
+  accent: string;
+  textAccent: string;
 }
 
 export interface ThemeColors {
@@ -66,8 +87,9 @@ export interface ThemeColors {
   sidebar: ComponentColors;
   card: CardColors;
   overlay: OverlayColors;
-  // ✅ NEW: Add vintage colors to theme
   vintage: VintageColors;
+  // ✅ NEW: Universal card system
+  universalCard: UniversalCardColors;
   active?: string;
   inactive?: string;
   iconBg?: string;
@@ -94,7 +116,7 @@ export const colors: { light: ThemeColors; dark: ThemeColors } = {
     input: '#ffffff',
     ring: '#8b4513',
     
-    // ✅ NEW: Dedicated vintage color palette for light mode
+    // Dedicated vintage color palette for light mode
     vintage: {
       paper: '#f8f6f0', // Main paper color
       ink: '#2c1810', // Primary text color
@@ -104,6 +126,27 @@ export const colors: { light: ThemeColors; dark: ThemeColors } = {
       highlight: '#fff8e7', // Paper highlight
       shadow: 'rgba(139, 69, 19, 0.15)', // Brown shadow
       crease: '#e0d5c0', // Paper fold lines
+    },
+
+    // ✅ NEW: Universal card system for light mode (vintage newspaper)
+    universalCard: {
+      default: {
+        background: 'linear-gradient(135deg, #f8f6f0 0%, rgba(252, 251, 247, 0.8) 100%)',
+        border: '1px solid #e8dcc0',
+        shadow: '0 2px 8px rgba(139, 69, 19, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+      },
+      hover: {
+        background: 'linear-gradient(135deg, #f8f6f0 0%, #fff8e7 50%, rgba(248, 246, 240, 0.9) 100%)',
+        border: '2px solid #d4c4a8',
+        shadow: '0 8px 24px rgba(139, 69, 19, 0.08), 0 2px 8px rgba(139, 69, 19, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+      },
+      selected: {
+        background: 'linear-gradient(135deg, #fff8e7 0%, #f8f6f0 30%, rgba(255, 248, 231, 0.8) 100%)',
+        border: '2px solid rgba(184, 134, 11, 0.4)',
+        shadow: '0 12px 40px rgba(180, 135, 45, 0.15), 0 4px 12px rgba(139, 69, 19, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.3)'
+      },
+      accent: '#b8860b', // Vintage gold
+      textAccent: '#b8860b'
     },
     
     sidebar: {
@@ -148,7 +191,7 @@ export const colors: { light: ThemeColors; dark: ThemeColors } = {
     input: '#1e293b',
     ring: '#60a5fa',
     
-    // ✅ NEW: Dark mode vintage colors (more muted, tech-like)
+    // Dark mode vintage colors (more muted, tech-like)
     vintage: {
       paper: '#1e293b', // Dark slate background
       ink: '#f8fafc', // Light text
@@ -158,6 +201,27 @@ export const colors: { light: ThemeColors; dark: ThemeColors } = {
       highlight: '#64748b', // Subtle highlight
       shadow: 'rgba(0, 0, 0, 0.3)', // Dark shadow
       crease: '#475569', // Border lines
+    },
+
+    // ✅ NEW: Universal card system for dark mode
+    universalCard: {
+      default: {
+        background: 'linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))',
+        border: 'rgba(255,255,255,0.1)',
+        shadow: '0 2px 8px rgba(0,0,0,0.04)'
+      },
+      hover: {
+        background: 'linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(96, 165, 250, 0.08))',
+        border: 'rgba(96, 165, 250, 0.3)',
+        shadow: '0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08)'
+      },
+      selected: {
+        background: 'linear-gradient(135deg, rgba(96, 165, 250, 0.20), rgba(96, 165, 250, 0.08))',
+        border: '#60a5fa',
+        shadow: '0 8px 32px rgba(96, 165, 250, 0.25), 0 2px 8px rgba(96, 165, 250, 0.15)'
+      },
+      accent: '#60a5fa',
+      textAccent: '#60a5fa'
     },
     
     navbar: {
@@ -213,9 +277,22 @@ export const getCardColors = (theme: 'light' | 'dark'): CardColors =>
 export const getOverlayColors = (theme: 'light' | 'dark'): OverlayColors => 
   colors[theme].overlay;
 
-// ✅ NEW: Vintage color getter
+// Vintage color getter
 export const getVintageColors = (theme: 'light' | 'dark'): VintageColors => 
   colors[theme].vintage;
+
+// ✅ NEW: Universal card color getter with state support
+export const getUniversalCardColors = (theme: 'light' | 'dark'): UniversalCardColors => 
+  colors[theme].universalCard;
+
+// ✅ NEW: Helper function to get card colors for specific states
+export const getCardState = (
+  theme: 'light' | 'dark',
+  state: 'default' | 'hover' | 'selected'
+) => {
+  const cardColors = getUniversalCardColors(theme);
+  return cardColors[state];
+};
 
 export const statusColorConfig = {
     light: {

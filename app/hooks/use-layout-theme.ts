@@ -10,7 +10,10 @@ import {
   getCardColors, 
   getOverlayColors,
   getVintageColors,
-  type VintageColors
+  getUniversalCardColors,
+  getCardState,
+  type VintageColors,
+  type UniversalCardColors
 } from '@/app/constants/colors';
 import { useAppearanceStore, SUBTONE_CONFIGS } from '@/app/stores/appearance';
 
@@ -46,14 +49,27 @@ export function useLayoutTheme() {
   const themeColors = getThemeColors(currentTheme);
   const subtoneConfig = getSubtoneConfig();
 
-  // ✅ Enhanced subtone utilities with vintage support
+  // ✅ NEW: Universal card state helper
+  const getCardColors = (isSelected: boolean, isHovered: boolean) => {
+    const universalCards = getUniversalCardColors(currentTheme);
+    
+    if (isSelected) {
+      return universalCards.selected;
+    } else if (isHovered) {
+      return universalCards.hover;
+    } else {
+      return universalCards.default;
+    }
+  };
+
+  // Enhanced subtone utilities with vintage support
   const getSubtoneEffects = () => {
     const isDark = currentTheme === 'dark';
     const subtoneColor = subtoneConfig.preview;
     const opacity = isDark ? 0.03 : 0.02;
     const glowOpacity = isDark ? 0.05 : 0.03;
     
-    // ✅ Vintage-specific effects for light mode
+    // Vintage-specific effects for light mode
     const vintageEffects = !isDark ? {
       paperStain: `radial-gradient(ellipse 80% 60% at 30% 40%, rgba(139, 69, 19, 0.02), transparent 70%)`,
       inkBlot: `radial-gradient(circle at 70% 20%, rgba(139, 69, 19, 0.03) 10px, transparent 20px)`,
@@ -100,7 +116,7 @@ export function useLayoutTheme() {
       // Text accent for highlights
       textAccent: colorSubtone !== 'neutral' ? subtoneColor : themeColors.primary,
       
-      // ✅ NEW: Vintage effects
+      // Vintage effects
       ...vintageEffects
     };
   };
@@ -128,9 +144,14 @@ export function useLayoutTheme() {
     isDark: currentTheme === 'dark',
     isLight: currentTheme === 'light',
     
-    // ✅ NEW: Vintage color integration
+    // Vintage color integration
     vintage: getVintageColors(currentTheme),
     isVintage: currentTheme === 'light',
+    
+    // ✅ NEW: Universal card system
+    universalCard: getUniversalCardColors(currentTheme),
+    getCardColors, // Helper function for states
+    getCardState: (state: 'default' | 'hover' | 'selected') => getCardState(currentTheme, state),
     
     // Subtone integration
     subtone: {

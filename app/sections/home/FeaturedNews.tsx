@@ -7,8 +7,6 @@ import { RefreshCw, AlertCircle } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { Button } from '@/app/components/ui/button';
 import { useNewsFilters } from '@/app/stores/filterStore';
-import { countryLabels } from '@/app/helpers/countries';
-
 interface FeaturedNewsProps {
   limit?: number;
   showBreaking?: boolean;
@@ -24,7 +22,6 @@ const FeaturedNews = memo(({
   const { colors, isDark } = useLayoutTheme();
   const newsFilters = useNewsFilters();
 
-  // Stable filters to prevent unnecessary re-renders
   const enhancedFilters = useMemo(() => ({
     limit,
     autoRefresh,
@@ -37,9 +34,8 @@ const FeaturedNews = memo(({
     onlyFactChecked: newsFilters.onlyFactChecked,
   }), [newsFilters, limit, autoRefresh, showBreaking]);
 
-  // ✅ **FIX: Fetch research results directly**
   const { 
-    articles: researchResults, // This is already ResearchResult[]
+    articles: researchResults, 
     loading, 
     error, 
     refreshNews,
@@ -51,7 +47,6 @@ const FeaturedNews = memo(({
     refreshNews();
   }, [refreshNews]);
 
-  // ✅ **FIX: Add validation for research results**
   const validResearchResults = useMemo(() => {
     if (!Array.isArray(researchResults)) {
       console.warn('FeaturedNews: researchResults is not an array', researchResults);

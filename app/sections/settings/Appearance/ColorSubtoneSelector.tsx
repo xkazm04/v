@@ -1,10 +1,10 @@
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { Palette, Sparkles, Eye, Brush } from 'lucide-react';
 import { useAppearanceStore, SUBTONE_CONFIGS, ColorSubtone } from '@/app/stores/appearance';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
 import { useState } from 'react';
-import { SetAppearanceSubtone } from './SetAppearanceSubtone';
+import { SetAppearanceSubtone } from '../../../components/settings/SetAppearanceSubtone';
 
 interface ColorSubtoneSelectorProps {
   className?: string;
@@ -12,7 +12,7 @@ interface ColorSubtoneSelectorProps {
 
 export function ColorSubtoneSelector({ className }: ColorSubtoneSelectorProps) {
   const { colorSubtone, setColorSubtone } = useAppearanceStore();
-  const { colors, isDark } = useLayoutTheme();
+  const { colors } = useLayoutTheme();
   const [hoveredSubtone, setHoveredSubtone] = useState<ColorSubtone | null>(null);
 
   const subtoneOrder: ColorSubtone[] = ['neutral', 'blue', 'red', 'green', 'yellow', 'purple'];
@@ -27,7 +27,7 @@ export function ColorSubtoneSelector({ className }: ColorSubtoneSelectorProps) {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 15, scale: 0.9 },
     visible: { 
       opacity: 1, 

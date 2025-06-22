@@ -1,11 +1,8 @@
-import DashboardLayout from "../sections/dashboard/DashboardLayout";
-import ProfilesExperimental from "../sections/dashboard/Profiles/ProfilesExperimental";
+import ProfilesLayout from "../sections/dashboard/Profiles/ProfilesLayout";
 
 const Page = () => {
     return <>
-    <ProfilesExperimental />
-    <div className="flex flex-row justify-center py-2">Playground - Final components will be migrated to /dashboard/:id route</div>
-        <DashboardLayout />
+        <ProfilesLayout />
     </>
 }
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseNewsServiceServer } from '@/app/lib/services/supabase-news-service-server';
 import { MockDataService } from '@/app/lib/services/mockDataService';
 import { ResearchResult } from '@/app/types/article';
+import { userPreferencesApiClient } from '@/app/lib/services/user-preferences-api-client';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,6 +13,15 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     
     console.log(`🔍 Research API route called with params:`, Object.fromEntries(searchParams.entries()));
+    
+    // ✅ Extract user preferences from request
+    const userPreferences = userPreferencesApiClient.extractUserPreferences({
+      request,
+      searchParams
+    });
+    
+    // ✅ Get translation target from user preferences (NOT hardcoded)
+    const translationTarget = userPreferencesApiClient.getTranslationTarget(userPreferences);
     
     // Parse filters from search params
     const filters = {
@@ -24,10 +34,14 @@ export async function GET(request: NextRequest) {
       search: searchParams.get('search_text') || undefined,
       sort_by: searchParams.get('sort_by') || 'processed_at',
       sort_order: (searchParams.get('sort_order') as 'asc' | 'desc') || 'desc',
-      translateTo: searchParams.get('translate_to') || 'es' // Default to Spanish
+      translateTo: translationTarget // ✅ Use user preference instead of hardcoded 'es'
     };
     
-    console.log(`🌐 Translation enabled: English → ${filters.translateTo}`);
+    if (translationTarget) {
+      console.log(`🌐 Translation enabled: English → ${translationTarget}`);
+    } else {
+      console.log(`📄 No translation needed (user prefers English or no preference set)`);
+    }
     
     let results: ResearchResult[] = [];
     
@@ -46,8 +60,11 @@ export async function GET(request: NextRequest) {
             fetchTime: Date.now() - startTime,
             timestamp: new Date().toISOString(),
             source: 'supabase',
-            translationEnabled: true,
-            targetLanguage: filters.translateTo
+            userPreferences: {
+              translationEnabled: !!translationTarget,
+              translationTarget: translationTarget || 'en',
+              originalLanguage: 'en'
+            }
           }
         });
       }
@@ -108,8 +125,11 @@ export async function GET(request: NextRequest) {
         fetchTime: Date.now() - startTime,
         timestamp: new Date().toISOString(),
         source: 'mock',
-        translationEnabled: false,
-        targetLanguage: filters.translateTo
+        userPreferences: {
+          translationEnabled: false,
+          translationTarget: translationTarget || 'en',
+          originalLanguage: 'en'
+        }
       }
     });
 

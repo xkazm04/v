@@ -5,7 +5,6 @@ import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
 import { ColorSubtoneSelector } from './ColorSubtoneSelector';
 import { 
-  Monitor,
   Sun,
   Moon,
   Sparkles,
@@ -15,8 +14,7 @@ import {
 
 const SetAppearance = memo(function SetAppearance() {
   const { theme, setTheme } = useTheme();
-  const { colors, isDark } = useLayoutTheme();
-  const [isUpdating, setIsUpdating] = useState(false);
+  const { colors, isDark, vintage, getCardColors } = useLayoutTheme();
   const [hoveredTheme, setHoveredTheme] = useState<string | null>(null);
 
   const containerVariants = {
@@ -48,26 +46,16 @@ const SetAppearance = memo(function SetAppearance() {
     {
       id: 'light',
       label: 'Light',
-      description: 'Clean and bright',
+      description: 'Clean and bright interface',
       icon: Sun,
-      gradient: 'from-amber-400 to-orange-500',
-      color: '#f59e0b'
+      color: '#b8860b'
     },
     {
       id: 'dark',
-      label: 'Dark',
+      label: 'Dark', 
       description: 'Easy on the eyes',
       icon: Moon,
-      gradient: 'from-indigo-600 to-purple-600',
       color: '#8b5cf6'
-    },
-    {
-      id: 'system',
-      label: 'System',
-      description: 'Matches your device',
-      icon: Monitor,
-      gradient: 'from-gray-600 to-gray-800',
-      color: '#6b7280'
     }
   ];
 
@@ -79,15 +67,11 @@ const SetAppearance = memo(function SetAppearance() {
   }, [theme]);
 
   const handleThemeUpdate = async (newTheme: 'light' | 'dark' | 'system') => {
-    if (isUpdating) return;
-
     try {
-      setIsUpdating(true);
       setTheme(newTheme);
     } catch (error) {
       console.error('Error updating theme:', error);
     } finally {
-      setIsUpdating(false);
     }
   };
 
@@ -104,35 +88,72 @@ const SetAppearance = memo(function SetAppearance() {
         shadow="glow"
         className="relative overflow-hidden p-2"
       >
-        {/* Content Sections */}
         <div className="relative z-10 px-8 pb-12 space-y-16">
-          {/* Theme Selection */}
+          {/* ✅ Enhanced Header */}
           <motion.div variants={itemVariants}>
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-3 flex items-center justify-center gap-3" style={{ color: colors.foreground }}>
+            <div className="text-center mb-10">
+              <motion.div
+                className="inline-flex items-center justify-center gap-3 mb-4"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
                 <motion.div
-                  className="p-2 rounded-xl"
+                  className="relative p-3 rounded-2xl"
                   style={{ 
-                    background: `linear-gradient(135deg, ${colors.primary}20, ${colors.primary}10)`,
-                    border: `1px solid ${colors.primary}30`
+                    background: isDark 
+                      ? `linear-gradient(135deg, ${colors.primary}25, ${colors.primary}10)`
+                      : `linear-gradient(135deg, ${vintage.highlight}, ${vintage.paper})`,
+                    border: isDark 
+                      ? `1px solid ${colors.primary}30`
+                      : `2px solid ${vintage.sepia}`,
+                    boxShadow: isDark 
+                      ? `0 8px 25px ${colors.primary}20`
+                      : `0 8px 25px rgba(139, 69, 19, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.3)`
                   }}
-                  whileHover={{ scale: 1.1, rotate: 10 }}
+                  whileHover={{ scale: 1.1, rotate: 8 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <Settings className="w-7 h-7" style={{ color: colors.primary }} />
+                  <Settings className="w-8 h-8" style={{ 
+                    color: isDark ? colors.primary : vintage.ink 
+                  }} />
                 </motion.div>
+              </motion.div>
+
+              <motion.h2 
+                className="text-4xl font-bold mb-4"
+                style={{ 
+                  color: isDark ? colors.foreground : vintage.ink,
+                  fontFamily: '"Playfair Display", "Times New Roman", serif',
+                  textShadow: isDark ? 'none' : '0 1px 2px rgba(139, 69, 19, 0.1)'
+                }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+              >
                 Theme Selection
-              </h2>
-              <p className="text-lg text-muted-foreground">
+              </motion.h2>
+              
+              <motion.p 
+                className="text-lg max-w-2xl mx-auto leading-relaxed"
+                style={{ 
+                  color: isDark ? colors.mutedForeground : vintage.faded,
+                  fontFamily: '"Crimson Text", Georgia, serif'
+                }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
                 Choose your preferred theme mode for the perfect viewing experience
-              </p>
+              </motion.p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               {themeOptions.map((option, index) => {
                 const isSelected = theme === option.id;
                 const isHovered = hoveredTheme === option.id;
                 const IconComponent = option.icon;
+                const cardColors = getCardColors(isSelected, isHovered); // ✅ Use universal function
 
                 return (
                   <motion.button
@@ -140,42 +161,47 @@ const SetAppearance = memo(function SetAppearance() {
                     onClick={() => handleThemeUpdate(option.id as any)}
                     onMouseEnter={() => setHoveredTheme(option.id)}
                     onMouseLeave={() => setHoveredTheme(null)}
-                    disabled={isUpdating}
                     variants={itemVariants}
                     initial="hidden"
                     animate="visible"
-                    transition={{ delay: index * 0.05 }}
-                    whileHover={{ y: -6, scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    transition={{ delay: index * 0.08 }}
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     className="relative group cursor-pointer disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     <motion.div
-                      className="relative p-6 rounded-2xl border transition-all duration-300 overflow-hidden"
+                      className="relative p-6 rounded-2xl transition-all duration-300 overflow-hidden"
                       style={{
-                        background: isSelected || isHovered
-                          ? `linear-gradient(135deg, ${option.color}20, ${option.color}10)`
-                          : isDark 
-                            ? 'linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))'
-                            : 'linear-gradient(135deg, rgba(0,0,0,0.05), rgba(0,0,0,0.02))',
-                        borderColor: isSelected ? colors.primary : 'transparent',
-                        boxShadow: isSelected 
-                          ? `0 10px 30px ${colors.primary}25`
-                          : isHovered
-                            ? `0 10px 30px rgba(0,0,0,0.1)`
-                            : 'none'
+                        background: cardColors.background, // ✅ Use universal colors
+                        border: cardColors.border,
+                        boxShadow: cardColors.shadow
                       }}
-                      animate={{
-                        scale: isSelected ? 1.02 : 1
-                      }}
-                      transition={{ type: "spring", stiffness: 300 }}
                     >
-                      {/* Icon Display */}
-                      <div className="text-center mb-4">
+                      {/* ✅ Vintage paper texture overlay for light mode */}
+                      {!isDark && (
+                        <div 
+                          className="absolute inset-0 opacity-30 pointer-events-none"
+                          style={{
+                            backgroundImage: `
+                              radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.02) 1px, transparent 1px),
+                              radial-gradient(circle at 80% 70%, rgba(139, 69, 19, 0.015) 1px, transparent 1px)
+                            `,
+                            backgroundSize: '60px 60px, 40px 40px'
+                          }}
+                        />
+                      )}
+
+                      {/* Enhanced Icon Display */}
+                      <div className="text-center mb-5">
                         <motion.div
                           className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4"
                           style={{
-                            background: `linear-gradient(135deg, ${option.color}20, ${option.color}10)`,
-                            border: `2px solid ${option.color}30`
+                            background: isDark
+                              ? `linear-gradient(135deg, ${option.color}20, ${option.color}10)`
+                              : `linear-gradient(135deg, ${option.color}15, ${option.color}08)`,
+                            border: isDark
+                              ? `2px solid ${option.color}30`
+                              : `2px solid ${option.color}25`
                           }}
                           animate={{
                             scale: isSelected || isHovered ? 1.1 : 1,
@@ -183,10 +209,7 @@ const SetAppearance = memo(function SetAppearance() {
                           }}
                           transition={{ type: "spring", stiffness: 300 }}
                         >
-                          <IconComponent 
-                            className="w-8 h-8" 
-                            style={{ color: option.color }} 
-                          />
+                          <IconComponent className="w-8 h-8" style={{ color: option.color }} />
                         </motion.div>
                         
                         {/* Selection Indicator */}
@@ -195,10 +218,14 @@ const SetAppearance = memo(function SetAppearance() {
                             {isSelected && (
                               <motion.div
                                 className="w-6 h-6 rounded-full flex items-center justify-center"
-                                style={{ background: colors.primary }}
-                                initial={{ scale: 0, rotate: -180 }}
+                                style={{ 
+                                  background: isDark 
+                                    ? colors.primary 
+                                    : 'linear-gradient(135deg, #b8860b, #cd853f)'
+                                }}
+                                initial={{ scale: 0, rotate: -90 }}
                                 animate={{ scale: 1, rotate: 0 }}
-                                exit={{ scale: 0, rotate: 180 }}
+                                exit={{ scale: 0, rotate: 90 }}
                                 transition={{ type: "spring", stiffness: 500 }}
                               >
                                 <Eye className="w-3 h-3 text-white" />
@@ -208,72 +235,89 @@ const SetAppearance = memo(function SetAppearance() {
                         </div>
                       </div>
 
-                      {/* Theme Information */}
-                      <div className="text-center space-y-2">
+                      {/* ✅ Enhanced Theme Information */}
+                      <div className="text-center space-y-3">
                         <motion.h3 
-                          className="text-lg font-bold leading-tight"
+                          className="text-xl font-bold leading-tight"
                           style={{ 
-                            color: isSelected ? colors.primary : colors.foreground 
-                          }}
-                          animate={{
-                            color: isSelected ? colors.primary : colors.foreground
+                            color: isSelected 
+                              ? (isDark ? colors.primary : '#b8860b')
+                              : (isDark ? colors.foreground : vintage.ink),
+                            fontFamily: '"Playfair Display", serif'
                           }}
                         >
                           {option.label}
                         </motion.h3>
 
-                        <div className="text-sm text-muted-foreground">
+                        <div 
+                          className="text-sm leading-relaxed"
+                          style={{ 
+                            color: isDark ? colors.mutedForeground : vintage.faded,
+                            fontFamily: '"Crimson Text", serif'
+                          }}
+                        >
                           {option.description}
                         </div>
 
-                        {/* Status Badge */}
+                        {/* ✅ Enhanced Status Badge */}
                         <motion.div
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
+                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold"
                           style={{
-                            background: `${option.color}15`,
-                            border: `1px solid ${option.color}30`
+                            background: isDark
+                              ? `${option.color}15`
+                              : `linear-gradient(135deg, ${option.color}10, ${option.color}05)`,
+                            border: isDark
+                              ? `1px solid ${option.color}30`
+                              : `1px solid ${option.color}25`,
+                            color: option.color
                           }}
                           whileHover={{ scale: 1.05 }}
                         >
-                          <Sparkles className="w-3 h-3" style={{ color: option.color }} />
-                          <span style={{ color: option.color }}>
-                            {isSelected ? 'Active' : 'Available'}
-                          </span>
+                          <Sparkles className="w-3 h-3" />
+                          <span>{isSelected ? 'Active' : 'Available'}</span>
                         </motion.div>
                       </div>
 
-                      {/* Selection Pulse Effect */}
+                      {/* ✅ Enhanced Selection Pulse Effect */}
                       {isSelected && (
                         <motion.div
-                          className="absolute inset-0 rounded-2xl border-2 pointer-events-none"
-                          style={{ borderColor: colors.primary }}
+                          className="absolute inset-0 rounded-2xl pointer-events-none"
+                          style={{ 
+                            border: isDark 
+                              ? `2px solid ${colors.primary}` 
+                              : '2px solid rgba(184, 134, 11, 0.4)'
+                          }}
                           animate={{
                             opacity: [0, 0.6, 0],
-                            scale: [1, 1.04, 1]
+                            scale: [1, 1.02, 1]
                           }}
                           transition={{
-                            duration: 2,
+                            duration: 3,
                             repeat: Infinity,
                             ease: "easeInOut"
                           }}
                         />
                       )}
 
-                      {/* Hover Glow Effect */}
-                      <AnimatePresence>
-                        {isHovered && (
-                          <motion.div
-                            className="absolute inset-0 rounded-2xl pointer-events-none"
+                      {/* ✅ Vintage corner ornaments for light mode */}
+                      {!isDark && isSelected && (
+                        <>
+                          <div 
+                            className="absolute top-2 left-2 w-2 h-2 opacity-20"
                             style={{
-                              background: `radial-gradient(circle at center, ${option.color}15, transparent 70%)`
+                              background: vintage.ink,
+                              clipPath: 'polygon(0 0, 100% 0, 0 100%)'
                             }}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2 }}
                           />
-                        )}
-                      </AnimatePresence>
+                          <div 
+                            className="absolute bottom-2 right-2 w-2 h-2 opacity-20"
+                            style={{
+                              background: vintage.ink,
+                              clipPath: 'polygon(100% 100%, 0 100%, 100% 0)'
+                            }}
+                          />
+                        </>
+                      )}
                     </motion.div>
                   </motion.button>
                 );

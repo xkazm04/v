@@ -1,0 +1,28 @@
+{
+  "feed": {
+    "statementOfTheDay": "Declaración del Día",
+    "loading": "Cargando...",
+    "error": "Error al cargar el contenido"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "timeline": "Cronología",
+    "news": "Noticias",
+    "about": "Acerca de"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Algo salió mal",
+    "retry": "Intentar de Nuevo",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "close": "Cerrar"
+  },
+  "errors": {
+    "validation": {
+      "required": "Este campo es obligatorio",
+      "email": "Por favor ingrese un email válido",
+      "minLength": "Se requieren mínimo {count} caracteres"
+    }
+  }
+}

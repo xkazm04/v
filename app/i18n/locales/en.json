@@ -1,0 +1,28 @@
+{
+  "feed": {
+    "statementOfTheDay": "Statement of the Day",
+    "loading": "Loading...",
+    "error": "Error loading content"
+  },
+  "navigation": {
+    "home": "Home",
+    "timeline": "Timeline",
+    "news": "News",
+    "about": "About"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try Again",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close"
+  },
+  "errors": {
+    "validation": {
+      "required": "This field is required",
+      "email": "Please enter a valid email",
+      "minLength": "Minimum {count} characters required"
+    }
+  }
+}

@@ -4,7 +4,7 @@ import { FloatingVerdictIcon } from "@/app/components/ui/Decorative/FloatingVerd
 import { Divider } from "@/app/components/ui/divider";
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
 import { motion, Variants } from "framer-motion";
-import { Calendar } from "lucide-react";
+
 
 type Props = {
   config: {

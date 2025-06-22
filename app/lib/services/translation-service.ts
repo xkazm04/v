@@ -19,13 +19,9 @@ interface CachedTranslation {
   updated_at?: string;
 }
 
-/**
- * Generate cache key for content
- */
-function generateCacheKey(content: string, sourceLocale: string, targetLocale: string): string {
-  // Create a simple hash of the content for cache lookup
-  const contentHash = btoa(content).slice(0, 50);
-  return `${sourceLocale}_${targetLocale}_${contentHash}`;
+interface TranslationResult {
+  translatedText: string;
+  wasCached: boolean;
 }
 
 /**
@@ -37,7 +33,6 @@ async function getCachedTranslation(
   targetLocale: string
 ): Promise<string | null> {
   try {
-    // Use content hash for lookup to avoid storing full content multiple times
     const contentHash = btoa(content);
     
     const { data, error } = await supabaseAdmin
@@ -47,7 +42,7 @@ async function getCachedTranslation(
       .eq('source_locale', sourceLocale)
       .eq('target_locale', targetLocale)
       .eq('translation_type', 'text')
-      .maybeSingle(); // Use maybeSingle to avoid error if no match
+      .maybeSingle();
 
     if (error) {
       console.warn('Cache lookup error:', error);
@@ -99,12 +94,13 @@ async function cacheTranslation(
 }
 
 /**
- * Translate research statement with caching
+ * ✅ ENHANCED: Translate research statement with cache detection
  */
 export async function translateResearchStatement(
   statement: string,
   sourceLocale: string = 'en',
-  targetLocale: string = 'es'
+  targetLocale: string = 'es',
+  context?: 'news' | 'timeline' | 'expert-opinion'
 ): Promise<string | null> {
   if (!statement || statement.trim() === '') {
     return null;
@@ -116,35 +112,93 @@ export async function translateResearchStatement(
   }
 
   try {
-    console.log(`🌐 Translating statement: "${statement.slice(0, 50)}..." from ${sourceLocale} to ${targetLocale}`);
+    console.log(`🌐 Server: Translating statement: "${statement.slice(0, 50)}..." from ${sourceLocale} to ${targetLocale}`);
 
     // Check cache first
     const cachedResult = await getCachedTranslation(statement, sourceLocale, targetLocale);
     if (cachedResult) {
-      console.log(`📋 Using cached translation for ${sourceLocale} → ${targetLocale}`);
+      console.log(`📋 Server: Using cached translation for ${sourceLocale} → ${targetLocale}`);
       return cachedResult;
     }
+
+    console.log(`🔄 Server: No cache found, translating via Lingo.dev`);
 
     // Perform translation
     const translatedText = await lingoDotDev.localizeText(statement, {
       sourceLocale,
       targetLocale,
-      fast: true, // Use fast mode for better performance
+      fast: true,
     });
 
     if (translatedText && translatedText !== statement) {
       // Cache the successful translation
       await cacheTranslation(statement, translatedText, sourceLocale, targetLocale);
-      console.log(`✅ Statement translated: ${sourceLocale} → ${targetLocale}`);
+      console.log(`✅ Server: Statement translated: ${sourceLocale} → ${targetLocale}`);
       return translatedText;
     } else {
-      console.warn('Translation returned same text or empty result');
-      return statement; // Return original if translation didn't work
+      console.warn('Server: Translation returned same text or empty result');
+      return statement;
     }
 
   } catch (error) {
-    console.error('Translation error:', error);
-    return statement; // Return original on error
+    console.error('Server translation error:', error);
+    return statement;
+  }
+}
+
+/**
+ * ✅ NEW: Translate with detailed result information
+ */
+export async function translateWithMetadata(
+  statement: string,
+  sourceLocale: string = 'en',
+  targetLocale: string = 'es',
+  context?: 'news' | 'timeline' | 'expert-opinion'
+): Promise<TranslationResult> {
+  if (!statement || statement.trim() === '' || sourceLocale === targetLocale) {
+    return {
+      translatedText: statement,
+      wasCached: false
+    };
+  }
+
+  try {
+    // Check cache first
+    const cachedResult = await getCachedTranslation(statement, sourceLocale, targetLocale);
+    if (cachedResult) {
+      console.log(`📋 Server: Using cached translation`);
+      return {
+        translatedText: cachedResult,
+        wasCached: true
+      };
+    }
+
+    // Perform fresh translation
+    const translatedText = await lingoDotDev.localizeText(statement, {
+      sourceLocale,
+      targetLocale,
+      fast: true,
+    });
+
+    if (translatedText && translatedText !== statement) {
+      await cacheTranslation(statement, translatedText, sourceLocale, targetLocale);
+      return {
+        translatedText,
+        wasCached: false
+      };
+    } else {
+      return {
+        translatedText: statement,
+        wasCached: false
+      };
+    }
+
+  } catch (error) {
+    console.error('Translation with metadata error:', error);
+    return {
+      translatedText: statement,
+      wasCached: false
+    };
   }
 }
 
@@ -154,22 +208,23 @@ export async function translateResearchStatement(
 export async function batchTranslateStatements(
   statements: string[],
   sourceLocale: string = 'en',
-  targetLocale: string = 'es'
+  targetLocale: string = 'es',
+  context?: 'news' | 'timeline' | 'expert-opinion'
 ): Promise<string[]> {
   if (sourceLocale === targetLocale) {
     return statements;
   }
 
   try {
-    console.log(`🌐 Batch translating ${statements.length} statements: ${sourceLocale} → ${targetLocale}`);
+    console.log(`🌐 Server: Batch translating ${statements.length} statements: ${sourceLocale} → ${targetLocale}`);
 
     const translationPromises = statements.map(async (statement, index) => {
       try {
-        const result = await translateResearchStatement(statement, sourceLocale, targetLocale);
+        const result = await translateResearchStatement(statement, sourceLocale, targetLocale, context);
         return result || statement;
       } catch (error) {
-        console.warn(`Batch translation failed for item ${index}:`, error);
-        return statement; // Return original on failure
+        console.warn(`Server: Batch translation failed for item ${index}:`, error);
+        return statement;
       }
     });
 
@@ -179,68 +234,60 @@ export async function batchTranslateStatements(
       if (result.status === 'fulfilled') {
         return result.value;
       } else {
-        console.warn(`Batch translation rejected for item ${index}:`, result.reason);
-        return statements[index]; // Return original on rejection
+        console.warn(`Server: Batch translation rejected for item ${index}:`, result.reason);
+        return statements[index];
       }
     });
 
   } catch (error) {
-    console.error('Batch translation error:', error);
-    return statements; // Return original array on error
+    console.error('Server: Batch translation error:', error);
+    return statements;
   }
 }
 
-/**
- * Clear translation cache (utility function)
- */
-export async function clearTranslationCache(): Promise<void> {
+// Clear translation cache
+export async function clearTranslationCache(): Promise<boolean> {
   try {
     const { error } = await supabaseAdmin
       .from('lingo_translations')
       .delete()
-      .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all
+      .gte('id', 0);
 
     if (error) {
-      console.error('Cache clear error:', error);
-    } else {
-      console.log('✅ Translation cache cleared');
+      console.error('Failed to clear translation cache:', error);
+      return false;
     }
+
+    console.log('✅ Translation cache cleared');
+    return true;
   } catch (error) {
-    console.error('Cache clear failed:', error);
+    console.error('Error clearing translation cache:', error);
+    return false;
   }
 }
 
-/**
- * Get translation cache stats
- */
-export async function getTranslationCacheStats(): Promise<{
-  totalTranslations: number;
-  languagePairs: string[];
-  mostTranslatedContent?: string;
-}> {
+// Get cache statistics
+export async function getTranslationCacheStats() {
   try {
     const { data, error } = await supabaseAdmin
       .from('lingo_translations')
-      .select('source_locale, target_locale, created_at');
+      .select('id, source_locale, target_locale, created_at', { count: 'exact' });
 
     if (error) {
-      throw error;
+      console.error('Failed to get cache stats:', error);
+      return null;
     }
 
-    const totalTranslations = data?.length || 0;
-    const languagePairs = [...new Set(
-      data?.map(item => `${item.source_locale} → ${item.target_locale}`) || []
-    )];
-
     return {
-      totalTranslations,
-      languagePairs,
+      totalCached: data?.length || 0,
+      byLanguagePair: data?.reduce((acc: any, item) => {
+        const pair = `${item.source_locale}-${item.target_locale}`;
+        acc[pair] = (acc[pair] || 0) + 1;
+        return acc;
+      }, {}) || {}
     };
   } catch (error) {
-    console.error('Cache stats error:', error);
-    return {
-      totalTranslations: 0,
-      languagePairs: [],
-    };
+    console.error('Error getting cache stats:', error);
+    return null;
   }
 }

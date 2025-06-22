@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { useCombinedProfile } from '@/app/hooks/useCombinedProfile';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import DashSpeakerProfile from '@/app/sections/dashboard/DashSpeakerProfile';
-import DashComparison from '@/app/sections/dashboard/DashComparison';
 import DashStatementsAnalyticsSection from '@/app/sections/dashboard/DashStatements/DashStatementAnalyticsSection';
 import { MOCK_SPEAKERS } from '@/app/constants/speakers';
 
@@ -133,7 +132,6 @@ const DashboardLayout = ({ profileId }: DashboardLayoutProps) => {
               </>
             ) : (
               <>
-                <DashComparison currentSpeaker={selectedSpeaker} />
               </>
             )}
           </motion.div>

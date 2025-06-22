@@ -1,5 +1,5 @@
-import { Profile, ProfileStatsResponse } from "@/app/types/profile";
-import { supabaseAdmin } from "../supabase";
+import { supabase } from '@/app/lib/supabase';
+import { Profile, ProfileStatsResponse } from '@/app/types/profile';
 
 export interface ProfileFilters {
   limit?: number;
@@ -11,18 +11,25 @@ export interface ProfileFilters {
   include_counts?: boolean;
 }
 
+export interface ProfileSearchOptions {
+  search?: string;
+  country?: string;
+  party?: string;
+  type?: string;
+  limit?: number;
+  offset?: number;
+  sortBy?: 'name' | 'score' | 'created_at';
+  sortOrder?: 'asc' | 'desc';
+}
+
 class SupabaseProfileService {
   /**
    * Get profiles from Supabase profiles table (client-side with restricted access)
    */
   async getProfiles(filters: ProfileFilters = {}): Promise<Profile[]> {
-    if (!supabaseAdmin) {
-      console.warn('Supabase admin client is not initialized. Cannot fetch profiles.');
-      return [];
-    }
     try {
       // Test connection first
-      const { data: testData, error: testError } = await supabaseAdmin
+      const { data: testData, error: testError } = await supabase
         .from('profiles')
         .select('id, name')
         .limit(1);
@@ -37,7 +44,7 @@ class SupabaseProfileService {
       }
 
       // Build main query
-      let query = supabaseAdmin
+      let query = supabase
         .from('profiles')
         .select(`
           id,
@@ -115,17 +122,100 @@ class SupabaseProfileService {
   }
 
   /**
+   * Get all profiles with filtering and pagination
+   */
+  async searchProfiles(options: ProfileSearchOptions = {}): Promise<Profile[]> {
+    try {
+      const {
+        search,
+        country,
+        party,
+        type = 'person',
+        limit = 20,
+        offset = 0,
+        sortBy = 'name',
+        sortOrder = 'asc'
+      } = options;
+
+      console.log(`🔍 Searching profiles with options:`, options);
+
+      let query = supabase
+        .from('profiles')
+        .select(`
+          id,
+          name,
+          name_normalized,
+          avatar_url,
+          country,
+          party,
+          type,
+          position,
+          bg_url,
+          score,
+          created_at,
+          updated_at
+        `);
+
+      // Apply filters
+      if (type) {
+        query = query.eq('type', type);
+      }
+      
+      if (search) {
+        query = query.or(`name.ilike.%${search}%,name_normalized.ilike.%${search}%`);
+      }
+      
+      if (country) {
+        query = query.eq('country', country);
+      }
+      
+      if (party) {
+        query = query.eq('party', party);
+      }
+
+      // Apply sorting
+      query = query.order(sortBy, { ascending: sortOrder === 'asc' });
+
+      // Apply pagination
+      query = query.range(offset, offset + limit - 1);
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error('❌ Error fetching profiles:', error);
+        return [];
+      }
+
+      console.log(`✅ Found ${data?.length || 0} profiles`);
+      return data || [];
+
+    } catch (error) {
+      console.error('💥 Profile search error:', error);
+      return [];
+    }
+  }
+
+  /**
    * Get single profile by ID
    */
   async getProfileById(id: string): Promise<Profile | null> {
-    if (!supabaseAdmin) {
-      console.warn('Supabase admin client is not initialized. Cannot fetch profile by ID.');
-      return null;
-    }
     try {
-      const { data, error } = await supabaseAdmin
+      const { data, error } = await supabase
         .from('profiles')
-        .select('*')
+        .select(`
+          id,
+          name,
+          name_normalized,
+          avatar_url,
+          country,
+          party,
+          type,
+          position,
+          bg_url,
+          score,
+          created_at,
+          updated_at
+        `)
         .eq('id', id)
         .single();
 
@@ -152,6 +242,46 @@ class SupabaseProfileService {
     } catch (error) {
       console.error('Get profile by ID error:', error);
       return null;
+    }
+  }
+
+  /**
+   * Search profiles by name (for autocomplete)
+   */
+  async searchProfilesByName(searchTerm: string, limit: number = 10): Promise<Profile[]> {
+    try {
+      if (!searchTerm || searchTerm.trim().length < 2) {
+        return [];
+      }
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select(`
+          id,
+          name,
+          name_normalized,
+          avatar_url,
+          country,
+          party,
+          type,
+          position,
+          score
+        `)
+        .or(`name.ilike.%${searchTerm}%,name_normalized.ilike.%${searchTerm}%`)
+        .eq('type', 'person')
+        .order('name', { ascending: true })
+        .limit(limit);
+
+      if (error) {
+        console.error('❌ Error searching profiles by name:', error);
+        return [];
+      }
+
+      return data || [];
+
+    } catch (error) {
+      console.error('💥 Profile name search error:', error);
+      return [];
     }
   }
 
@@ -225,12 +355,14 @@ class SupabaseProfileService {
    */
   async healthCheck(): Promise<boolean> {
     try {
-      const { error } = await supabaseAdmin
+      const { data, error } = await supabase
         .from('profiles')
         .select('id')
         .limit(1);
+
       return !error;
     } catch (error) {
+      console.error('💥 Profile service health check failed:', error);
       return false;
     }
   }

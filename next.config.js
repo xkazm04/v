@@ -4,9 +4,14 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  
-  images: { unoptimized: true },
-    async rewrites() {
+  images: {
+    domains: [
+      "upload.wikimedia.org",
+    ],
+    formats: ['image/webp', 'image/avif'],
+    unoptimized: true,
+  },
+  async rewrites() {
     return [
       // Your other rewrites here
     ];
