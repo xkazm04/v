@@ -19,7 +19,7 @@ import {
 export function useTimelineScroll(
   containerRef: React.RefObject<HTMLDivElement>,
   timeline: Timeline
-): UseTimelineScrollReturn {
+): UseTimelineScrollReturn & { hasScrolled: boolean } {
   const { isDesktop } = useViewport();
   
   const milestones = timeline?.milestones || [];
@@ -31,6 +31,7 @@ export function useTimelineScroll(
   const [scrollTargets, setScrollTargets] = useState<ScrollTarget[]>([]);
   const [isScrolling, setIsScrolling] = useState(false);
   const [showScrollHint, setShowScrollHint] = useState(true);
+  const [hasScrolled, setHasScrolled] = useState(false); // Add this state
 
   const isScrollingRef = useRef(false);
   const currentIndexRef = useRef(0);
@@ -50,6 +51,16 @@ export function useTimelineScroll(
     damping: 25,    
     restDelta: 0.001 
   });
+
+  // Track first scroll
+  useEffect(() => {
+    const unsubscribe = scrollYProgress.on('change', (latest) => {
+      if (latest > 0.01 && !hasScrolled) {
+        setHasScrolled(true);
+      }
+    });
+    return unsubscribe;
+  }, [scrollYProgress, hasScrolled]);
 
   // Hide scroll hint after delay
   useEffect(() => {
@@ -145,6 +156,7 @@ export function useTimelineScroll(
     scrollTargets,
     isScrolling,
     showScrollHint,
+    hasScrolled, // Add this to return
     
     scrollYProgress,
     smoothScrollProgress,

@@ -51,7 +51,7 @@ export default function TimelineEventSecondaryLayout({
                 {positionsByRow.top.map(({ opinion, position, index }) => (
                   <motion.div
                     key={`${opinion.id}-${index}`}
-                    className="w-64 flex-shrink-0"
+                    className="w-84 flex-shrink-0"
                     initial={{
                       opacity: 0,
                       scale: 0.8,
@@ -93,7 +93,7 @@ export default function TimelineEventSecondaryLayout({
 
           {/* Middle Row - Side opinions only (fact card is handled by parent) */}
           <motion.div
-            className="flex items-center justify-between gap-20 mb-8 w-full"
+            className="flex items-center pr-28 justify-center gap-[400px] mb-8 w-full"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
@@ -101,7 +101,7 @@ export default function TimelineEventSecondaryLayout({
             {/* Left side opinion */}
             {positionsByRow.middle.find(p => p.position.column === "left") && (
               <motion.div
-                className="w-64 flex-shrink-0"
+                className="w-20 flex-shrink-0"
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3, duration: 0.6, type: "spring" }}
@@ -166,7 +166,7 @@ export default function TimelineEventSecondaryLayout({
                 {positionsByRow.bottom.map(({ opinion, position, index }) => (
                   <motion.div
                     key={`${opinion.id}-${index}`}
-                    className="w-64 flex-shrink-0"
+                    className="w-100 flex-shrink-0"
                     initial={{
                       opacity: 0,
                       scale: 0.8,

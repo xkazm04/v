@@ -11,16 +11,27 @@ type Props = {
     index: number;
     side: 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
     isActive?: boolean;
-    expertType: string; 
+    expertType: string;
+    isHovered?: boolean;
 }
 
-const ExpertOpinionCardWrapper = ({ children, isSecondaryLayout, isStrongest, isExpanded, index, side, isActive, expertType }: Props) => {
+const ExpertOpinionCardWrapper = ({ 
+    children, 
+    isSecondaryLayout, 
+    isStrongest, 
+    isExpanded, 
+    index, 
+    side, 
+    isActive, 
+    expertType,
+    isHovered = false
+}: Props) => {
     const { isDark } = useLayoutTheme();
     const { isMobile, isTablet } = useViewport();
     const expertConfig = EXPERT_TIMELINE_CONFIG[expertType];
 
     const getStackTransform = () => {
-        if (isSecondaryLayout || !isExpanded || isStrongest) return { x: 0, y: 0, scale: 1, zIndex: 10 };
+        if (isSecondaryLayout || !isExpanded || isStrongest) return { x: 0, y: 0, scale: 1 };
 
         const offset = index * (isMobile ? 8 : 12);
         const scaleReduction = index * 0.02;
@@ -31,8 +42,7 @@ const ExpertOpinionCardWrapper = ({ children, isSecondaryLayout, isStrongest, is
         return {
             x: isLeftSide ? -offset : isRightSide ? offset : 0,
             y: offset * 0.5,
-            scale: 1 - scaleReduction,
-            zIndex: 10 - index
+            scale: 1 - scaleReduction
         };
     };
 
@@ -86,41 +96,39 @@ const ExpertOpinionCardWrapper = ({ children, isSecondaryLayout, isStrongest, is
 
     const cardStyling = getCardStyling();
     
-    return <motion.div
-        className={`relative backdrop-blur-md border ${getCardDimensions()} ${getTextAlignment()} overflow-hidden`}
-        style={{
-            backgroundColor: cardStyling.backgroundColor,
-            borderColor: cardStyling.borderColor,
-            borderRadius: isMobile ? '16px' : '20px',
-            boxShadow: isStrongest && isActive
-                ? `0 20px 40px ${cardStyling.glowColor}, 0 0 0 1px ${expertConfig.color}30`
-                : `0 8px 24px ${isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.08)'}`,
-            x: stackTransform.x,
-            y: stackTransform.y,
-            scale: stackTransform.scale,
-            zIndex: stackTransform.zIndex
-        }}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{
-            opacity: 1,
-            y: stackTransform.y,
-            x: stackTransform.x,
-            scale: stackTransform.scale
-        }}
-        whileHover={{
-            scale: stackTransform.scale + 0.02,
-            y: stackTransform.y - 4,
-            boxShadow: `0 25px 45px ${cardStyling.glowColor}`,
-            borderColor: expertConfig.color,
-            transition: { duration: 0.2 }
-        }}
-        transition={{
-            type: 'spring',
-            stiffness: 200,
-            damping: 20,
-            delay: index * 0.05
-        }}
-    >{children}</motion.div>
+    return (
+        <motion.div
+            className={`relative backdrop-blur-md border ${getCardDimensions()} ${getTextAlignment()} overflow-hidden`}
+            style={{
+                backgroundColor: cardStyling.backgroundColor,
+                borderColor: isHovered ? expertConfig.color : cardStyling.borderColor,
+                borderRadius: isMobile ? '16px' : '20px',
+                boxShadow: isHovered 
+                    ? `0 25px 50px ${cardStyling.glowColor}, 0 0 0 1px ${expertConfig.color}50`
+                    : isStrongest && isActive
+                        ? `0 20px 40px ${cardStyling.glowColor}, 0 0 0 1px ${expertConfig.color}30`
+                        : `0 8px 24px ${isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.08)'}`,
+                x: stackTransform.x,
+                y: stackTransform.y,
+                scale: stackTransform.scale
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{
+                opacity: 1,
+                y: stackTransform.y,
+                x: stackTransform.x,
+                scale: stackTransform.scale
+            }}
+            transition={{
+                type: 'spring',
+                stiffness: 200,
+                damping: 20,
+                delay: index * 0.05
+            }}
+        >
+            {children}
+        </motion.div>
+    );
 }
 
 export default ExpertOpinionCardWrapper;

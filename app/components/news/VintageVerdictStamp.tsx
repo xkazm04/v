@@ -53,7 +53,17 @@ const VERDICT_CONFIG = {
     rotation: -8,
     borderStyle: 'double'
   }
-};
+} as const;
+
+// Default config for unknown status values
+const DEFAULT_CONFIG = {
+  label: 'UNKNOWN',
+  shortLabel: '?',
+  color: '#6b7280',
+  darkColor: '#9ca3af',
+  rotation: 0,
+  borderStyle: 'solid'
+} as const;
 
 export const VintageVerdictStamp = memo(function VintageVerdictStamp({
   status,
@@ -62,7 +72,14 @@ export const VintageVerdictStamp = memo(function VintageVerdictStamp({
   animated = true
 }: VintageVerdictStampProps) {
   const { isDark, vintage } = useLayoutTheme();
-  const config = VERDICT_CONFIG[status];
+  
+  // Safe config lookup with fallback
+  const config = VERDICT_CONFIG[status] || DEFAULT_CONFIG;
+  
+  // Add debug logging to see what status values are being passed
+  if (!VERDICT_CONFIG[status]) {
+    console.warn('VintageVerdictStamp: Unknown status value:', status);
+  }
   
   const sizeClasses = {
     sm: 'w-16 h-16 text-xs',
@@ -70,7 +87,7 @@ export const VintageVerdictStamp = memo(function VintageVerdictStamp({
     lg: 'w-24 h-24 text-base'
   };
 
-  const stampColor = isDark ? config.darkColor : config.color || '#000000';
+  const stampColor = isDark ? config.darkColor : config.color;
   
   return (
     <motion.div

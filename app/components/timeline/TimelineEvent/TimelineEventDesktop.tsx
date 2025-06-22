@@ -1,4 +1,5 @@
 'use client';
+import React, { memo } from 'react';
 import { motion, MotionValue, AnimatePresence } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import ExpertOpinionCard from '../../../components/timeline/ExpertOpinionCard/ExpertOpinionCard';
@@ -18,6 +19,45 @@ interface TimelineEventDesktopProps {
   viewport: ViewportType;
 }
 
+// Memoize the FactCard to prevent unnecessary re-renders
+const MemoizedFactCard = memo(function MemoizedFactCard({
+  isActive,
+  showAllOpinions,
+  onOpinionToggle,
+  event,
+  eventIndex
+}: {
+  isActive: boolean;
+  showAllOpinions: boolean;
+  onOpinionToggle: (value: boolean) => void;
+  event: EventType;
+  eventIndex: number;
+}) {
+  return (
+    <motion.div
+      className="relative z-20"
+      style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        maxWidth: '640px',
+        width: '100%'
+      }}
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.6, delay: 0.1 }}
+    >
+      <TimelineEventFactCard
+        isActive={isActive}
+        showAllOpinions={showAllOpinions}
+        setShowAllOpinions={onOpinionToggle}
+        event={event}
+        eventIndex={eventIndex}
+      />
+    </motion.div>
+  );
+});
+
 export default function TimelineEventDesktop({
   event,
   eventIndex,
@@ -36,20 +76,18 @@ export default function TimelineEventDesktop({
       style={{ 
         opacity: milestoneIndex === 0 && eventIndex === 0 ? 1 : eventOpacity,
         height: '100vh',
-        width: '100%', // FIXED: Changed from 100vw to 100% to prevent right offset
+        width: '100%', 
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '2rem',
-        margin: '0 auto', // FIXED: Center the container
-        maxWidth: '1400px' // FIXED: Constrain max width for better centering
+        margin: '0 auto', 
+        maxWidth: '1400px' 
       }}
       data-event-id={event.id}
     >
-      {/* CONDITIONAL LAYOUT: Primary vs Secondary */}
       {showAllOpinions ? (
-        // SECONDARY LAYOUT: All 6 opinions
         <>
           <div className="absolute inset-0 z-10">
             <TimelineEventSecondaryLayout
@@ -59,54 +97,25 @@ export default function TimelineEventDesktop({
             />
           </div>
 
-          {/* FACT CARD - Always perfectly centered */}
-          <motion.div
-            className="relative z-20"
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              maxWidth: '640px',
-              width: '100%'
-            }}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <TimelineEventFactCard
-              isActive={isActive}
-              showAllOpinions={showAllOpinions}
-              setShowAllOpinions={onOpinionToggle}
-              event={event}
-              eventIndex={eventIndex}
-            />
-          </motion.div>
+          {/* FACT CARD  */}
+          <MemoizedFactCard
+            isActive={isActive}
+            showAllOpinions={showAllOpinions}
+            onOpinionToggle={onOpinionToggle}
+            event={event}
+            eventIndex={eventIndex}
+          />
         </>
       ) : (
-        // PRIMARY LAYOUT: 2 key opinions (top-right, bottom-left)
         <>
-          {/* FACT CARD - Perfectly centered */}
-          <motion.div
-            className="relative z-20"
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              maxWidth: '640px',
-              width: '100%'
-            }}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <TimelineEventFactCard
-              isActive={isActive}
-              showAllOpinions={showAllOpinions}
-              setShowAllOpinions={onOpinionToggle}
-              event={event}
-              eventIndex={eventIndex}
-            />
-          </motion.div>
+          {/* FACT CARD */}
+          <MemoizedFactCard
+            isActive={isActive}
+            showAllOpinions={showAllOpinions}
+            onOpinionToggle={onOpinionToggle}
+            event={event}
+            eventIndex={eventIndex}
+          />
 
           {/* PRIMARY OPINION CARDS: Top-Right and Bottom-Left */}
           <AnimatePresence mode="sync">
@@ -131,9 +140,9 @@ export default function TimelineEventDesktop({
               />
             </motion.div>
 
-            {/* BOTTOM-LEFT OPINION */}
+            {/* BOTTOM-LEFT OPINION - Moved further left */}
             <motion.div
-              className="absolute bottom-16 left-16 z-10"
+              className="absolute bottom-16 left-8 z-10" // Changed from left-16 to left-8
               initial={{ opacity: 0, y: 30, x: -30 }}
               animate={{ opacity: 1, y: 0, x: 0 }}
               exit={{ opacity: 0, y: 30, x: -30 }}
@@ -154,64 +163,20 @@ export default function TimelineEventDesktop({
           </AnimatePresence>
         </>
       )}
-
-      {/* Active indicator */}
-      {isActive && (
-        <motion.div
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-1 h-16 rounded-full z-30"
-          style={{ backgroundColor: colors.primary }}
-          initial={{ scaleY: 0 }}
-          animate={{ scaleY: 1 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-        />
-      )}
-
-      {/* Connection lines when active (PRIMARY LAYOUT ONLY) */}
-      {isActive && !showAllOpinions && (
-        <motion.div
-          className="absolute inset-0 z-5 pointer-events-none"
-        >
-          <svg
-            className="w-full h-full"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-          >
-            <motion.line
-              x1="75" y1="25"
-              x2="25" y2="75"
-              stroke={colors.primary}
-              strokeWidth="0.2"
-              strokeOpacity="0.3"
-              vectorEffect="non-scaling-stroke"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            />
-            <motion.line
-              x1="25" y1="25"
-              x2="75" y2="75"
-              stroke={colors.primary}
-              strokeWidth="0.2"
-              strokeOpacity="0.3"
-              vectorEffect="non-scaling-stroke"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            />
-          </svg>
-        </motion.div>
-      )}
-
       {/* Toggle Button for switching between layouts */}
       <motion.button
-        className="absolute bottom-4 right-4 z-30 px-4 py-2 rounded-full border text-sm font-medium"
+        className="absolute bottom-4 right-4 z-30 px-4 py-2 rounded-full border text-sm font-medium backdrop-blur-sm"
         style={{
           backgroundColor: colors.background + '90',
           borderColor: colors.border,
           color: colors.foreground
         }}
         onClick={() => onOpinionToggle(!showAllOpinions)}
-        whileHover={{ scale: 1.05 }}
+        whileHover={{ 
+          scale: 1.05,
+          backgroundColor: colors.background,
+          boxShadow: `0 4px 12px ${colors.primary}20`
+        }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

@@ -27,7 +27,6 @@ const TimelineEventFactCard = ({ className = "", isActive, showAllOpinions, setS
         getTrackByProgressId 
     } = useTimelineAudioStore();
     
-    // Get the track for this event using the proper lookup
     const eventTrack = getTrackByProgressId(event.id);
     
     // Check if this event is currently playing
@@ -189,7 +188,7 @@ const TimelineEventFactCard = ({ className = "", isActive, showAllOpinions, setS
 
         {/* FloatingVerdictIcon - Show when event is playing */}
         <AnimatePresence>
-            {isEventPlaying && (
+            {isActive && (
                 <motion.div
                     className="absolute -bottom-2 -right-2"
                     initial={{ scale: 0, opacity: 0 }}

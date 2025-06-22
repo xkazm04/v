@@ -4,23 +4,24 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 
-// Import the timeline data directly to avoid dynamic import issues
-import indiaTimeline from './timeline_milestones_india.json';
-import sudanTimeline from './timeline_milestones_sudan.json';
-import syriaTimeline from './timeline_milestones_syria.json';
-import ukraineTimeline from './timeline_milestones_ukraine.json';
-import israelTimeline from './timeline_milestones_israel.json';
+import indiaTimeline from './en/timeline_milestones_india.json';
+import sudanTimeline from './en/timeline_milestones_sudan.json';
+import syriaTimeline from './en/timeline_milestones_syria.json';
+import ukraineTimeline from './en/timeline_milestones_ukraine.json';
+import israelTimeline from './en/timeline_milestones_israel.json';
+import { Timeline } from '@/app/types/timeline';
 
 interface TimelineDataset {
   id: string;
   title: string;
-  data: any; // Direct data instead of file path
+  data: any; 
   description?: string;
 }
 
 interface TimelineSelectorProps {
-  onTimelineSelect: (timelineData: any) => void;
   currentTimeline?: any;
+  setIsLoadingTimeline: (loading: boolean) => void;
+  setCurrentTimeline: (timeline: Timeline) => void;
   className?: string;
 }
 
@@ -33,8 +34,8 @@ const timelineDatasets: TimelineDataset[] = [
   },
   {
     id: 'iraq-war',
-    title: 'Iraq War 2003-2011', 
-    data: sudanTimeline, // Note: this seems to be the Sudan data based on the original mapping
+    title: 'Iraq War 2003-2011',
+    data: sudanTimeline,
     description: 'Coalition invasion and aftermath'
   },
   {
@@ -57,16 +58,34 @@ const timelineDatasets: TimelineDataset[] = [
   }
 ];
 
-export default function TimelineSelector({ 
-  onTimelineSelect, 
+export default function TimelineSelector({
   currentTimeline,
-  className = '' 
+  setIsLoadingTimeline,
+  setCurrentTimeline,
+  className = ''
 }: TimelineSelectorProps) {
   const { colors, isDark } = useLayoutTheme();
 
   const handleNoteClick = (dataset: TimelineDataset) => {
-    onTimelineSelect(dataset.data);
+    handleTimelineSelect(dataset.data);
   };
+
+  const handleTimelineSelect = async (timelineData: Timeline) => {
+    if (timelineData.id === currentTimeline.id) return;
+
+    setIsLoadingTimeline(true);
+    try {
+      setCurrentTimeline(timelineData);
+
+      // Reset scroll position to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (error) {
+      console.error('Failed to load timeline:', error);
+    } finally {
+      setIsLoadingTimeline(false);
+    }
+  };
+
 
   const vintageColors = colors.vintage || {
     paper: '#f8f6f0',
@@ -106,22 +125,22 @@ export default function TimelineSelector({
       >
         {timelineDatasets.map((dataset, index) => {
           const isActive = currentTimeline?.id === dataset.data.id;
-          
+
           return (
             <motion.div
               key={dataset.id}
               initial={{ opacity: 0, scale: 0.9, rotate: Math.random() * 4 - 2 }}
-              animate={{ 
-                opacity: 1, 
-                scale: 1, 
-                rotate: Math.random() * 6 - 3 // Slight random rotation for authentic sticky note feel
+              animate={{
+                opacity: 1,
+                scale: 1,
+                rotate: Math.random() * 6 - 3 
               }}
-              transition={{ 
+              transition={{
                 delay: index * 0.1,
                 duration: 0.4,
                 ease: "easeOut"
               }}
-              whileHover={{ 
+              whileHover={{
                 scale: 1.05,
                 rotate: 0,
                 zIndex: 10
@@ -152,7 +171,7 @@ export default function TimelineSelector({
               >
                 {/* Paper texture overlay for vintage effect */}
                 {!isDark && (
-                  <div 
+                  <div
                     className="absolute inset-0 opacity-20 pointer-events-none"
                     style={{
                       backgroundImage: `
@@ -165,7 +184,7 @@ export default function TimelineSelector({
                 )}
 
                 {/* Corner fold effect */}
-                <div 
+                <div
                   className="absolute top-0 right-0 w-4 h-4 transform rotate-45 translate-x-2 -translate-y-2"
                   style={{
                     backgroundColor: noteColors.active,
@@ -180,7 +199,7 @@ export default function TimelineSelector({
                     {dataset.title}
                   </h3>
                   {dataset.description && (
-                    <p 
+                    <p
                       className="text-xs opacity-75 leading-relaxed"
                       style={{ color: vintageColors?.faded || noteColors.text }}
                     >
@@ -202,7 +221,7 @@ export default function TimelineSelector({
               </div>
 
               {/* Hover state background */}
-              <div 
+              <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none -z-10"
                 style={{
                   backgroundColor: noteColors.hover,

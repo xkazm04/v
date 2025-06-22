@@ -5,6 +5,7 @@ import TimelineProgressHeader from './TimelineProgressHeader';
 import TimelineProgressContent from './TimelineProgressContent';
 import TimelineProgressFooter from './TimelineProgressFooter';
 import { useViewport } from '@/app/hooks/useViewport';
+
 interface TimelineProgressProps {
   scrollProgress: MotionValue<number>;
   milestones: Milestone[];
@@ -12,6 +13,7 @@ interface TimelineProgressProps {
   activeEventId: string | null;
   onNavigateToMilestone?: (milestoneId: string) => void;
   onNavigateToEvent?: (eventId: string, milestoneId: string) => void;
+  hasScrolled?: boolean; // Add this prop
 }
 
 export default function TimelineProgress({
@@ -20,11 +22,18 @@ export default function TimelineProgress({
   activeMilestoneId,
   activeEventId,
   onNavigateToMilestone,
-  onNavigateToEvent
+  onNavigateToEvent,
+  hasScrolled = false // Default to false
 }: TimelineProgressProps) {
   const { colors, isDark } = useLayoutTheme();
-  const { isHd } = useViewport()
-  const indicatorOpacity = useTransform(scrollProgress, [0, 0.08, 0.92, 1], [0, 1, 1, 1]);
+  const { isHd } = useViewport();
+  
+  // Enhanced opacity logic - only show after first scroll
+  const indicatorOpacity = useTransform(
+    scrollProgress, 
+    [0, 0.02, 0.08, 0.92, 1], 
+    [0, hasScrolled ? 0.8 : 0, 1, 1, 1]
+  );
   const indicatorScale = useTransform(scrollProgress, [0, 0.08], [0.9, 1]);
   const scrollProgressPercentage = useTransform(scrollProgress, [0, 1], [0, 100]);
   const progressLineHeight = useTransform(scrollProgress, [0, 1], ['0%', '100%']);
@@ -41,8 +50,15 @@ export default function TimelineProgress({
           scale: indicatorScale,
         }}
         initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 1, duration: 0.6 }}
+        animate={{ 
+          opacity: hasScrolled ? 1 : 0, 
+          x: hasScrolled ? 0 : 50 
+        }}
+        transition={{ 
+          delay: hasScrolled ? 0.3 : 0, 
+          duration: 0.6,
+          ease: "easeOut"
+        }}
         className='relative'
       >
         <div
@@ -93,8 +109,8 @@ export default function TimelineProgress({
 
         <TimelineProgressFooter />
         <TimelineProgressHeader
-            scrollProgressPercentage={scrollProgressPercentage}
-          />
+          scrollProgressPercentage={scrollProgressPercentage}
+        />
       </motion.div>
     </div>
   );

@@ -48,7 +48,7 @@ const TimelineProgressContent = ({
                 type: 'hero' as const,
                 title: 'Timeline Summary',
                 content: {
-                    content: 'Complete timeline overview and analysis',
+                    content: 'Hard to read? Play the audio summary!',
                     date: ''
                 },
                 isActive: false,

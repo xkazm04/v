@@ -6,6 +6,7 @@ export interface Timeline {
   leftSide: string; // Actor #1 in the topic - country, political party, person, etc.
   rightSide: string; // Actor #2 in the topic - country, political party, person, etc.
   milestones: Milestone[];
+  consequences?: string; 
 };
 
 // Person object with name and role
