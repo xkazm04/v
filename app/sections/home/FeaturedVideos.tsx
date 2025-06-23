@@ -2,17 +2,22 @@
 
 import { memo } from 'react';
 import { useFeaturedVideos } from '@/app/hooks/useVideos'; 
-import { Loader2, AlertCircle } from 'lucide-react';
+import { Loader2, AlertCircle, Database, Cloud } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { VideoGrid } from '../feed/VideoGrid/VideoGrid';
 
 export const FeaturedVideos = memo(function FeaturedVideos() {
   const { 
-    data: videos, 
+    data: response, 
     isLoading, 
     error, 
     refetch 
-  } = useFeaturedVideos(4); 
+  } = useFeaturedVideos(6); // Request max 6 videos
+
+  // Extract videos and metadata from response
+  const videos = Array.isArray(response) ? response : (response?.videos || []);
+  const metadata = response && !Array.isArray(response) ? response.__meta : null;
+
   // Loading state
   if (isLoading) {
     return (
@@ -69,6 +74,11 @@ export const FeaturedVideos = memo(function FeaturedVideos() {
           <p className="text-slate-600 dark:text-slate-400">
             No featured videos available at the moment.
           </p>
+          {metadata?.source === 'none' && (
+            <p className="text-sm text-red-500 mt-2">
+              All video sources are currently unavailable
+            </p>
+          )}
         </motion.div>
       </section>
     );
@@ -83,13 +93,45 @@ export const FeaturedVideos = memo(function FeaturedVideos() {
       >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Featured Videos</h2>
+          
+          {/* Data source indicator */}
+          {metadata && (
+            <div className="flex items-center gap-2 text-sm text-slate-500">
+              {metadata.source === 'supabase' && (
+                <>
+                  <Database className="w-4 h-4 text-green-600" />
+                  <span>Live Data</span>
+                </>
+              )}
+              {metadata.source === 'backend_api' && (
+                <>
+                  <Cloud className="w-4 h-4 text-blue-600" />
+                  <span>API Data</span>
+                  {metadata.fallback && <span className="text-amber-600">(Fallback)</span>}
+                </>
+              )}
+              {metadata.fetchTime && (
+                <span className="text-xs">
+                  ({metadata.fetchTime}ms)
+                </span>
+              )}
+            </div>
+          )}
         </div>
+        
         <VideoGrid 
           videos={videos} 
           layout="grid"
-          columns={4}
+          columns={3} // 3 columns for better layout with max 6 videos
           virtualized={false}
         />
+        
+        {/* Show total count if available */}
+        {videos.length > 0 && (
+          <div className="mt-4 text-center text-sm text-slate-500">
+            Showing {videos.length} featured video{videos.length === 1 ? '' : 's'}
+          </div>
+        )}
       </motion.div>
     </section>
   );

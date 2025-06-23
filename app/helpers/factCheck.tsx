@@ -42,102 +42,171 @@ export function getProgressBarColors() {
   };
 }
 
-export const getStatusTranslation = (status: string) => {
-  if (!status) return 'UNKNOWN';
+// Multilingual status translations
+const STATUS_TRANSLATIONS = {
+  en: {
+    TRUE: 'TRUE',
+    FACTUAL_ERROR: 'FACTUAL ERROR',
+    DECEPTIVE_LIE: 'DECEPTIVE LIE',
+    MANIPULATIVE: 'MANIPULATIVE',
+    PARTIALLY_TRUE: 'PARTIALLY TRUE',
+    OUT_OF_CONTEXT: 'OUT OF CONTEXT',
+    UNVERIFIABLE: 'UNVERIFIABLE',
+    FALSE: 'FALSE',
+    MISLEADING: 'MISLEADING',
+    MIXED: 'MIXED'
+  },
+  es: {
+    TRUE: 'VERDADERO',
+    FACTUAL_ERROR: 'ERROR FACTUAL',
+    DECEPTIVE_LIE: 'MENTIRA ENGAÑOSA',
+    MANIPULATIVE: 'MANIPULATIVO',
+    PARTIALLY_TRUE: 'PARCIALMENTE VERDADERO',
+    OUT_OF_CONTEXT: 'FUERA DE CONTEXTO',
+    UNVERIFIABLE: 'NO VERIFICABLE',
+    FALSE: 'FALSO',
+    MISLEADING: 'ENGAÑOSO',
+    MIXED: 'MIXTO'
+  },
+  cs: {
+    TRUE: 'PRAVDA',
+    FACTUAL_ERROR: 'FAKTICKÁ CHYBA',
+    DECEPTIVE_LIE: 'KLAMAVÁ LŽI',
+    MANIPULATIVE: 'MANIPULATIVNÍ',
+    PARTIALLY_TRUE: 'ČÁSTEČNĚ PRAVDA',
+    OUT_OF_CONTEXT: 'MIMO KONTEXT',
+    UNVERIFIABLE: 'NEOVĚŘITELNÉ',
+    FALSE: 'NEPRAVDA',
+    MISLEADING: 'ZAVÁDĚJÍCÍ',
+    MIXED: 'SMÍŠENÉ'
+  }
+} as const;
+
+export type SupportedLanguage = 'en' | 'es' | 'cs';
+export type StatusKey = keyof typeof STATUS_TRANSLATIONS.en;
+
+// Enhanced multilingual status translation function
+export const getStatusTranslation = (status: string, language: SupportedLanguage = 'en') => {
+  if (!status) return STATUS_TRANSLATIONS[language].UNVERIFIABLE;
   
+  // Normalize status to match our enum
+  const normalizedStatus = status.toUpperCase().replace(/\s+/g, '_');
+  
+  // Direct mapping for new backend values
+  const statusMap: Record<string, StatusKey> = {
+    'TRUE': 'TRUE',
+    'FACTUAL_ERROR': 'FACTUAL_ERROR',
+    'DECEPTIVE_LIE': 'DECEPTIVE_LIE',
+    'MANIPULATIVE': 'MANIPULATIVE',
+    'PARTIALLY_TRUE': 'PARTIALLY_TRUE',
+    'OUT_OF_CONTEXT': 'OUT_OF_CONTEXT',
+    'UNVERIFIABLE': 'UNVERIFIABLE',
+    
+    // Legacy mappings for backward compatibility
+    'FALSE': 'FALSE',
+    'MISLEADING': 'MISLEADING',
+    'MIXED': 'MIXED',
+    'PARTIAL': 'PARTIALLY_TRUE',
+    'MOSTLY_TRUE': 'TRUE',
+    'MOSTLY_FALSE': 'FALSE'
+  };
+
+  const mappedStatus = statusMap[normalizedStatus];
+  
+  if (mappedStatus && STATUS_TRANSLATIONS[language][mappedStatus]) {
+    return STATUS_TRANSLATIONS[language][mappedStatus];
+  }
+  
+  // Fallback to English if translation not found
+  if (language !== 'en' && mappedStatus && STATUS_TRANSLATIONS.en[mappedStatus]) {
+    return STATUS_TRANSLATIONS.en[mappedStatus];
+  }
+  
+  // Final fallback
+  return normalizedStatus.replace('_', ' ');
+};
+
+// Legacy function for backward compatibility
+export const getStatusTranslationLegacy = (status: string) => {
+  return getStatusTranslation(status, 'en');
+};
+
+export const getStatusColors = (status: string) => {
   const normalizedStatus = status.toLowerCase();
   
   switch (normalizedStatus) {
-    case 'true': 
-    case 'TRUE':
-      return 'TRUE';
-    case 'false': 
-    case 'FALSE':
-      return 'FALSE';
-    case 'misleading': 
-    case 'MISLEADING':
-      return 'MISLEADING';
-    case 'partially_true': 
-    case 'PARTIALLY_TRUE':
-    case 'partial':
-      return 'PARTIALLY TRUE';
-    case 'unverifiable': 
-    case 'UNVERIFIABLE':
-      return 'UNVERIFIABLE';
-    case 'mixed':
-      return 'MIXED';
-    default: 
-      return status.toUpperCase().replace('_', ' ');
-  }
-}
+    case 'true':
+    case 'mostly true':
+      return {
+        gradientFrom: '#16a34a',
+        gradientVia: '#22c55e',
+        gradientTo: '#4ade80',
+        borderColor: 'rgba(34, 197, 94, 0.5)',
+        shadowColor: 'rgba(34, 197, 94, 0.25)',
+        glowColor: 'rgba(34, 197, 94, 0.6)',
+        badgeClasses: 'bg-green-500/20 text-green-100 border-green-400/30'
+      };
 
-  export const getStatusColors = (status: string) => {
-        const normalizedStatus = status.toLowerCase();
-        
-        switch (normalizedStatus) {
-            case 'true':
-            case 'mostly true':
-                return {
-                    gradientFrom: '#10b981', // emerald-500
-                    gradientVia: '#22c55e',   // green-500
-                    gradientTo: '#0d9488',    // teal-600
-                    borderColor: 'rgba(52, 211, 153, 0.5)', // emerald-300/50
-                    shadowColor: 'rgba(16, 185, 129, 0.25)', // emerald-500/25
-                    glowColor: 'rgba(52, 211, 153, 0.6)',    // emerald-400/60
-                    badgeClasses: 'bg-emerald-500/20 text-emerald-100 border-emerald-400/30'
-                };
-            case 'false':
-            case 'mostly false':
-                return {
-                    gradientFrom: '#ef4444', // red-500
-                    gradientVia: '#f43f5e',  // rose-500
-                    gradientTo: '#ec4899',   // pink-600
-                    borderColor: 'rgba(252, 165, 165, 0.5)', // red-300/50
-                    shadowColor: 'rgba(239, 68, 68, 0.25)',  // red-500/25
-                    glowColor: 'rgba(248, 113, 113, 0.6)',   // red-400/60
-                    badgeClasses: 'bg-red-500/20 text-red-100 border-red-400/30'
-                };
-            case 'misleading':
-                return {
-                    gradientFrom: '#f97316', // orange-500
-                    gradientVia: '#ef4444',  // red-500
-                    gradientTo: '#f43f5e',   // rose-600
-                    borderColor: 'rgba(253, 186, 116, 0.5)', // orange-300/50
-                    shadowColor: 'rgba(249, 115, 22, 0.25)', // orange-500/25
-                    glowColor: 'rgba(251, 146, 60, 0.6)',    // orange-400/60
-                    badgeClasses: 'bg-orange-500/20 text-orange-100 border-orange-400/30'
-                };
-            case 'mixed':
-            case 'partially true':
-            case 'partially_true':
-                return {
-                    gradientFrom: '#eab308', // yellow-500
-                    gradientVia: '#f59e0b',  // amber-500
-                    gradientTo: '#f97316',   // orange-500
-                    borderColor: 'rgba(253, 224, 71, 0.5)',  // yellow-300/50
-                    shadowColor: 'rgba(234, 179, 8, 0.25)',  // yellow-500/25
-                    glowColor: 'rgba(250, 204, 21, 0.6)',    // yellow-400/60
-                    badgeClasses: 'bg-yellow-500/20 text-yellow-100 border-yellow-400/30'
-                };
-            case 'unverifiable':
-                return {
-                    gradientFrom: '#64748b', // slate-500
-                    gradientVia: '#6b7280',  // gray-500
-                    gradientTo: '#71717a',   // zinc-600
-                    borderColor: 'rgba(148, 163, 184, 0.5)', // slate-300/50
-                    shadowColor: 'rgba(100, 116, 139, 0.25)', // slate-500/25
-                    glowColor: 'rgba(148, 163, 184, 0.6)',    // slate-400/60
-                    badgeClasses: 'bg-slate-500/20 text-slate-100 border-slate-400/30'
-                };
-            default:
-                return {
-                    gradientFrom: '#3b82f6', // blue-500
-                    gradientVia: '#6366f1',  // indigo-500
-                    gradientTo: '#8b5cf6',   // purple-600
-                    borderColor: 'rgba(147, 197, 253, 0.5)', // blue-300/50
-                    shadowColor: 'rgba(59, 130, 246, 0.25)', // blue-500/25
-                    glowColor: 'rgba(96, 165, 250, 0.6)',    // blue-400/60
-                    badgeClasses: 'bg-blue-500/20 text-blue-100 border-blue-400/30'
-                };
-        }
-    };
+    case 'false':
+    case 'mostly false':
+    case 'factual_error':
+    case 'deceptive_lie':
+      return {
+        gradientFrom: '#dc2626',
+        gradientVia: '#ef4444',
+        gradientTo: '#f87171',
+        borderColor: 'rgba(239, 68, 68, 0.5)',
+        shadowColor: 'rgba(239, 68, 68, 0.25)',
+        glowColor: 'rgba(239, 68, 68, 0.6)',
+        badgeClasses: 'bg-red-500/20 text-red-100 border-red-400/30'
+      };
+
+    case 'misleading':
+    case 'manipulative':
+    case 'out_of_context':
+      return {
+        gradientFrom: '#d97706',
+        gradientVia: '#f59e0b',
+        gradientTo: '#fbbf24',
+        borderColor: 'rgba(245, 158, 11, 0.5)',
+        shadowColor: 'rgba(245, 158, 11, 0.25)',
+        glowColor: 'rgba(245, 158, 11, 0.6)',
+        badgeClasses: 'bg-amber-500/20 text-amber-100 border-amber-400/30'
+      };
+
+    case 'mixed':
+    case 'partially true':
+    case 'partially_true':
+      return {
+        gradientFrom: '#2563eb',
+        gradientVia: '#3b82f6',
+        gradientTo: '#60a5fa',
+        borderColor: 'rgba(59, 130, 246, 0.5)',
+        shadowColor: 'rgba(59, 130, 246, 0.25)',
+        glowColor: 'rgba(59, 130, 246, 0.6)',
+        badgeClasses: 'bg-blue-500/20 text-blue-100 border-blue-400/30'
+      };
+
+    case 'unverifiable':
+      return {
+        gradientFrom: '#7c3aed',
+        gradientVia: '#8b5cf6',
+        gradientTo: '#a78bfa',
+        borderColor: 'rgba(139, 92, 246, 0.5)',
+        shadowColor: 'rgba(139, 92, 246, 0.25)',
+        glowColor: 'rgba(139, 92, 246, 0.6)',
+        badgeClasses: 'bg-purple-500/20 text-purple-100 border-purple-400/30'
+      };
+
+    default:
+      return {
+        gradientFrom: '#3b82f6',
+        gradientVia: '#6366f1',
+        gradientTo: '#8b5cf6',
+        borderColor: 'rgba(147, 197, 253, 0.5)',
+        shadowColor: 'rgba(59, 130, 246, 0.25)',
+        glowColor: 'rgba(96, 165, 250, 0.6)',
+        badgeClasses: 'bg-blue-500/20 text-blue-100 border-blue-400/30'
+      };
+  }
+};

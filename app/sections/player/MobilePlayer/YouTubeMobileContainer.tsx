@@ -1,6 +1,6 @@
 import { VideoWithTimestamps } from "@/app/types/video_api";
-import { useCallback, useRef, useState } from "react";
-import { motion, PanInfo, useAnimation, Variants } from "framer-motion";
+import { useCallback, useRef, useState, useEffect, useMemo } from "react";
+import { motion, PanInfo, useAnimation } from "framer-motion";
 
 type Props = {
     videos?: VideoWithTimestamps[];
@@ -31,6 +31,9 @@ const YouTubeMobileContainer = ({
     const containerRef = useRef<HTMLDivElement>(null);
     const controls = useAnimation();
     
+    // Add viewport height state
+    const [viewportHeight, setViewportHeight] = useState(0);
+    
     const [swipeState, setSwipeState] = useState<SwipeState>({
         isDragging: false,
         direction: null,
@@ -48,6 +51,31 @@ const YouTubeMobileContainer = ({
     const INTERACTIVE_ZONE_WIDTH = 0.3; // 30% of screen width for interactive zones
     const DIRECTION_THRESHOLD = 15; // Pixels to determine swipe direction
     const VOTING_ZONE_HEIGHT = 0.3; // 30% of screen height from top for voting areas
+
+    // Handle viewport height on client side only
+    useEffect(() => {
+        const updateViewportHeight = () => {
+            if (typeof window !== 'undefined') {
+                setViewportHeight(window.innerHeight);
+            }
+        };
+
+        // Set initial height
+        updateViewportHeight();
+
+        // Add resize listener
+        if (typeof window !== 'undefined') {
+            window.addEventListener('resize', updateViewportHeight);
+            
+            // Handle mobile viewport changes (address bar hiding/showing)
+            window.addEventListener('orientationchange', updateViewportHeight);
+            
+            return () => {
+                window.removeEventListener('resize', updateViewportHeight);
+                window.removeEventListener('orientationchange', updateViewportHeight);
+            };
+        }
+    }, []);
 
     // Reset header timer utility
     const resetHeaderTimer = useCallback(() => {
@@ -232,18 +260,29 @@ const YouTubeMobileContainer = ({
         resetHeaderTimer();
     }, [resetHeaderTimer, isVotingElement]);
 
-    // Animation variants for smooth transitions
-    const containerVariants = {
+    // Animation variants for smooth transitions - now using dynamic viewport height
+    const containerVariants = useMemo(() => ({
         initial: { y: 0 },
         animate: { 
-            y: -currentIndex * window.innerHeight,
+            y: viewportHeight > 0 ? -currentIndex * viewportHeight : 0,
             transition: {
                 type: "spring",
                 stiffness: 300,
                 damping: 30
             }
         }
-    };
+    }), [currentIndex, viewportHeight]);
+
+    // Don't render until we have viewport height (avoid hydration mismatch)
+    if (viewportHeight === 0) {
+        return (
+            <div className="relative w-full h-screen overflow-hidden">
+                <div className="flex flex-col" style={{ height: '100vh' }}>
+                    {children}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="relative w-full h-screen overflow-hidden">
@@ -262,7 +301,7 @@ const YouTubeMobileContainer = ({
                 onTap={handleTap}
                 style={{
                     willChange: 'transform',
-                    height: `${(videos?.length || 1) * 100}vh`
+                    height: `${(videos?.length || 1) * viewportHeight}px`
                 }}
             >
                 {children}

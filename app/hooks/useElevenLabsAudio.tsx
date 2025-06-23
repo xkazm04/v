@@ -229,33 +229,57 @@ export function useElevenLabsAudio(options: UseElevenLabsAudioOptions = {}) {
     }
   }, [generateAudio, play, autoPlay]);
 
-  // Handle track ending and auto-advance
+  // FIXED: Enhanced track ending and auto-advance with proper state management
   const handleTrackEnd = useCallback(() => {
     console.log('Track ended');
     setPlaybackState({ isPlaying: false });
     onPlayEnd?.();
     onTrackEnd?.();
     
-    // Auto-advance to next track if available
+    // Auto-advance to next track if available and auto-play is enabled
     if (currentTrack) {
-      const nextTrack = getNextTrack(currentTrack.id);
-      if (nextTrack) {
-        console.log('Auto-advancing to next track:', nextTrack.title);
+      const { isAutoPlayMode, nextTrack } = useTimelineAudioStore.getState();
+      
+      if (isAutoPlayMode) {
+        console.log('Auto-play enabled, attempting to advance to next track');
         
-        // Scroll to the next section first
-        scrollToSection(nextTrack);
+        // Use the store's nextTrack method which properly handles component state
+        const hasNext = nextTrack();
         
-        // Generate and play the next track
-        generateAndPlay(nextTrack.text)
-          .then(() => {
-            storePlayTrack(nextTrack);
-          })
-          .catch(error => {
-            console.error('Failed to auto-advance to next track:', error);
-          });
+        if (hasNext) {
+          const { currentTrack: newTrack } = useTimelineAudioStore.getState();
+          
+          if (newTrack) {
+            console.log('Auto-advancing to next track:', newTrack.title);
+            
+            // Scroll to the next section first
+            scrollToSection(newTrack);
+            
+            // Generate and play the next track after a short delay
+            setTimeout(() => {
+              generateAndPlay(newTrack.text)
+                .then(() => {
+                  // Update the store to mark as playing
+                  setPlaybackState({ isPlaying: true });
+                })
+                .catch(error => {
+                  console.error('Failed to auto-advance to next track:', error);
+                  setError('Failed to auto-advance to next track');
+                });
+            }, 500); // Small delay to allow scroll to complete
+          }
+        } else {
+          console.log('No more tracks available for auto-advance');
+          // Clear active component when reaching end
+          useTimelineAudioStore.getState().setActiveComponent(null, null);
+        }
+      } else {
+        console.log('Auto-play disabled, stopping at current track');
+        // Clear active component when auto-play is disabled
+        useTimelineAudioStore.getState().setActiveComponent(null, null);
       }
     }
-  }, [setPlaybackState, onPlayEnd, onTrackEnd, currentTrack, getNextTrack, scrollToSection, generateAndPlay, storePlayTrack]);
+  }, [setPlaybackState, onPlayEnd, onTrackEnd, currentTrack, scrollToSection, generateAndPlay, setError]);
 
   // Set volume
   const setVolume = useCallback((newVolume: number) => {

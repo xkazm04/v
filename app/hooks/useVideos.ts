@@ -1,5 +1,5 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { VideoFilters } from '../types/video_api';
+import { VideoFilters, Video } from '../types/video_api';
 
 const LOCAL_API_BASE = '/api';
 
@@ -14,45 +14,19 @@ function createVideosQueryKey(filters: VideoFilters = {}) {
   return ['videos', cleanFilters];
 }
 
-async function getVideosLocal(filters: VideoFilters = {}) {
-  // ✅ Don't make request if no meaningful filters
-  const hasSignificantFilters = Object.values(filters).some(value => 
-    value !== undefined && value !== null && value !== '' && value !== 0
-  );
-  
-  if (!hasSignificantFilters) {
-    console.log('useVideos: Skipping request - no significant filters provided');
-    return [];
-  }
-
+async function getVideosLocal(filters: VideoFilters = {}): Promise<Video[]> {
   const params = new URLSearchParams();
   
-  // Map frontend filters to backend parameters correctly
-  const paramMapping: Record<string, string> = {
-    limit: 'limit',
-    offset: 'offset', 
-    source: 'source',
-    researched: 'researched',
-    analyzed: 'analyzed',
-    speaker_name: 'speaker_name',
-    language_code: 'language_code',
-    categories: 'categories',
-    search: 'search',
-    sort_by: 'sort_by',
-    sort_order: 'sort_order'
-  };
-
+  // Map filters to URL parameters
   Object.entries(filters).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '') {
-      const backendParam = paramMapping[key] || key;
-      
       // Handle array values (like categories)
       if (Array.isArray(value)) {
         if (value.length > 0) {
-          params.append(backendParam, value.join(','));
+          params.append(key, value.join(','));
         }
       } else {
-        params.append(backendParam, String(value));
+        params.append(key, String(value));
       }
     }
   });
@@ -67,23 +41,19 @@ async function getVideosLocal(filters: VideoFilters = {}) {
   }
   
   const data = await response.json();
-  console.log('useVideos: Received data count:', Array.isArray(data) ? data.length : 'not array');
-  return data;
+  console.log('useVideos: Received response:', data);
+  
+  // Return the videos array from the response
+  return Array.isArray(data) ? data : (data.videos || []);
 }
 
 export const useVideos = (filters: VideoFilters = {}) => {
   // ✅ Create stable query key
   const queryKey = createVideosQueryKey(filters);
   
-  // ✅ Check if this is a meaningful request
-  const hasSignificantFilters = Object.values(filters).some(value => 
-    value !== undefined && value !== null && value !== '' && value !== 0
-  );
-
   return useQuery({
     queryKey,
     queryFn: () => getVideosLocal(filters),
-    enabled: hasSignificantFilters, // ✅ Only run if we have meaningful filters
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
     refetchOnWindowFocus: false,
@@ -106,7 +76,8 @@ export const useInfiniteVideos = (filters: Omit<VideoFilters, 'offset'> = {}) =>
     initialPageParam: 0,
     getNextPageParam: (lastPage: any, pages) => {
       const limit = filtersWithDefaults.limit || 20;
-      return (lastPage as any[]).length === limit ? pages.length * limit : undefined;
+      const videos = Array.isArray(lastPage) ? lastPage : (lastPage.videos || []);
+      return videos.length === limit ? pages.length * limit : undefined;
     },
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
@@ -114,13 +85,16 @@ export const useInfiniteVideos = (filters: Omit<VideoFilters, 'offset'> = {}) =>
   });
 };
 
-// ✅ Add a hook specifically for featured videos to avoid conflicts
-export const useFeaturedVideos = (limit: number = 4) => {
+// ✅ Enhanced hook specifically for featured videos
+export const useFeaturedVideos = (limit: number = 6) => {
   return useQuery({
-    queryKey: ['videos', 'featured', { limit, researched: true, sort_by: 'processed_at', sort_order: 'desc' }],
+    queryKey: ['videos', 'featured', { 
+      limit: Math.min(limit, 6), // Max 6 videos
+      sort_by: 'processed_at', 
+      sort_order: 'desc' 
+    }],
     queryFn: () => getVideosLocal({
-      limit,
-      researched: true,
+      limit: Math.min(limit, 6),
       sort_by: 'processed_at',
       sort_order: 'desc'
     }),

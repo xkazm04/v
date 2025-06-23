@@ -193,7 +193,7 @@ export default function TimelineMilestoneContent({
             {milestone.context && (
               <motion.p
                 className={`leading-relaxed font-light opacity-90 mb-8 ${
-                  isMobile ? 'text-sm' : 'text-base'
+                  isMobile ? 'text-base' : 'text-lg font-semibold'
                 }`}
                 style={{ color: colors.foreground }}
                 initial={{ opacity: 0, y: 20 }}

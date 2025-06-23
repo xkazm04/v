@@ -23,18 +23,26 @@ export type StatementCategory =
 export interface ResourceReference {
   url: string;
   title: string;
-  category: 'mainstream' | 'governance' | 'academic' | 'medical' | 'other';
+  domain?: string | null;
+  category: 'mainstream' | 'governance' | 'academic' | 'medical' | 'legal' | 'policy' | 'economic' | 'technology' | 'fact_checking' | 'international' | 'other';
   country: string;
   credibility: 'high' | 'medium' | 'low';
+  key_finding?: string;
 }
 
 export interface ResourceAnalysis {
-  total: string; // e.g., "85%"
-  count: number;
+  total: string; // e.g., "100%" 
+  count: number; // Total count of sources
   mainstream: number;
   governance: number;
   academic: number;
   medical: number;
+  legal: number;
+  policy: number;
+  economic: number;
+  technology: number;
+  fact_checking: number;
+  international: number;
   other: number;
   major_countries: string[];
   references: ResourceReference[];

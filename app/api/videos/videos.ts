@@ -29,8 +29,17 @@ class VideoAPI {
   }
 
   // NEW: Get video detail with timestamps and research
-  async getVideoDetail(videoId: string): Promise<VideoDetailResponse> {
-    return this.request<VideoDetailResponse>(`/video/${videoId}`);
+  async getVideoDetail(videoId: string, options?: { signal?: AbortSignal }): Promise<VideoDetailResponse | null> {
+    try {
+      const response = await this.request(`/video/${videoId}`, {
+        method: 'GET',
+        signal: options?.signal
+      });
+      return response;
+    } catch (error) {
+      console.error(`Error fetching video detail ${videoId}:`, error);
+      return null;
+    }
   }
 
   // NEW: Get transformed video detail for frontend consumption

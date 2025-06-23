@@ -104,8 +104,7 @@ const TimelineProgressContent = ({
         // Scroll to top or hero section
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, []);
-
-    // Audio control handlers - improved pause functionality
+    
     const handlePlayAudio = useCallback(async (track: any) => {
         if (currentTrackId === track.id && isPlaying) {
             // Pause current track
@@ -113,6 +112,14 @@ const TimelineProgressContent = ({
             // Dispatch pause event
             window.dispatchEvent(new CustomEvent('timeline-audio-pause'));
         } else {
+            // Stop any currently playing track first
+            if (currentTrackId && currentTrackId !== track.id) {
+                pauseTrack();
+                window.dispatchEvent(new CustomEvent('timeline-audio-pause'));
+                // Small delay to ensure cleanup
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            
             // Start/resume track
             playTrack(track.id);
             

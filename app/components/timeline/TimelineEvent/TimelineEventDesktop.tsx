@@ -88,7 +88,7 @@ export default function TimelineEventDesktop({
       data-event-id={event.id}
     >
       {showAllOpinions ? (
-        <>
+        <React.Fragment key={`${event.id}-all-opinions`}>
           <div className="absolute inset-0 z-10">
             <TimelineEventSecondaryLayout
               isActive={isActive}
@@ -105,9 +105,9 @@ export default function TimelineEventDesktop({
             event={event}
             eventIndex={eventIndex}
           />
-        </>
+        </React.Fragment>
       ) : (
-        <>
+        <React.Fragment key={`${event.id}-key-opinions`}>
           {/* FACT CARD */}
           <MemoizedFactCard
             isActive={isActive}
@@ -121,6 +121,7 @@ export default function TimelineEventDesktop({
           <AnimatePresence mode="sync">
             {/* TOP-RIGHT OPINION */}
             <motion.div
+              key={`${event.id}-right-opinion`} // FIXED: Added unique key
               className="absolute top-16 right-16 z-10"
               initial={{ opacity: 0, y: -30, x: 30 }}
               animate={{ opacity: 1, y: 0, x: 0 }}
@@ -140,9 +141,10 @@ export default function TimelineEventDesktop({
               />
             </motion.div>
 
-            {/* BOTTOM-LEFT OPINION - Moved further left */}
+            {/* BOTTOM-LEFT OPINION */}
             <motion.div
-              className="absolute bottom-16 left-8 z-10" // Changed from left-16 to left-8
+              key={`${event.id}-left-opinion`} // FIXED: Added unique key
+              className="absolute bottom-16 left-8 z-10"
               initial={{ opacity: 0, y: 30, x: -30 }}
               animate={{ opacity: 1, y: 0, x: 0 }}
               exit={{ opacity: 0, y: 30, x: -30 }}
@@ -161,10 +163,12 @@ export default function TimelineEventDesktop({
               />
             </motion.div>
           </AnimatePresence>
-        </>
+        </React.Fragment>
       )}
+      
       {/* Toggle Button for switching between layouts */}
       <motion.button
+        key={`${event.id}-toggle-button`} // FIXED: Added unique key
         className="absolute bottom-4 right-4 z-30 px-4 py-2 rounded-full border text-sm font-medium backdrop-blur-sm"
         style={{
           backgroundColor: colors.background + '90',

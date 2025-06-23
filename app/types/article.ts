@@ -13,6 +13,7 @@ export type ResearchResult = {
   status: 'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE' | 'UNVERIFIABLE';
   correction?: string;
   experts: ExpertOpinion;
+  expert_perspectives?: ExpertPerspective[] | string; 
   resources_agreed?: ResourceAnalysis;
   resources_disagreed?: ResourceAnalysis;
   profile_id?: string; 
@@ -20,6 +21,7 @@ export type ResearchResult = {
   processed_at: string;
   created_at: string;
   updated_at: string;
+  topic_id?: string | null;
   resources?: string[];
   category?: string; 
   __meta?: {
@@ -29,6 +31,17 @@ export type ResearchResult = {
     warning?: string;
   };
 };
+
+export type ExpertPerspective = {
+  expert_name: string;
+  stance: 'SUPPORTING' | 'OPPOSING' | 'NEUTRAL';
+  reasoning: string;
+  confidence_level: number; // 0-100
+  summary: string;
+  source_type: 'llm' | 'external' | 'hybrid';
+  expertise_area: string;
+  publication_date?: string | null;
+}
 
 export type NewsArticle = {
   id: string;
@@ -90,32 +103,30 @@ export function convertResearchToNews(research: ResearchResult): NewsArticle {
 
   return {
     id: research.id,
-    headline: safeStatement.length > 100 
-      ? safeStatement.substring(0, 97) + '...'
-      : safeStatement,
+    headline: safeStatement,
     source: {
       name: safeSource,
       logoUrl: undefined
     },
-    category: research.category || 'general', // Use category from research
-    country: research.country, // Add country field
-    datePublished: research.statement_date || research.processed_at || new Date().toISOString(),
-    truthScore: statusToScore[safeStatus as keyof typeof statusToScore] || 0.5,
-    isBreaking: safeStatus === 'FALSE' || safeStatus === 'MISLEADING',
-    publishedAt: research.processed_at || new Date().toISOString(),
+    category: research.category || 'general',
+    country: research.country,
+    datePublished: research.request_datetime,
+    truthScore: statusToScore[safeStatus] || 0.5,
+    isBreaking: false,
+    publishedAt: research.processed_at || research.created_at,
     factCheck: {
-      evaluation: safeStatus as NewsArticle['factCheck']['evaluation'],
-      confidence: statusToConfidence[safeStatus as keyof typeof statusToConfidence] || 30,
+      evaluation: safeStatus,
+      confidence: statusToConfidence[safeStatus] || 50,
       verdict: safeVerdict,
       experts: research.experts,
       resources_agreed: research.resources_agreed,
       resources_disagreed: research.resources_disagreed
     },
     citation: safeSource,
-    profileId: research.profile_id, 
-    summary: safeVerdict,
+    profileId: research.profileId || research.profile_id,
+    summary: research.context || 'No summary available',
     statementDate: research.statement_date,
     researchId: research.id,
-    __meta: research.__meta 
+    __meta: research.__meta
   };
 }

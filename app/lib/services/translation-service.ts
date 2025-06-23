@@ -1,7 +1,6 @@
 import { LingoDotDevEngine } from 'lingo.dev/sdk';
 import { supabaseAdmin } from '../supabase';
 
-// Lingo.dev client
 const lingoDotDev = new LingoDotDevEngine({
   apiKey: process.env.LINGO_API_KEY!,
   batchSize: 100,
@@ -22,6 +21,18 @@ interface CachedTranslation {
 interface TranslationResult {
   translatedText: string;
   wasCached: boolean;
+}
+
+// ✅ NEW: Expert perspective translation interface
+interface ExpertPerspective {
+  expert_name: string;
+  stance: 'SUPPORTING' | 'OPPOSING' | 'NEUTRAL';
+  reasoning: string;
+  confidence_level: number;
+  summary: string;
+  source_type: 'llm' | 'external' | 'hybrid';
+  expertise_area: string;
+  publication_date?: string | null;
 }
 
 /**
@@ -45,7 +56,7 @@ async function getCachedTranslation(
       .maybeSingle();
 
     if (error) {
-      console.warn('Cache lookup error:', error);
+      console.warn('Cache retrieval error:', error);
       return null;
     }
 
@@ -83,9 +94,9 @@ async function cacheTranslation(
       });
 
     if (error) {
-      console.warn('Cache storage error:', error);
+      console.warn('Caching failed:', error);
     } else {
-      console.log(`✅ Cached translation: ${sourceLocale} → ${targetLocale}`);
+      console.log(`✅ Cached translation: ${originalContent.slice(0, 30)}...`);
     }
 
   } catch (error) {
@@ -117,7 +128,7 @@ export async function translateResearchStatement(
     // Check cache first
     const cachedResult = await getCachedTranslation(statement, sourceLocale, targetLocale);
     if (cachedResult) {
-      console.log(`📋 Server: Using cached translation for ${sourceLocale} → ${targetLocale}`);
+      console.log(`💾 Using cached translation for: "${statement.slice(0, 30)}..."`);
       return cachedResult;
     }
 
@@ -133,16 +144,83 @@ export async function translateResearchStatement(
     if (translatedText && translatedText !== statement) {
       // Cache the successful translation
       await cacheTranslation(statement, translatedText, sourceLocale, targetLocale);
-      console.log(`✅ Server: Statement translated: ${sourceLocale} → ${targetLocale}`);
       return translatedText;
     } else {
-      console.warn('Server: Translation returned same text or empty result');
+      console.warn(`⚠️ Translation returned same text or empty: "${statement}"`);
       return statement;
     }
 
   } catch (error) {
     console.error('Server translation error:', error);
     return statement;
+  }
+}
+
+/**
+ * ✅ NEW: Translate expert perspective summary and reasoning
+ */
+export async function translateExpertPerspective(
+  perspective: ExpertPerspective,
+  sourceLocale: string = 'en',
+  targetLocale: string = 'es'
+): Promise<ExpertPerspective> {
+  if (sourceLocale === targetLocale) {
+    return perspective;
+  }
+
+  try {
+    console.log(`🎭 Translating expert perspective: ${perspective.expert_name}`);
+
+    // Translate summary
+    const translatedSummary = perspective.summary 
+      ? await translateResearchStatement(perspective.summary, sourceLocale, targetLocale, 'expert-opinion')
+      : perspective.summary;
+
+    // Translate reasoning
+    const translatedReasoning = perspective.reasoning 
+      ? await translateResearchStatement(perspective.reasoning, sourceLocale, targetLocale, 'expert-opinion')
+      : perspective.reasoning;
+
+    return {
+      ...perspective,
+      summary: translatedSummary || perspective.summary,
+      reasoning: translatedReasoning || perspective.reasoning
+    };
+
+  } catch (error) {
+    console.error('Expert perspective translation error:', error);
+    return perspective; // Return original on error
+  }
+}
+
+/**
+ * ✅ NEW: Batch translate multiple expert perspectives
+ */
+export async function batchTranslateExpertPerspectives(
+  perspectives: ExpertPerspective[],
+  sourceLocale: string = 'en',
+  targetLocale: string = 'es'
+): Promise<ExpertPerspective[]> {
+  if (!perspectives || perspectives.length === 0 || sourceLocale === targetLocale) {
+    return perspectives;
+  }
+
+  try {
+    console.log(`🎭 Batch translating ${perspectives.length} expert perspectives`);
+
+    // Process all perspectives in parallel
+    const translatedPerspectives = await Promise.all(
+      perspectives.map(perspective => 
+        translateExpertPerspective(perspective, sourceLocale, targetLocale)
+      )
+    );
+
+    console.log(`✅ Successfully translated ${translatedPerspectives.length} expert perspectives`);
+    return translatedPerspectives;
+
+  } catch (error) {
+    console.error('Batch expert perspective translation error:', error);
+    return perspectives; // Return original on error
   }
 }
 
@@ -166,14 +244,13 @@ export async function translateWithMetadata(
     // Check cache first
     const cachedResult = await getCachedTranslation(statement, sourceLocale, targetLocale);
     if (cachedResult) {
-      console.log(`📋 Server: Using cached translation`);
       return {
         translatedText: cachedResult,
         wasCached: true
       };
     }
 
-    // Perform fresh translation
+    // Perform translation
     const translatedText = await lingoDotDev.localizeText(statement, {
       sourceLocale,
       targetLocale,
@@ -216,31 +293,18 @@ export async function batchTranslateStatements(
   }
 
   try {
-    console.log(`🌐 Server: Batch translating ${statements.length} statements: ${sourceLocale} → ${targetLocale}`);
+    const translatedStatements = await Promise.all(
+      statements.map(statement => 
+        translateResearchStatement(statement, sourceLocale, targetLocale, context)
+      )
+    );
 
-    const translationPromises = statements.map(async (statement, index) => {
-      try {
-        const result = await translateResearchStatement(statement, sourceLocale, targetLocale, context);
-        return result || statement;
-      } catch (error) {
-        console.warn(`Server: Batch translation failed for item ${index}:`, error);
-        return statement;
-      }
-    });
-
-    const results = await Promise.allSettled(translationPromises);
-    
-    return results.map((result, index) => {
-      if (result.status === 'fulfilled') {
-        return result.value;
-      } else {
-        console.warn(`Server: Batch translation rejected for item ${index}:`, result.reason);
-        return statements[index];
-      }
-    });
+    return translatedStatements.map((translated, index) => 
+      translated || statements[index]
+    );
 
   } catch (error) {
-    console.error('Server: Batch translation error:', error);
+    console.error('Batch translation error:', error);
     return statements;
   }
 }
@@ -251,17 +315,17 @@ export async function clearTranslationCache(): Promise<boolean> {
     const { error } = await supabaseAdmin
       .from('lingo_translations')
       .delete()
-      .gte('id', 0);
+      .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all except non-existent ID
 
     if (error) {
       console.error('Failed to clear translation cache:', error);
       return false;
     }
 
-    console.log('✅ Translation cache cleared');
+    console.log('✅ Translation cache cleared successfully');
     return true;
   } catch (error) {
-    console.error('Error clearing translation cache:', error);
+    console.error('Failed to clear translation cache:', error);
     return false;
   }
 }
@@ -271,7 +335,7 @@ export async function getTranslationCacheStats() {
   try {
     const { data, error } = await supabaseAdmin
       .from('lingo_translations')
-      .select('id, source_locale, target_locale, created_at', { count: 'exact' });
+      .select('target_locale, translation_type', { count: 'exact' });
 
     if (error) {
       console.error('Failed to get cache stats:', error);
@@ -280,14 +344,17 @@ export async function getTranslationCacheStats() {
 
     return {
       totalCached: data?.length || 0,
-      byLanguagePair: data?.reduce((acc: any, item) => {
-        const pair = `${item.source_locale}-${item.target_locale}`;
-        acc[pair] = (acc[pair] || 0) + 1;
+      byLanguage: data?.reduce((acc: Record<string, number>, item) => {
+        acc[item.target_locale] = (acc[item.target_locale] || 0) + 1;
+        return acc;
+      }, {}) || {},
+      byType: data?.reduce((acc: Record<string, number>, item) => {
+        acc[item.translation_type] = (acc[item.translation_type] || 0) + 1;
         return acc;
       }, {}) || {}
     };
   } catch (error) {
-    console.error('Error getting cache stats:', error);
+    console.error('Failed to get cache stats:', error);
     return null;
   }
 }

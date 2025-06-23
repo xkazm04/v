@@ -3,79 +3,35 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-
-import indiaTimeline from './en/timeline_milestones_india.json';
-import sudanTimeline from './en/timeline_milestones_sudan.json';
-import syriaTimeline from './en/timeline_milestones_syria.json';
-import ukraineTimeline from './en/timeline_milestones_ukraine.json';
-import israelTimeline from './en/timeline_milestones_israel.json';
+import { useTimelineStore, TIMELINE_DATASETS } from '@/app/stores/useTimelineStore';
 import { Timeline } from '@/app/types/timeline';
 
-interface TimelineDataset {
-  id: string;
-  title: string;
-  data: any; 
-  description?: string;
-}
-
 interface TimelineSelectorProps {
-  currentTimeline?: any;
-  setIsLoadingTimeline: (loading: boolean) => void;
-  setCurrentTimeline: (timeline: Timeline) => void;
   className?: string;
 }
 
-const timelineDatasets: TimelineDataset[] = [
-  {
-    id: 'india-pakistan',
-    title: 'India x Pakistan 2025',
-    data: indiaTimeline,
-    description: 'Escalation leading to conflict'
-  },
-  {
-    id: 'iraq-war',
-    title: 'Iraq War 2003-2011',
-    data: sudanTimeline,
-    description: 'Coalition invasion and aftermath'
-  },
-  {
-    id: 'syria-civil-war',
-    title: 'Syria Civil War 2011-2025',
-    data: syriaTimeline,
-    description: 'Ongoing conflict and interventions'
-  },
-  {
-    id: 'russia-ukraine',
-    title: 'Russia x Ukraine 2013-2022',
-    data: ukraineTimeline,
-    description: 'From annexation to full invasion'
-  },
-  {
-    id: 'israel-iran',
-    title: 'Israel x Iran 2017-2025',
-    data: israelTimeline,
-    description: 'Shadow war escalation'
-  }
-];
-
 export default function TimelineSelector({
-  currentTimeline,
-  setIsLoadingTimeline,
-  setCurrentTimeline,
   className = ''
 }: TimelineSelectorProps) {
   const { colors, isDark } = useLayoutTheme();
+  const { 
+    currentTimeline, 
+    isLoadingTimeline, 
+    setIsLoadingTimeline, 
+    selectTimelineByDatasetId 
+  } = useTimelineStore();
 
-  const handleNoteClick = (dataset: TimelineDataset) => {
-    handleTimelineSelect(dataset.data);
+  const handleNoteClick = (datasetId: string) => {
+    handleTimelineSelect(datasetId);
   };
 
-  const handleTimelineSelect = async (timelineData: Timeline) => {
-    if (timelineData.id === currentTimeline.id) return;
+  const handleTimelineSelect = async (datasetId: string) => {
+    const dataset = TIMELINE_DATASETS.find(d => d.id === datasetId);
+    if (!dataset || dataset.data.id === currentTimeline.id) return;
 
     setIsLoadingTimeline(true);
     try {
-      setCurrentTimeline(timelineData);
+      selectTimelineByDatasetId(datasetId);
 
       // Reset scroll position to top
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -85,7 +41,6 @@ export default function TimelineSelector({
       setIsLoadingTimeline(false);
     }
   };
-
 
   const vintageColors = colors.vintage || {
     paper: '#f8f6f0',
@@ -123,7 +78,7 @@ export default function TimelineSelector({
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="flex flex-wrap justify-center gap-3 mb-8 px-4"
       >
-        {timelineDatasets.map((dataset, index) => {
+        {TIMELINE_DATASETS.map((dataset, index) => {
           const isActive = currentTimeline?.id === dataset.data.id;
 
           return (
@@ -147,7 +102,7 @@ export default function TimelineSelector({
               }}
               whileTap={{ scale: 0.98 }}
               className="relative cursor-pointer group"
-              onClick={() => handleNoteClick(dataset)}
+              onClick={() => handleNoteClick(dataset.id)}
             >
               {/* Sticky note */}
               <div
@@ -233,6 +188,24 @@ export default function TimelineSelector({
           );
         })}
       </motion.div>
+
+      {/* Loading indicator */}
+      {isLoadingTimeline && (
+        <motion.div
+          className="text-center py-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <motion.div
+            className="inline-block w-6 h-6 border-2 border-current border-t-transparent rounded-full"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            style={{ borderColor: colors.primary }}
+          />
+          <p className="mt-2 text-sm opacity-60">Loading timeline...</p>
+        </motion.div>
+      )}
 
       {/* Helper text */}
       <motion.p

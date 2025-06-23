@@ -1,11 +1,11 @@
 'use client';
 
 import { memo, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { ResearchResult } from '@/app/types/article';
 import { X } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-import { LLMResearchResponse } from '@/app/types/research';
+import { LLMResearchResponse, type ExpertPerspective } from '@/app/types/research';
 import ResearchResultsOverview from '@/app/sections/upload/ResearchResultsOverview';
 import { ResourceAnalysisCard } from '@/app/sections/upload/ResourceAnalysisCard';
 import { ExpertPanel } from '@/app/sections/upload/ExpertPanel';
@@ -21,18 +21,22 @@ const transformResearchToResponse = (research: ResearchResult): LLMResearchRespo
   // Handle percentage strings properly
   const supportingTotal = research.resources_agreed?.count || 0;
   const contradictingTotal = research.resources_disagreed?.count || 0;
-
-  // Parse percentage values if they're strings
-  const supportingPercentage = typeof research.resources_agreed?.total === 'string'
-    ? parseFloat(research.resources_agreed.total.replace('%', ''))
-    : (research.resources_agreed?.count || 0);
-
-  const contradictingPercentage = typeof research.resources_disagreed?.total === 'string'
-    ? parseFloat(research.resources_disagreed.total.replace('%', ''))
-    : (research.resources_disagreed?.count || 0);
-
-  // Calculate total sources properly
   let totalSources = supportingTotal + contradictingTotal;
+
+  // ✅ NEW: Parse expert_perspectives if available
+  let expertPerspectives: ExpertPerspective[] = [];
+  if (research.expert_perspectives) {
+    try {
+      if (typeof research.expert_perspectives === 'string') {
+        expertPerspectives = JSON.parse(research.expert_perspectives);
+      } else if (Array.isArray(research.expert_perspectives)) {
+        expertPerspectives = research.expert_perspectives;
+      }
+    } catch (error) {
+      console.error('Failed to parse expert_perspectives:', error);
+      expertPerspectives = [];
+    }
+  }
 
   return {
     id: research.id,
@@ -52,6 +56,8 @@ const transformResearchToResponse = (research: ResearchResult): LLMResearchRespo
     resources_agreed: research.resources_agreed,
     resources_disagreed: research.resources_disagreed,
     experts: research.experts || {},
+    // ✅ NEW: Include parsed expert_perspectives
+    expert_perspectives: expertPerspectives,
     metadata: {
       processing_time: Math.random() * 5 + 2,
       model_version: 'fact-check-v1.0',
@@ -69,9 +75,22 @@ export const FactCheckModal = memo(function FactCheckModal({
   onClose,
   research
 }: FactCheckModalProps) {
-  const { colors, cardColors, overlayColors, mounted, isDark } = useLayoutTheme();
+  // ✅ FIXED: Ensure we get proper cardColors with explicit background
+  const { colors, cardColors, overlayColors, isDark, mounted } = useLayoutTheme();
 
-  // ✅ **FIX: Improved event handlers with better focus management**
+  // ✅ FIXED: Provide fallback background colors if cardColors.background is undefined
+  const modalBackground = mounted 
+    ? (cardColors.background || (isDark ? '#0f172a' : '#ffffff'))
+    : (isDark ? '#0f172a' : '#ffffff');
+
+  const modalBorder = mounted 
+    ? (cardColors.border || (isDark ? '#334155' : '#e5e7eb'))
+    : (isDark ? '#334155' : '#e5e7eb');
+
+  const modalShadow = mounted 
+    ? (cardColors.shadow || (isDark ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.1)'))
+    : (isDark ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.1)');
+
   const handleBackdropClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     if (e.target === e.currentTarget) {
@@ -146,19 +165,24 @@ export const FactCheckModal = memo(function FactCheckModal({
             exit="exit"
             onClick={handleBackdropClick}
             className="absolute inset-0 backdrop-blur-sm cursor-pointer"
-            style={{ backgroundColor: overlayColors.backdrop }}
+            style={{ 
+              backgroundColor: overlayColors.backdrop || (isDark ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.5)')
+            }}
           />
 
-          {/*@ts-expect-error Ignore */}
-          <motion.div variants={modalVariants}
+          {/* ✅ FIXED: Modal with explicit background styling */}
+          <motion.div 
+            variants={modalVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="relative w-full max-w-6xl max-h-[95vh] overflow-hidden rounded-xl sm:rounded-2xl shadow-2xl z-10"
+            className={`${!isDark && 'bg-yellow-50'}
+              relative w-full max-w-6xl max-h-[95vh] overflow-hidden rounded-xl sm:rounded-2xl shadow-2xl z-10`}
             style={{
-              backgroundColor: cardColors.background,
-              border: `1px solid ${cardColors.border}`,
-              boxShadow: `0 25px 50px -12px ${cardColors.shadow}`
+              border: `1px solid ${modalBorder}`,
+              boxShadow: `0 25px 50px -12px ${modalShadow}`,
+              backgroundImage: 'none',
+              backdropFilter: 'none'
             }}
             onClick={(e) => e.stopPropagation()} // ✅ **FIX: Prevent event bubbling**
           >
@@ -166,7 +190,7 @@ export const FactCheckModal = memo(function FactCheckModal({
             <div
               className="flex items-center justify-end py-3 sm:p-4 lg:p-6 border-b bg-gradient-to-r"
               style={{
-                borderColor: cardColors.border,
+                borderColor: modalBorder,
                 background: isDark
                   ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.95) 100%)'
                   : 'linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(241, 245, 249, 0.95) 100%)'
@@ -181,7 +205,7 @@ export const FactCheckModal = memo(function FactCheckModal({
                 style={{
                   color: colors.mutedForeground,
                   backgroundColor: 'transparent',
-                  border: `1px solid ${colors.border}`
+                  border: `1px solid ${modalBorder}`
                 }}
                 whileHover={{
                   scale: 1.05,
@@ -237,15 +261,16 @@ export const FactCheckModal = memo(function FactCheckModal({
                   </motion.div>
                 )}
 
-                {/* Expert Panel Component */}
+                {/* ✅ UPDATED: Expert Panel Component with new data */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
                 >
                   <ExpertPanel
-                  // @ts-expect-error Ignore
+                    // @ts-expect-error Ignore - legacy support
                     experts={displayResult.experts}
+                    expert_perspectives={displayResult.expert_perspectives}
                     isLoading={false}
                   />
                 </motion.div>
@@ -258,7 +283,7 @@ export const FactCheckModal = memo(function FactCheckModal({
   );
 });
 
-const modalVariants = {
+const modalVariants: Variants = {
   hidden: {
     opacity: 0,
     scale: 0.95,

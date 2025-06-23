@@ -1,4 +1,3 @@
-
 import { useCallback, useMemo, memo } from 'react';
 import { useNews } from '@/app/hooks/useNews';
 import { NewsGrid } from '../feed/NewsGrid';
@@ -7,12 +6,13 @@ import { RefreshCw, AlertCircle } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { Button } from '@/app/components/ui/button';
 import { useNewsFilters } from '@/app/stores/filterStore';
+import { useNewsTranslations, useCommonTranslations } from '@/app/hooks/useSmartTranslations';
+
 interface FeaturedNewsProps {
   limit?: number;
   showBreaking?: boolean;
   autoRefresh?: boolean;
 }
-
 
 const FeaturedNews = memo(({ 
   limit = 20, 
@@ -21,6 +21,10 @@ const FeaturedNews = memo(({
 }: FeaturedNewsProps) => {
   const { colors, isDark } = useLayoutTheme();
   const newsFilters = useNewsFilters();
+  
+  // Translation hooks
+  const { t: tn } = useNewsTranslations();
+  const { t: tc } = useCommonTranslations();
 
   const enhancedFilters = useMemo(() => ({
     limit,
@@ -67,7 +71,6 @@ const FeaturedNews = memo(({
     return filtered;
   }, [researchResults]);
 
-
   return (
     <div className="space-y-6 max-w-[1600px]">
       {/* Header */}
@@ -81,7 +84,7 @@ const FeaturedNews = memo(({
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
           >
-            Researched statements
+            {tn('researchedStatements', 'Researched statements')}
           </motion.h2>
         </div>
 
@@ -99,6 +102,7 @@ const FeaturedNews = memo(({
             background: isDark ? 'rgba(71, 85, 105, 0.4)' : 'rgba(148, 163, 184, 0.3)'
           }}
           whileTap={{ scale: 0.95 }}
+          title={tc('refresh', 'Refresh')}
         >
           <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
         </motion.button>
@@ -117,17 +121,17 @@ const FeaturedNews = memo(({
               className="text-lg font-semibold mb-2"
               style={{ color: colors.foreground }}
             >
-              Failed to load research
+              {tn('failedToLoadResearch', 'Failed to load research')}
             </h3>
             <p 
               className="mb-4"
               style={{ color: colors.mutedForeground }}
             >
-              {error || 'Something went wrong while fetching research.'}
+              {error || tn('somethingWentWrong', 'Something went wrong while fetching research.')}
             </p>
             <Button onClick={handleRefresh} variant="default">
               <RefreshCw className="w-4 h-4 mr-2" />
-              Try Again
+              {tc('tryAgain', 'Try Again')}
             </Button>
           </motion.div>
         ) : validResearchResults.length === 0 && !loading ? (
@@ -139,7 +143,7 @@ const FeaturedNews = memo(({
             className="text-center py-12"
             style={{ color: colors.mutedForeground }}
           >
-            No research results found.
+            {tn('noResultsFound', 'No research results found.')}
           </motion.div>
         ) : (
           <motion.div
@@ -149,12 +153,11 @@ const FeaturedNews = memo(({
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}
           >
-            {/* ✅ **FIX: Pass ResearchResult[] directly to NewsGrid** */}
             <NewsGrid 
               articles={validResearchResults}
               onArticleRead={(researchId) => {
                 // Handle research read tracking if needed
-                console.log('Research read:', researchId);
+                console.log(tn('researchRead', 'Research read'), researchId);
               }}
             />
           </motion.div>
@@ -170,7 +173,7 @@ const FeaturedNews = memo(({
         >
           <div className="inline-flex items-center gap-2 text-sm" style={{ color: colors.mutedForeground }}>
             <RefreshCw className="w-4 h-4 animate-spin" />
-            Updating research...
+            {tn('updatingResearch', 'Updating research...')}
           </div>
         </motion.div>
       )}

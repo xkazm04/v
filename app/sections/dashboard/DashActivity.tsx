@@ -153,7 +153,6 @@ const DashActivity = ({ statsData, limit = 8 }: DashActivityProps) => {
                   : `linear-gradient(135deg, ${universalCard.accent}20, ${universalCard.accent}15)`,
                 border: `1px solid ${universalCard.accent}30`
               }}
-              whileHover={{ scale: 1.1, rotate: 5 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
               <TrendingUp className="w-5 h-5" style={{ color: universalCard.accent }} />
@@ -169,7 +168,7 @@ const DashActivity = ({ statsData, limit = 8 }: DashActivityProps) => {
                 Recent Activity
               </h3>
               <p 
-                className="text-sm"
+                className=""
                 style={{ 
                   color: isDark ? colors.mutedForeground : vintage.faded,
                   fontFamily: '"Crimson Text", serif'
@@ -182,7 +181,6 @@ const DashActivity = ({ statsData, limit = 8 }: DashActivityProps) => {
           
           <motion.div 
             className="text-right"
-            whileHover={{ scale: 1.05 }}
           >
             <div 
               className="text-2xl font-bold"
@@ -192,15 +190,6 @@ const DashActivity = ({ statsData, limit = 8 }: DashActivityProps) => {
               }}
             >
               {statements.length}
-            </div>
-            <div 
-              className="text-xs"
-              style={{ 
-                color: isDark ? colors.mutedForeground : vintage.faded,
-                fontFamily: '"Crimson Text", serif'
-              }}
-            >
-              statements
             </div>
           </motion.div>
         </div>
@@ -224,7 +213,6 @@ const DashActivity = ({ statsData, limit = 8 }: DashActivityProps) => {
                     color: statusConfig.colors.textColor,
                     fontFamily: '"Crimson Text", serif'
                   }}
-                  whileHover={{ scale: 1.05 }}
                 >
                   <statusConfig.icon className="w-3 h-3" />
                   <span className="font-semibold">{statusConfig.label}</span>
@@ -315,7 +303,6 @@ const DashActivity = ({ statsData, limit = 8 }: DashActivityProps) => {
                 fontFamily: '"Crimson Text", serif'
               }}
               whileHover={{ 
-                scale: 1.02,
                 background: isDark 
                   ? `linear-gradient(135deg, ${universalCard.accent}25, ${universalCard.accent}10)`
                   : `linear-gradient(135deg, ${universalCard.accent}25, ${universalCard.accent}15)`

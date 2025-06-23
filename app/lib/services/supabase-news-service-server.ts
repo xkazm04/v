@@ -1,6 +1,9 @@
-import { ResearchResult } from "@/app/types/article";
-import { supabaseAdmin } from "../supabase";
-import { translateResearchStatement } from "./translation-service";
+import { ResearchResult } from '@/app/types/article';
+import { 
+  translateResearchStatement, 
+  batchTranslateExpertPerspectives
+} from './translation-service';
+import { supabaseAdmin } from '../supabase';
 
 export interface SupabaseNewsFilters {
   limit?: number;
@@ -15,6 +18,18 @@ export interface SupabaseNewsFilters {
   translateTo?: string;
 }
 
+// ✅ NEW: Expert perspective interface
+interface ExpertPerspective {
+  expert_name: string;
+  stance: 'SUPPORTING' | 'OPPOSING' | 'NEUTRAL';
+  reasoning: string;
+  confidence_level: number;
+  summary: string;
+  source_type: 'llm' | 'external' | 'hybrid';
+  expertise_area: string;
+  publication_date?: string | null;
+}
+
 class SupabaseNewsServiceServer {
   /**
    * Get research results from Supabase research_results table (server-side with admin client)
@@ -23,7 +38,7 @@ class SupabaseNewsServiceServer {
     try {
       // Check if admin client is available
       if (!supabaseAdmin) {
-        console.warn('Supabase admin client not available (missing service role key)');
+        console.error('Supabase admin client not available');
         return [];
       }
 
@@ -34,10 +49,12 @@ class SupabaseNewsServiceServer {
         .limit(1);
 
       if (testError) {
-        throw new Error(`Supabase connection failed: ${testError.message}`);
+        console.error('Supabase connection test failed:', testError);
+        return [];
       }
 
       if (!testData || testData.length === 0) {
+        console.warn('No data found in research_results table');
         return [];
       }
 
@@ -60,8 +77,10 @@ class SupabaseNewsServiceServer {
           resources_agreed,
           resources_disagreed,
           experts,
+          expert_perspectives,
           processed_at,
           created_at,
+          topic_id,
           updated_at,
           profile_id
         `);
@@ -84,8 +103,7 @@ class SupabaseNewsServiceServer {
       }
 
       if (filters.search && filters.search.trim() !== '') {
-        const searchTerm = filters.search.trim();
-        query = query.or(`statement.ilike.%${searchTerm}%,source.ilike.%${searchTerm}%,context.ilike.%${searchTerm}%,verdict.ilike.%${searchTerm}%`);
+        query = query.or(`statement.ilike.%${filters.search}%,verdict.ilike.%${filters.search}%`);
       }
 
       // Sorting
@@ -101,10 +119,12 @@ class SupabaseNewsServiceServer {
       const { data, error } = await query;
 
       if (error) {
-        throw new Error(`Supabase query failed: ${error.message}`);
+        console.error('Supabase query error:', error);
+        return [];
       }
 
       if (!data || data.length === 0) {
+        console.log('No research results found');
         return [];
       }
 
@@ -122,18 +142,19 @@ class SupabaseNewsServiceServer {
         status: item.status || 'UNVERIFIABLE',
         correction: item.correction,
         experts: this.parseJsonField(item.experts),
+        expert_perspectives: this.parseJsonField(item.expert_perspectives),
         resources_agreed: this.parseJsonField(item.resources_agreed),
         resources_disagreed: this.parseJsonField(item.resources_disagreed),
         profileId: item.profile_id, 
+        topic_id: item.topic_id || null,
         processed_at: item.processed_at || item.created_at,
         created_at: item.created_at,
         updated_at: item.updated_at,
         category: item.category
       }));
 
-      // Apply translation if requested
+      // ✅ ENHANCED: Apply translation if requested (including expert perspectives)
       if (filters.translateTo) {
-        console.log(`🌐 Translating ${results.length} research results to ${filters.translateTo}`);
         results = await this.translateResearchResults(results, filters.translateTo);
       }
 
@@ -146,83 +167,71 @@ class SupabaseNewsServiceServer {
   }
 
   /**
-   * ✅ ENHANCED: Translate both statements and verdicts in batch
+   * ✅ ENHANCED: Translate statements, verdicts, and expert perspectives in batch
    */
   private async translateResearchResults(results: ResearchResult[], targetLanguage: string): Promise<ResearchResult[]> {
     try {
-      const translationPromises = results.map(async (result) => {
-        const translatedFields: Partial<ResearchResult> = {};
+      console.log(`🌐 Translating ${results.length} research results to ${targetLanguage}`);
 
-        if (result.statement && result.statement.trim() !== '') {
+      const translatedResults = await Promise.all(
+        results.map(async (result) => {
           try {
-            const translatedStatement = await translateResearchStatement(
-              result.statement,
-              'en',
-              targetLanguage
-            );
-            translatedFields.statement = translatedStatement || result.statement;
+            // Translate statement and verdict
+            const [translatedStatement, translatedVerdict] = await Promise.all([
+              translateResearchStatement(result.statement, 'en', targetLanguage, 'news'),
+              translateResearchStatement(result.verdict, 'en', targetLanguage, 'news')
+            ]);
+
+            // ✅ NEW: Translate expert perspectives if they exist
+            let translatedExpertPerspectives = result.expert_perspectives;
+
+            if (result.expert_perspectives) {
+              // Handle both array and string formats
+              let perspectives: ExpertPerspective[] = [];
+              
+              if (typeof result.expert_perspectives === 'string') {
+                try {
+                  perspectives = JSON.parse(result.expert_perspectives);
+                } catch (parseError) {
+                  console.warn('Failed to parse expert_perspectives string:', parseError);
+                  perspectives = [];
+                }
+              } else if (Array.isArray(result.expert_perspectives)) {
+                perspectives = result.expert_perspectives;
+              }
+
+              if (perspectives.length > 0) {
+                console.log(`🎭 Translating ${perspectives.length} expert perspectives for result ${result.id}`);
+                const translated = await batchTranslateExpertPerspectives(perspectives, 'en', targetLanguage);
+                translatedExpertPerspectives = translated;
+              }
+            }
+
+            return {
+              ...result,
+              statement: translatedStatement || result.statement,
+              verdict: translatedVerdict || result.verdict,
+              expert_perspectives: translatedExpertPerspectives,
+              __meta: {
+                ...result.__meta,
+                translatedTo: targetLanguage,
+                translationTimestamp: new Date().toISOString()
+              }
+            };
+
           } catch (error) {
-            console.warn(`Statement translation failed for ${result.id}:`, error);
-            translatedFields.statement = result.statement;
+            console.error(`Failed to translate result ${result.id}:`, error);
+            return result; // Return original on error
           }
-        }
+        })
+      );
 
-        if (result.verdict && result.verdict.trim() !== '') {
-          try {
-            const translatedVerdict = await translateResearchStatement(
-              result.verdict,
-              'en',
-              targetLanguage
-            );
-            translatedFields.verdict = translatedVerdict || result.verdict;
-          } catch (error) {
-            console.warn(`Verdict translation failed for ${result.id}:`, error);
-            translatedFields.verdict = result.verdict;
-          }
-        }
-
-        if (result.context && result.context.trim() !== '') {
-          try {
-            const translatedContext = await translateResearchStatement(
-              result.context,
-              'en',
-              targetLanguage
-            );
-            translatedFields.context = translatedContext || result.context;
-          } catch (error) {
-            console.warn(`Context translation failed for ${result.id}:`, error);
-            translatedFields.context = result.context;
-          }
-        }
-
-        return {
-          ...result,
-          ...translatedFields,
-          __meta: {
-            ...result.__meta,
-            originalStatement: result.statement,
-            originalVerdict: result.verdict,
-            originalContext: result.context,
-            translatedTo: targetLanguage,
-            translationSource: 'lingo-dev'
-          }
-        };
-      });
-
-      const translatedResults = await Promise.allSettled(translationPromises);
-      
-      return translatedResults.map((result, index) => {
-        if (result.status === 'fulfilled') {
-          return result.value;
-        } else {
-          console.warn(`Translation failed for result ${index}:`, result.reason);
-          return results[index]; // Return original on failure
-        }
-      });
+      console.log(`✅ Successfully translated ${translatedResults.length} research results`);
+      return translatedResults;
 
     } catch (error) {
       console.error('Batch translation failed:', error);
-      return results; // Return original results if batch translation fails
+      return results; // Return original results on error
     }
   }
 
@@ -236,7 +245,7 @@ class SupabaseNewsServiceServer {
       try {
         return JSON.parse(field);
       } catch {
-        return undefined;
+        return field; // Return as string if parsing fails
       }
     }
     return undefined;

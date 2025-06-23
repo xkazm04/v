@@ -1,9 +1,11 @@
 import TimelineVertical from "../sections/edu/TimelineVertical";
 
 const Page = () => {
-  return <>
-    <TimelineVertical />
-  </>
+  return (
+    <div key="timeline-page"> 
+      <TimelineVertical />
+    </div>
+  );
 };
 
 export default Page;
