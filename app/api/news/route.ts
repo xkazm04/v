@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseNewsServiceServer } from '@/app/lib/services/supabase-news-service-server';
-import { MockDataService } from '@/app/lib/services/mockDataService';
 import { ResearchResult } from '@/app/types/article';
 import { userPreferencesApiClient } from '@/app/lib/services/user-preferences-api-client';
 
@@ -71,51 +70,7 @@ export async function GET(request: NextRequest) {
     } catch (supabaseError) {
       console.warn('⚠️ Supabase failed in API route:', supabaseError);
     }
-    
-    // Fallback to mock data
-    console.log('🔄 Using mock data fallback in API route...');
-    
-    const mockResults = MockDataService.getMockNews({
-      limit: filters.limit,
-      offset: filters.offset,
-      status: filters.status,
-      category: filters.category,
-      country: filters.country,
-      source: filters.source,
-      search: filters.search
-    });
-    
-    // Convert mock to ResearchResult format
-    //@ts-expect-error Ignore
-    results = mockResults.map(article => ({
-      id: article.id,
-      statement: article.headline,
-      source: article.source.name,
-      context: article.summary,
-      request_datetime: article.publishedAt,
-      statement_date: article.statementDate,
-      country: article.country,
-      valid_sources: '',
-      verdict: article.factCheck.verdict,
-      status: article.factCheck.evaluation,
-      correction: '',
-      experts: article.factCheck.experts,
-      resources_agreed: article.factCheck.resources_agreed,
-      resources_disagreed: article.factCheck.resources_disagreed,
-      processed_at: article.publishedAt,
-      created_at: article.datePublished,
-      updated_at: article.publishedAt,
-      category: article.category,
-      profileId: article.profileId,
-      __meta: {
-        source: 'mock',
-        fetchTime: Date.now() - startTime,
-        timestamp: new Date().toISOString(),
-        warning: 'Using offline mock data'
-      }
-    }));
-
-    console.log(`✅ Research API returning ${results.length} mock results in ${Date.now() - startTime}ms`);
+  
     
     return NextResponse.json({
       results,

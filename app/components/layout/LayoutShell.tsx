@@ -17,7 +17,6 @@ export function LayoutShell({ children }: LayoutShellProps) {
 
   return (
     <div className="relative flex min-h-screen flex-col">
-      {/* Desktop Navigation - Always visible */}
       <div className="hidden sm:block relative z-50">
         <DesktopNavbar />
       </div>
