@@ -5,13 +5,14 @@ import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { TrendingUp, Hash, CheckCircle, AlertCircle } from 'lucide-react';
 import { ProfileStatsResponse, StatementSummary, StatementStatus } from '@/app/types/profile';
 import DashActivityItem from './DashStatements/DashActivityItem';
+
 interface DashActivityProps {
   statsData: ProfileStatsResponse;
   limit?: number;
 }
 
-// Enhanced status configuration with colors and icons
-const getStatusConfig = (status: StatementStatus, isDark: boolean) => {
+// Enhanced status configuration with universal theming
+const getStatusConfig = (status: StatementStatus, isDark: boolean, universalCard: any) => {
   const configs = {
     TRUE: {
       colors: {
@@ -64,27 +65,12 @@ const getStatusConfig = (status: StatementStatus, isDark: boolean) => {
 };
 
 const DashActivity = ({ statsData, limit = 8 }: DashActivityProps) => {
-  const { colors, isDark } = useLayoutTheme();
+  const { colors, isDark, vintage, universalCard, getCardColors } = useLayoutTheme();
   
   const { recent_statements: statements, stats } = statsData;
   const displayStatements = statements.slice(0, limit);
 
-  // Enhanced theme colors with better contrast and accessibility
-  const themeColors = {
-    cardBackground: isDark 
-      ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(51, 65, 85, 0.8))'
-      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.9))',
-    cardBorder: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(203, 213, 225, 0.4)',
-    cardShadow: isDark 
-      ? '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1)'
-      : '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-    headerBackground: isDark ? 'rgba(51, 65, 85, 0.6)' : 'rgba(248, 250, 252, 0.8)',
-    primaryText: colors.foreground,
-    secondaryText: isDark ? 'rgba(148, 163, 184, 0.9)' : 'rgba(100, 116, 139, 0.9)',
-    mutedText: isDark ? 'rgba(148, 163, 184, 0.7)' : 'rgba(100, 116, 139, 0.7)',
-    accentColor: colors.primary,
-    divider: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(203, 213, 225, 0.4)'
-  };
+  const cardColors = getCardColors(false, false);
 
   // Calculate verdict summary for enhanced statistics
   const verdictSummary = statements.reduce((acc, statement) => {
@@ -124,40 +110,71 @@ const DashActivity = ({ statsData, limit = 8 }: DashActivityProps) => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="rounded-2xl border backdrop-blur-sm h-fit sticky top-6 overflow-hidden"
+      className="rounded-2xl overflow-hidden h-fit sticky top-6"
       style={{
-        background: themeColors.cardBackground,
-        borderColor: themeColors.cardBorder,
-        boxShadow: themeColors.cardShadow
+        background: cardColors.background,
+        border: `1px solid ${cardColors.border}`,
+        boxShadow: cardColors.shadow
       }}
     >
-      {/* Enhanced Header */}
+      {/* Universal vintage paper texture for light mode */}
+      {!isDark && (
+        <div 
+          className="absolute inset-0 opacity-15 pointer-events-none rounded-2xl"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.02) 1px, transparent 1px),
+              radial-gradient(circle at 80% 70%, rgba(139, 69, 19, 0.015) 1px, transparent 1px),
+              radial-gradient(ellipse 80% 60% at 30% 40%, rgba(139, 69, 19, 0.01), transparent 70%)
+            `,
+            backgroundSize: '40px 40px, 25px 25px, 100% 100%'
+          }}
+        />
+      )}
+
+      {/* Enhanced Header with Universal Theming */}
       <motion.div 
         className="p-5 border-b relative"
         style={{ 
-          borderColor: themeColors.divider,
-          background: themeColors.headerBackground
+          borderColor: isDark ? colors.border : vintage.aged,
+          background: isDark 
+            ? 'linear-gradient(135deg, rgba(51, 65, 85, 0.6), rgba(30, 41, 59, 0.4))'
+            : 'linear-gradient(135deg, rgba(248, 250, 252, 0.8), rgba(255, 255, 255, 0.6))'
         }}
         variants={itemVariants}
       >
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-4 relative z-10">
           <div className="flex items-center gap-3">
             <motion.div
               className="p-2 rounded-xl"
               style={{ 
-                background: `linear-gradient(135deg, ${colors.primary}20, ${colors.primary}10)`,
-                border: `1px solid ${colors.primary}30`
+                background: isDark 
+                  ? `linear-gradient(135deg, ${universalCard.accent}20, ${universalCard.accent}10)`
+                  : `linear-gradient(135deg, ${universalCard.accent}20, ${universalCard.accent}15)`,
+                border: `1px solid ${universalCard.accent}30`
               }}
               whileHover={{ scale: 1.1, rotate: 5 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <TrendingUp className="w-5 h-5" style={{ color: themeColors.accentColor }} />
+              <TrendingUp className="w-5 h-5" style={{ color: universalCard.accent }} />
             </motion.div>
             <div>
-              <h3 className="text-lg font-bold" style={{ color: themeColors.primaryText }}>
+              <h3 
+                className="text-lg font-bold"
+                style={{ 
+                  color: isDark ? colors.foreground : vintage.ink,
+                  fontFamily: '"Playfair Display", serif'
+                }}
+              >
                 Recent Activity
               </h3>
-              <p className="text-sm" style={{ color: themeColors.secondaryText }}>
+              <p 
+                className="text-sm"
+                style={{ 
+                  color: isDark ? colors.mutedForeground : vintage.faded,
+                  fontFamily: '"Crimson Text", serif'
+                }}
+              >
                 Latest fact-checked statements
               </p>
             </div>
@@ -167,20 +184,32 @@ const DashActivity = ({ statsData, limit = 8 }: DashActivityProps) => {
             className="text-right"
             whileHover={{ scale: 1.05 }}
           >
-            <div className="text-2xl font-bold" style={{ color: themeColors.accentColor }}>
+            <div 
+              className="text-2xl font-bold"
+              style={{ 
+                color: universalCard.accent,
+                fontFamily: '"Playfair Display", serif'
+              }}
+            >
               {statements.length}
             </div>
-            <div className="text-xs" style={{ color: themeColors.mutedText }}>
+            <div 
+              className="text-xs"
+              style={{ 
+                color: isDark ? colors.mutedForeground : vintage.faded,
+                fontFamily: '"Crimson Text", serif'
+              }}
+            >
               statements
             </div>
           </motion.div>
         </div>
         
-        {/* Enhanced Verdict Summary */}
-        <div className="flex flex-wrap gap-2">
+        {/* Enhanced Verdict Summary with Universal Theming */}
+        <div className="flex flex-wrap gap-2 relative z-10">
           <AnimatePresence>
             {Object.entries(verdictSummary).map(([status, count], index) => {
-              const statusConfig = getStatusConfig(status as StatementStatus, isDark);
+              const statusConfig = getStatusConfig(status as StatementStatus, isDark, universalCard);
               return (
                 <motion.div
                   key={status}
@@ -192,7 +221,8 @@ const DashActivity = ({ statsData, limit = 8 }: DashActivityProps) => {
                   style={{
                     background: statusConfig.colors.badgeBackground,
                     borderColor: statusConfig.colors.badgeBorder,
-                    color: statusConfig.colors.textColor
+                    color: statusConfig.colors.textColor,
+                    fontFamily: '"Crimson Text", serif'
                   }}
                   whileHover={{ scale: 1.05 }}
                 >
@@ -209,7 +239,7 @@ const DashActivity = ({ statsData, limit = 8 }: DashActivityProps) => {
       </motion.div>
       
       {/* Enhanced Statements List */}
-      <div className="p-4">
+      <div className="p-4 relative z-10">
         {displayStatements.length > 0 ? (
           <motion.div 
             className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar"
@@ -241,34 +271,54 @@ const DashActivity = ({ statsData, limit = 8 }: DashActivityProps) => {
                 ease: "easeInOut"
               }}
             >
-              <Hash className="w-12 h-12 mx-auto" style={{ color: themeColors.mutedText }} />
+              <Hash 
+                className="w-12 h-12 mx-auto" 
+                style={{ color: isDark ? colors.mutedForeground : vintage.faded }} 
+              />
             </motion.div>
-            <p className="text-lg font-medium mb-2" style={{ color: themeColors.primaryText }}>
+            <p 
+              className="text-lg font-medium mb-2"
+              style={{ 
+                color: isDark ? colors.foreground : vintage.ink,
+                fontFamily: '"Playfair Display", serif'
+              }}
+            >
               No recent activity
             </p>
-            <p className="text-sm" style={{ color: themeColors.mutedText }}>
+            <p 
+              className="text-sm"
+              style={{ 
+                color: isDark ? colors.mutedForeground : vintage.faded,
+                fontFamily: '"Crimson Text", serif'
+              }}
+            >
               Fact-checked statements will appear here
             </p>
           </motion.div>
         )}
         
-        {/* Enhanced Footer */}
+        {/* Enhanced Footer with Universal Theming */}
         {statements.length > limit && (
           <motion.div 
             className="mt-4 pt-4 border-t"
-            style={{ borderColor: themeColors.divider }}
+            style={{ borderColor: isDark ? colors.border : vintage.aged }}
             variants={itemVariants}
           >
             <motion.button 
               className="w-full py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 relative overflow-hidden group"
               style={{ 
-                background: `linear-gradient(135deg, ${colors.primary}15, ${colors.primary}05)`,
-                border: `1px solid ${colors.primary}30`,
-                color: themeColors.accentColor
+                background: isDark 
+                  ? `linear-gradient(135deg, ${universalCard.accent}15, ${universalCard.accent}05)`
+                  : `linear-gradient(135deg, ${universalCard.accent}15, ${universalCard.accent}08)`,
+                border: `1px solid ${universalCard.accent}30`,
+                color: universalCard.accent,
+                fontFamily: '"Crimson Text", serif'
               }}
               whileHover={{ 
                 scale: 1.02,
-                background: `linear-gradient(135deg, ${colors.primary}25, ${colors.primary}10)`
+                background: isDark 
+                  ? `linear-gradient(135deg, ${universalCard.accent}25, ${universalCard.accent}10)`
+                  : `linear-gradient(135deg, ${universalCard.accent}25, ${universalCard.accent}15)`
               }}
               whileTap={{ scale: 0.98 }}
               onClick={() => {
@@ -289,23 +339,25 @@ const DashActivity = ({ statsData, limit = 8 }: DashActivityProps) => {
         )}
       </div>
 
-      {/* Custom scrollbar styles */}
-      <style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: ${isDark ? 'rgba(71, 85, 105, 0.1)' : 'rgba(203, 213, 225, 0.2)'};
-          border-radius: 3px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: ${isDark ? 'rgba(148, 163, 184, 0.3)' : 'rgba(100, 116, 139, 0.3)'};
-          border-radius: 3px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: ${isDark ? 'rgba(148, 163, 184, 0.5)' : 'rgba(100, 116, 139, 0.5)'};
-        }
-      `}</style>
+      {/* Universal corner ornaments for light mode */}
+      {!isDark && (
+        <>
+          <div 
+            className="absolute top-3 left-3 w-4 h-4 opacity-10 z-20"
+            style={{
+              background: universalCard.accent,
+              clipPath: 'polygon(0 0, 100% 0, 0 100%)'
+            }}
+          />
+          <div 
+            className="absolute bottom-3 right-3 w-4 h-4 opacity-10 z-20"
+            style={{
+              background: universalCard.accent,
+              clipPath: 'polygon(100% 100%, 0 100%, 100% 0)'
+            }}
+          />
+        </>
+      )}
     </motion.div>
   );
 };

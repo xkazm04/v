@@ -3,19 +3,15 @@
 import { motion } from 'framer-motion';
 import { useCombinedProfileStats } from '@/app/hooks/useCombinedProfile';
 import DashTruthTrend from '@/app/sections/dashboard/DashTruthTrend';
-import DashBreakdown from '@/app/sections/dashboard/DashBreakdown';
 import DashActivity from '@/app/sections/dashboard/DashActivity';
-import { Speaker } from '@/app/constants/speakers';
 
 interface DashStatementsAnalyticsSectionProps {
   profileId?: string;
-  speaker?: Speaker; // For mock data fallback
   timeRange?: string;
 }
 
 const DashStatementsAnalyticsSection = ({ 
   profileId, 
-  speaker, 
   timeRange = '6months' 
 }: DashStatementsAnalyticsSectionProps) => {
   
@@ -29,10 +25,8 @@ const DashStatementsAnalyticsSection = ({
 
   const profileStatsData = statsResult?.stats; 
   const statsData = profileStatsData?.stats; 
-  const statsDataSource = statsResult?.dataSource;
-
   const shouldShowRealDataComponents = profileId && profileStatsData && !statsIsError;
-  const shouldShowMockDataComponents = !profileId && speaker;
+  const shouldShowMockDataComponents = !profileId ;
 
 
   return (
@@ -42,7 +36,7 @@ const DashStatementsAnalyticsSection = ({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="space-y-6"
+        className="space-y-6 flex flex-col col-span-2"
       >
         {/* Real Data Components */}
         {shouldShowRealDataComponents && statsData && (
@@ -51,11 +45,6 @@ const DashStatementsAnalyticsSection = ({
               profileId={profileId!}
               stats={statsData}
               timeRange={timeRange} 
-            />
-            
-            <DashBreakdown 
-              profileId={profileId!}
-              stats={statsData}
             />
           </>
         )}
@@ -68,9 +57,7 @@ const DashStatementsAnalyticsSection = ({
               timeRange={timeRange} 
             />
             
-            <DashBreakdown 
-              speaker={speaker} 
-            />
+
           </>
         )}
 
@@ -81,15 +68,7 @@ const DashStatementsAnalyticsSection = ({
             <div className="h-64 bg-muted/30 rounded-2xl animate-pulse" />
           </div>
         )}
-      </motion.div>
 
-      {/* Right Column - Activity */}
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.4 }}
-        className="space-y-6"
-      >
         {/* Real Data Activity - Fixed data passing */}
         {shouldShowRealDataComponents && profileStatsData && (
           <DashActivity 

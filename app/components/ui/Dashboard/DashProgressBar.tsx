@@ -39,16 +39,22 @@ const DashProgressBar: React.FC<DashProgressBarProps> = ({
         backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
       }}
     >
-      {/* Background subtle pattern */}
+      {/* Enhanced hatched background pattern */}
       <div 
-        className="absolute inset-0 opacity-10"
+        className="absolute inset-0 opacity-15"
         style={{
           backgroundImage: `repeating-linear-gradient(
             45deg,
             transparent,
             transparent 2px,
-            ${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'} 2px,
-            ${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'} 4px
+            ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'} 2px,
+            ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'} 4px
+          ), repeating-linear-gradient(
+            -45deg,
+            transparent,
+            transparent 3px,
+            ${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'} 3px,
+            ${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'} 6px
           )`
         }}
       />
@@ -67,6 +73,20 @@ const DashProgressBar: React.FC<DashProgressBarProps> = ({
           background: `linear-gradient(90deg, ${color}, ${color}ee, ${color}dd)`
         }}
       >
+        {/* Progress bar hatched pattern overlay */}
+        <div 
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `repeating-linear-gradient(
+              45deg,
+              transparent,
+              transparent 1px,
+              rgba(255,255,255,0.3) 1px,
+              rgba(255,255,255,0.3) 2px
+            )`
+          }}
+        />
+
         {/* Enhanced shimmer effect */}
         <motion.div
           className="absolute inset-0 opacity-60"
