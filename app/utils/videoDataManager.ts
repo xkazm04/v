@@ -34,7 +34,6 @@ export interface VideoDataManagerResult {
 export function useVideoDataManager(options: VideoDataManagerOptions = {}): VideoDataManagerResult {
   const {
     limit = 50,
-    researched = true,
     sort_by = 'processed_at',
     sort_order = 'desc',
     videoId,
@@ -47,11 +46,10 @@ export function useVideoDataManager(options: VideoDataManagerOptions = {}): Vide
     
     return {
       limit,
-      researched,
       sort_by,
       sort_order
     };
-  }, [enableVideosList, limit, researched, sort_by, sort_order]);
+  }, [enableVideosList, limit, sort_by, sort_order]);
 
   const {
     data: apiVideos,

@@ -1,36 +1,43 @@
 'use client'
-import React, { useRef, useMemo, useEffect, useState } from 'react';
+import React, { useRef, useMemo, useEffect, useCallback } from 'react';
 import { motion, useTransform } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useViewport } from '@/app/hooks/useViewport';
 import { useTimelineScroll } from '@/app/hooks/useTimelineScroll';
 import { useTimelineAudioStore } from '@/app/stores/useTimelineAudioStore';
+import { useTimelineStore } from '@/app/stores/useTimelineStore';
 import TimelineMilestone from '../../components/timeline/TimelineMilestone/TimelineMilestone';
 import TimelineProgress from '../../components/timeline/TimelineProgress/TimelineProgress';
 import TimelineBackground from '../../components/timeline/TimelineVertical/TimelineBackground';
 import TimelineSelector from '../../components/timeline/TimelineSelector/TimelineSelector';
 import TimelineSummaryModal from '../../components/timeline/TimelineSummary/TimelineSummaryModal';
 import { FloatingVerdictIcon } from '@/app/components/ui/Decorative/FloatingVerdictIcon';
-import { Timeline } from '../../types/timeline';
-import exampleData from './data/example.json';
 import TimelineHeader from '../../components/timeline/TimelineVertical/TimelineHeader';
 import { useUserPreferences } from '@/app/hooks/use-user-preferences';
 import { getVoiceIdForLanguage } from '@/app/helpers/countries';
 import TimelineVerticalWrapper from './TimelineVerticalWrapper';
 import FloatingSummaryButton from '@/app/components/timeline/TimelineSummary/FloatingSummaryButton';
+import FloatingAudioButton from '@/app/components/timeline/FloatingAudioButton/FloatingAudioButton';
 
 const MemoizedTimelineBackground = React.memo(TimelineBackground);
 const MemoizedTimelineHeader = React.memo(TimelineHeader);
 const MemoizedTimelineProgress = React.memo(TimelineProgress);
 
+// Fixed OptimizedTimelineMilestone with proper key handling
 const OptimizedTimelineMilestone = React.memo(({ 
   milestone, 
   index, 
   activeEventId, 
   activeMilestoneId, 
   smoothScrollProgress 
-}: any) => (
+}: {
+  milestone: any;
+  index: number;
+  activeEventId: string | null;
+  activeMilestoneId: string | null;
+  smoothScrollProgress: any;
+}) => (
   <TimelineMilestone
     milestone={milestone}
     index={index}
@@ -49,20 +56,32 @@ const FixedTimelineProgress = React.memo(({
   activeEventId, 
   handleNavigateToMilestone, 
   handleNavigateToEvent,
-  hasScrolled
-}: any) => {
+  hasScrolled,
+  timelineId // Add timelineId for unique key
+}: {
+  smoothScrollProgress: any;
+  sortedMilestones: any[];
+  activeMilestoneId: string | null;
+  activeEventId: string | null;
+  handleNavigateToMilestone: (id: string) => void;
+  handleNavigateToEvent: (eventId: string, milestoneId: string) => void;
+  hasScrolled: boolean;
+  timelineId: string;
+}) => {
   if (typeof window === 'undefined') return null;
 
   const progressComponent = (
-    <MemoizedTimelineProgress
-      scrollProgress={smoothScrollProgress}
-      milestones={sortedMilestones}
-      activeMilestoneId={activeMilestoneId}
-      activeEventId={activeEventId}
-      onNavigateToMilestone={handleNavigateToMilestone}
-      onNavigateToEvent={handleNavigateToEvent}
-      hasScrolled={hasScrolled}
-    />
+    <div key={`timeline-progress-portal-${timelineId}`}> {/* Unique key for portal content */}
+      <MemoizedTimelineProgress
+        scrollProgress={smoothScrollProgress}
+        milestones={sortedMilestones}
+        activeMilestoneId={activeMilestoneId}
+        activeEventId={activeEventId}
+        onNavigateToMilestone={handleNavigateToMilestone}
+        onNavigateToEvent={handleNavigateToEvent}
+        hasScrolled={hasScrolled}
+      />
+    </div>
   );
 
   return createPortal(progressComponent, document.body);
@@ -75,19 +94,21 @@ export default function TimelineVertical() {
   const { isMobile, isDesktop } = useViewport();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // State for timeline selection and summary modal
-  const [currentTimeline, setCurrentTimeline] = useState<Timeline>(exampleData as Timeline);
-  const [isLoadingTimeline, setIsLoadingTimeline] = useState(false);
-  const [isSummaryOpen, setIsSummaryOpen] = useState(false);
+  // Use timeline store instead of local state
+  const { 
+    currentTimeline: timeline, 
+    isLoadingTimeline,
+    selectedTopicId 
+  } = useTimelineStore();
+
+  // State for summary modal
+  const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
 
   // Get user preferences for language-based voice selection
   const { preferences } = useUserPreferences();
   const userLanguage = preferences.language || 'en';
   const voiceId = useMemo(() => getVoiceIdForLanguage(userLanguage), [userLanguage]);
 
-  // Use currentTimeline instead of exampleData
-  const timeline: Timeline = currentTimeline;
-  
   // Initialize audio store
   const { initializeTracklist } = useTimelineAudioStore();
 
@@ -101,12 +122,30 @@ export default function TimelineVertical() {
     handleNavigateToEvent,
     scrollToMilestone,
     scrollToEvent,
-    hasScrolled // Get hasScrolled state
+    hasScrolled
   } = useTimelineScroll(containerRef, timeline);
 
+  // Move all useTransform calls to top level
+  const progressWidth = useTransform(smoothScrollProgress, [0, 1], ['0%', '100%']);
+  const headerOpacity = useTransform(smoothScrollProgress, [0, 0.2], [1, 0]);
+
+  // Stable handlers to prevent unnecessary re-renders
+  const stableNavigateToMilestone = useCallback((id: string) => {
+    handleNavigateToMilestone(id);
+  }, [handleNavigateToMilestone]);
+
+  const stableNavigateToEvent = useCallback((eventId: string, milestoneId: string) => {
+    handleNavigateToEvent(eventId, milestoneId);
+  }, [handleNavigateToEvent]);
+
+  const stableSetSummaryOpen = useCallback((open: boolean) => {
+    setIsSummaryOpen(open);
+  }, []);
 
   useEffect(() => {
-    initializeTracklist(timeline);
+    if (timeline) {
+      initializeTracklist(timeline);
+    }
   }, [timeline, initializeTracklist]);
 
   useEffect(() => {
@@ -116,14 +155,22 @@ export default function TimelineVertical() {
     });
   }, [userLanguage, voiceId]);
 
+  useEffect(() => {
+    if (selectedTopicId) {
+      console.log('📢 Timeline selected via topic:', {
+        topicId: selectedTopicId,
+        timelineTitle: timeline?.title
+      });
+    }
+  }, [selectedTopicId, timeline]);
+
+  // Memoize sorted milestones
   const sortedMilestones = useMemo(() => 
-    [...timeline.milestones].sort((a, b) => a.order - b.order), 
-    [timeline.milestones]
+    timeline ? [...timeline.milestones].sort((a, b) => a.order - b.order) : [], 
+    [timeline]
   );
 
-  const progressWidth = useTransform(smoothScrollProgress, [0, 1], ['0%', '100%']);
-  const headerOpacity = useTransform(smoothScrollProgress, [0, 0.2], [1, 0]); 
-
+  // Memoize style objects
   const backgroundGradient = useMemo(() => 
     isDark
       ? 'linear-gradient(180deg, rgb(15, 23, 42) 0%, rgb(30, 41, 59) 100%)'
@@ -144,170 +191,198 @@ export default function TimelineVertical() {
     color: colors.foreground
   }), [isDark, colors.border, colors.foreground]);
 
-  return (
-    <TimelineVerticalWrapper
-      userLanguage={userLanguage}
-      voiceId={voiceId}
-      scrollToMilestone={scrollToMilestone}
-      scrollToEvent={scrollToEvent}
-    >
-      <FixedTimelineProgress
-        smoothScrollProgress={smoothScrollProgress}
-        sortedMilestones={sortedMilestones}
-        activeMilestoneId={activeMilestoneId}
-        activeEventId={activeEventId}
-        handleNavigateToMilestone={handleNavigateToMilestone}
-        handleNavigateToEvent={handleNavigateToEvent}
-        hasScrolled={hasScrolled}
-      />
-
-      {/* Floating Summary Button */}
-      <FloatingSummaryButton
-        onClick={() => setIsSummaryOpen(true)}
-        colors={colors}
-        isDark={isDark}
-        vintage={vintage}
-        isMobile={isMobile}
-        scrollProgress={smoothScrollProgress}
-      />
-
-      <div
-        ref={containerRef}
-        id="timeline-container"
-        className="min-h-screen relative w-full overflow-hidden"
-        style={{
-          background: backgroundGradient,
-          color: colors.foreground,
-          willChange: 'transform',
-          transform: 'translateZ(0)'
-        }}
-      >
-        <TimelineSelector
-          currentTimeline={currentTimeline}
-          setCurrentTimeline={setCurrentTimeline}
-          setIsLoadingTimeline={setIsLoadingTimeline}
-        />
-        
-        <MemoizedTimelineBackground
-          scrollProgress={smoothScrollProgress.get()}
-          isDark={isDark}
-          colors={colors}
-        />
-        
-        <div 
-          className="fixed left-1/2 top-0 w-px h-full -translate-x-1/2 z-10 opacity-60"
-          style={{ willChange: 'transform' }}
-        >
-          <div
-            className="w-full h-full"
-            style={{ background: timelineLineGradients.background }}
-          />
-          
-          <motion.div
-            className="absolute top-0 left-0 w-full origin-top"
-            style={{
-              height: progressWidth,
-              background: timelineLineGradients.progress,
-              boxShadow: `0 0 8px ${colors.primary}30`,
-              willChange: 'height'
-            }}
-          />
-        </div>
-
-        {isDesktop && (
-          <motion.div
-            className="fixed top-[50%] left-8 z-20"
-            style={{ opacity: headerOpacity }}
-            initial={{ x: -30, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.4 }}
-          >
-            <FloatingVerdictIcon
-              size="sm"
-              confidence={85}
-              showConfidenceRing={false}
-              autoAnimate={true}
-              delay={0.3}
-            />
-          </motion.div>
-        )}
-
+  // Don't render anything if no timeline is loaded
+  if (!timeline) {
+    return (
+      <div key="timeline-loading-state" className="min-h-screen flex items-center justify-center">
         <motion.div
-          style={{ opacity: headerOpacity }}
-          className="relative z-25" 
-          initial={{ y: -30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
-          data-scroll-target="hero" 
+          className="text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
         >
-          <MemoizedTimelineHeader timeline={timeline} />          
+          <motion.div
+            className="inline-block w-8 h-8 border-2 border-current border-t-transparent rounded-full mb-4"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            style={{ borderColor: colors.primary }}
+          />
+          <p className="text-lg opacity-60">Loading timeline...</p>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Create unique timeline key
+  const timelineKey = `timeline-${timeline.id}`;
+
+  return (
+    <React.Fragment key={timelineKey}> {/* Use explicit Fragment with unique key */}
+      <TimelineVerticalWrapper
+        userLanguage={userLanguage}
+        voiceId={voiceId}
+        scrollToMilestone={scrollToMilestone}
+        scrollToEvent={scrollToEvent}
+      >
+        <FixedTimelineProgress
+          smoothScrollProgress={smoothScrollProgress}
+          sortedMilestones={sortedMilestones}
+          activeMilestoneId={activeMilestoneId}
+          activeEventId={activeEventId}
+          handleNavigateToMilestone={stableNavigateToMilestone}
+          handleNavigateToEvent={stableNavigateToEvent}
+          hasScrolled={hasScrolled}
+          timelineId={timeline.id} // Pass timeline ID for unique key
+        />
+
+        {/* Floating Summary Button */}
+        <FloatingSummaryButton
+          key={`floating-summary-${timeline.id}`}
+          onClick={() => stableSetSummaryOpen(true)}
+          colors={colors}
+          isDark={isDark}
+          vintage={vintage}
+          isMobile={isMobile}
+          scrollProgress={smoothScrollProgress}
+        />
+
+        <div
+          ref={containerRef}
+          id="timeline-container"
+          className="min-h-screen relative w-full overflow-hidden"
+          style={{
+            background: backgroundGradient,
+            color: colors.foreground,
+            willChange: 'transform',
+            transform: 'translateZ(0)'
+          }}
+        >
+          <TimelineSelector 
+            key={`timeline-selector-${timeline.id}`}
+            className="pt-4" 
+          />
           
-          {/* Loading indicator */}
-          {isLoadingTimeline && (
+          <MemoizedTimelineBackground
+            key={`timeline-background-${timeline.id}`}
+            scrollProgress={smoothScrollProgress.get()}
+            isDark={isDark}
+            colors={colors}
+          />
+          
+          <div 
+            key={`timeline-progress-line-${timeline.id}`}
+            className="fixed left-1/2 top-0 w-px h-full -translate-x-1/2 z-10 opacity-60"
+            style={{ willChange: 'transform' }}
+          >
+            <div
+              className="w-full h-full"
+              style={{ background: timelineLineGradients.background }}
+            />
+            
             <motion.div
-              className="text-center py-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              className="absolute top-0 left-0 w-full origin-top"
+              style={{
+                height: progressWidth,
+                background: timelineLineGradients.progress,
+                boxShadow: `0 0 8px ${colors.primary}30`,
+                willChange: 'height'
+              }}
+            />
+          </div>
+
+          {isDesktop && (
+            <motion.div
+              key={`floating-verdict-${timeline.id}`}
+              className="fixed top-[50%] left-8 z-20"
+              style={{ opacity: headerOpacity }}
+              initial={{ x: -30, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.4 }}
             >
-              <motion.div
-                className="inline-block w-6 h-6 border-2 border-current border-t-transparent rounded-full"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                style={{ borderColor: colors.primary }}
+              <FloatingVerdictIcon
+                size="sm"
+                confidence={85}
+                showConfidenceRing={false}
+                autoAnimate={true}
+                delay={0.3}
               />
-              <p className="mt-2 text-sm opacity-60">Loading timeline...</p>
             </motion.div>
           )}
-        </motion.div>
 
-        <div 
-          className={`relative z-20 mx-auto px-4 pt-6 ${
-            isDesktop ? 'max-w-5xl' : isMobile ? 'max-w-full' : 'max-w-3xl'
-          }`}
-          style={{ willChange: 'transform' }}
-        >
-          {sortedMilestones.map((milestone, index) => (
-            <OptimizedTimelineMilestone
-              key={milestone.id}
-              milestone={milestone}
-              index={index}
-              activeEventId={activeEventId}
-              activeMilestoneId={activeMilestoneId}
-              smoothScrollProgress={smoothScrollProgress}
-            />
-          ))}
-        </div>
-
-
-        {isDesktop && showScrollHint && (
           <motion.div
-            className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-30"
-            style={scrollHintStyle}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
+            key={`timeline-header-section-${timeline.id}`}
+            style={{ opacity: headerOpacity }}
+            className="relative z-25" 
+            initial={{ y: -30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
+            data-scroll-target="hero" 
           >
-            <div className="px-4 py-2 rounded-full border text-sm flex items-center gap-2">
-              <div className="w-4 h-6 flex flex-col justify-center items-center">
+            <FloatingAudioButton
+              isVisible={true}
+              milestones={sortedMilestones}
+            />
+            <MemoizedTimelineHeader timeline={timeline} />          
+            
+            {/* Loading indicator */}
+            {isLoadingTimeline && (
+              <motion.div
+                key={`loading-indicator-${timeline.id}`}
+                className="text-center py-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
                 <motion.div
-                  className="w-1 h-3 rounded-full"
-                  style={{ backgroundColor: colors.primary }}
-                  animate={{ scaleY: [0.5, 1, 0.5] }}
-                  transition={{ repeat: Infinity, duration: 1.5 }}
+                  className="inline-block w-6 h-6 border-2 border-current border-t-transparent rounded-full"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  style={{ borderColor: colors.primary }}
                 />
-              </div>
-              Scroll to explore timeline
-            </div>
+              </motion.div>
+            )}
           </motion.div>
-        )}
-      </div>
-      <TimelineSummaryModal
-        isOpen={isSummaryOpen}
-        onClose={() => setIsSummaryOpen(false)}
-        timeline={timeline}
-      />
-    </TimelineVerticalWrapper>
+
+          <div 
+            key={`milestones-container-${timeline.id}`}
+            className={`relative z-20 mx-auto px-4 pt-6 ${
+              isDesktop ? 'max-w-5xl' : isMobile ? 'max-w-full' : 'max-w-3xl'
+            }`}
+            style={{ willChange: 'transform' }}
+          >
+            {sortedMilestones.map((milestone, index) => (
+              <OptimizedTimelineMilestone
+                key={`${timeline.id}-milestone-${milestone.id}`} // Unique key with timeline prefix
+                milestone={milestone}
+                index={index}
+                activeEventId={activeEventId}
+                activeMilestoneId={activeMilestoneId}
+                smoothScrollProgress={smoothScrollProgress}
+              />
+            ))}
+          </div>
+
+          {isDesktop && showScrollHint && (
+            <motion.div
+              key={`scroll-hint-${timeline.id}`}
+              className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-30"
+              style={scrollHintStyle}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              {/* Your scroll hint content */}
+            </motion.div>
+          )}
+        </div>
+        
+        <TimelineSummaryModal
+          key={`timeline-summary-modal-${timeline.id}`}
+          isOpen={isSummaryOpen}
+          onClose={() => stableSetSummaryOpen(false)}
+          timeline={timeline}
+        />
+      </TimelineVerticalWrapper>
+    </React.Fragment>
   );
 }

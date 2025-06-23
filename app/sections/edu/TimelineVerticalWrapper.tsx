@@ -1,4 +1,5 @@
 import FloatingIconsConstellation from "@/app/components/ui/Decorative/FloatingIconsConstellation";
+import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
 import { useElevenLabsAudio } from "@/app/hooks/useElevenLabsAudio";
 import { useEffect } from "react";
 
@@ -11,6 +12,7 @@ type Props = {
 }
   // Initialize audio functionality with scroll utilities and language preference
 const TimelineVerticalWrapper = ({ children, userLanguage, voiceId, scrollToMilestone, scrollToEvent }: Props) => {
+    const { isDark } = useLayoutTheme();
     const { audioRef, generateAndPlay, pause } = useElevenLabsAudio({
         autoPlay: true,
         languageCode: userLanguage,
@@ -49,7 +51,7 @@ const TimelineVerticalWrapper = ({ children, userLanguage, voiceId, scrollToMile
             window.removeEventListener('timeline-audio-pause', handleAudioPause as EventListener);
         };
     }, [generateAndPlay, pause, userLanguage, voiceId]);
-    return <div className="relative">
+    return <div className={`relative`}>
         <audio
             ref={audioRef}
             preload="metadata"

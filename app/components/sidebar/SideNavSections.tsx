@@ -1,10 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion"
 import NavItem from "./SideNavItem";
-import { 
-  Home, 
-  Bookmark,
-  NewspaperIcon, 
-} from 'lucide-react';
+import {  NewspaperIcon, ChartBarIcon, GraduationCapIcon } from 'lucide-react';
 
 type Props = {
     isActive: (path: string) => boolean;
@@ -30,10 +26,16 @@ const SideNavMainSection = ( {isActive, mounted}: Props) => {
                             itemId: "home"
                         },
                         {
-                            href: "/profiles",
-                            icon: Bookmark,
+                            href: "/dashboard",
+                            icon: ChartBarIcon,
                             label: "Profiles",
                             itemId: "profiles"
+                        },
+                        {
+                            href: "/timeline",
+                            icon: GraduationCapIcon,
+                            label: "Hot topics",
+                            itemId: "education"
                         }
                     ].map((item, index) => (
                         <motion.div

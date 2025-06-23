@@ -108,15 +108,10 @@ const DashActivityItem = ({ statement, index, itemVariants }: DashActivityItemPr
   return (
     <motion.div
       variants={itemVariants}
-      className="border rounded-xl p-4 transition-all duration-300 cursor-pointer group relative overflow-hidden"
+      className="border rounded-xl p-4 transition-all duration-300 cursor-pointer group relative overflow-hidden hover:shadow hover:shadow-gray-600/20"
       style={{
         background: themeColors.itemBackground,
         borderColor: themeColors.itemBorder
-      }}
-      whileHover={{
-        background: themeColors.itemHover,
-        scale: 1.02,
-        y: -2
       }}
       whileTap={{ scale: 0.98 }}
     >
@@ -131,7 +126,7 @@ const DashActivityItem = ({ statement, index, itemVariants }: DashActivityItemPr
       {/* Header with FloatingVerdictIcon */}
       <div className="flex items-start gap-3 mb-3">
         <FloatingVerdictIcon
-          size="sm"
+          size="xs"
           confidence={statusConfig.confidence}
           colors={statusConfig.colors}
           showConfidenceRing={true}

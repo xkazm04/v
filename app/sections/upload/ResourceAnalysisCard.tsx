@@ -20,12 +20,29 @@ export function ResourceAnalysisCard({
 }: ResourceAnalysisCardProps) {
   const { colors, isDark } = useLayoutTheme();
 
-  const supportingTotal = Number(supportingAnalysis?.total) || 0;
-  const contradictingTotal = Number(contradictingAnalysis?.total) || 0;
-  const totalSources = supportingTotal + contradictingTotal;
+  // ✅ FIXED: Use count from the data structure, not total
+  const supportingCount = supportingAnalysis?.count || 0;
+  const contradictingCount = contradictingAnalysis?.count || 0;
+  const totalSources = supportingCount + contradictingCount;
   
-  const supportingPercentage = totalSources > 0 ? (supportingTotal / totalSources) * 100 : 0;
-  const contradictingPercentage = totalSources > 0 ? (contradictingTotal / totalSources) * 100 : 0;
+  // ✅ FIXED: Parse percentage from total field properly
+  const supportingPercentage = supportingAnalysis?.total 
+    ? parseFloat(supportingAnalysis.total.replace('%', '')) 
+    : 0;
+  const contradictingPercentage = contradictingAnalysis?.total 
+    ? parseFloat(contradictingAnalysis.total.replace('%', '')) 
+    : 0;
+
+  // Debug logging
+  console.log('ResourceAnalysisCard data:', {
+    supportingAnalysis,
+    contradictingAnalysis,
+    supportingCount,
+    contradictingCount,
+    totalSources,
+    supportingPercentage,
+    contradictingPercentage
+  });
 
   if (!supportingAnalysis && !contradictingAnalysis) {
     return null;
@@ -49,12 +66,13 @@ export function ResourceAnalysisCard({
       >
         {/* Header with Comparison Bar */}
         <ResultResourceHeader
-          supportingTotal={supportingTotal}
-          contradictingTotal={contradictingTotal}
+          supportingTotal={supportingCount}
+          contradictingTotal={contradictingCount}
           supportingPercentage={supportingPercentage}
           contradictingPercentage={contradictingPercentage}
           totalSources={totalSources}
-          />
+        />
+        
         {/* Side-by-Side Content */}
         <div className="p-6">
           <div className="flex flex-col lg:flex-row gap-8">
@@ -83,6 +101,7 @@ export function ResourceAnalysisCard({
             />
           </div>
         </div>
+        
         {/* Winner Declaration */}
         {totalSources > 0 && !isLoading && (
           <motion.div
@@ -91,9 +110,9 @@ export function ResourceAnalysisCard({
             transition={{ delay: 0.8 }}
             className="p-6 border-t"
             style={{
-              background: supportingTotal > contradictingTotal
+              background: supportingCount > contradictingCount
                 ? isDark ? 'rgba(34, 197, 94, 0.1)' : 'rgba(34, 197, 94, 0.05)'
-                : supportingTotal < contradictingTotal
+                : supportingCount < contradictingCount
                 ? isDark ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.05)'
                 : isDark ? 'rgba(245, 158, 11, 0.1)' : 'rgba(245, 158, 11, 0.05)',
               borderColor: colors.border
@@ -102,16 +121,16 @@ export function ResourceAnalysisCard({
             <div 
               className="text-xl font-bold text-center"
               style={{
-                color: supportingTotal > contradictingTotal
+                color: supportingCount > contradictingCount
                   ? isDark ? '#4ade80' : '#16a34a'
-                  : supportingTotal < contradictingTotal
+                  : supportingCount < contradictingCount
                   ? isDark ? '#f87171' : '#dc2626'
                   : isDark ? '#fbbf24' : '#d97706'
               }}
             >
-              {supportingTotal > contradictingTotal
+              {supportingCount > contradictingCount
                 ? '✅ Sources Lean Toward Supporting the Statement'
-                : supportingTotal < contradictingTotal
+                : supportingCount < contradictingCount
                 ? '❌ Sources Lean Toward Contradicting the Statement'
                 : '⚖️ Sources Are Evenly Divided'
               }

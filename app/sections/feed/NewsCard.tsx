@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ResearchResult } from '@/app/types/article';
 import { FactCheckModal } from '@/app/components/modals/FactCheck/FactCheckModal';
 import NewsCardContent from '@/app/components/news/NewsCardContent';
+import NewsTopic from '@/app/components/news/NewsTopic';
 import { VintageVerdictStamp } from '@/app/components/news/VintageVerdictStamp';
 import { VintageTopicBanner } from '@/app/components/news/VintageTopicBanner';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
@@ -164,6 +165,13 @@ const NewsCard = memo(function NewsCard({
               transition={{ delay: 0.3, duration: 0.4 }}
               className="relative z-10 flex-1"
             >
+                          
+            {research.topic_id && (
+              <NewsTopic
+                topicId={research.topic_id}
+                className="z-45"
+              />
+            )}
               <NewsCardContent
                 research={research}
                 isCompact={isCompact}

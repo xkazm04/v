@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useViewport } from '@/app/hooks/useViewport';
-import { ExpertType } from '../../../types/timeline';
 import ExpertOpinionCardFooter from './ExpertOpinionCardFooter';
 import { EXPERT_TIMELINE_CONFIG, ExpertTimelineConfigKey } from '@/app/constants/experts';
 import ExpertOpinionCardHeader from './ExpertOpinionCardHeader';
@@ -10,7 +9,7 @@ import ExpertOpinionCardWrapper from './ExpertOpinionCardWrapper';
 
 interface ExpertOpinionCardProps {
   opinion: string;
-  expertType: ExpertType;
+  expertType: ExpertTimelineConfigKey;
   sourceUrl?: string;
   side: 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
   isStrongest: boolean;
@@ -138,7 +137,6 @@ export default function ExpertOpinionCard({
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* ENHANCED: Card Content with staggered reveals */}
         <motion.div 
           className={`relative z-10 ${isMobile ? 'p-4' : isSecondaryLayout ? 'p-4' : 'p-5'}`}
           initial={{ opacity: 0 }}

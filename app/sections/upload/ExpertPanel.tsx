@@ -2,62 +2,61 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Card, CardContent } from '../../components/ui/card';
-import { Quote } from 'lucide-react';
-import type { ExpertOpinion } from './types';
+import { Card, CardContent } from '@/app/components/ui/card';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-import ExpertStatsIcon from '../../components/icons/expert_stats';
-import ExpertPsychIcon from '../../components/icons/expert_psych';
-import ExpertAnalystIcon from '../../components/icons/expert_analyst';
-import ExpertAdvocateIcon from '../../components/icons/expert_advocate';
+import { 
+  EXPERT_PROFILES, 
+  mapExpertToProfile,
+  type ExpertProfileKey 
+} from '@/app/constants/experts';
+import type { ExpertPerspective, ExpertOpinion } from '@/app/types/research';
 
 interface ExpertPanelProps {
   experts?: ExpertOpinion;
+  expert_perspectives?: ExpertPerspective[];
   isLoading?: boolean;
 }
 
-const EXPERT_PROFILES = {
-  critic: {
-    title: 'The Critic',
-    name: 'Dr. Sarah Chen',
-    role: 'Investigative Researcher',
-    description: 'Looks for hidden truths and gaps',
-    mockQuote: 'There\'s always more beneath the surface',
-    specialty: 'Critical Analysis',
-    SvgComponent: ExpertAnalystIcon
-  },
-  devil: {
-    title: "Devil's Advocate",
-    name: 'Prof. Marcus Rivera',
-    role: 'Contrarian Analyst',
-    description: 'Represents minority viewpoints',
-    mockQuote: 'Every story has an untold side',
-    specialty: 'Alternative Perspectives',
-    SvgComponent: ExpertAdvocateIcon
-  },
-  nerd: {
-    title: 'The Data Analyst',
-    name: 'Dr. Alex Thompson',
-    role: 'Statistical Expert',
-    description: 'Provides statistical analysis',
-    mockQuote: 'Numbers don\'t lie, but context matters',
-    specialty: 'Data Science',
-    SvgComponent: ExpertStatsIcon
-  },
-  psychic: {
-    title: 'The Psychologist',
-    name: 'Dr. Elena Rossi',
-    role: 'Behavioral Expert',
-    description: 'Analyzes psychological motivations',
-    mockQuote: 'Understanding why reveals the what',
-    specialty: 'Human Psychology',
-    SvgComponent: ExpertPsychIcon
-  }
-};
-
-export function ExpertPanel({ experts, isLoading = false }: ExpertPanelProps) {
+export function ExpertPanel({ 
+  experts, 
+  expert_perspectives, 
+  isLoading = false 
+}: ExpertPanelProps) {
   const { colors, isDark } = useLayoutTheme();
-  const expertEntries = Object.entries(experts || {}).filter(([_, opinion]) => opinion);
+
+  // ✅ NEW: Use expert_perspectives if available, fallback to legacy experts
+  const expertData = expert_perspectives && expert_perspectives.length > 0 
+    ? expert_perspectives 
+    : null;
+
+
+  // ✅ NEW: Helper function to get stance color
+  const getStanceColor = (stance: string) => {
+    switch (stance) {
+      case 'SUPPORTING':
+        return isDark ? '#22c55e' : '#16a34a';
+      case 'OPPOSING':
+        return isDark ? '#ef4444' : '#dc2626';
+      case 'NEUTRAL':
+        return isDark ? '#f59e0b' : '#d97706';
+      default:
+        return colors.mutedForeground;
+    }
+  };
+
+  // ✅ NEW: Helper function to get stance icon
+  const getStanceIcon = (stance: string) => {
+    switch (stance) {
+      case 'SUPPORTING':
+        return '✅';
+      case 'OPPOSING':
+        return '❌';
+      case 'NEUTRAL':
+        return '⚖️';
+      default:
+        return '❓';
+    }
+  };
 
   return (
     <motion.div
@@ -73,7 +72,10 @@ export function ExpertPanel({ experts, isLoading = false }: ExpertPanelProps) {
           <span>Expert Panel Analysis</span>
         </h3>
         <p className="text-sm sm:text-lg max-w-2xl mx-auto px-4" style={{ color: colors.mutedForeground }}>
-          Diverse panel of experts provides multiple perspectives on your statement
+          {expertData 
+            ? 'Advanced AI experts analyze your statement from multiple perspectives'
+            : 'Diverse panel of experts provides multiple perspectives on your statement'
+          }
         </p>
         {isLoading && (
           <motion.div
@@ -89,14 +91,15 @@ export function ExpertPanel({ experts, isLoading = false }: ExpertPanelProps) {
       
       {/* Expert Cards Grid */}
       <div className="grid md:grid-cols-2 gap-6">
-        {expertEntries.map(([expertType, opinion], index) => {
-          const expert = expertType as keyof ExpertOpinion;
-          const profile = EXPERT_PROFILES[expert];
+        {/* ✅ NEW: Render new expert_perspectives data */}
+        {expertData && expertData.map((perspective, index) => {
+          const profileKey = mapExpertToProfile(perspective.expert_name, perspective.expertise_area);
+          const profile = EXPERT_PROFILES[profileKey];
           const SvgComponent = profile.SvgComponent;
 
           return (
             <motion.div
-              key={expert}
+              key={`${perspective.expert_name}-${index}`}
               initial={{ opacity: 0, y: 30, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ 
@@ -132,51 +135,69 @@ export function ExpertPanel({ experts, isLoading = false }: ExpertPanelProps) {
                   {/* Expert Header */}
                   <div className="mb-4">
                     <div className="flex items-start justify-between gap-4 mb-4">
-                      {/* Right Side - Quote */}
-                      <div className="flex-shrink-0 max-w-xs">
+                      {/* Left Side - Expert Info */}
+                      <div className="flex-1">
+                        <h4 
+                          className="font-bold text-lg mb-1"
+                          style={{ color: colors.foreground }}
+                        >
+                          {profile.title}
+                        </h4>
+                        <p 
+                          className="text-sm opacity-80 mb-2"
+                          style={{ color: colors.mutedForeground }}
+                        >
+                          {perspective.expertise_area}
+                        </p>
+                        
+                        {/* Stance Badge */}
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-sm">
+                            {getStanceIcon(perspective.stance)}
+                          </span>
+                          <span 
+                            className="text-xs font-semibold uppercase tracking-wide px-2 py-1 rounded-full"
+                            style={{ 
+                              backgroundColor: `${getStanceColor(perspective.stance)}20`,
+                              color: getStanceColor(perspective.stance),
+                              border: `1px solid ${getStanceColor(perspective.stance)}40`
+                            }}
+                          >
+                            {perspective.stance}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Right Side - Confidence Score */}
+                      <div className="flex-shrink-0">
                         <div 
-                          className="p-3 rounded-xl border-l-4 relative"
+                          className="w-16 h-16 rounded-full flex items-center justify-center border-4"
                           style={{
-                            background: isDark 
-                              ? 'rgba(59, 130, 246, 0.1)' 
-                              : 'rgba(59, 130, 246, 0.05)',
-                            borderLeftColor: colors.primary
+                            backgroundColor: `${profile.color}20`,
+                            borderColor: profile.color
                           }}
                         >
-                          <Quote 
-                            className="absolute -top-2 -left-2 h-5 w-5 p-1 rounded-full"
-                            style={{
-                              background: colors.primary,
-                              color: 'white'
-                            }}
-                          />
-                          <div className="pl-3">
-                            <p 
-                              className="text-xs italic font-semibold leading-relaxed"
-                              style={{ color: colors.foreground }}
+                          <div className="text-center">
+                            <div 
+                              className="text-lg font-bold"
+                              style={{ color: profile.color }}
                             >
-                              "{profile.mockQuote}"
-                            </p>
+                              {Math.round(perspective.confidence_level)}
+                            </div>
+                            <div 
+                              className="text-xs font-medium -mt-1"
+                              style={{ color: profile.color }}
+                            >
+                              %
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Analysis Section */}
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <div 
-                        className="w-2 h-2 rounded-full"
-                        style={{ background: colors.primary }}
-                      ></div>
-                      <span 
-                        className="text-sm font-semibold uppercase tracking-wide"
-                        style={{ color: colors.mutedForeground }}
-                      >
-                        {profile.title}
-                      </span>
-                    </div>
+                  {/* Summary Section */}
+                  <div className="space-y-3 mb-4">
                     <div 
                       className="rounded-lg p-4 border"
                       style={{
@@ -185,30 +206,53 @@ export function ExpertPanel({ experts, isLoading = false }: ExpertPanelProps) {
                       }}
                     >
                       <p 
-                        className={`text-sm leading-relaxed ${isLoading ? 'animate-pulse' : ''}`}
+                        className={`leading-relaxed ${isLoading ? 'animate-pulse' : ''}`}
                         style={{ color: colors.foreground }}
                       >
-                        {opinion}
+                        {perspective.summary}
                       </p>
                     </div>
                   </div>
 
-                  {/* Confidence Indicator */}
-                  <div className="mt-4 flex items-center justify-between">
-                    <span 
-                      className="text-xs font-medium"
-                      style={{ color: colors.mutedForeground }}
+                  {/* Detailed Reasoning */}
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-2 h-2 rounded-full"
+                        style={{ background: profile.color }}
+                      />
+                      <span 
+                        className="text-sm font-semibold uppercase tracking-wide"
+                        style={{ color: colors.mutedForeground }}
+                      >
+                        Analysis
+                      </span>
+                    </div>
+                    <div 
+                      className="rounded-lg p-4 border"
+                      style={{
+                        background: isDark ? 'rgba(71, 85, 105, 0.05)' : 'rgba(248, 250, 252, 0.5)',
+                        border: `1px solid ${colors.border}`
+                      }}
                     >
-                      Confidence Level
-                    </span>
+                      <p 
+                        className={`font-semibold leading-relaxed ${isLoading ? 'animate-pulse' : ''}`}
+                        style={{ color: colors.mutedForeground }}
+                      >
+                        {perspective.reasoning}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex items-center justify-between">
                     <div className="flex items-center gap-1">
                       {[1, 2, 3, 4, 5].map((level) => (
                         <div
                           key={level}
                           className="w-2 h-2 rounded-full"
                           style={{
-                            background: level <= Math.floor(Math.random() * 5) + 1
-                              ? colors.primary
+                            background: level <= Math.floor(perspective.confidence_level / 20)
+                              ? profile.color
                               : isDark ? 'rgba(71, 85, 105, 0.4)' : 'rgba(226, 232, 240, 0.8)'
                           }}
                         />

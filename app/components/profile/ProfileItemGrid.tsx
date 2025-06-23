@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { Profile } from '@/app/types/profile';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
@@ -9,11 +9,13 @@ import Image from 'next/image';
 import { 
   MapPin, 
   User, 
-  Star,
 } from 'lucide-react';
 import ScoreVerdictIcon from './ScoreVerdictIcon';
 import DashProgressBar from '@/app/components/ui/Dashboard/DashProgressBar';
 import { getScoreColor, getStatusIcon, getTrendIcon } from '@/app/helpers/scoreColors';
+import { 
+  AVAILABLE_COUNTRIES 
+} from '@/app/helpers/countries';
 
 interface ProfileItemGridProps {
   profile: Profile;
@@ -29,51 +31,60 @@ const ProfileItemGrid: React.FC<ProfileItemGridProps> = ({ profile, index }) => 
   const scoreColors = getScoreColor(displayScore);
   const cardColors = getCardColors(false, isHovered);
 
-  // Country code mapping for flags
-  const getCountryCode = (country: string): string => {
-    const countryMap: Record<string, string> = {
-      'us': 'us',
-      'cz': 'cs',
-      'czech republic': 'cs',
-      'czechia': 'cs',
-      'au': 'au',
-      'australia': 'au',
-      'br': 'br',
-      'brazil': 'br',
-      'ca': 'ca',
-      'canada': 'ca',
-      'cn': 'cn',
-      'china': 'cn',
-      'de': 'de',
-      'germany': 'de',
-      'es': 'es',
-      'spain': 'es',
-      'fr': 'fr',
-      'france': 'fr',
-      'gb': 'gb',
-      'uk': 'gb',
-      'united kingdom': 'gb',
-      'in': 'in',
-      'india': 'in',
-      'it': 'it',
-      'italy': 'it',
-      'jp': 'jp',
-      'japan': 'jp',
-      'ru': 'ru',
-      'russia': 'ru'
-    };
+  // ✅ Enhanced country code resolution using existing helpers
+  const getResolvedCountryInfo = (country: string | undefined) => {
+    if (!country) {
+      return {
+        code: '',
+        flagSvg: null,
+        flagEmoji: '🌍',
+        displayName: 'Unknown',
+        isValid: false
+      };
+    }
+
+    const normalizedCountry = country.toLowerCase().trim();
     
-    return countryMap[country?.toLowerCase()] || '';
+    // Try to find exact match first
+    let matchedCountry = AVAILABLE_COUNTRIES.find(c => 
+      c.code.toLowerCase() === normalizedCountry ||
+      c.name.toLowerCase() === normalizedCountry ||
+      c.nativeName.toLowerCase() === normalizedCountry
+    );
+
+    if (matchedCountry) {
+      return {
+        code: matchedCountry.code,
+        flagSvg: matchedCountry.flagSvg,
+        flagEmoji: matchedCountry.flag,
+        displayName: matchedCountry.name,
+        isValid: true
+      };
+    }
+
+    // Fallback for unknown countries
+    return {
+      code: normalizedCountry.toUpperCase(),
+      flagSvg: null,
+      flagEmoji: '🌍',
+      displayName: country.charAt(0).toUpperCase() + country.slice(1),
+      isValid: false
+    };
   };
 
   const handleCardClick = () => {
     router.push(`/dashboard/${profile.id}`);
   };
 
-  const countryCode = getCountryCode(profile.country || '');
-  const flagPath = countryCode ? `/flags/${countryCode}.svg` : null;
+  // ✅ Use enhanced country resolution
+  const countryInfo = getResolvedCountryInfo(profile.country);
 
-  const itemVariants = {
+  console.log('Country resolution:', {
+    input: profile.country,
+    resolved: countryInfo
+  });
+
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20, scale: 0.95 },
     visible: {
       opacity: 1,
@@ -105,12 +116,12 @@ const ProfileItemGrid: React.FC<ProfileItemGridProps> = ({ profile, index }) => 
         whileTap={{ scale: 0.98 }}
         onClick={handleCardClick}
       >
-        {/* Flag Background */}
-        {flagPath && (
+        {/* ✅ Enhanced Flag Background with proper fallback */}
+        {countryInfo.flagSvg && (
           <div className="absolute inset-0 opacity-5 pointer-events-none">
             <Image
-              src={flagPath}
-              alt={`${profile.country} flag`}
+              src={countryInfo.flagSvg}
+              alt={`${countryInfo.displayName} flag`}
               fill
               className="object-cover"
               style={{
@@ -120,6 +131,7 @@ const ProfileItemGrid: React.FC<ProfileItemGridProps> = ({ profile, index }) => 
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.style.display = 'none';
+                console.warn(`Flag image failed to load: ${countryInfo.flagSvg}`);
               }}
             />
           </div>
@@ -140,11 +152,11 @@ const ProfileItemGrid: React.FC<ProfileItemGridProps> = ({ profile, index }) => 
           />
         )}
 
-        <div className="p-5 relative z-10">
+        <div className="p-2 relative z-10">
           {/* Header with Enhanced Verdict Icon */}
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
-              {/* Country Badge with Flag */}
+              {/* ✅ Enhanced Country Badge with better flag handling */}
               {profile.country && (
                 <motion.div
                   className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium mb-2"
@@ -154,25 +166,46 @@ const ProfileItemGrid: React.FC<ProfileItemGridProps> = ({ profile, index }) => 
                     border: isDark ? '1px solid rgba(255,255,255,0.2)' : `1px solid ${vintage.aged}`
                   }}
                   whileHover={{ scale: 1.05 }}
+                  title={`${countryInfo.displayName} ${countryInfo.isValid ? '(Verified)' : '(Unverified)'}`}
                 >
-                  {flagPath ? (
-                    <div className="w-3 h-3 rounded-sm overflow-hidden">
+                  {/* ✅ Enhanced flag display with fallback */}
+                  {countryInfo.flagSvg ? (
+                    <div className="w-3 h-3 rounded-sm overflow-hidden flex-shrink-0">
                       <Image
-                        src={flagPath}
-                        alt={`${profile.country} flag`}
+                        src={countryInfo.flagSvg}
+                        alt={`${countryInfo.displayName} flag`}
                         width={12}
                         height={12}
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
-                          target.style.display = 'none';
+                          // Fallback to emoji or icon
+                          const parent = target.parentElement;
+                          if (parent) {
+                            parent.innerHTML = countryInfo.flagEmoji || '🌍';
+                            parent.className = 'w-3 h-3 flex items-center justify-center text-xs';
+                          }
                         }}
                       />
                     </div>
                   ) : (
-                    <MapPin className="w-3 h-3" />
+                    <div className="w-3 h-3 flex items-center justify-center text-xs">
+                      {countryInfo.flagEmoji || <MapPin className="w-3 h-3" />}
+                    </div>
                   )}
-                  <span>{profile.country.toUpperCase()}</span>
+                  
+                  {/* ✅ Enhanced country display */}
+                  <span className="truncate max-w-16">
+                    {countryInfo.code || profile.country.toUpperCase()}
+                  </span>
+                  
+                  {/* ✅ Verification indicator for known countries */}
+                  {countryInfo.isValid && (
+                    <div 
+                      className="w-1 h-1 rounded-full bg-green-500 flex-shrink-0"
+                      title="Verified country"
+                    />
+                  )}
                 </motion.div>
               )}
             </div>
@@ -193,17 +226,14 @@ const ProfileItemGrid: React.FC<ProfileItemGridProps> = ({ profile, index }) => 
               transition={{ type: "spring", stiffness: 300 }}
             >
               <div 
-                className="w-20 h-20 rounded-full overflow-hidden ring-4 transition-all duration-300"
-                style={{ 
-                  ringColor: isHovered ? scoreColors.primary : scoreColors.secondary
-                }}
+                className="w-40 h-40 rounded-2xl overflow-hidden transition-all duration-300"
               >
                 {profile.avatar_url ? (
                   <Image
                     src={profile.avatar_url}
                     alt={profile.name}
-                    width={80}
-                    height={80}
+                    width={160}
+                    height={160}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -261,7 +291,6 @@ const ProfileItemGrid: React.FC<ProfileItemGridProps> = ({ profile, index }) => 
             >
               {profile.position || profile.type || 'Public Figure'}
             </div>
-
           </div>
 
           {/* Enhanced Score Bar at Bottom */}

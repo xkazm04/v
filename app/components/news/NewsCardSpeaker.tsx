@@ -1,5 +1,6 @@
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
 import { useViewport } from "@/app/hooks/useViewport";
+import { useUserPreferences } from "@/app/hooks/use-user-preferences";
 import { cn } from "@/app/lib/utils";
 import { ResearchResult } from "@/app/types/article";
 import { motion } from "framer-motion";
@@ -14,12 +15,16 @@ type Props = {
 const NewsCardSpeaker = ({ research }: Props) => {
     const { colors, isDark } = useLayoutTheme();
     const { isMobile } = useViewport();
+    const { preferences } = useUserPreferences();
     const router = useRouter();
     const [isSourceHovered, setIsSourceHovered] = useState(false);
 
     if (!research) {
         return null;
     }
+
+    // Check if language is English or not set (default)
+    const isEnglishOrDefault = !preferences.language || preferences.language === 'en';
 
     const handleSourceClick = (e: React.MouseEvent) => {
         e.stopPropagation(); 
@@ -32,6 +37,29 @@ const NewsCardSpeaker = ({ research }: Props) => {
         }
     };
 
+    // If language is not English, render as simple text
+    if (!isEnglishOrDefault) {
+        return (
+            <div className="flex items-center space-x-2 min-w-0 flex-1">
+                <span 
+                    className={cn(
+                        "text-sm font-semibold truncate",
+                        "drop-shadow-sm px-2 py-1"
+                    )}
+                    style={{
+                        color: colors.foreground,
+                        textShadow: isDark
+                            ? '0 1px 2px rgba(0,0,0,0.8)'
+                            : '0 1px 2px rgba(255,255,255,0.8)',
+                    }}
+                >
+                    {research.source}
+                </span>
+            </div>
+        );
+    }
+
+    // For English or default language, render as interactive button (AS-IS)
     return (
         <div className="flex items-center space-x-2 min-w-0 flex-1">
             <motion.button
@@ -66,7 +94,6 @@ const NewsCardSpeaker = ({ research }: Props) => {
                         <ExternalLink className="w-3 h-3" />
                     </motion.div>
                 )}
-
             </motion.button>
         </div>
     );

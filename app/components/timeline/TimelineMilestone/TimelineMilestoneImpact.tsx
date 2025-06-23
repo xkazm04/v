@@ -105,8 +105,8 @@ export default function TimelineMilestoneImpact({
 
             {/* Consequence Text */}
             <motion.p 
-              className={`leading-relaxed font-light ${
-                isMobile ? 'text-sm' : 'text-base'
+              className={`leading-relaxed ${
+                isMobile ? 'text-base' : 'text-lg'
               }`}
               style={{ color: colors.foreground }}
               initial={{ opacity: 0, y: 10 }}

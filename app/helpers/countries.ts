@@ -162,29 +162,6 @@ export const getLanguageName = (languageCode?: string): string => {
     return language ? `${language.flag} ${language.nativeName}` : `🇺🇸 ${languageCode.toUpperCase()}`;
 };
 
-export const countryLabels: Record<string, string> = {
-    'US': 'United States',
-    'GB': 'United Kingdom',
-    'FR': 'France',
-    'DE': 'Germany',
-    'CA': 'Canada',
-    'AU': 'Australia',
-    'JP': 'Japan',
-    'CN': 'China',
-    'IN': 'India',
-    'BR': 'Brazil',
-    'RU': 'Russia',
-    'ZA': 'South Africa',
-    'KR': 'South Korea',
-    'MX': 'Mexico',
-    'IT': 'Italy',
-    'ES': 'Spain',
-    'NL': 'Netherlands',
-    'SE': 'Sweden',
-    'NO': 'Norway',
-    'CZ': 'Czech Republic',
-};
-
 // Helper to validate country codes
 export const isValidCountryCode = (code: string): boolean => {
     if (!code || !AVAILABLE_COUNTRIES) return false;
@@ -219,4 +196,109 @@ export const getLanguageInfo = (languageCode: string): LanguageOption | null => 
   if (!languageCode || !AVAILABLE_LANGUAGES) return null;
   
   return AVAILABLE_LANGUAGES.find(l => l.code === languageCode) || null;
+};
+
+/**
+ * Enhanced country resolution specifically for profile data
+ * Handles various country name formats and provides comprehensive fallback
+ */
+export const getProfileCountryInfo = (country: string | undefined): {
+  code: string;
+  flagSvg: string | null;
+  flagEmoji: string;
+  displayName: string;
+  isValid: boolean;
+  region?: string;
+} => {
+  if (!country) {
+    return {
+      code: '',
+      flagSvg: null,
+      flagEmoji: '🌍',
+      displayName: 'Unknown',
+      isValid: false
+    };
+  }
+
+  const normalizedCountry = country.toLowerCase().trim();
+  
+  // Try exact match first
+  let matchedCountry = AVAILABLE_COUNTRIES.find(c => 
+    c.code.toLowerCase() === normalizedCountry ||
+    c.name.toLowerCase() === normalizedCountry ||
+    c.nativeName.toLowerCase() === normalizedCountry
+  );
+
+  // Extended variations mapping for common profile data formats
+  if (!matchedCountry) {
+    const countryVariations: Record<string, string> = {
+      // US variations
+      'us': 'us', 'usa': 'us', 'united states': 'us', 'america': 'us', 'estados unidos': 'us',
+      
+      // UK variations  
+      'uk': 'uk', 'gb': 'uk', 'great britain': 'uk', 'britain': 'uk', 'england': 'uk', 
+      'scotland': 'uk', 'wales': 'uk', 'northern ireland': 'uk',
+      
+      // Czech variations
+      'cz': 'cz', 'czech': 'cz', 'czech republic': 'cz', 'czechia': 'cz', 'česká republika': 'cz',
+      
+      // Germany variations
+      'de': 'de', 'germany': 'de', 'deutschland': 'de', 'alemania': 'de',
+      
+      // Spain variations
+      'es': 'es', 'spain': 'es', 'españa': 'es', 'espanha': 'es',
+      
+      // France variations
+      'fr': 'fr', 'france': 'fr', 'frança': 'fr', 'francia': 'fr',
+      
+      // Italy variations
+      'it': 'it', 'italy': 'it', 'italia': 'it',
+      
+      // Japan variations
+      'jp': 'jp', 'japan': 'jp', '日本': 'jp', 'japón': 'jp', 'japao': 'jp',
+      
+      // China variations
+      'cn': 'cn', 'china': 'cn', '中国': 'cn', 'república popular china': 'cn',
+      
+      // India variations
+      'in': 'in', 'india': 'in', 'भारत': 'in', 'hindustan': 'in',
+      
+      // Brazil variations
+      'br': 'br', 'brazil': 'br', 'brasil': 'br',
+      
+      // Russia variations
+      'ru': 'ru', 'russia': 'ru', 'россия': 'ru', 'rusia': 'ru',
+      
+      // Australia variations
+      'au': 'au', 'australia': 'au', 'oz': 'au',
+      
+      // Canada variations
+      'ca': 'ca', 'canada': 'ca', 'canadá': 'ca'
+    };
+
+    const mappedCode = countryVariations[normalizedCountry];
+    if (mappedCode) {
+      matchedCountry = AVAILABLE_COUNTRIES.find(c => c.code === mappedCode);
+    }
+  }
+
+  if (matchedCountry) {
+    return {
+      code: matchedCountry.code,
+      flagSvg: matchedCountry.flagSvg,
+      flagEmoji: matchedCountry.flag,
+      displayName: matchedCountry.name,
+      isValid: true,
+      region: matchedCountry.region
+    };
+  }
+
+  // Fallback for unknown countries
+  return {
+    code: normalizedCountry.toUpperCase(),
+    flagSvg: null,
+    flagEmoji: '🌍',
+    displayName: country.charAt(0).toUpperCase() + country.slice(1),
+    isValid: false
+  };
 };

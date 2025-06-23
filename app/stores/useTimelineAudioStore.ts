@@ -26,6 +26,10 @@ export interface TimelineAudioState {
   isMuted: boolean;
   error: string | null;
   
+  // Active component tracking - FIXED: Add missing properties
+  activeComponentId: string | null;
+  activeComponentType: 'milestone' | 'event' | 'hero' | null;
+  
   // Track management
   tracks: AudioTrack[];
   trackStates: Record<string, {
@@ -52,6 +56,8 @@ export interface TimelineAudioState {
   getTrackByProgressId: (progressId: string) => AudioTrack | null;
   getNextTrack: (currentTrackId: string) => AudioTrack | null;
   nextTrack: () => boolean; // Auto-advance to next track
+  // FIXED: Add missing action
+  setActiveComponent: (componentId: string | null, componentType: 'milestone' | 'event' | 'hero' | null) => void;
   reset: () => void;
 }
 
@@ -131,6 +137,11 @@ export const useTimelineAudioStore = create<TimelineAudioState>()(
       volume: 0.7,
       isMuted: false,
       error: null,
+      
+      // FIXED: Initialize missing active component state
+      activeComponentId: null,
+      activeComponentType: null,
+      
       tracks: [],
       trackStates: {},
       isAutoPlayMode: true,
@@ -151,21 +162,42 @@ export const useTimelineAudioStore = create<TimelineAudioState>()(
           tracks,
           trackStates,
           currentTrackId: null,
-          currentTrack: null
+          currentTrack: null,
+          // FIXED: Reset active component state
+          activeComponentId: null,
+          activeComponentType: null
         });
       },
       
-      // Play a specific track
+      // FIXED: Enhanced play track with component tracking
       playTrack: (trackId: string) => {
         const { tracks } = get();
         const track = tracks.find(t => t.id === trackId);
         
         if (track) {
+          // Determine active component based on track type and IDs
+          let activeComponentId: string | null = null;
+          let activeComponentType: 'milestone' | 'event' | 'hero' | null = null;
+          
+          if (track.type === 'conclusion') {
+            activeComponentId = 'hero';
+            activeComponentType = 'hero';
+          } else if (track.type === 'milestone_context') {
+            activeComponentId = track.milestoneId || null;
+            activeComponentType = 'milestone';
+          } else if (track.type === 'event') {
+            activeComponentId = track.eventId || null;
+            activeComponentType = 'event';
+          }
+          
           set({
             currentTrackId: trackId,
             currentTrack: track,
             isPlaying: true,
-            error: null
+            error: null,
+            // FIXED: Set active component state
+            activeComponentId,
+            activeComponentType
           });
         }
       },
@@ -180,7 +212,10 @@ export const useTimelineAudioStore = create<TimelineAudioState>()(
         set({ 
           isPlaying: false,
           currentTime: 0,
-          progress: 0
+          progress: 0,
+          // FIXED: Clear active component when stopping
+          activeComponentId: null,
+          activeComponentType: null
         });
       },
       
@@ -245,22 +280,48 @@ export const useTimelineAudioStore = create<TimelineAudioState>()(
         return null;
       },
 
-      // Auto-advance to next track
+      // FIXED: Enhanced auto-advance with proper component tracking
       nextTrack: () => {
-        const { currentTrackId, tracks } = get();
-        if (!currentTrackId) return false;
+        const { currentTrackId, tracks, isAutoPlayMode } = get();
+        if (!currentTrackId || !isAutoPlayMode) return false;
         
         const currentIndex = tracks.findIndex(t => t.id === currentTrackId);
         if (currentIndex !== -1 && currentIndex < tracks.length - 1) {
           const nextTrack = tracks[currentIndex + 1];
+          
+          // Determine next active component
+          let activeComponentId: string | null = null;
+          let activeComponentType: 'milestone' | 'event' | 'hero' | null = null;
+          
+          if (nextTrack.type === 'conclusion') {
+            activeComponentId = 'hero';
+            activeComponentType = 'hero';
+          } else if (nextTrack.type === 'milestone_context') {
+            activeComponentId = nextTrack.milestoneId || null;
+            activeComponentType = 'milestone';
+          } else if (nextTrack.type === 'event') {
+            activeComponentId = nextTrack.eventId || null;
+            activeComponentType = 'event';
+          }
+          
           set({
             currentTrackId: nextTrack.id,
             currentTrack: nextTrack,
-            isPlaying: false // Will be set to true when audio starts
+            isPlaying: false, // Will be set to true when audio starts
+            activeComponentId,
+            activeComponentType
           });
           return true;
         }
         return false;
+      },
+      
+      // FIXED: Add missing setActiveComponent action
+      setActiveComponent: (componentId: string | null, componentType: 'milestone' | 'event' | 'hero' | null) => {
+        set({
+          activeComponentId: componentId,
+          activeComponentType: componentType
+        });
       },
       
       // Reset state
@@ -274,6 +335,9 @@ export const useTimelineAudioStore = create<TimelineAudioState>()(
           currentTime: 0,
           progress: 0,
           error: null,
+          // FIXED: Reset active component state
+          activeComponentId: null,
+          activeComponentType: null,
           tracks: [],
           trackStates: {}
         });

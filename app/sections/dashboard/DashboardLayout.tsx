@@ -7,6 +7,7 @@ import { AlertCircle, Loader2 } from 'lucide-react';
 import DashStatementsAnalyticsSection from '@/app/sections/dashboard/DashStatements/DashStatementAnalyticsSection';
 import ProfileItemGrid from '@/app/components/profile/ProfileItemGrid';
 import DashBreakdown from './DashBreakdown';
+import VintageBackButton from '@/app/components/ui/Buttons/VintageBackButton';
 
 interface DashboardLayoutProps {
   profileId?: string;
@@ -75,12 +76,7 @@ const DashboardLayout = ({ profileId }: DashboardLayoutProps) => {
               <div className="text-sm text-muted-foreground max-w-md mx-auto">
                 {profileError || `Unable to load profile with ID: ${profileId} from any data source`}
               </div>
-              <button
-                onClick={() => window.history.back()}
-                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-              >
-                Go Back
-              </button>
+              <VintageBackButton />
             </div>
           </div>
         </div>
@@ -92,6 +88,7 @@ const DashboardLayout = ({ profileId }: DashboardLayoutProps) => {
     <div className="min-h-screen p-6">
       <StatsBackground />
       <div className="max-w-7xl mx-auto space-y-8">
+        <VintageBackButton />
         {/* Main Dashboard Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Profile & Key Stats */}

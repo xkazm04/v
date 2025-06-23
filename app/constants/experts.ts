@@ -8,8 +8,6 @@ import { Brain, DollarSign, Scale, Crown, Eye, User } from 'lucide-react';
 import ExpertKingIcon from "../components/icons/expert_king";
 import ExpertPublicIcon from "../components/icons/expert_public";
 
-
-
 export const EXPERT_PROFILES = {
   critic: {
     title: 'The Critic',
@@ -55,6 +53,68 @@ export interface ExpertProfileType {
   color: string;
 }
 
+// ✅ NEW: Expert name mapping for new backend expert_perspectives
+export const EXPERT_NAME_MAPPING = {
+  // Backend expert names to our profile keys
+  'Critical Analyst': 'critic',
+  'Devil\'s Advocate': 'devil',
+  'Quantitative Analyst': 'nerd',
+  'Strategic Analyst': 'psychic',
+  'Contextual Specialist': 'critic', // Map to critic as fallback
+  'Data Analyst': 'nerd',
+  'Behavioral Analyst': 'psychic',
+  'Alternative Perspective Analyst': 'devil',
+  'Statistical Analyst': 'nerd',
+  'Psychological Analyst': 'psychic'
+} as const;
+
+// ✅ NEW: Expertise area to profile mapping
+export const EXPERTISE_AREA_MAPPING = {
+  'Argument Analysis': 'critic',
+  'Alternative Interpretation': 'devil',
+  'Quantitative Analysis': 'nerd',
+  'Strategic Analysis': 'psychic',
+  'International Law': 'critic',
+  'Data Science': 'nerd',
+  'Behavioral Psychology': 'psychic',
+  'Critical Thinking': 'critic',
+  'Statistical Analysis': 'nerd',
+  'Communication Strategy': 'psychic'
+} as const;
+
+// ✅ NEW: Helper function to map expert perspective to profile
+export const mapExpertToProfile = (expertName: string, expertiseArea?: string): ExpertProfileKey => {
+  // First try exact name match
+  const nameMatch = EXPERT_NAME_MAPPING[expertName as keyof typeof EXPERT_NAME_MAPPING];
+  if (nameMatch) return nameMatch;
+  
+  // Then try expertise area match
+  if (expertiseArea) {
+    const areaMatch = EXPERTISE_AREA_MAPPING[expertiseArea as keyof typeof EXPERTISE_AREA_MAPPING];
+    if (areaMatch) return areaMatch;
+  }
+  
+  // Fallback logic based on keywords
+  const lowerName = expertName.toLowerCase();
+  const lowerArea = expertiseArea?.toLowerCase() || '';
+  
+  if (lowerName.includes('critic') || lowerName.includes('critical') || lowerArea.includes('critical')) {
+    return 'critic';
+  }
+  if (lowerName.includes('devil') || lowerName.includes('advocate') || lowerArea.includes('alternative')) {
+    return 'devil';
+  }
+  if (lowerName.includes('data') || lowerName.includes('quantitative') || lowerName.includes('statistical') || lowerArea.includes('quantitative') || lowerArea.includes('data')) {
+    return 'nerd';
+  }
+  if (lowerName.includes('strategic') || lowerName.includes('psycho') || lowerName.includes('behavioral') || lowerArea.includes('strategic') || lowerArea.includes('psychology')) {
+    return 'psychic';
+  }
+  
+  // Default fallback
+  return 'critic';
+};
+
 export type ExpertTimelineConfigKey = keyof typeof EXPERT_TIMELINE_CONFIG;
 export interface ExpertTimelineConfigType {
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -71,7 +131,7 @@ export const EXPERT_TIMELINE_CONFIG = {
   nerd: { 
     icon: DollarSign, 
     label: 'Nerd',
-    shortLabel: 'Economic',
+    shortLabel: 'Economic Nerd',
     color: '#10B981',
     description: 'Economic & Resource Analysis',
     specialty: 'Economic Impact',
@@ -81,18 +141,17 @@ export const EXPERT_TIMELINE_CONFIG = {
   joe: { 
     icon: User, 
     label: 'Average Joe',
-    shortLabel: 'Public',
+    shortLabel: 'Average Joe',
     color: '#F59E0B',
     description: 'Common Perspective',
     specialty: 'Public Opinion',
     mockConfidence: 3,
     SvgComponent: ExpertPublicIcon
-    
   },
   psychic: { 
     icon: Eye, 
     label: 'Psychic',
-    shortLabel: 'Media',
+    shortLabel: 'Psychic',
     color: '#8B5CF6',
     description: 'Psychological & Propaganda Analysis',
     specialty: 'Media Psychology',
@@ -102,7 +161,7 @@ export const EXPERT_TIMELINE_CONFIG = {
   dredd: { 
     icon: Scale, 
     label: 'Dredd',
-    shortLabel: 'Legal',
+    shortLabel: 'Dredd',
     color: '#EF4444',
     description: 'Legal & Constitutional Analysis',
     specialty: 'Legal Framework',
@@ -112,7 +171,7 @@ export const EXPERT_TIMELINE_CONFIG = {
   president: { 
     icon: Crown, 
     label: 'El Presidente',
-    shortLabel: 'Diplomatic',
+    shortLabel: 'El Presidente',
     color: '#3B82F6',
     description: 'Geopolitical & Strategic Analysis',
     specialty: 'Geopolitical Strategy',
@@ -122,7 +181,7 @@ export const EXPERT_TIMELINE_CONFIG = {
   conspirator: { 
     icon: Brain, 
     label: 'Alex the Conspirator',
-    shortLabel: 'Pattern',
+    shortLabel: 'Alex the Conspirator',
     color: '#EC4899',
     description: 'Hidden Connections & Motives',
     specialty: 'Pattern Recognition',

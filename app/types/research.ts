@@ -27,11 +27,20 @@ export interface ExpertOpinion {
   psychic?: string | null;
 }
 
+// ✅ UPDATED: Enhanced ExpertPerspective interface to match new backend structure
 export interface ExpertPerspective {
-  expert_type: string;
-  opinion: string;
-  confidence: number;
+  expert_name: string;
+  stance: 'SUPPORTING' | 'OPPOSING' | 'NEUTRAL';
+  reasoning: string;
+  confidence_level: number; // 0-100
+  summary: string;
+  source_type: 'llm' | 'external' | 'hybrid';
+  expertise_area: string;
+  publication_date?: string | null;
 }
+
+// ✅ NEW: Expert perspective stance types
+export type ExpertStance = 'SUPPORTING' | 'OPPOSING' | 'NEUTRAL';
 
 export interface ResearchMetadata {
   research_sources: string[];
@@ -54,7 +63,7 @@ export interface LLMResearchResponse {
   research_method?: string;
   profile_id?: string | null;
   
-  // Enhanced tri-factor fields
+  // ✅ UPDATED: Enhanced tri-factor fields with new expert perspectives
   expert_perspectives?: ExpertPerspective[];
   key_findings?: string[];
   research_summary?: string;
@@ -63,6 +72,7 @@ export interface LLMResearchResponse {
   llm_findings?: string[];
   web_findings?: string[];
   resource_findings?: string[];
+  topic_id?: string | null;
   
   // Request metadata
   request_statement: string;
@@ -107,9 +117,9 @@ export interface TwitterExtractionResponse {
 // Quote research request interface
 export interface ResearchRequest {
   statement: string;
-  source?: string;
-  context?: string;
-  datetime?: string;
+  source: string;
+  context: string;
+  datetime: string;
   statement_date?: string;
   country?: string;
   category?: string;
@@ -118,18 +128,14 @@ export interface ResearchRequest {
 // Predefined tweet interface
 export interface PredefinedTweet {
   id: string;
-  url: string;
-  preview: {
-    username: string;
-    display_name: string;
-    content: string;
-    verified: boolean;
-    engagement: {
-      likes: number;
-      retweets: number;
-      replies: number;
-    };
-  };
-  category: string;
-  description: string;
+  username: string;
+  content: string;
+  posted_at: string;
+  tweet_url: string;
+  user_display_name: string;
+  user_verified: boolean;
+  retweet_count: number;
+  like_count: number;
+  reply_count: number;
+  category?: string;
 }

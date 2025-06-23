@@ -15,7 +15,6 @@ function ReelPageContent() {
   // Use the common video data manager
   const videoDataResult = useVideoDataManager({
     limit: 50,
-    researched: true,
     sort_by: 'processed_at',
     sort_order: 'desc',
     videoId
