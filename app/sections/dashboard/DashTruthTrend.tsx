@@ -1,10 +1,8 @@
-'use client';
-
 import { motion, AnimatePresence } from 'framer-motion';
 import { Speaker } from '@/app/constants/speakers';
-import { StatsData, StatementSummary, StatementStatus } from '@/app/types/profile';
+import { StatsData } from '@/app/types/profile';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart, Bar, BarChart } from 'recharts';
-import { TrendingUp, BarChart3, LineChart, Activity, Sparkles, Zap } from 'lucide-react';
+import { TrendingUp, BarChart3, LineChart, Activity, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 
@@ -19,8 +17,7 @@ interface TruthTrendChartProps {
 
 const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChartProps) => {
   const [viewMode, setViewMode] = useState<'trend' | 'breakdown'>('trend');
-  const [isHovered, setIsHovered] = useState(false);
-  const { colors, isDark } = useLayoutTheme();
+  const { colors, isDark, vintage, universalCard, getCardColors } = useLayoutTheme();
 
   // Determine data source and prepare chart data
   let data: any[] = [];
@@ -40,7 +37,6 @@ const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChar
     const unverifiableCount = statusBreakdown['UNVERIFIABLE'] || 0;
     
     // Create simulated trend data based on current breakdown
-    // This simulates how the data might look over time
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
     data = months.map((month, index) => {
       // Add some variation to make it look realistic
@@ -54,7 +50,7 @@ const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChar
       
       return {
         month,
-        truthful: monthTrue + monthPartial, // Consider partial as truthful for trend
+        truthful: monthTrue + monthPartial,
         misleading: monthMisleading,
         false: monthFalse,
         unverifiable: monthUnverifiable,
@@ -98,25 +94,55 @@ const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChar
   const trendDirection = currentTruthRate > previousTruthRate ? 'up' : 'down';
   const trendChange = Math.abs(currentTruthRate - previousTruthRate);
 
+  const cardColors = getCardColors(false, true);
   // If no data available, show empty state
   if (data.length === 0) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-2xl border backdrop-blur-xl p-6 text-center"
+        className="relative overflow-hidden rounded-2xl p-6 text-center"
         style={{
-          background: `linear-gradient(135deg, 
-            ${isDark ? 'rgba(15, 23, 42, 0.8)' : 'rgba(248, 250, 252, 0.8)'} 0%, 
-            ${isDark ? 'rgba(30, 41, 59, 0.9)' : 'rgba(241, 245, 249, 0.9)'} 100%)`,
-          borderColor: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(203, 213, 225, 0.3)',
+          background: cardColors.background,
+          border: `1px solid ${cardColors.border}`,
+          boxShadow: cardColors.shadow
         }}
       >
-        <Activity className="w-12 h-12 mx-auto mb-4 opacity-30" style={{ color: colors.primary }} />
-        <h3 className="text-lg font-bold text-foreground mb-2">No Trend Data Available</h3>
-        <p className="text-sm text-muted-foreground">
-          Insufficient data to generate trend analysis
-        </p>
+        {/* Universal paper texture for light mode */}
+        {!isDark && (
+          <div 
+            className="absolute inset-0 opacity-15 pointer-events-none rounded-2xl"
+            style={{
+              backgroundImage: `
+                radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.02) 1px, transparent 1px),
+                radial-gradient(circle at 80% 70%, rgba(139, 69, 19, 0.015) 1px, transparent 1px)
+              `,
+              backgroundSize: '40px 40px, 25px 25px'
+            }}
+          />
+        )}
+        
+        <div className="relative z-10">
+          <Activity className="w-12 h-12 mx-auto mb-4 opacity-30" style={{ color: universalCard.accent }} />
+          <h3 
+            className="text-lg font-bold mb-2"
+            style={{ 
+              color: isDark ? colors.foreground : vintage.ink,
+              fontFamily: '"Playfair Display", serif'
+            }}
+          >
+            No Trend Data Available
+          </h3>
+          <p 
+            className="text-sm"
+            style={{ 
+              color: isDark ? colors.mutedForeground : vintage.faded,
+              fontFamily: '"Crimson Text", serif'
+            }}
+          >
+            Insufficient data to generate trend analysis
+          </p>
+        </div>
       </motion.div>
     );
   }
@@ -129,23 +155,44 @@ const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChar
           animate={{ opacity: 1, scale: 1, y: 0 }}
           className="backdrop-blur-xl border rounded-xl p-4 shadow-2xl"
           style={{
-            background: `linear-gradient(135deg, ${isDark ? 'rgba(0,0,0,0.9)' : 'rgba(255,255,255,0.95)'}, ${isDark ? 'rgba(30,30,30,0.95)' : 'rgba(248,250,252,0.95)'})`,
-            border: `1px solid ${colors.primary}30`,
-            boxShadow: `0 20px 40px -12px ${colors.primary}30`
+            background: isDark 
+              ? 'linear-gradient(135deg, rgba(0,0,0,0.9), rgba(30,30,30,0.95))'
+              : 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,250,252,0.95))',
+            border: `1px solid ${universalCard.accent}30`,
+            boxShadow: `0 20px 40px -12px ${universalCard.accent}30`
           }}
         >
           <div className="flex items-center gap-2 mb-3">
-            <Sparkles className="w-4 h-4" style={{ color: colors.primary }} />
-            <p className="font-bold text-foreground">{label}</p>
+            <Sparkles className="w-4 h-4" style={{ color: universalCard.accent }} />
+            <p 
+              className="font-bold"
+              style={{ 
+                color: isDark ? colors.foreground : vintage.ink,
+                fontFamily: '"Playfair Display", serif'
+              }}
+            >
+              {label}
+            </p>
           </div>
           
           {viewMode === 'trend' ? (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-green-400 text-sm font-medium">Truth Rate:</span>
-                <span className="text-foreground font-bold">{payload[0].value}%</span>
+                <span 
+                  className="font-bold"
+                  style={{ 
+                    color: isDark ? colors.foreground : vintage.ink,
+                    fontFamily: '"Crimson Text", serif'
+                  }}
+                >
+                  {payload[0].value}%
+                </span>
               </div>
-              <div className="text-xs text-muted-foreground">
+              <div 
+                className="text-xs"
+                style={{ color: isDark ? colors.mutedForeground : vintage.faded }}
+              >
                 {payload[0].payload.truthful}/{payload[0].payload.total} statements truthful
               </div>
             </div>
@@ -158,12 +205,31 @@ const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChar
                       className="w-3 h-3 rounded-sm shadow-sm" 
                       style={{ backgroundColor: entry.color }} 
                     />
-                    <span className="text-foreground text-sm font-medium">{entry.dataKey}:</span>
+                    <span 
+                      className="text-sm font-medium"
+                      style={{ 
+                        color: isDark ? colors.foreground : vintage.ink,
+                        fontFamily: '"Crimson Text", serif'
+                      }}
+                    >
+                      {entry.dataKey}:
+                    </span>
                   </div>
-                  <span className="text-foreground font-bold text-sm">{entry.value}</span>
+                  <span 
+                    className="font-bold text-sm"
+                    style={{ color: isDark ? colors.foreground : vintage.ink }}
+                  >
+                    {entry.value}
+                  </span>
                 </div>
               ))}
-              <div className="text-xs text-muted-foreground pt-1 border-t border-border">
+              <div 
+                className="text-xs pt-1 border-t"
+                style={{ 
+                  color: isDark ? colors.mutedForeground : vintage.faded,
+                  borderColor: isDark ? colors.border : vintage.aged
+                }}
+              >
                 Total: {payload.reduce((sum: number, entry: any) => sum + entry.value, 0)} statements
               </div>
             </div>
@@ -178,25 +244,37 @@ const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChar
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="relative overflow-hidden rounded-2xl border backdrop-blur-xl p-6"
+      className="relative overflow-hidden rounded-2xl p-6"
       style={{
-        background: `linear-gradient(135deg, 
-          ${isDark ? 'rgba(15, 23, 42, 0.8)' : 'rgba(248, 250, 252, 0.8)'} 0%, 
-          ${isDark ? 'rgba(30, 41, 59, 0.9)' : 'rgba(241, 245, 249, 0.9)'} 100%)`,
-        borderColor: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(203, 213, 225, 0.3)',
-        boxShadow: `0 20px 40px -12px ${colors.primary}10`
+        background: cardColors.background,
+        border: `1px solid ${cardColors.border}`,
+        boxShadow: cardColors.shadow
       }}
+      transition={{ duration: 0.3 }}
     >
-      {/* Enhanced animated background elements */}
+      {/* Universal vintage paper texture for light mode */}
+      {!isDark && (
+        <div 
+          className="absolute inset-0 opacity-15 pointer-events-none rounded-2xl"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.02) 1px, transparent 1px),
+              radial-gradient(circle at 80% 70%, rgba(139, 69, 19, 0.015) 1px, transparent 1px),
+              radial-gradient(ellipse 80% 60% at 30% 40%, rgba(139, 69, 19, 0.01), transparent 70%)
+            `,
+            backgroundSize: '40px 40px, 25px 25px, 100% 100%'
+          }}
+        />
+      )}
+
+      {/* Enhanced animated background elements with universal theming */}
       <div className="absolute inset-0 overflow-hidden">
         {[...Array(5)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute rounded-full"
             style={{
-              background: `radial-gradient(circle, ${colors.primary}${Math.floor(30 - i * 5).toString(16)}, transparent)`,
+              background: `radial-gradient(circle, ${universalCard.accent}${Math.floor(30 - i * 5).toString(16)}, transparent)`,
               width: `${40 + i * 20}px`,
               height: `${40 + i * 20}px`,
               left: `${15 + i * 18}%`,
@@ -218,23 +296,38 @@ const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChar
       </div>
       
       <div className="relative z-10">
-        {/* Compact Header */}
+        {/* Compact Header with Universal Theming */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <motion.div
               className="p-2 rounded-xl"
               style={{ 
-                background: `linear-gradient(135deg, ${colors.primary}20, ${colors.primary}10)`,
-                border: `1px solid ${colors.primary}30`
+                background: isDark 
+                  ? `linear-gradient(135deg, ${universalCard.accent}20, ${universalCard.accent}10)`
+                  : `linear-gradient(135deg, ${universalCard.accent}20, ${universalCard.accent}15)`,
+                border: `1px solid ${universalCard.accent}30`
               }}
-              whileHover={{ scale: 1.05, rotate: 5 }}
             >
-              <TrendingUp className="h-5 w-5" style={{ color: colors.primary }} />
+              <TrendingUp className="h-5 w-5" style={{ color: universalCard.accent }} />
             </motion.div>
             
             <div>
-              <h3 className="text-lg font-bold text-foreground">Truth Trend Analysis</h3>
-              <p className="text-xs text-muted-foreground">
+              <h3 
+                className="text-lg font-bold"
+                style={{ 
+                  color: isDark ? colors.foreground : vintage.ink,
+                  fontFamily: '"Playfair Display", serif'
+                }}
+              >
+                Truth Trend Analysis
+              </h3>
+              <p 
+                className="text-xs"
+                style={{ 
+                  color: isDark ? colors.mutedForeground : vintage.faded,
+                  fontFamily: '"Crimson Text", serif'
+                }}
+              >
                 {viewMode === 'trend' ? 'Truth rate over time' : 'Statement type breakdown'}
                 {stats && ` • ${stats.total_statements} statements`}
                 {speaker && ' • Mock Data'}
@@ -242,7 +335,7 @@ const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChar
             </div>
           </div>
 
-          {/* Stats and mode toggle */}
+          {/* Stats and mode toggle with universal theming */}
           <div className="flex items-center gap-3">
             {/* Current stats */}
             <div className="flex items-center gap-2">
@@ -266,8 +359,9 @@ const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChar
             </div>
             
             {/* Mode toggle */}
-            <div className="flex rounded-lg overflow-hidden border"
-              style={{ borderColor: `${colors.primary}30` }}
+            <div 
+              className="flex rounded-lg overflow-hidden border"
+              style={{ borderColor: `${universalCard.accent}30` }}
             >
               {[
                 { mode: 'trend', icon: LineChart, label: 'Trend' },
@@ -279,11 +373,13 @@ const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChar
                   className="px-3 py-1.5 text-xs font-medium transition-all duration-300 flex items-center gap-1"
                   style={{
                     background: viewMode === mode 
-                      ? `linear-gradient(135deg, ${colors.primary}, ${colors.primary}dd)`
+                      ? `linear-gradient(135deg, ${universalCard.accent}, ${universalCard.accent}dd)`
                       : 'transparent',
-                    color: viewMode === mode ? 'white' : colors.foreground
+                    color: viewMode === mode 
+                      ? 'white' 
+                      : (isDark ? colors.foreground : vintage.ink),
+                    fontFamily: '"Crimson Text", serif'
                   }}
-                  whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <Icon className="w-3 h-3" />
@@ -298,12 +394,13 @@ const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChar
         <motion.div
           className="relative h-72 rounded-xl overflow-hidden"
           style={{
-            background: `linear-gradient(135deg, 
-              ${isDark ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.6)'}, 
-              ${isDark ? 'rgba(15,23,42,0.3)' : 'rgba(248,250,252,0.4)'})`,
-            border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`
+            background: isDark 
+              ? 'linear-gradient(135deg, rgba(0,0,0,0.4), rgba(15,23,42,0.3))'
+              : 'linear-gradient(135deg, rgba(255,255,255,0.6), rgba(248,250,252,0.4))',
+            border: isDark 
+              ? '1px solid rgba(255,255,255,0.1)' 
+              : '1px solid rgba(139, 69, 19, 0.1)'
           }}
-          whileHover={{ scale: 1.005 }}
           transition={{ type: "spring", stiffness: 300 }}
         >
           <ResponsiveContainer width="100%" height="100%">
@@ -326,16 +423,18 @@ const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChar
                     </defs>
                     <CartesianGrid 
                       strokeDasharray="3 3" 
-                      stroke={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'} 
+                      stroke={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(139,69,19,0.1)'} 
                     />
                     <XAxis 
                       dataKey="month" 
-                      stroke={isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'}
+                      stroke={isDark ? 'rgba(255,255,255,0.6)' : 'rgba(139,69,19,0.6)'}
                       fontSize={12}
+                      fontFamily='"Crimson Text", serif'
                     />
                     <YAxis 
-                      stroke={isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'}
+                      stroke={isDark ? 'rgba(255,255,255,0.6)' : 'rgba(139,69,19,0.6)'}
                       fontSize={12}
+                      fontFamily='"Crimson Text", serif'
                     />
                     <Tooltip content={<CustomTooltip />} />
                     <Area
@@ -359,16 +458,18 @@ const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChar
                   <BarChart data={data}>
                     <CartesianGrid 
                       strokeDasharray="3 3" 
-                      stroke={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'} 
+                      stroke={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(139,69,19,0.1)'} 
                     />
                     <XAxis 
                       dataKey="month" 
-                      stroke={isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'}
+                      stroke={isDark ? 'rgba(255,255,255,0.6)' : 'rgba(139,69,19,0.6)'}
                       fontSize={12}
+                      fontFamily='"Crimson Text", serif'
                     />
                     <YAxis 
-                      stroke={isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'}
+                      stroke={isDark ? 'rgba(255,255,255,0.6)' : 'rgba(139,69,19,0.6)'}
                       fontSize={12}
+                      fontFamily='"Crimson Text", serif'
                     />
                     <Tooltip content={<CustomTooltip />} />
                     <Bar dataKey="Truthful" stackId="a" fill="#22c55e" />
@@ -382,7 +483,7 @@ const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChar
           </ResponsiveContainer>
         </motion.div>
         
-        {/* Enhanced Legend */}
+        {/* Enhanced Legend with Universal Theming */}
         <motion.div
           className="mt-6 flex items-center justify-center gap-6 text-xs"
           initial={{ opacity: 0, y: 10 }}
@@ -399,7 +500,7 @@ const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChar
               key={item.label}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r ${item.bgGrad} border border-opacity-20 border-current`}
               style={{ borderColor: item.color }}
-              whileHover={{ scale: 1.05, y: -2 }}
+
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.7 + index * 0.1 }}
@@ -410,12 +511,38 @@ const DashTruthTrend = ({ profileId, stats, speaker, timeRange }: TruthTrendChar
               >
                 {item.icon}
               </div>
-              <span className="font-semibold" style={{ color: item.color }}>
+              <span 
+                className="font-semibold" 
+                style={{ 
+                  color: item.color,
+                  fontFamily: '"Crimson Text", serif'
+                }}
+              >
                 {item.label}
               </span>
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Universal corner ornaments for light mode */}
+        {!isDark && (
+          <>
+            <div 
+              className="absolute top-3 left-3 w-4 h-4 opacity-10"
+              style={{
+                background: universalCard.accent,
+                clipPath: 'polygon(0 0, 100% 0, 0 100%)'
+              }}
+            />
+            <div 
+              className="absolute bottom-3 right-3 w-4 h-4 opacity-10"
+              style={{
+                background: universalCard.accent,
+                clipPath: 'polygon(100% 100%, 0 100%, 100% 0)'
+              }}
+            />
+          </>
+        )}
       </div>
     </motion.div>
   );

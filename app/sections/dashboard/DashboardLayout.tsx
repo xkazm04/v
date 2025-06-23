@@ -1,28 +1,41 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { memo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useCombinedProfile } from '@/app/hooks/useCombinedProfile';
 import { AlertCircle, Loader2 } from 'lucide-react';
-import DashSpeakerProfile from '@/app/sections/dashboard/DashSpeakerProfile';
 import DashStatementsAnalyticsSection from '@/app/sections/dashboard/DashStatements/DashStatementAnalyticsSection';
-import { MOCK_SPEAKERS } from '@/app/constants/speakers';
+import ProfileItemGrid from '@/app/components/profile/ProfileItemGrid';
+import DashBreakdown from './DashBreakdown';
 
 interface DashboardLayoutProps {
   profileId?: string;
 }
 
+const StatsBackground = memo(() => (
+  <div 
+    className="fixed inset-0 opacity-5 bg-cover bg-center bg-no-repeat"
+    style={{
+      backgroundImage: `url('/background/bg_stats_8.jpg')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed'
+    }}
+  />
+));
+
+StatsBackground.displayName = 'StatsBackground';
+
+
 const DashboardLayout = ({ profileId }: DashboardLayoutProps) => {
-  const [selectedSpeaker, setSelectedSpeaker] = useState(MOCK_SPEAKERS[0]);
   const [timeRange, setTimeRange] = useState('6months');
-  
-  // Fetch real profile data if profileId is provided using combined hook
-  const { 
-    profile, 
-    isLoading: profileLoading, 
-    error: profileError, 
+
+  const {
+    profile,
+    isLoading: profileLoading,
+    error: profileError,
     isError,
-    dataSource 
+    dataSource
   } = useCombinedProfile(profileId);
 
   // Use real profile data when available, fallback to mock data
@@ -62,7 +75,7 @@ const DashboardLayout = ({ profileId }: DashboardLayoutProps) => {
               <div className="text-sm text-muted-foreground max-w-md mx-auto">
                 {profileError || `Unable to load profile with ID: ${profileId} from any data source`}
               </div>
-              <button 
+              <button
                 onClick={() => window.history.back()}
                 className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
               >
@@ -76,46 +89,9 @@ const DashboardLayout = ({ profileId }: DashboardLayoutProps) => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen p-6">
+      <StatsBackground />
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Data Source Indicator (only in development) */}
-        {process.env.NODE_ENV === 'development' && profileId && dataSource && (
-          <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-            <div className="text-sm text-blue-700 dark:text-blue-300">
-              📊 Data Source: <span className="font-semibold capitalize">{dataSource}</span>
-              {dataSource === 'api' && ' (Fallback)'}
-            </div>
-          </div>
-        )}
-
-        {/* Speaker Selection - Only show for mock data */}
-        {!shouldUseRealData && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-card border border-border rounded-xl p-6 shadow-sm"
-          >
-            <div className="flex flex-wrap gap-3">
-              {MOCK_SPEAKERS.map((speaker) => (
-                <button
-                  key={speaker.id}
-                  onClick={() => setSelectedSpeaker(speaker)}
-                  className={`
-                    px-4 py-2 rounded-lg font-medium transition-all duration-200
-                    ${selectedSpeaker.id === speaker.id
-                      ? 'bg-primary text-primary-foreground shadow-sm'
-                      : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
-                    }
-                  `}
-                >
-                  {speaker.name}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
         {/* Main Dashboard Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Profile & Key Stats */}
@@ -123,23 +99,22 @@ const DashboardLayout = ({ profileId }: DashboardLayoutProps) => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="space-y-6"
+            className="space-y-6 col-span-1"
           >
             {shouldUseRealData ? (
               <>
-                <DashSpeakerProfile profile={profile} />
-                {/* Additional real data components can be added here later */}
+                <ProfileItemGrid profile={profile} index={0} />
+                <DashBreakdown
+                  profileId={profileId}
+                />
               </>
             ) : (
               <>
               </>
             )}
           </motion.div>
-
-          {/* Center & Right Columns - Analytics Section */}
-          <DashStatementsAnalyticsSection 
+          <DashStatementsAnalyticsSection
             profileId={profileId}
-            speaker={shouldUseRealData ? undefined : selectedSpeaker}
             timeRange={timeRange}
           />
         </div>
