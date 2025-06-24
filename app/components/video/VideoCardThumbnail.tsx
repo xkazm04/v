@@ -6,7 +6,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
-import { playButtonVariants } from '../animations/variants/cardVariants';
 import { Video, getVideoThumbnailUrl, formatVideoDuration } from '@/app/types/video_api';
 import { Play } from 'lucide-react';
 
@@ -32,7 +31,7 @@ export const VideoCardThumbnail = memo(function VideoCardThumbnail({
   return (
     <Link 
       href={`/watch?v=${video.id}`}
-      className={cn("relative block overflow-hidden rounded-t-xl group", className)}
+      className={cn("relative block overflow-hidden group", className)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={(e) => e.stopPropagation()} // Prevent parent card click

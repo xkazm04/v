@@ -175,9 +175,6 @@ class SupabaseNewsService {
     }
   }
 
-  /**
-   * ✅ ENHANCED: Translate multiple fields in research results
-   */
   private async translateResearchResults(results: ResearchResult[], targetLanguage: string): Promise<ResearchResult[]> {
     try {
       const translationPromises = results.map(async (result) => {
@@ -196,8 +193,6 @@ class SupabaseNewsService {
             translatedFields.statement = result.statement;
           }
         }
-
-        // ✅ NEW: Translate verdict if present
         if (result.verdict && result.verdict.trim() !== '') {
           try {
             const translatedVerdict = await translateViaAPI(
@@ -212,7 +207,6 @@ class SupabaseNewsService {
           }
         }
 
-        // ✅ NEW: Translate context if present
         if (result.context && result.context.trim() !== '') {
           try {
             const translatedContext = await translateViaAPI(

@@ -15,6 +15,11 @@ export interface Video {
   updated_at: string | null;
   processed_at: string | null;
   duration?: string; 
+  thumbnail_url?: string;
+  description?: string;
+  categories?: string;
+  status?: 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'PENDING';
+  topic_id?: string;
 }
 
 export interface VideoTimestamp {
@@ -151,7 +156,12 @@ export function convertBackendToFrontend(backendResponse: VideoDetailResponse): 
     analyzed: backendResponse.researched_statements > 0,
     created_at: backendResponse.processed_at || new Date().toISOString(),
     updated_at: backendResponse.processed_at || null,
-    processed_at: backendResponse.processed_at || null
+    processed_at: backendResponse.processed_at || null,
+    thumbnail_url: backendResponse.thumbnail_url || undefined,
+    description: backendResponse.description || undefined,
+    categories: backendResponse.categories || undefined,
+    status: backendResponse.status || undefined,
+    topic_id: backendResponse.topic_id || undefined
   };
 
   const timestamps: VideoTimestamp[] = backendResponse.timestamps.map(ts => ({
@@ -254,6 +264,8 @@ export interface VideoFilters {
   search?: string;
   sort_by?: string;
   sort_order?: 'asc' | 'desc';
+  status?: 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'PENDING';
+  topic_id?: string;
 }
 
 export interface VideoStats {

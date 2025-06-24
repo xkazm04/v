@@ -120,6 +120,10 @@ class SupabaseProfileServiceServer {
    */
   async getProfileById(id: string): Promise<Profile | null> {
     try {
+      if (!supabaseAdmin) {
+        console.warn('Supabase admin client not available (missing service role key)');
+        return null;
+      }
       const { data, error } = await supabaseAdmin
         .from('profiles')
         .select('*')
@@ -157,6 +161,10 @@ class SupabaseProfileServiceServer {
    */
   async getProfileStats(profileId: string): Promise<ProfileStatsResponse | null> {
     try {
+      if (!supabaseAdmin) {
+        console.warn('Supabase admin client not available (missing service role key)');
+        return null;
+      }
       // Verify profile exists
       const profile = await this.getProfileById(profileId);
       if (!profile) {

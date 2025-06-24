@@ -1,12 +1,13 @@
 import { useCallback, useMemo, memo } from 'react';
-import { useNews } from '@/app/hooks/useNews';
+import { useNewsWithExchange } from '@/app/hooks/useNews';
+import { useReadArticlesStore } from '@/app/stores/useReadArticlesStore';
+import { useNewsFilters } from '@/app/stores/filterStore'; 
 import { NewsGrid } from '../feed/NewsGrid';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RefreshCw, AlertCircle } from 'lucide-react';
+import { RefreshCw, AlertCircle, TrendingUp, Trash2, Filter } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-import { Button } from '@/app/components/ui/button';
-import { useNewsFilters } from '@/app/stores/filterStore';
 import { useNewsTranslations, useCommonTranslations } from '@/app/hooks/useSmartTranslations';
+import LoaderComponent from '@/app/components/animations/LoaderComponent';
 
 interface FeaturedNewsProps {
   limit?: number;
@@ -15,38 +16,65 @@ interface FeaturedNewsProps {
 }
 
 const FeaturedNews = memo(({ 
-  limit = 20, 
+  limit = 10,
   showBreaking = false,
   autoRefresh = true,
 }: FeaturedNewsProps) => {
-  const { colors, isDark } = useLayoutTheme();
+  const { colors } = useLayoutTheme();
+  const { getExcludeIds } = useReadArticlesStore();
+  
   const newsFilters = useNewsFilters();
   
   // Translation hooks
   const { t: tn } = useNewsTranslations();
   const { t: tc } = useCommonTranslations();
-
-  const enhancedFilters = useMemo(() => ({
-    limit,
-    autoRefresh,
-    categoryFilter: newsFilters.categoryFilter,
-    countryFilter: newsFilters.countryFilter,
-    searchText: newsFilters.searchText,
-    statusFilter: newsFilters.statusFilter,
-    sourceFilter: newsFilters.sourceFilter,
-    breaking: showBreaking || newsFilters.breaking,
-    onlyFactChecked: newsFilters.onlyFactChecked,
-  }), [newsFilters, limit, autoRefresh, showBreaking]);
+  const enhancedFilters = useMemo(() => {
+    const filters = {
+      limit,
+      autoRefresh,
+      ...(newsFilters.categoryFilter && { categoryFilter: newsFilters.categoryFilter }),
+      ...(newsFilters.countryFilter && { countryFilter: newsFilters.countryFilter }),
+      ...(newsFilters.searchText && { searchText: newsFilters.searchText }),
+      ...(newsFilters.statusFilter && { statusFilter: newsFilters.statusFilter }),
+      ...(newsFilters.sourceFilter && { sourceFilter: newsFilters.sourceFilter }),
+      ...(newsFilters.topicFilter && { topicId: newsFilters.topicFilter }),
+      ...(showBreaking && { breaking: true }),
+      ...(newsFilters.breaking && { breaking: newsFilters.breaking }),
+      ...(newsFilters.onlyFactChecked && { onlyFactChecked: newsFilters.onlyFactChecked }),
+    };
+    
+    console.log('🔍 FeaturedNews stable filters created:', filters);
+    return filters;
+  }, [
+    limit, 
+    autoRefresh, 
+    showBreaking,
+    newsFilters.categoryFilter,
+    newsFilters.countryFilter,
+    newsFilters.searchText,
+    newsFilters.statusFilter,
+    newsFilters.sourceFilter,
+    newsFilters.topicFilter,
+    newsFilters.breaking,
+    newsFilters.onlyFactChecked
+  ]);
 
   const { 
     articles: researchResults, 
     loading, 
     error, 
     refreshNews,
-    dataSource
-  } = useNews(enhancedFilters);
+    replaceReadArticle,
+    dataSource,
+    totalFetched,
+    hasMoreArticles
+  } = useNewsWithExchange(enhancedFilters);
 
-  // Stable handlers
+  const handleArticleRead = useCallback((articleId: string) => {
+    console.log(`📖 Article read: ${articleId}`);
+    replaceReadArticle(articleId);
+  }, [replaceReadArticle]);
+
   const handleRefresh = useCallback(() => {
     refreshNews();
   }, [refreshNews]);
@@ -71,112 +99,137 @@ const FeaturedNews = memo(({
     return filtered;
   }, [researchResults]);
 
+  const excludedCount = getExcludeIds().length;
+
+  // ✅ **NEW: Show active filters**
+  const activeFiltersDisplay = useMemo(() => {
+    const activeFilters = [];
+    if (newsFilters.categoryFilter) activeFilters.push(`📂 ${newsFilters.categoryFilter}`);
+    if (newsFilters.countryFilter) activeFilters.push(`🌍 ${newsFilters.countryFilter}`);
+    if (newsFilters.searchText) activeFilters.push(`🔍 "${newsFilters.searchText}"`);
+    if (newsFilters.topicFilter) activeFilters.push(`🔥 Topic: ${newsFilters.topicFilter}`);
+    return activeFilters;
+  }, [newsFilters.categoryFilter, newsFilters.countryFilter, newsFilters.searchText, newsFilters.topicFilter]);
+
   return (
     <div className="space-y-6 max-w-[1600px]">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <motion.h2 
+        <div className="flex items-center gap-4">
+          <h2 
             className="text-2xl font-bold"
             style={{ color: colors.foreground }}
-            key={'featured-news-title'}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
           >
-            {tn('researchedStatements', 'Researched statements')}
-          </motion.h2>
+            {tn('featured_news', 'Featured News')}
+          </h2>
+          
+          <div className="flex items-center gap-4 text-sm" style={{ color: colors.mutedForeground }}>
+            {loading ? (
+              <div className="flex items-center gap-2">
+                <LoaderComponent loading={true} variant="small" />
+                <span>Loading...</span>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4" />
+                  <span>{validResearchResults.length} active</span>
+                </div>
+                
+                {excludedCount > 0 && (
+                  <div className="flex items-center gap-1 text-xs opacity-75">
+                    <Trash2 className="w-3 h-3" />
+                    <span>{excludedCount} read</span>
+                  </div>
+                )}
+
+                {/* ✅ **NEW: Active filters display** */}
+                {activeFiltersDisplay.length > 0 && (
+                  <div className="flex items-center gap-1 text-xs">
+                    <Filter className="w-3 h-3" />
+                    <span className="font-medium">
+                      {activeFiltersDisplay.join(' • ')}
+                    </span>
+                  </div>
+                )}
+                
+                {totalFetched > validResearchResults.length && (
+                  <span className="text-xs opacity-60">
+                    ({totalFetched} total fetched)
+                  </span>
+                )}
+              </>
+            )}
+          </div>
         </div>
 
-        <motion.button
-          onClick={handleRefresh}
-          disabled={loading}
-          className="p-2 rounded-lg transition-all duration-200"
-          style={{
-            background: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(148, 163, 184, 0.2)',
-            border: `1px solid ${isDark ? 'rgba(71, 85, 105, 0.4)' : 'rgba(148, 163, 184, 0.3)'}`,
-            color: colors.mutedForeground
-          }}
-          whileHover={{
-            scale: 1.05,
-            background: isDark ? 'rgba(71, 85, 105, 0.4)' : 'rgba(148, 163, 184, 0.3)'
-          }}
-          whileTap={{ scale: 0.95 }}
-          title={tc('refresh', 'Refresh')}
-        >
-          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-        </motion.button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleRefresh}
+            disabled={loading}
+            className="flex items-center gap-2"
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            {tc('refresh', 'Refresh')}
+          </button>
+        </div>
       </div>
 
       {/* Content */}
       <AnimatePresence mode="wait">
         {error ? (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center py-12"
-          >
-            <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <h3 
-              className="text-lg font-semibold mb-2"
-              style={{ color: colors.foreground }}
-            >
-              {tn('failedToLoadResearch', 'Failed to load research')}
-            </h3>
-            <p 
-              className="mb-4"
-              style={{ color: colors.mutedForeground }}
-            >
-              {error || tn('somethingWentWrong', 'Something went wrong while fetching research.')}
-            </p>
-            <Button onClick={handleRefresh} variant="default">
-              <RefreshCw className="w-4 h-4 mr-2" />
-              {tc('tryAgain', 'Try Again')}
-            </Button>
-          </motion.div>
-        ) : validResearchResults.length === 0 && !loading ? (
           <motion.div
-            key="empty"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="text-center py-12"
-            style={{ color: colors.mutedForeground }}
-          >
-            {tn('noResultsFound', 'No research results found.')}
-          </motion.div>
-        ) : (
-          <motion.div
-            key={`research-news-${validResearchResults.length}`}
+            key="error"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4 }}
+            className="text-center py-12"
           >
-            <NewsGrid 
+            <AlertCircle className="w-12 h-12 mx-auto mb-4 text-red-500" />
+            <h3 className="text-lg font-semibold mb-2" style={{ color: colors.foreground }}>
+              {tc('error_loading', 'Error loading news')}
+            </h3>
+            <p className="text-sm mb-4" style={{ color: colors.mutedForeground }}>
+              {error}
+            </p>
+            <button onClick={handleRefresh}>
+              {tc('try_again', 'Try Again')}
+            </button>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <NewsGrid
               articles={validResearchResults}
-              onArticleRead={(researchId) => {
-                // Handle research read tracking if needed
-                console.log(tn('researchRead', 'Research read'), researchId);
-              }}
+              onArticleRead={handleArticleRead}
+              layout="grid"
+              className="mb-8"
+              loading={loading} 
             />
+            
+            {loading && validResearchResults.length > 0 && (
+              <div className="text-center py-4">
+                <div className="inline-flex items-center gap-3 text-sm" style={{ color: colors.mutedForeground }}>
+                  <LoaderComponent loading={true} variant="small" />
+                  {tc('updating_feed', 'Updating feed...')}
+                </div>
+              </div>
+            )}
+            
+            {!hasMoreArticles && validResearchResults.length > 0 && !loading && (
+              <div className="text-center py-4">
+                <p className="text-sm" style={{ color: colors.mutedForeground }}>
+                  {tc('no_more_articles', 'No more articles available')}
+                </p>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
-
-      {loading && validResearchResults.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          className="text-center py-4"
-        >
-          <div className="inline-flex items-center gap-2 text-sm" style={{ color: colors.mutedForeground }}>
-            <RefreshCw className="w-4 h-4 animate-spin" />
-            {tn('updatingResearch', 'Updating research...')}
-          </div>
-        </motion.div>
-      )}
     </div>
   );
 });

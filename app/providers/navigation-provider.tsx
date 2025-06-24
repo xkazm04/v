@@ -24,8 +24,6 @@ export function useNavigationContext() {
   return context;
 }
 
-// Critical routes to prefetch
-const CRITICAL_ROUTES = ['/reel', '/upload'];
 
 interface NavigationProviderProps {
   children: ReactNode;
@@ -100,18 +98,6 @@ export function NavigationProvider({ children }: NavigationProviderProps) {
     };
   }, [pathname, router]);
 
-  // Prefetch critical routes on mount
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      CRITICAL_ROUTES.forEach(route => {
-        if (route !== pathname) {
-          router.prefetch(route);
-        }
-      });
-    }, 1000);
-    
-    return () => clearTimeout(timer);
-  }, [pathname, router]);
 
   // Context value
   const value: NavigationContextType = {

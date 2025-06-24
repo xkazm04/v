@@ -1,56 +1,43 @@
-
 import { memo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ResearchResult } from '@/app/types/article';
 import { NewsCard } from './NewsCard';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import { containerVariants, itemVariants } from '@/app/components/animations/variants/votingVariants';
+import LoaderComponent from '@/app/components/animations/LoaderComponent';
 
 interface NewsGridProps {
-  articles: ResearchResult[]; // Fix: Use ResearchResult
+  articles: ResearchResult[];
   onArticleRead?: (articleId: string) => void;
   layout?: 'grid' | 'compact';
   className?: string;
+  loading?: boolean; 
 }
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { 
-    opacity: 0, 
-    y: 30,
-    scale: 0.95
-  },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.4,
-      ease: 'easeOut'
-    }
-  }
-};
 
 const NewsGrid = memo(function NewsGrid({
   articles,
   onArticleRead,
   layout = 'grid',
-  className = ''
+  className = '',
+  loading = false 
 }: NewsGridProps) {
   const { colors } = useLayoutTheme();
 
   const handleArticleRead = useCallback((articleId: string) => {
     onArticleRead?.(articleId);
   }, [onArticleRead]);
+
+  if (loading) {
+    return (
+      <div className="text-center py-16">
+        <LoaderComponent 
+          loading={true} 
+          text="Loading news articles..."
+          variant="default"
+        />
+      </div>
+    );
+  }
 
   // ✅ **FIX: Add proper data validation**
   if (!Array.isArray(articles)) {
@@ -66,10 +53,33 @@ const NewsGrid = memo(function NewsGrid({
 
   if (articles.length === 0) {
     return (
-      <div className="text-center py-8">
-        <p style={{ color: colors.mutedForeground }}>
-          No research results found
-        </p>
+      <div className="text-center py-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="mb-4">
+            <div 
+              className="w-16 h-16 mx-auto rounded-full flex items-center justify-center"
+              style={{ backgroundColor: `${colors.muted}30` }}
+            >
+              <span className="text-2xl">📰</span>
+            </div>
+          </div>
+          <h3 
+            className="text-lg font-semibold mb-2"
+            style={{ color: colors.foreground }}
+          >
+            No articles found
+          </h3>
+          <p 
+            className="text-sm"
+            style={{ color: colors.mutedForeground }}
+          >
+            Try adjusting your filters or search terms
+          </p>
+        </motion.div>
       </div>
     );
   }
@@ -108,7 +118,7 @@ const NewsGrid = memo(function NewsGrid({
       <AnimatePresence>
         {validArticles.map((research, index) => (
           <motion.div
-            key={`${research.id}-${index}`} // Use index as fallback for uniqueness
+            key={`${research.id}-${index}`}
             variants={itemVariants}
             layout
             className="flex"

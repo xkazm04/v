@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { ChevronRight } from 'lucide-react';
@@ -41,6 +41,17 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
       subtitle: 'Explore the comprehensive fact-checking tools at your disposal'
     },
   ];
+
+  useEffect(() => {
+    if (isOpen) {
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      document.body.style.overflow = 'hidden';
+      
+      return () => {
+        document.body.style.overflow = originalStyle;
+      };
+    }
+  }, [isOpen]);
 
   const handleLanguageChange = (language: string) => {
     setTempPreferences(prev => ({ ...prev, language }));
@@ -126,7 +137,7 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
             {/* Top Section: Language Selection + Theme Switcher */}
             <div className="space-y-6">
               <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
-                <div className="flex-1 max-w-2xl">
+                <div className="flex-1">
                   <LanguageSelector
                     value={tempPreferences.language}
                     onChange={handleLanguageChange}
@@ -176,22 +187,32 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          // FIXED: Prevent event bubbling to background
+          onMouseDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
         >
-          {/* Backdrop */}
+          {/* FIXED: Enhanced Backdrop with scroll prevention */}
           <motion.div
             className="absolute inset-0 bg-black/70 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            // Prevent clicks from bubbling through
+            onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.preventDefault()}
+            onTouchMove={(e) => e.preventDefault()}
           />
 
-          {/* Modal */}
+          {/* FIXED: Modal with proper scroll isolation */}
           <motion.div
             className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-3xl border-2 border-gray-200 dark:border-gray-700"
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            // FIXED: Prevent modal content from affecting background scroll
+            onWheel={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
           >
             {/* Dynamic Background */}
             <DynamicBackground
@@ -199,27 +220,29 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
               currentTheme={tempPreferences.theme}
             />
 
-            {/* Content */}
-            <div className="relative z-20 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm h-full flex flex-col">
-              {/* Header */}
-              <OnboardingHeader
-                onSkip={handleSkip}
-                currentStep={currentStep}
-                steps={steps}
-                getBackgroundConfig={getBackgroundConfig}
-                preferences={tempPreferences}
-              />
+            {/* FIXED: Content with explicit height and scroll isolation */}
+            <div className="relative z-20 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm h-full flex flex-col max-h-[90vh]">
+              {/* Header - Fixed height */}
+              <div className="flex-shrink-0">
+                <OnboardingHeader
+                  onSkip={handleSkip}
+                  currentStep={currentStep}
+                  steps={steps}
+                  getBackgroundConfig={getBackgroundConfig}
+                  preferences={tempPreferences}
+                />
+              </div>
 
-              {/* Step Content - Scrollable */}
-              <div className="flex-1 overflow-y-auto relative">
-                <div className="p-6 md:p-8">
+              {/* FIXED: Step Content - Properly scrollable with explicit dimensions */}
+              <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
+                <div className="p-6 md:p-8 min-h-full">
                   <motion.div
                     key={currentStep}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.3 }}
-                    className="space-y-6"
+                    className="space-y-6 h-full"
                   >
                     {/* Step Title */}
                     <div className="text-center space-y-2">
@@ -232,13 +255,15 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
                     </div>
 
                     {/* Step Content */}
-                    {renderStepContent()}
+                    <div className="flex-1">
+                      {renderStepContent()}
+                    </div>
                   </motion.div>
                 </div>
               </div>
 
-              {/* Footer */}
-              <div className="p-6 md:p-8 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+              {/* Footer - Fixed height */}
+              <div className="flex-shrink-0 p-6 md:p-8 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
                 <div className="flex justify-between items-center">
                   <Button
                     variant="outline"

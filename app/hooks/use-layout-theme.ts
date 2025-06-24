@@ -12,10 +12,8 @@ import {
   getVintageColors,
   getUniversalCardColors,
   getCardState,
-  type VintageColors,
-  type UniversalCardColors
 } from '@/app/constants/colors';
-import { useAppearanceStore, SUBTONE_CONFIGS } from '@/app/stores/appearance';
+import { useAppearanceStore } from '@/app/stores/appearance';
 
 export function useLayoutTheme() {
   const { theme, resolvedTheme } = useTheme();
@@ -37,8 +35,6 @@ export function useLayoutTheme() {
         return getNavbarColors(currentTheme);
       case 'sidebar':
         return getSidebarColors(currentTheme);
-      case 'card':
-        return getCardColors(currentTheme);
       case 'overlay':
         return getOverlayColors(currentTheme);
       default:

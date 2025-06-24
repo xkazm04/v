@@ -1,22 +1,17 @@
 'use client';
-import {
-    Globe,
-    Hash,
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect, useMemo, useRef, Suspense, lazy } from 'react'
-import SideSectionHeader from './SideSectionHeader';
+
+import { motion } from 'framer-motion';
+import { useMemo, Suspense, lazy } from 'react';
 import SideNavMainSection from './SideNavSections';
+import SidebarSections from './SidebarSections';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useUserPreferences } from '@/app/hooks/use-user-preferences';
 import { getCountryFlag, getCountryName } from '@/app/helpers/countries';
 import Divider from '../ui/divider';
 import Image from 'next/image';
 import { navItemVariants } from '../animations/variants/navVariants';
-import SideCatStats from './SideCatStats';
+import { useSidebarState, LoadingStage } from './SidebarLayout';
 
-const SideCountryItem = lazy(() => import('./SideCountryItem'));
-const SideCategoryGrid = lazy(() => import('./SideCategoryGrid'));
 const SideSettingButton = lazy(() => import('./SideSettingButton'));
 
 const ComponentSkeleton = ({ height = "h-8" }: { height?: string }) => (
@@ -27,82 +22,25 @@ const ComponentSkeleton = ({ height = "h-8" }: { height?: string }) => (
     />
 );
 
-enum LoadingStage {
-    NAVIGATION = 0,
-    STATS = 1,
-    COUNTRIES = 2,
-    CATEGORIES = 3,
-    SETTINGS = 4,
-    COMPLETE = 5
-}
-
 type Props = {
     isCollapsed: boolean;
     isActive: (path: string) => boolean;
 }
 
 const SideCat = ({ isCollapsed, isActive }: Props) => {
-    const [mounted, setMounted] = useState(false);
-    const [loadingStage, setLoadingStage] = useState<LoadingStage>(LoadingStage.NAVIGATION);
-    const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['main', 'countries']));
     const { isDark } = useLayoutTheme();
-    const containerRef = useRef<HTMLDivElement>(null);
-
     const { preferences, getAvailableCountries } = useUserPreferences();
+    const {
+        mounted,
+        loadingStage,
+        expandedSections,
+        containerRef,
+        toggleSection
+    } = useSidebarState();
+
     const availableCountries = getAvailableCountries();
 
-    // ✅ Progressive loading with delays
-    useEffect(() => {
-        setMounted(true);
-        
-        const stages = [
-            { stage: LoadingStage.STATS, delay: 400 },
-            { stage: LoadingStage.COUNTRIES, delay: 800 },
-            { stage: LoadingStage.CATEGORIES, delay: 1200 },
-            { stage: LoadingStage.SETTINGS, delay: 1600 },
-            { stage: LoadingStage.COMPLETE, delay: 2000 }
-        ];
-
-        stages.forEach(({ stage, delay }) => {
-            setTimeout(() => {
-                setLoadingStage(prevStage => Math.max(prevStage, stage));
-            }, delay);
-        });
-    }, []);
-
-    // ✅ Intersection Observer for adaptive loading
-    useEffect(() => {
-        if (!containerRef.current) return;
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        // Accelerate loading if component is in view
-                        setLoadingStage(LoadingStage.COMPLETE);
-                    }
-                });
-            },
-            { threshold: 0.1 }
-        );
-
-        observer.observe(containerRef.current);
-        return () => observer.disconnect();
-    }, []);
-
-    const toggleSection = (sectionId: string) => {
-        setExpandedSections(prev => {
-            const newSet = new Set(prev);
-            if (newSet.has(sectionId)) {
-                newSet.delete(sectionId);
-            } else {
-                newSet.add(sectionId);
-            }
-            return newSet;
-        });
-    };
-
-    // ✅ Get user preferences (same as before)
+    // ✅ Get user preferences
     const userPreferredCountries = preferences.countries && preferences.countries.length > 0
         ? preferences.countries
         : ['worldwide'];
@@ -144,7 +82,6 @@ const SideCat = ({ isCollapsed, isActive }: Props) => {
         }
     };
 
-
     return (
         <div className="relative" ref={containerRef}>
             <motion.div 
@@ -166,120 +103,20 @@ const SideCat = ({ isCollapsed, isActive }: Props) => {
                     <Divider />
                 </motion.div>
 
-                {/* ✅ Stats Section - Loads after navigation */}
-                {loadingStage >= LoadingStage.STATS && (
-                    <SideCatStats />
-                )}
-
-                {/* ✅ Countries Section - Progressive loading */}
-                {loadingStage >= LoadingStage.COUNTRIES ? (
-                    <motion.div variants={navItemVariants}>
-                        <SideSectionHeader
-                            title="Regions"
-                            icon={Globe}
-                            sectionId="countries"
-                            isExpanded={expandedSections.has('countries')}
-                            isCollapsed={isCollapsed}
-                            mounted={mounted}
-                            toggleSection={toggleSection}
-                        />
-
-                        <AnimatePresence initial={false}>
-                            {expandedSections.has('countries') && (
-                                <motion.div
-                                    initial={{ height: 0, opacity: 0 }}
-                                    animate={{ height: 'auto', opacity: 1 }}
-                                    exit={{ height: 0, opacity: 0 }}
-                                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                                    className="space-y-2 overflow-hidden"
-                                >
-                                    <AnimatePresence mode="popLayout">
-                                        {sidebarCountries.map((country, index) => (
-                                            <motion.div
-                                                key={`${country.code}-${preferences.lastUpdated || 'initial'}`}
-                                                layout
-                                                initial={{ x: -30, opacity: 0, scale: 0.9 }}
-                                                animate={{ x: 0, opacity: 1, scale: 1 }}
-                                                exit={{ x: -30, opacity: 0, scale: 0.9 }}
-                                                transition={{
-                                                    type: "spring",
-                                                    stiffness: 400,
-                                                    damping: 25,
-                                                    delay: index * 0.05,
-                                                    layout: { duration: 0.3 }
-                                                }}
-                                            >
-                                                <Suspense fallback={<ComponentSkeleton />}>
-                                                    <SideCountryItem
-                                                        mounted={mounted}
-                                                        isCollapsed={isCollapsed}
-                                                        country={country}
-                                                        isActiveRoute={isActive(country.href.split('?')[0]) &&
-                                                            typeof window !== 'undefined' &&
-                                                            window.location.search.includes(`country=${country.code}`)}
-                                                    />
-                                                </Suspense>
-                                            </motion.div>
-                                        ))}
-                                    </AnimatePresence>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </motion.div>
-                ) : (
-                    <ComponentSkeleton height="h-12" />
-                )}
-
-                <motion.div variants={navItemVariants}>
-                    <Divider />
-                </motion.div>
-
-                {/* ✅ Categories Section - Progressive loading */}
-                {loadingStage >= LoadingStage.CATEGORIES && userPreferredCategories.length > 0 ? (
-                    <motion.div variants={navItemVariants}>
-                        <SideSectionHeader
-                            title="Topics"
-                            icon={Hash}
-                            sectionId="categories"
-                            isExpanded={expandedSections.has('categories')}
-                            isCollapsed={false}
-                            mounted={mounted}
-                            toggleSection={toggleSection}
-                        />
-
-                        <AnimatePresence initial={false}>
-                            {expandedSections.has('categories') && (
-                                <motion.div
-                                    key={`categories-${preferences.lastUpdated || 'initial'}`}
-                                    initial={{ height: 0, opacity: 0 }}
-                                    animate={{ height: 'auto', opacity: 1 }}
-                                    exit={{ height: 0, opacity: 0 }}
-                                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                                    className="overflow-hidden"
-                                >
-                                    <Suspense fallback={<ComponentSkeleton height="h-16" />}>
-                                        <SideCategoryGrid
-                                            categories={userPreferredCategories}
-                                            isCollapsed={false}
-                                            mounted={mounted}
-                                        />
-                                    </Suspense>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </motion.div>
-                ) : userPreferredCategories.length > 0 ? (
-                    <ComponentSkeleton height="h-12" />
-                ) : null}
-
-                {userPreferredCategories.length > 0 && (
-                    <motion.div variants={navItemVariants}>
-                        <Divider />
-                    </motion.div>
-                )}
+                <SidebarSections
+                    isCollapsed={isCollapsed}
+                    isActive={isActive}
+                    mounted={mounted}
+                    loadingStage={loadingStage}
+                    expandedSections={expandedSections}
+                    toggleSection={toggleSection}
+                    sidebarCountries={sidebarCountries}
+                    userPreferredCategories={userPreferredCategories}
+                    preferences={preferences}
+                />
 
                 {loadingStage >= LoadingStage.SETTINGS ? (
-                    <motion.div variants={navItemVariants}>
+                    <motion.div variants={navItemVariants} className='py-5'>
                         <Suspense fallback={<ComponentSkeleton height="h-14" />}>
                             <SideSettingButton />
                         </Suspense>

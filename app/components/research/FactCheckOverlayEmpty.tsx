@@ -25,14 +25,6 @@ const FactCheckOverlayEmpty = ({themeColors}: Props) => {
                 background: themeColors.emptyBackground,
                 borderColor: themeColors.emptyBorder
             }}
-            animate={{
-                scale: [1, 1.02, 1],
-            }}
-            transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: 'easeInOut'
-            }}
         >
             <motion.div
                 animate={{

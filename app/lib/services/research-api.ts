@@ -20,6 +20,13 @@ export class ResearchApiService {
   } = {}): Promise<{ data: ResearchResult[]; count: number; error?: string }> {
     try {
       const client = useAdmin ? supabaseAdmin : supabase;
+      if (!client) {
+        return {
+          data: [],
+          count: 0,
+          error: 'Supabase client is not initialized'
+        };
+      }
       
       if (search || status) {
         // Use the search function for complex queries
@@ -144,42 +151,6 @@ export class ResearchApiService {
     }
   }
 
-  /**
-   * Get breaking news (FALSE or MISLEADING statements)
-   */
-  static async getBreakingNews({
-    limit = 10,
-    useAdmin = false
-  }: {
-    limit?: number;
-    useAdmin?: boolean;
-  } = {}): Promise<{ data: NewsArticle[]; error?: string }> {
-    try {
-      const client = useAdmin ? supabaseAdmin : supabase;
-      
-      const { data, error } = await client
-        .from('research_results_with_resources')
-        .select('*')
-        .in('status', ['FALSE', 'MISLEADING'])
-        .order('processed_at', { ascending: false })
-        .limit(limit);
-
-      if (error) throw error;
-
-      const newsArticles = (data || []).map((research) => ({
-        ...convertResearchToNews(research),
-        isBreaking: true
-      }));
-
-      return { data: newsArticles };
-    } catch (error) {
-      console.error('Error fetching breaking news:', error);
-      return {
-        data: [],
-        error: error instanceof Error ? error.message : 'Unknown error'
-      };
-    }
-  }
 
   /**
    * Search research results with advanced filters
@@ -205,7 +176,12 @@ export class ResearchApiService {
   } = {}): Promise<{ data: ResearchResult[]; error?: string }> {
     try {
       const client = useAdmin ? supabaseAdmin : supabase;
-      
+      if (!client) {
+        return {
+          data: [],
+          error: 'Supabase client is not initialized'
+        };
+      }
       // Build query with filters
       let query = client
         .from('research_results_with_resources')

@@ -1,5 +1,5 @@
 
-import NewsCardSpeaker from "@/app/components/news/NewsCardSpeaker";
+import UniversalCardSpeaker from "@/app/components/shared/UniversalCardSpeaker";
 import { FloatingVerdictIcon } from "@/app/components/ui/Decorative/FloatingVerdictIcon";
 import { Divider } from "@/app/components/ui/divider";
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
@@ -135,7 +135,7 @@ const FeedHeaderContent = ({ config, currentTheme, textColors, mockStatement }: 
               className="w-2 h-2 rounded-full"
               style={{ backgroundColor: config.color }}
             />
-            <NewsCardSpeaker research={mockStatement} />
+            <UniversalCardSpeaker data={mockStatement} />
           </motion.div>
         </motion.div>
       </div>

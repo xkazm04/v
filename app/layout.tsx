@@ -114,7 +114,6 @@ export default function RootLayout({
         />
         
         {/* Preload critical routes */}
-        <link rel="prefetch" href="/reel" />
         <link rel="prefetch" href="/timeline" />
         <link rel="prefetch" href="/" />
         <link rel="prefetch" href="/settings" />

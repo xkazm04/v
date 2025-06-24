@@ -1,54 +1,11 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-import { useFilterStore, useSelectedCountry } from '@/app/stores/filterStore';
-import { getCountryFlagSvg } from '@/app/helpers/countries';
-import Image from 'next/image';
-import { useState } from 'react';
-import { cn } from '@/app/lib/utils';
+'use client';
 
-const CountryFlagBackground = ({ 
-  flagSvg, 
-  alt, 
-  isFilterActive, 
-  isHovered 
-}: { 
-  flagSvg: string; 
-  alt: string; 
-  isFilterActive: boolean;
-  isHovered: boolean;
-}) => {
-  const [imageError, setImageError] = useState(false);
-  
-  if (imageError) {
-    return null;
-  }
-  
-  return (
-    <motion.div 
-      className="absolute inset-0 overflow-hidden rounded-lg"
-      animate={{
-        opacity: isFilterActive ? 0.4 : isHovered ? 0.3 : 0.2
-      }}
-      transition={{ duration: 0.3 }}
-    >
-      <Image
-        src={flagSvg}
-        alt={alt}
-        fill
-        className="object-cover"
-        onError={() => setImageError(true)}
-      />
-      <div 
-        className="absolute inset-0"
-        style={{
-          background: isFilterActive 
-            ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.08), rgba(139, 92, 246, 0.12))'
-            : 'linear-gradient(135deg, rgba(0,0,0,0.12), rgba(0,0,0,0.04), rgba(0,0,0,0.12))'
-        }}
-      />
-    </motion.div>
-  );
-};
+import { useState, useCallback } from 'react';
+import { useUserPreferences } from '@/app/hooks/use-user-preferences';
+import { useFilterStore } from '@/app/stores/filterStore';
+import { getCountryFlagSvg } from '@/app/helpers/countries';
+import { cn } from '@/app/lib/utils';
+import Image from 'next/image';
 
 interface SideCountryItemProps {
     mounted: boolean;
@@ -65,215 +22,137 @@ interface SideCountryItemProps {
 
 const SideCountryItem = ({ mounted, isCollapsed, country, isActiveRoute = false }: SideCountryItemProps) => {
     const [isHovered, setIsHovered] = useState(false);
-    const { colors, sidebarColors, isDark } = useLayoutTheme();
+    const { preferences } = useUserPreferences();
     
-    // Filter store state
-    const { selectedCountry } = useFilterStore();
-    const { setSelectedCountry } = useSelectedCountry();
-    
-    // Determine if this country is the active filter
+
+    const { selectedCountry, setSelectedCountry } = useFilterStore((state) => ({
+        selectedCountry: state.selectedCountry,
+        setSelectedCountry: state.setSelectedCountry
+    }));
+
     const isFilterActive = selectedCountry === country.code || 
                           (country.isDefault && selectedCountry === 'worldwide') ||
                           isActiveRoute;
     
-    // Get flag SVG path for background (only for non-worldwide countries)
     const flagSvgPath = country.code !== 'worldwide' ? getCountryFlagSvg(country.code) : null;
-    
-    // Mock article counts for visual appeal
-    const articleCount = country.isDefault ? 1247 : Math.floor(Math.random() * 500) + 50;
 
-    const handleCountryClick = () => {
-        if (country.isDefault || country.code === 'worldwide') {
-            setSelectedCountry('worldwide');
-        } else {
-            setSelectedCountry(country.code);
+    const handleCountryClick = useCallback(() => {
+        const targetCountry = country.isDefault || country.code === 'worldwide' 
+            ? 'worldwide' 
+            : country.code;
+
+        console.log(`🌍 Setting country filter: ${targetCountry}`);
+        
+        setSelectedCountry(targetCountry);
+        
+        const preferredCategory = preferences?.categories?.[0];
+        if (preferredCategory && preferredCategory !== 'all') {
+            console.log(`📂 Applying preferred category: ${preferredCategory}`);
         }
-    };
+    }, [country.code, country.isDefault, setSelectedCountry, preferences?.categories]);
+
+    if (!mounted) {
+        return (
+            <div className={cn(
+                'w-full rounded-xl animate-pulse bg-gray-200 dark:bg-gray-700',
+                isCollapsed ? 'h-10' : 'h-14'
+            )} />
+        );
+    }
 
     return (
-        <AnimatePresence mode="wait">
-            <motion.div
-                key={country.code} 
-                layout 
-                initial={{ opacity: 0, x: -20, scale: 0.95 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: -20, scale: 0.95 }}
-                transition={{ 
-                    type: "spring", 
-                    stiffness: 400, 
-                    damping: 25,
-                    opacity: { duration: 0.2 },
-                    layout: { duration: 0.3 }
-                }}
-                whileHover={{ x: isCollapsed ? 0 : 4 }}
-                onHoverStart={() => setIsHovered(true)}
-                onHoverEnd={() => setIsHovered(false)}
-            >
-                <motion.button
-                    onClick={handleCountryClick}
-                    className={cn(
-                        'w-full relative overflow-hidden group rounded-xl transition-all duration-300', // Increased border radius
-                        isCollapsed ? 'h-10 px-2' : 'h-14 px-0', // Slightly taller for better proportions
-                        country.isDefault && 'font-medium'
+        <button
+            onClick={handleCountryClick}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            className={cn(
+                'w-full relative overflow-hidden group rounded-xl transition-all duration-300',
+                'border border-slate-200/50 dark:border-slate-700/50',
+                isCollapsed ? 'h-10 px-1' : 'h-14 px-2',
+                isFilterActive && [
+                    'bg-gradient-to-br from-blue-500/20 via-purple-500/15 to-indigo-500/10',
+                    'dark:from-blue-500/25 dark:via-purple-500/18 dark:to-indigo-500/15',
+                    'border-blue-500/40 dark:border-blue-500/50',
+                    'shadow-lg shadow-blue-500/15 dark:shadow-blue-500/20'
+                ],
+                // Hover states
+                !isFilterActive && [
+                    'hover:bg-slate-50/80 dark:hover:bg-slate-800/60',
+                    'hover:border-slate-300/60 dark:hover:border-slate-600/60'
+                ],
+                isFilterActive && [
+                    'hover:from-blue-500/25 hover:via-purple-500/20 hover:to-indigo-500/15',
+                    'dark:hover:from-blue-500/30 dark:hover:via-purple-500/23 dark:hover:to-indigo-500/18'
+                ]
+            )}
+        >
+            {isCollapsed ? (
+                <div className="flex items-center justify-center h-full relative">
+                    <span className="text-xl" title={country.name}>
+                        {country.flag}
+                    </span>
+                    {isFilterActive && (
+                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full" />
                     )}
-                    style={{
-                        background: isFilterActive 
-                            ? isDark 
-                                ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(139, 92, 246, 0.12))'
-                                : 'linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.10), rgba(168, 85, 247, 0.08))'
-                            : 'transparent',
-                        border: isFilterActive 
-                            ? `1px solid ${isDark ? 'rgba(59, 130, 246, 0.4)' : 'rgba(59, 130, 246, 0.35)'}` 
-                            : `1px solid ${isDark ? 'rgba(71, 85, 105, 0.2)' : 'rgba(148, 163, 184, 0.15)'}`,
-                        boxShadow: isFilterActive 
-                            ? `0 4px 12px ${isDark ? 'rgba(59, 130, 246, 0.15)' : 'rgba(59, 130, 246, 0.12)'}`
-                            : 'none'
-                    }}
-                    whileHover={{
-                        backgroundColor: isFilterActive
-                            ? isDark 
-                                ? 'rgba(59, 130, 246, 0.22)' 
-                                : 'rgba(59, 130, 246, 0.18)'
-                            : isDark 
-                                ? 'rgba(71, 85, 105, 0.12)' 
-                                : 'rgba(248, 250, 252, 0.8)',
-                        borderColor: isFilterActive
-                            ? isDark ? 'rgba(59, 130, 246, 0.5)' : 'rgba(59, 130, 246, 0.45)'
-                            : isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(148, 163, 184, 0.25)'
-                    }}
-                    whileTap={{ scale: 0.98 }}
-                >
-                    {isCollapsed ? (
-                        // ✅ Collapsed view - just flag icon
-                        <div className="flex items-center justify-center h-full">
-                            <motion.span 
-                                className="text-lg drop-shadow-sm"
-                                whileHover={{ scale: 1.1, rotate: isHovered ? 3 : 0 }}
-                                transition={{ type: "spring", stiffness: 400 }}
-                                animate={{ scale: isFilterActive ? 1.05 : 1 }}
-                            >
-                                {country.flag}
-                            </motion.span>
-                        </div>
-                    ) : (
-                        // ✅ Expanded view - split layout: 45% flag area, 55% text area for better balance
-                        <div className="flex h-full">
-                            {/* ✅ Left 45% - Flag Area */}
-                            <div className="w-[45%] relative flex items-center justify-center">
-                                {/* SVG Flag Background (only for non-worldwide countries) */}
-                                {flagSvgPath && (
-                                    <CountryFlagBackground 
-                                        flagSvg={flagSvgPath}
-                                        alt={country.name}
-                                        isFilterActive={isFilterActive}
-                                        isHovered={isHovered}
-                                    />
+                </div>
+            ) : (
+                <div className="flex items-center h-full">
+                    {/* Left 1/4 - Country Code */}
+                    <div className="w-1/4 flex items-center justify-center">
+                        <span 
+                            className={cn(
+                                'text-sm font-bold tracking-wider',
+                                isFilterActive 
+                                    ? 'text-blue-700 dark:text-blue-300' 
+                                    : 'text-slate-600 dark:text-slate-400'
+                            )}
+                        >
+                            {country.code === 'worldwide' ? '🌍' : country.code.toUpperCase()}
+                        </span>
+                    </div>
+
+                    {/* Right 3/4 - Flag + Active Indicator */}
+                    <div className="w-3/4 relative h-full flex items-center justify-center">
+                        {/* Flag Background */}
+                        {flagSvgPath && (
+                            <div 
+                                className={cn(
+                                    'absolute inset-1 rounded-lg overflow-hidden transition-opacity duration-300',
+                                    isFilterActive ? 'opacity-60' : isHovered ? 'opacity-40' : 'opacity-30'
                                 )}
-                                
-                                {/* Flag Icon */}
-                                <motion.span 
-                                    className="text-2xl drop-shadow-sm relative z-10"
-                                    whileHover={{ scale: 1.1, rotate: isHovered ? 3 : 0 }}
-                                    transition={{ type: "spring", stiffness: 400 }}
-                                    animate={{ scale: isFilterActive ? 1.05 : 1 }}
-                                >
-                                    {country.flag}
-                                </motion.span>
-                            </div>
-
-                            {/* ✅ Right 55% - Text Area with improved spacing */}
-                            <div className="w-[55%] flex flex-col justify-center px-3 py-1.5">
-                                {mounted && (
-                                    <AnimatePresence initial={false}>
-                                        <motion.div
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0 }}
-                                            transition={{ duration: 0.2 }}
-                                            className="space-y-1"
-                                        >
-                                            {/* Country Code */}
-                                            <motion.div
-                                                className="text-xs font-bold uppercase tracking-wider leading-none"
-                                                style={{
-                                                    color: isFilterActive 
-                                                        ? isDark ? '#60a5fa' : '#2563eb'
-                                                        : sidebarColors.foreground
-                                                }}
-                                                animate={{ fontWeight: isFilterActive ? 700 : 600 }}
-                                            >
-                                                {country.code === 'worldwide' ? 'ALL' : country.code.toUpperCase()}
-                                            </motion.div>
-
-                                            {/* Article Count */}
-                                            <motion.div
-                                                className="text-xs leading-none"
-                                                style={{ color: colors.mutedForeground }}
-                                                initial={{ opacity: 0, y: 5 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 0.1 }}
-                                            >
-                                                {articleCount.toLocaleString()} articles
-                                            </motion.div>
-
-                                            {/* Special badge for worldwide */}
-                                            {country.isDefault && (
-                                                <motion.div
-                                                    className="text-xs px-1.5 py-0.5 rounded-md text-center font-medium leading-none"
-                                                    style={{
-                                                        background: isDark 
-                                                            ? 'rgba(139, 92, 246, 0.25)' 
-                                                            : 'rgba(139, 92, 246, 0.15)',
-                                                        color: isDark ? '#c084fc' : '#8b5cf6',
-                                                        fontSize: '10px'
-                                                    }}
-                                                    initial={{ scale: 0, opacity: 0 }}
-                                                    animate={{ scale: 1, opacity: 1 }}
-                                                    transition={{ delay: 0.2 }}
-                                                    whileHover={{ scale: 1.05 }}
-                                                >
-                                                    Global
-                                                </motion.div>
-                                            )}
-                                        </motion.div>
-                                    </AnimatePresence>
-                                )}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Enhanced Active indicator */}
-                    <AnimatePresence>
-                        {isFilterActive && (
-                            <motion.div
-                                className="absolute right-2 top-1/2"
-                                initial={{ scale: 0, opacity: 0, y: '-50%' }}
-                                animate={{ scale: 1, opacity: 1, y: '-50%' }}
-                                exit={{ scale: 0, opacity: 0, y: '-50%' }}
-                                transition={{ type: "spring", stiffness: 400, delay: 0.1 }}
                             >
-                                <motion.div
-                                    className="w-1 h-6 rounded-full shadow-lg"
-                                    style={{ backgroundColor: isDark ? '#60a5fa' : '#2563eb' }}
-                                    animate={{
-                                        boxShadow: [
-                                            `0 0 0 0 ${isDark ? 'rgba(96, 165, 250, 0.4)' : 'rgba(37, 99, 235, 0.4)'}`,
-                                            `0 0 0 3px ${isDark ? 'rgba(96, 165, 250, 0.1)' : 'rgba(37, 99, 235, 0.1)'}`,
-                                            `0 0 0 0 ${isDark ? 'rgba(96, 165, 250, 0.4)' : 'rgba(37, 99, 235, 0.4)'}`
-                                        ]
-                                    }}
-                                    transition={{
-                                        duration: 2,
-                                        repeat: Infinity,
-                                        ease: "easeInOut"
-                                    }}
+                                <Image
+                                    src={flagSvgPath}
+                                    alt={`${country.name} flag`}
+                                    fill
+                                    className="object-cover"
                                 />
-                            </motion.div>
+                                <div 
+                                    className={cn(
+                                        'absolute inset-0',
+                                        isFilterActive 
+                                            ? 'bg-gradient-to-br from-blue-500/15 via-blue-500/8 to-purple-500/12'
+                                            : 'bg-gradient-to-br from-black/12 via-black/4 to-black/12'
+                                    )}
+                                />
+                            </div>
                         )}
-                    </AnimatePresence>
-                </motion.button>
-            </motion.div>
-        </AnimatePresence>
+
+                        {/* Flag Emoji Fallback */}
+                        {!flagSvgPath && (
+                            <span className="text-2xl opacity-60">
+                                {country.flag}
+                            </span>
+                        )}
+
+                        {/* Active Indicator */}
+                        {isFilterActive && (
+                            <div className="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full shadow-sm" />
+                        )}
+                    </div>
+                </div>
+            )}
+        </button>
     );
 };
 

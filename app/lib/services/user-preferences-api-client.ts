@@ -28,7 +28,6 @@ export class UserPreferencesApiClient {
     try {
       // 1. Try client-side preferences first (most reliable)
       if (sources.clientPreferences) {
-        console.log('📱 Using client-side preferences');
         this.preferences = sources.clientPreferences;
         return sources.clientPreferences;
       }
@@ -43,7 +42,6 @@ export class UserPreferencesApiClient {
           if (preferencesHeader) {
             try {
               const parsed = JSON.parse(preferencesHeader) as UserPreferences;
-              console.log('🌐 Using preferences from request header');
               this.preferences = parsed;
               return parsed;
             } catch (error) {
@@ -64,7 +62,7 @@ export class UserPreferencesApiClient {
               lastUpdated: new Date().toISOString(),
               version: '1.0.0'
             };
-            console.log('🌍 Using language from request header');
+            console.log('🌍 Using language from request header:', minimalPrefs);
             this.preferences = minimalPrefs;
             return minimalPrefs;
           }
@@ -75,6 +73,8 @@ export class UserPreferencesApiClient {
       if (sources.searchParams) {
         const lang = sources.searchParams.get('lang');
         const theme = sources.searchParams.get('theme');
+        
+        console.log('🔗 URL params check:', { lang, theme });
         
         if (lang || theme) {
           const minimalPrefs: UserPreferences = {
@@ -88,7 +88,6 @@ export class UserPreferencesApiClient {
             lastUpdated: new Date().toISOString(),
             version: '1.0.0'
           };
-          console.log('🔗 Using preferences from URL params');
           this.preferences = minimalPrefs;
           return minimalPrefs;
         }
@@ -100,7 +99,7 @@ export class UserPreferencesApiClient {
           const stored = localStorage.getItem('storyteller-user-preferences');
           if (stored) {
             const parsed = JSON.parse(stored) as UserPreferences;
-            console.log('💾 Using preferences from localStorage');
+            console.log('💾 Using preferences from localStorage:', parsed);
             this.preferences = parsed;
             return parsed;
           }
@@ -123,10 +122,9 @@ export class UserPreferencesApiClient {
    */
   public getTranslationTarget(preferences?: UserPreferences): string | null {
     const prefs = preferences || this.preferences;
-    if (!prefs || prefs.language === 'en' || !prefs.language) {
-      return null;
-    }
-    return prefs.language;
+    const result = (!prefs || prefs.language === 'en' || !prefs.language) ? null : prefs.language;
+    
+    return result;
   }
 
   /**
@@ -165,10 +163,10 @@ export class UserPreferencesApiClient {
    */
   public applyPreferencesToFilters<T extends Record<string, any>>(
     baseFilters: T,
-    preferences?: UserPreferences
+    preferences?: UserPreferences | null
   ): T & { translate_to?: string } {
-    const prefs = preferences || this.preferences;
-    const translationTarget = this.getTranslationTarget(prefs);
+    const prefs = preferences ?? this.preferences;
+    const translationTarget = this.getTranslationTarget(prefs ?? undefined);
 
     return {
       ...baseFilters,
@@ -190,6 +188,8 @@ export class UserPreferencesApiClient {
       headers['X-User-Preferences'] = JSON.stringify(prefs);
       headers['X-User-Language'] = prefs.language || 'en';
       headers['X-User-Theme'] = prefs.theme || 'system';
+    } else {
+      console.log('📤 No preferences available for headers');
     }
 
     return headers;
@@ -203,9 +203,9 @@ export class UserPreferencesApiClient {
     options: RequestInit = {},
     preferences?: UserPreferences
   ): Promise<Response> {
-    const prefs = preferences || this.preferences;
+    const prefs = preferences ?? this.preferences ?? undefined;
     const enhancedHeaders = {
-      ...this.createRequestHeaders(prefs),
+      ...this.createRequestHeaders(prefs === null ? undefined : prefs),
       ...options.headers
     };
 
@@ -213,22 +213,6 @@ export class UserPreferencesApiClient {
       ...options,
       headers: enhancedHeaders
     });
-  }
-
-  /**
-   * Log current preferences state (for debugging)
-   */
-  public logPreferencesState(context: string = 'Unknown'): void {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`🔍 User Preferences State [${context}]:`, {
-        hasPreferences: !!this.preferences,
-        language: this.preferences?.language || 'en',
-        needsTranslation: this.needsTranslation(),
-        translationTarget: this.getTranslationTarget(),
-        theme: this.preferences?.theme || 'system',
-        isServer: this.isServer
-      });
-    }
   }
 
   /**

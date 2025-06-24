@@ -10,7 +10,6 @@ import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
 import { containerVariants } from '@/app/components/animations/variants/votingVariants';
 import ProfilesSearch from '../../../components/profile/ProfilesSearch';
 import ProfilesError from '@/app/components/profile/ProfilesError';
-import ProfileItemList from '@/app/components/profile/ProfileItemList';
 import ProfileItemGrid from '@/app/components/profile/ProfileItemGrid';
 import ProfileFilterBar from '@/app/components/profile/ProfileFilterBar';
 
@@ -18,19 +17,12 @@ import ProfileFilterBar from '@/app/components/profile/ProfileFilterBar';
 interface ProfileGridItemProps {
     profile: Profile;
     index: number;
-    viewMode?: 'grid' | 'list';
 }
 
 const ProfileGridItem: React.FC<ProfileGridItemProps> = ({
     profile,
     index,
-    viewMode = 'grid'
 }) => {
-    // Route to appropriate component based on view mode
-    if (viewMode === 'list') {
-        return <ProfileItemList profile={profile} index={index} />;
-    }
-
     return <ProfileItemGrid profile={profile} index={index} />;
 };
 
@@ -202,7 +194,6 @@ const AllProfilesTab: React.FC = () => {
                                         key={profile.id}
                                         profile={profile}
                                         index={index}
-                                        viewMode={viewMode}
                                     />
                                 ))}
                             </motion.div>

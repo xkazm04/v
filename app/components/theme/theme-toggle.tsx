@@ -7,15 +7,14 @@ import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { Button } from '@/app/components/ui/button';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
+import { playButtonVariants } from '../animations/variants/cardVariants';
 
 interface ThemeToggleProps {
-  variant?: 'default' | 'minimal' | 'enhanced' | 'mobile';
-  showLabel?: boolean;
   className?: string;
   size?: 'sm' | 'md' | 'lg';
 }
 
-const iconVariants = {
+const iconVariants: Variants = {
   hidden: { 
     scale: 0, 
     rotate: -180, 
@@ -42,80 +41,126 @@ const iconVariants = {
   }
 };
 
-const buttonVariants: Variants = {
-  idle: { scale: 1 },
-  hover: { 
-    scale: 1.05,
-    transition: { duration: 0.2, ease: 'easeOut' }
-  },
-  tap: { 
-    scale: 0.95,
-    transition: { duration: 0.1 }
-  }
-};
-
 export function ThemeToggle({ 
-  variant = 'default', 
-  showLabel = false,
   className,
   size = 'md'
 }: ThemeToggleProps) {
-  const { theme, setTheme, resolvedTheme, systemTheme } = useTheme();
-  const { colors, mounted, isDark } = useLayoutTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { colors, mounted } = useLayoutTheme();
   const [isHovered, setIsHovered] = React.useState(false);
   const [isAnimating, setIsAnimating] = React.useState(false);
+  const [themeInitialized, setThemeInitialized] = React.useState(false);
 
-  // Enhanced theme detection with better resolution
+  React.useEffect(() => {
+    if (!mounted || themeInitialized) return;
+
+    const initializeTheme = () => {
+      try {
+        // Check if user has a saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        const userPreferences = localStorage.getItem('storyteller-user-preferences');
+        
+        let preferredTheme = 'light'; // Default fallback
+        
+        // Try to get theme from user preferences first
+        if (userPreferences) {
+          try {
+            const parsed = JSON.parse(userPreferences);
+            if (parsed.theme && parsed.theme !== 'system') {
+              preferredTheme = parsed.theme;
+            }
+          } catch (e) {
+            console.warn('Failed to parse user preferences:', e);
+          }
+        }
+        
+        // Fallback to localStorage theme if no user preference
+        if (!userPreferences && savedTheme && savedTheme !== 'system') {
+          preferredTheme = savedTheme;
+        }
+
+        // ✅ CRITICAL: Override system theme detection completely
+        if (theme === 'system' || !theme || savedTheme === 'system') {
+          console.log('🎨 Overriding system theme with light default');
+          setTheme(preferredTheme);
+          
+          // Force DOM update immediately to prevent flash
+          const root = document.documentElement;
+          if (preferredTheme === 'dark') {
+            root.classList.add('dark');
+            root.setAttribute('data-theme', 'dark');
+          } else {
+            root.classList.remove('dark');
+            root.setAttribute('data-theme', 'light');
+          }
+          
+          // Update localStorage to prevent system theme fallback
+          localStorage.setItem('theme', preferredTheme);
+        }
+
+        setThemeInitialized(true);
+      } catch (error) {
+        console.error('Theme initialization failed:', error);
+        // Fallback: force light theme
+        setTheme('light');
+        document.documentElement.classList.remove('dark');
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        setThemeInitialized(true);
+      }
+    };
+
+    // Small delay to ensure all theme providers are ready
+    const timer = setTimeout(initializeTheme, 100);
+    return () => clearTimeout(timer);
+  }, [mounted, theme, setTheme, themeInitialized]);
+
   const getCurrentTheme = React.useCallback(() => {
     if (!mounted) return 'light';
     
-    // Priority: resolved theme > explicit theme > system theme > fallback
-    const currentTheme = resolvedTheme || theme || systemTheme || 'light';
+    // Priority: explicit theme > resolved theme > DOM state > light fallback
+    let currentTheme = theme || resolvedTheme || 'light';
     
-    // Additional check using document class for more reliable detection
+    // ✅ OVERRIDE: Never allow system theme to be returned
+    if (currentTheme === 'system') {
+      currentTheme = 'light';
+    }
+    
+    // Additional check using document class for reliability
     if (typeof window !== 'undefined') {
-      const hasSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const hasDarkClass = document.documentElement.classList.contains('dark');
       const dataTheme = document.documentElement.getAttribute('data-theme');
       
-      // Use multiple sources for the most accurate theme detection
-      if (currentTheme === 'system') {
-        return hasSystemDark ? 'dark' : 'light';
-      }
-      
-      // Cross-verify with DOM state
-      if (dataTheme) {
-        return dataTheme;
+      // Cross-verify with DOM state, but always prefer explicit themes
+      if (dataTheme && dataTheme !== 'system') {
+        return dataTheme as 'light' | 'dark';
       }
       
       return hasDarkClass ? 'dark' : 'light';
     }
     
-    return currentTheme;
-  }, [mounted, resolvedTheme, theme, systemTheme]);
+    return currentTheme as 'light' | 'dark';
+  }, [mounted, resolvedTheme, theme]);
 
   const currentTheme = getCurrentTheme();
   const isCurrentlyDark = currentTheme === 'dark';
 
-  // Optimized theme switching with proper state management
+  // ✅ UPDATED: Enhanced theme switching that prevents system theme
   const handleThemeSwitch = React.useCallback(async () => {
     if (isAnimating) return;
     
     setIsAnimating(true);
     
     try {
-      // Determine next theme
-      let nextTheme: string;
-      if (theme === 'system') {
-        nextTheme = isCurrentlyDark ? 'light' : 'dark';
-      } else {
-        nextTheme = isCurrentlyDark ? 'light' : 'dark';
-      }
+      // Simple toggle between light and dark only (no system)
+      const nextTheme = isCurrentlyDark ? 'light' : 'dark';
+      
+      console.log(`🎨 Switching theme from ${currentTheme} to ${nextTheme}`);
       
       // Apply theme with immediate DOM update
       setTheme(nextTheme);
       
-      // Update DOM attributes immediately for better sync
+      // ✅ CRITICAL: Update DOM attributes immediately for better sync
       if (typeof window !== 'undefined') {
         const root = document.documentElement;
         
@@ -127,19 +172,39 @@ export function ThemeToggle({
           root.setAttribute('data-theme', 'light');
         }
         
-        // Store in localStorage for persistence
+        // Store in localStorage for persistence (never store 'system')
         localStorage.setItem('theme', nextTheme);
+        
+        // ✅ NEW: Also update user preferences if they exist
+        try {
+          const userPreferences = localStorage.getItem('storyteller-user-preferences');
+          if (userPreferences) {
+            const parsed = JSON.parse(userPreferences);
+            parsed.theme = nextTheme;
+            parsed.lastUpdated = new Date().toISOString();
+            localStorage.setItem('storyteller-user-preferences', JSON.stringify(parsed));
+          }
+        } catch (e) {
+          console.warn('Failed to update user preferences:', e);
+        }
       }
       
     } catch (error) {
       console.error('Theme switch failed:', error);
+      // Fallback to light theme on error
+      setTheme('light');
+      if (typeof window !== 'undefined') {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+      }
     } finally {
       // Reset animation state with proper timing
       setTimeout(() => {
         setIsAnimating(false);
       }, 200);
     }
-  }, [theme, setTheme, isCurrentlyDark, isAnimating]);
+  }, [isCurrentlyDark, isAnimating, setTheme, currentTheme]);
 
   // Size configurations
   const sizeConfig = {
@@ -179,65 +244,20 @@ export function ThemeToggle({
 
   const themeColors = getThemeColors();
 
-  // Mobile variant - simplified for touch
-  const renderMobile = () => (
-    <motion.button
-      variants={buttonVariants}
-      initial="idle"
-      whileHover="hover"
-      whileTap="tap"
-      onClick={handleThemeSwitch}
-      disabled={isAnimating}
-      className={cn(
-        "relative flex items-center justify-center rounded-full transition-all duration-300",
-        "active:scale-95 touch-manipulation",
-        buttonSize,
-        className
-      )}
-      style={{
-        backgroundColor: isHovered ? themeColors.hoverBg : 'transparent',
-        color: themeColors.iconColor,
-      }}
-      onTouchStart={() => setIsHovered(true)}
-      onTouchEnd={() => setIsHovered(false)}
-    >
-      {/* Touch feedback */}
-      <motion.div
-        className="absolute inset-0 rounded-full"
-        style={{ backgroundColor: themeColors.glow }}
-        animate={{
-          opacity: isHovered ? 0.6 : 0,
-          scale: isHovered ? 1.1 : 1
-        }}
-        transition={{ duration: 0.2 }}
-      />
-
-      {/* Icon */}
-      <div className="relative z-10">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`mobile-${isCurrentlyDark ? 'sun' : 'moon'}`}
-            variants={iconVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            {isCurrentlyDark ? (
-              <Sun className={iconSize} />
-            ) : (
-              <Moon className={iconSize} />
-            )}
-          </motion.div>
-        </AnimatePresence>
+  // ✅ LOADING STATE: Show loading indicator during theme initialization
+  if (!mounted || !themeInitialized) {
+    return (
+      <div className={cn("relative", buttonSize, className)}>
+        <div className="flex items-center justify-center">
+          <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
+        </div>
       </div>
-    </motion.button>
-  );
-
-  // Enhanced desktop variant
-  const renderEnhanced = () => (
-    <motion.div
+    );
+  }
+  return (
+        <motion.div
       className="relative"
-      variants={buttonVariants}
+      variants={playButtonVariants}
       initial="idle"
       whileHover="hover"
       whileTap="tap"
@@ -347,65 +367,5 @@ export function ThemeToggle({
         )}
       </AnimatePresence>
     </motion.div>
-  );
-
-  // Default variant
-  const renderDefault = () => (
-    <motion.div
-      variants={buttonVariants}
-      initial="idle"
-      whileHover="hover"
-      whileTap="tap"
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-    >
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={handleThemeSwitch}
-        disabled={isAnimating}
-        className={cn(
-          "relative transition-all duration-300",
-          buttonSize,
-          className
-        )}
-        style={{
-          backgroundColor: isHovered ? themeColors.hoverBg : 'transparent',
-          color: themeColors.foreground,
-        }}
-      >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`default-${isCurrentlyDark ? 'sun' : 'moon'}`}
-            variants={iconVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            {isCurrentlyDark ? (
-              <Sun className={cn(iconSize, "transition-all")} />
-            ) : (
-              <Moon className={cn(iconSize, "transition-all")} />
-            )}
-          </motion.div>
-        </AnimatePresence>
-        
-        <span className="sr-only">
-          Switch to {isCurrentlyDark ? 'light' : 'dark'} mode
-        </span>
-      </Button>
-    </motion.div>
-  );
-
-  // Render based on variant
-  switch (variant) {
-    case 'mobile':
-      return renderMobile();
-    case 'enhanced':
-      return renderEnhanced();
-    case 'minimal':
-      return renderDefault(); // Use default for minimal
-    default:
-      return renderDefault();
-  }
+  )
 }

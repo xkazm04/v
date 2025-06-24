@@ -1,3 +1,5 @@
+import { Variants } from "framer-motion";
+
 export const headerVariants = {
   hidden: { 
     opacity: 0, 
@@ -22,7 +24,7 @@ export const headerVariants = {
   }
 };
 
-export const contentVariants = {
+export const contentVariants: Variants = {
   hidden: { opacity: 0, x: -20 },
   visible: { 
     opacity: 1, 

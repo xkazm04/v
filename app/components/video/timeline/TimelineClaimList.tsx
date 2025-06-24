@@ -44,9 +44,7 @@ export function TimelineClaimList({
   isCompact = false
 }: TimelineClaimListProps) {
   const { colors, isDark, vintage, isVintage } = useLayoutTheme();
-  const { isDesktop } = useViewport();
 
-  // ✅ FIX: Fetch timestamps if not provided via video prop
   const { 
     data: fetchedTimestamps, 
     isLoading: timestampsLoading, 

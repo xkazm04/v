@@ -1,6 +1,11 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { ResearchResult } from '@/app/types/article';
+'use client';
+
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useApiWithPreferences } from './use-api-with-preferences';
+import { useUserPreferences } from './use-user-preferences';
+import { useReadArticlesStore } from '@/app/stores/useReadArticlesStore';
+import { useFilterStore } from '@/app/stores/filterStore'; 
+import { ResearchResult } from '@/app/types/article';
 
 export interface UseNewsFilters {
   limit?: number;
@@ -12,72 +17,96 @@ export interface UseNewsFilters {
   sourceFilter?: string;
   breaking?: boolean;
   onlyFactChecked?: boolean;
+  topicId?: string; 
 }
 
-interface UseNewsReturn {
+interface UseNewsWithExchangeReturn {
   articles: ResearchResult[];
   loading: boolean;
   error: string | null;
   refreshNews: () => void;
+  replaceReadArticle: (articleId: string) => void;
   dataSource: string;
+  totalFetched: number;
+  hasMoreArticles: boolean;
 }
 
-export function useNews(filters: UseNewsFilters = {}): UseNewsReturn {
+// ✅ Extracted filter creation logic
+function createNewsFilters(
+  filters: UseNewsFilters,
+  storeFilters: any,
+  preferences: any,
+  excludeIds: string[]
+): Record<string, string> {
+  const params: Record<string, string> = {
+    limit: String(filters.limit || 10),
+    offset: '0',
+    sort_by: 'processed_at',
+    sort_order: 'desc'
+  };
+
+  const statusFilter = filters.statusFilter || storeFilters.statusFilter;
+  const countryFilter = filters.countryFilter || storeFilters.countryFilter || 
+                       (preferences?.countries?.length > 0 && preferences.countries[0] !== 'worldwide' ? preferences.countries[0] : undefined);
+  const sourceFilter = filters.sourceFilter || storeFilters.sourceFilter;
+  const searchText = filters.searchText || storeFilters.searchText;
+  const topicId = filters.topicId || storeFilters.topicFilter;
+
+  if (statusFilter) params.status_filter = statusFilter;
+  if (countryFilter) params.country_filter = countryFilter;
+  if (sourceFilter) params.source_filter = sourceFilter;
+  if (searchText) params.search_text = searchText;
+  if (topicId) params.topic_id = topicId;
+  if (excludeIds.length > 0) params.exclude_ids = excludeIds.join(',');
+
+  return params;
+}
+
+export function useNewsWithExchange(filters: UseNewsFilters = {}): UseNewsWithExchangeReturn {
   const [articles, setArticles] = useState<ResearchResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [dataSource, setDataSource] = useState<string>('none');
+  const [totalFetched, setTotalFetched] = useState(0);
+  const [hasMoreArticles, setHasMoreArticles] = useState(true);
   
-  // ✅ **Use universal API client with preferences**
+  const { addReadArticle, getExcludeIds, clearReadArticles } = useReadArticlesStore();
+  const { getNewsFilters } = useFilterStore();
+  const { preferences } = useUserPreferences();
   const { 
     fetchWithPreferences, 
     createUrlWithPreferences,
     translationTarget,
     needsTranslation
   } = useApiWithPreferences();
-  
-  // Stable filter object to prevent unnecessary re-renders
+
   const stableFilters = useMemo(() => {
-    const params: Record<string, string> = {};
+    const storeFilters = getNewsFilters();
+    const excludeIds = getExcludeIds();
     
-    if (filters.limit) params.limit = String(filters.limit);
-    if (filters.statusFilter && filters.statusFilter !== 'all') params.status_filter = filters.statusFilter;
-    if (filters.categoryFilter && filters.categoryFilter !== 'all') params.category_filter = filters.categoryFilter;
-    if (filters.countryFilter && 
-        filters.countryFilter !== 'all' && 
-        filters.countryFilter !== 'worldwide') {
-      params.country_filter = filters.countryFilter;
-    }
-    if (filters.sourceFilter && filters.sourceFilter !== 'all') params.source_filter = filters.sourceFilter;
-    if (filters.searchText?.trim()) params.search_text = filters.searchText.trim();
-    params.sort_by = 'processed_at';
-    params.sort_order = 'desc';
-    
-    return params;
+    return createNewsFilters(filters, storeFilters, preferences, excludeIds);
   }, [
-    filters.limit,
-    filters.statusFilter, 
-    filters.categoryFilter,
-    filters.countryFilter,
-    filters.sourceFilter,
-    filters.searchText
+    filters,
+    getNewsFilters().statusFilter,
+    getNewsFilters().categoryFilter,
+    getNewsFilters().countryFilter,
+    getNewsFilters().sourceFilter,
+    getNewsFilters().searchText,
+    getNewsFilters().topicFilter,
+    preferences?.categories?.[0],
+    preferences?.countries?.[0],
+    getExcludeIds().join(','),
+    translationTarget
   ]);
 
+  // ✅ Extracted fetch logic
   const fetchNews = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // ✅ **Create URL with user preferences but NO theme parameter**
       const apiUrl = createUrlWithPreferences('/api/news', stableFilters, { includeTheme: false });
-
-      console.log(`🔄 Fetching news with preferences:`, {
-        url: apiUrl,
-        translationTarget: translationTarget || 'none',
-        needsTranslation
-      });
       
-      // ✅ **Use enhanced fetch with preferences**
       const response = await fetchWithPreferences(apiUrl, {
         cache: 'no-store'
       });
@@ -94,21 +123,14 @@ export function useNews(filters: UseNewsFilters = {}): UseNewsReturn {
 
       const results = Array.isArray(data.results) ? data.results : data;
       setArticles(results);
+      setTotalFetched(results.length);
+      setHasMoreArticles(results.length >= (filters.limit || 10));
       
       // Determine data source from response metadata
       if (data.__meta?.userPreferences) {
         setDataSource(data.__meta.userPreferences.translationEnabled ? 'translated' : 'original');
       } else {
         setDataSource('unknown');
-      }
-
-      console.log(`✅ Successfully loaded ${results.length} news results`);
-      
-      // ✅ **Log translation status from response**
-      if (data.__meta?.userPreferences?.translationEnabled) {
-        console.log(`🌐 Content translated to: ${data.__meta.userPreferences.translationTarget}`);
-      } else {
-        console.log(`📄 Content in original language (English)`);
       }
 
     } catch (err) {
@@ -121,25 +143,37 @@ export function useNews(filters: UseNewsFilters = {}): UseNewsReturn {
     }
   }, [stableFilters, fetchWithPreferences, createUrlWithPreferences, translationTarget, needsTranslation]);
 
-  // Auto-refresh logic
+  // Replace read article with a new one
+  const replaceReadArticle = useCallback(async (articleId: string) => {
+    try {
+      addReadArticle(articleId);
+      setArticles(prev => prev.filter(article => article.id !== articleId));
+      await fetchNews();
+    } catch (error) {
+      console.error('Failed to replace article:', error);
+    }
+  }, [addReadArticle, fetchNews]);
+
+  // Refresh all news and clear read articles
+  const refreshNews = useCallback(() => {
+    clearReadArticles();
+    fetchNews();
+  }, [fetchNews, clearReadArticles]);
+
+  // Effect to fetch initial news and react to changes
   useEffect(() => {
     fetchNews();
-
-    if (filters.autoRefresh) {
-      const interval = setInterval(fetchNews, 5 * 60 * 1000); // 5 minutes
-      return () => clearInterval(interval);
-    }
-  }, [fetchNews, filters.autoRefresh]);
-
-  const refreshNews = useCallback(() => {
-    fetchNews();
   }, [fetchNews]);
+
 
   return {
     articles,
     loading,
     error,
     refreshNews,
-    dataSource
+    replaceReadArticle,
+    dataSource,
+    totalFetched,
+    hasMoreArticles
   };
 }

@@ -1,4 +1,6 @@
-export const shimmerVariants = {
+import { Variants } from "framer-motion";
+
+export const shimmerVariants: Variants = {
   initial: { x: '-100%' },
   animate: { 
     x: '100%',
@@ -11,7 +13,7 @@ export const shimmerVariants = {
   }
 };
 
-export const badgeVariants = {
+export const badgeVariants: Variants = {
   hidden: { opacity: 0, scale: 0.8, y: 10 },
   visible: { 
     opacity: 1, 
@@ -25,7 +27,7 @@ export const badgeVariants = {
   }
 };
 
-export const playButtonVariants = {
+export const playButtonVariants: Variants = {
   hidden: { opacity: 0, scale: 0.8 },
   visible: { 
     opacity: 1, 

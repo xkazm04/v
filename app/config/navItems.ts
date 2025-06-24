@@ -1,5 +1,4 @@
-import { Clock10Icon, NewspaperIcon } from 'lucide-react';
-import ReelIcon from '../components/icons/nav/icon_reel';
+import { Clock10Icon, LucideBrainCog, NewspaperIcon } from 'lucide-react';
 
 export const NAVIGATION_CONFIG = {
   mainNav: [
@@ -14,12 +13,6 @@ export const NAVIGATION_CONFIG = {
       label: 'Dashboard',
       description: 'Dashboard with personalized insights',
       translationKey: 'navigation.dashboard'
-    },
-    {
-      href: '/reel',
-      label: 'Reel',
-      description: 'Explore trending videos',
-      translationKey: 'navigation.reel'
     },
     {
       href: '/upload',
@@ -56,14 +49,6 @@ export const MOBILE_NAV: TabItem[] = [
     isCustomIcon: false
   },
   {
-    id: 'reel',
-    label: 'Reel',
-    icon: ReelIcon,
-    href: '/reel',
-    translationKey: 'navigation.reel',
-    isCustomIcon: true
-  },
-  {
     id: 'edu',
     label: 'Education',
     icon: Clock10Icon,
@@ -71,13 +56,20 @@ export const MOBILE_NAV: TabItem[] = [
     isSpecial: true,
     translationKey: 'navigation.education',
     isCustomIcon: false
+  },
+  {
+    id: 'upload',
+    label: 'Upload',
+    icon: LucideBrainCog,
+    href: '/upload',
+    isSpecial: true,
+    translationKey: 'navigation.upload',
   }
 ];
 
 export const NAV_TRANSLATION_KEYS = {
   home: 'navigation.home',
   dashboard: 'navigation.dashboard', 
-  reel: 'navigation.reel',
   upload: 'navigation.upload',
   education: 'navigation.education'
 } as const;

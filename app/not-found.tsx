@@ -1,30 +1,13 @@
 'use client';
-
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
-import { VintageVerdictStamp } from '@/app/components/news/VintageVerdictStamp';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Home, ArrowLeft, Newspaper, Search, Clock } from 'lucide-react';
+import BackgroundPattern from './components/ui/Decorative/BackgroundPattern';
+import { VintageStamp } from './components/shared/VintageStamp';
 
-// Vintage newspaper background for light mode
-const VintageNewsBackground = memo(() => (
-  <div 
-    className="fixed inset-0 opacity-15 bg-cover bg-center bg-no-repeat"
-    style={{
-      backgroundImage: `url('/background/news_bg_1.jpg')`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'fixed'
-    }}
-  />
-));
-
-VintageNewsBackground.displayName = 'VintageNewsBackground';
-
-// Vintage paper texture overlay
 const VintagePaperOverlay = memo(() => (
   <div className="fixed inset-0 pointer-events-none">
     {/* Paper texture */}
@@ -65,18 +48,7 @@ export default function NotFound() {
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      {/* Background */}
-      {isDark ? (
-        <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
-      ) : (
-        <>
-          <VintageNewsBackground />
-          <VintagePaperOverlay />
-          <div className="fixed inset-0 bg-gradient-to-br from-amber-50/80 via-orange-50/60 to-yellow-50/80" />
-        </>
-      )}
-
-      {/* Main Content */}
+      <BackgroundPattern />
       <div className="relative z-10 max-w-4xl mx-auto p-6">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -152,7 +124,7 @@ export default function NotFound() {
               transition={{ delay: 0.8, duration: 0.6 }}
               className="absolute top-4 right-4"
             >
-              <VintageVerdictStamp
+              <VintageStamp
                 status="UNVERIFIABLE"
                 size="lg"
                 animated={true}

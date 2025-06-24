@@ -73,21 +73,6 @@ export function FactCheckAnalysis({ factCheck, config }: FactCheckAnalysisProps)
           </p>
         </div>
       </motion.div>
-
-      {/* Source Validation Summary */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7 }}
-        className="flex items-center justify-between p-3 rounded-lg 
-                 bg-white/80 dark:bg-slate-800/30 
-                 border border-slate-200/60 dark:border-slate-700/30"
-      >
-        <span className="text-xs text-slate-500 dark:text-slate-400">Source Validation</span>
-        <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-          {factCheck.valid_sources}
-        </span>
-      </motion.div>
     </motion.div>
   );
 }

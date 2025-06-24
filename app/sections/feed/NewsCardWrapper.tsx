@@ -1,9 +1,8 @@
 import { useCallback, useRef, ReactNode } from 'react';
-import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo, Variants } from 'framer-motion';
 import { cn } from '@/app/lib/utils';
 import { ResearchResult } from '@/app/types/article';
 import { useViewport } from '@/app/hooks/useViewport';
-import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import NewsCardMobileRead from '@/app/components/news/NewsCardMobileRead';
 
 interface NewsCardWrapperProps {
@@ -34,8 +33,7 @@ interface NewsCardWrapperProps {
   isDark: boolean;
 }
 
-// ✅ **ENHANCED: Card animations with subtle hover glow**
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { 
     opacity: 0, 
     y: 20, 
@@ -63,7 +61,7 @@ const fadeOutVariants = {
     filter: 'blur(2px)',
     transition: {
       duration: 0.3,
-      ease: [0.25, 0.46, 0.45, 0.94]
+      ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number]
     }
   }
 };
@@ -76,7 +74,7 @@ const swipeRightVariants = {
     rotateZ: 15,
     transition: {
       duration: 0.5,
-      ease: [0.25, 0.46, 0.45, 0.94]
+      ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number]
     }
   }
 };
@@ -105,7 +103,6 @@ const NewsCardWrapper = ({
 }: NewsCardWrapperProps) => {
   
   const { isMobile, isTablet, isDesktop } = useViewport();
-  const { colors } = useLayoutTheme();
   const dragStartTimeRef = useRef<number>(0);
   const dragThresholdRef = useRef<boolean>(false);
   
@@ -158,7 +155,6 @@ const NewsCardWrapper = ({
 
   const handlePan = useCallback((event: any, info: PanInfo) => {
     if (isMobile || isTablet) {
-      // Track if we've moved beyond a small threshold (to distinguish from taps)
       if (Math.abs(info.offset.x) > 10) {
         dragThresholdRef.current = true;
       }
@@ -201,7 +197,7 @@ const NewsCardWrapper = ({
       variants={cardVariants}
       initial="hidden"
       animate="visible"
-      exit={getExitVariant()}
+      exit={fadeOutVariants.exit}
       whileTap={!isDragging ? "tap" : undefined}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -236,15 +232,10 @@ const NewsCardWrapper = ({
       )}
     >
       {children}
-
-
-      {/* Mobile read button */}
-      {isMobile && (
         <NewsCardMobileRead
           onMarkRead={handleMobileRead}
           className="opacity-80 hover:opacity-100"
         />
-      )}
 
       {/* Mobile swipe indicators */}
       <AnimatePresence>

@@ -1,12 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { VideoWithTimestamps } from '@/app/types/video_api'; 
-import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { User, Globe } from 'lucide-react';
+import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import { Video } from '@/app/types/video_api'; 
 
 interface VideoInfoHeaderProps {
-  video: VideoWithTimestamps; 
+  video: Video; 
   className?: string;
 }
 
@@ -23,6 +23,7 @@ export function VideoInfoHeader({ video, className }: VideoInfoHeaderProps) {
     accent: colors.primary,
     iconBackground: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(226, 232, 240, 0.5)'
   };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -42,11 +43,11 @@ export function VideoInfoHeader({ video, className }: VideoInfoHeaderProps) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3 }}
         >
-          {video.video.title || 'Untitled Video'}
+          {video.title || 'Untitled Video'}
         </motion.h1>
 
         <div className="flex flex-row w-full justify-between gap-10">
-          {/* Speaker  */}
+          {/* Speaker */}
           <motion.div 
             className="flex items-center gap-2"
             initial={{ opacity: 0, y: 10 }}
@@ -64,11 +65,12 @@ export function VideoInfoHeader({ video, className }: VideoInfoHeaderProps) {
                 Speaker
               </div>
               <div className="text-sm font-medium" style={{ color: headerColors.title }}>
-                {video.video.speaker_name || 'Unknown Speaker'}
+                {video.speaker_name || 'Unknown Speaker'} 
               </div>
             </div>
           </motion.div>
-          {/* Language  */}
+          
+          {/* Language */}
           <motion.div 
             className="flex items-center gap-2"
             initial={{ opacity: 0, y: 10 }}
@@ -86,7 +88,7 @@ export function VideoInfoHeader({ video, className }: VideoInfoHeaderProps) {
                 Language
               </div>
               <div className="text-sm font-medium capitalize" style={{ color: headerColors.title }}>
-                {video.video.language_code || 'Unknown'}
+                {video.language_code || 'Unknown'} 
               </div>
             </div>
           </motion.div>

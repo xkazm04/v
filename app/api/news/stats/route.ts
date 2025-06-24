@@ -12,7 +12,6 @@ export async function GET(request: NextRequest) {
       search_text: searchParams.get('search_text'),
       status_filter: searchParams.get('status_filter'),
       country_filter: searchParams.get('country_filter'),
-      category_filter: searchParams.get('category_filter'),
       source_filter: searchParams.get('source_filter')
     };
 

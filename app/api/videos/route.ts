@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { videoAPI } from '@/app/api/videos/videos';
-import { Video, VideoFilters } from '@/app/types/video_api';
 import { supabaseVideoService } from '@/app/lib/services/suapabse-video-service';
+import { videoAPI } from './videos';
+import { Video, VideoFilters } from '@/app/types/video_api';
+import { userPreferencesApiClient } from '@/app/lib/services/user-preferences-api-client';
+import { batchTranslateVideoTitles } from '@/app/lib/services/video-translation-service';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,11 +13,18 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     
-    console.log(`🔍 Videos API route called with params:`, Object.fromEntries(searchParams.entries()));
+    // Extract user preferences from request
+    const userPreferences = userPreferencesApiClient.extractUserPreferences({
+      request,
+      searchParams
+    });
+    
+    // Get translation target from user preferences ONLY
+    let translationTarget = userPreferencesApiClient.getTranslationTarget(userPreferences);
     
     // Parse filters from search params
     const filters: VideoFilters = {
-      limit: searchParams.get('limit') ? Math.min(parseInt(searchParams.get('limit')!), 6) : 6, // Max 6 for featured
+      limit: searchParams.get('limit') ? Math.min(parseInt(searchParams.get('limit')!), 6) : 6,
       offset: searchParams.get('offset') ? parseInt(searchParams.get('offset')!) : 0,
       source: searchParams.get('source') || undefined,
       speaker_name: searchParams.get('speaker_name') || undefined,
@@ -23,7 +32,9 @@ export async function GET(request: NextRequest) {
       categories: searchParams.get('categories') || undefined,
       search: searchParams.get('search') || undefined,
       sort_by: searchParams.get('sort_by') || 'processed_at',
-      sort_order: (searchParams.get('sort_order') as 'asc' | 'desc') || 'desc'
+      sort_order: (searchParams.get('sort_order') as 'asc' | 'desc') || 'desc',
+      status: searchParams.get('status') || undefined,
+      topic_id: searchParams.get('topic_id') || undefined,
     };
 
     // Convert to Supabase filters format
@@ -36,7 +47,9 @@ export async function GET(request: NextRequest) {
       categories: filters.categories,
       search: filters.search,
       sort_by: filters.sort_by,
-      sort_order: filters.sort_order
+      sort_order: filters.sort_order,
+      status: filters.status,
+      topic_id: filters.topic_id,
     };
     
     let videos: Video[] = [];
@@ -44,37 +57,19 @@ export async function GET(request: NextRequest) {
     
     // Try Supabase first
     try {
-      console.log('🎯 Attempting to fetch videos from Supabase...');
       videos = await supabaseVideoService.getVideos(supabaseFilters);
       
       if (videos.length > 0) {
         dataSource = 'supabase';
-        console.log(`✅ Videos API returning ${videos.length} results from Supabase in ${Date.now() - startTime}ms`);
         
-        return NextResponse.json({
-          videos,
-          count: videos.length,
-          filters,
-          __meta: {
-            fetchTime: Date.now() - startTime,
-            timestamp: new Date().toISOString(),
-            source: dataSource,
-            dataQuality: 'real'
+        // Apply translation if needed (only based on user preferences)
+        if (translationTarget && translationTarget !== 'en') {
+          try {
+            videos = await batchTranslateVideoTitles(videos, 'en', translationTarget);
+          } catch (translationError) {
+            console.warn('⚠️ Video translation failed, using original content:', translationError);
           }
-        });
-      }
-    } catch (supabaseError) {
-      console.warn('⚠️ Supabase videos failed in API route:', supabaseError);
-    }
-    
-    // Fallback to backend API
-    try {
-      console.log('🔄 Using backend API fallback for videos...');
-      videos = await videoAPI.getVideos(filters);
-      dataSource = 'backend_api';
-      
-      if (videos.length > 0) {
-        console.log(`✅ Videos API returning ${videos.length} results from backend API in ${Date.now() - startTime}ms`);
+        }
         
         return NextResponse.json({
           videos,
@@ -85,7 +80,48 @@ export async function GET(request: NextRequest) {
             timestamp: new Date().toISOString(),
             source: dataSource,
             dataQuality: 'real',
-            fallback: true
+            translated: !!translationTarget,
+            targetLanguage: translationTarget || 'en',
+            userPreferences: {
+              translationEnabled: !!translationTarget,
+              translationTarget: translationTarget || 'en',
+              originalLanguage: 'en',
+              detectionMethod: userPreferences ? 'headers' : 'url_params'
+            }
+          }
+        });
+      }
+    } catch (supabaseError) {
+      console.warn('⚠️ Supabase videos failed in API route:', supabaseError);
+    }
+    
+    // Fallback to backend API
+    try {
+      videos = await videoAPI.getVideos(filters);
+      dataSource = 'backend_api';
+      
+      if (videos.length > 0) {
+        // Apply translation to backend API results too (only based on user preferences)
+        if (translationTarget && translationTarget !== 'en') {
+          try {
+            videos = await batchTranslateVideoTitles(videos, 'en', translationTarget);
+          } catch (translationError) {
+            console.warn('⚠️ Backend video translation failed, using original content:', translationError);
+          }
+        }
+        
+        return NextResponse.json({
+          videos,
+          count: videos.length,
+          filters,
+          __meta: {
+            fetchTime: Date.now() - startTime,
+            timestamp: new Date().toISOString(),
+            source: dataSource,
+            dataQuality: 'real',
+            fallback: true,
+            translated: !!translationTarget,
+            targetLanguage: translationTarget || 'en'
           }
         });
       }
@@ -94,8 +130,6 @@ export async function GET(request: NextRequest) {
     }
     
     // If both fail, return empty array with error info
-    console.log('❌ All video sources failed, returning empty array');
-    
     return NextResponse.json({
       videos: [],
       count: 0,
@@ -105,7 +139,9 @@ export async function GET(request: NextRequest) {
         timestamp: new Date().toISOString(),
         source: 'none',
         dataQuality: 'none',
-        error: 'All data sources failed'
+        error: 'All data sources failed',
+        translated: false,
+        targetLanguage: translationTarget || 'en'
       }
     });
 
@@ -120,7 +156,8 @@ export async function GET(request: NextRequest) {
         __meta: {
           fetchTime: Date.now() - startTime,
           timestamp: new Date().toISOString(),
-          source: 'error'
+          source: 'error',
+          translated: false
         }
       },
       { status: 500 }

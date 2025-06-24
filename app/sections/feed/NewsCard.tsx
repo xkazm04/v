@@ -4,11 +4,11 @@ import { ResearchResult } from '@/app/types/article';
 import { FactCheckModal } from '@/app/components/modals/FactCheck/FactCheckModal';
 import NewsCardContent from '@/app/components/news/NewsCardContent';
 import NewsTopic from '@/app/components/news/NewsTopic';
-import { VintageVerdictStamp } from '@/app/components/news/VintageVerdictStamp';
-import { VintageTopicBanner } from '@/app/components/news/VintageTopicBanner';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useViewport } from '@/app/hooks/useViewport';
 import NewsCardWrapper from './NewsCardWrapper';
+import { VintageBanner } from '@/app/components/shared/VintageBanner';
+import { VintageStamp } from '@/app/components/shared/VintageStamp';
 
 interface NewsCardProps {
   research: ResearchResult;
@@ -148,12 +148,12 @@ const NewsCard = memo(function NewsCard({
             className={className}
             isDark={isDark}
           >
-            <VintageTopicBanner
-              research={research}
+            <VintageBanner
+              data={research}
               className="relative z-30"
             />
 
-            <VintageVerdictStamp
+            <VintageStamp
               status={research.status}
               className="absolute -top-1 -right-2 z-50"
               size={'md'}

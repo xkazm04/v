@@ -1,6 +1,4 @@
-import { VideoTimestamp } from '@/app/types/video_api';
 
-// Get segment color based on category from backend
 export const getSegmentColor = (type: 'truth' | 'neutral' | 'lie'): string => {
   switch (type) {
     case 'truth':

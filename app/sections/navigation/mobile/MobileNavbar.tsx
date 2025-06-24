@@ -9,7 +9,6 @@ import { useState, useCallback, useMemo } from 'react';
 import { cn } from '@/app/lib/utils';
 import MobileNavbarItem from './MobileNavbarItem';
 import { MOBILE_NAV } from '@/app/config/navItems';
-import MobileNavActionButton from './MobileNavActionButton';
 
 interface MobileNavbarProps {
   isVideoPlayerMode?: boolean;
@@ -30,7 +29,7 @@ export function MobileNavbar({
   className
 }: MobileNavbarProps) {
   const router = useRouter();
-  const { colors, isDark, mounted } = useLayoutTheme();
+  const { colors, isDark } = useLayoutTheme();
   const { activeTab, setActiveTab, setIsNavigating } = useNavigationContext();
   const [pressedTab, setPressedTab] = useState<string | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(isVideoPlayerMode);

@@ -38,10 +38,6 @@ export function FactCheckCorrection({ correction }: FactCheckCorrectionProps) {
         <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-amber-500 to-orange-600 rounded-l-lg" />
         
         <div className="pl-3">
-          <div className="flex items-center gap-2 mb-2">
-            <ArrowRight className="w-3 h-3 text-amber-600 dark:text-amber-400" />
-            <span className="text-xs font-medium text-amber-700 dark:text-amber-300">ACCURATE VERSION</span>
-          </div>
           <p className="text-sm leading-relaxed text-amber-900 dark:text-amber-100 font-medium">
             {correction}
           </p>
