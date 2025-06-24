@@ -4,9 +4,13 @@ import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/app/lib/utils';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import { ResearchResult } from '@/app/types/article';
+import { Video } from '@/app/types/video_api';
 
-interface VintageVerdictStampProps {
-  status: 'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE' | 'UNVERIFIABLE';
+interface Props {
+  data?: ResearchResult | Video;
+  // Allow manual override if status is passed directly
+  status?: 'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE' | 'UNVERIFIABLE';
   className?: string;
   size?: 'sm' | 'md' | 'lg';
   animated?: boolean;
@@ -65,20 +69,52 @@ const DEFAULT_CONFIG = {
   borderStyle: 'solid'
 } as const;
 
-export const VintageVerdictStamp = memo(function VintageVerdictStamp({
-  status,
+// Type guards
+const isResearchResult = (data: any): data is ResearchResult => {
+  return data && 'statement' in data && 'status' in data;
+};
+
+const isVideo = (data: any): data is Video => {
+  return data && 'video_url' in data && 'verdict' in data;
+};
+
+export const VintageStamp = memo(function VintageStamp({
+  data,
+  status: manualStatus,
   className,
   size = 'md',
   animated = true
-}: VintageVerdictStampProps) {
+}: Props) {
   const { isDark, vintage } = useLayoutTheme();
   
+  // Extract status from data or use manual override
+  let verdictStatus: 'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE' | 'UNVERIFIABLE' | undefined;
+  
+  if (manualStatus) {
+    verdictStatus = manualStatus;
+  } else if (data) {
+    if (isResearchResult(data)) {
+      verdictStatus = data.status;
+    } else if (isVideo(data)) {
+      // Convert video verdict string to status enum
+      const verdict = data.verdict?.toUpperCase();
+      if (verdict && verdict in VERDICT_CONFIG) {
+        verdictStatus = verdict as keyof typeof VERDICT_CONFIG;
+      }
+    }
+  }
+  
+  // If no valid status found, don't render
+  if (!verdictStatus) {
+    return null;
+  }
+  
   // Safe config lookup with fallback
-  const config = VERDICT_CONFIG[status] || DEFAULT_CONFIG;
+  const config = VERDICT_CONFIG[verdictStatus] || DEFAULT_CONFIG;
   
   // Add debug logging to see what status values are being passed
-  if (!VERDICT_CONFIG[status]) {
-    console.warn('VintageVerdictStamp: Unknown status value:', status);
+  if (!VERDICT_CONFIG[verdictStatus]) {
+    console.warn('UniversalVintageVerdictStamp: Unknown status value:', verdictStatus);
   }
   
   const sizeClasses = {
@@ -115,7 +151,6 @@ export const VintageVerdictStamp = memo(function VintageVerdictStamp({
       } : undefined}
     >
       <div className="absolute inset-0 rounded-full">
-        {/* Main stamp circle */}
         <div
           className="absolute inset-0 rounded-full"
           style={{
@@ -129,7 +164,6 @@ export const VintageVerdictStamp = memo(function VintageVerdictStamp({
           }}
         />
         
-        {/* Inner circle */}
         <div
           className="absolute inset-2 rounded-full"
           style={{
@@ -138,9 +172,8 @@ export const VintageVerdictStamp = memo(function VintageVerdictStamp({
           }}
         />
         
-        {/* Vintage wear effects */}
         <div className="absolute inset-0 rounded-full overflow-hidden">
-          {/* Ink smudges */}
+          {/* Vintage wear marks */}
           <div 
             className="absolute top-1 right-2 w-2 h-1 rounded-full opacity-40"
             style={{ background: stampColor }}
@@ -150,7 +183,7 @@ export const VintageVerdictStamp = memo(function VintageVerdictStamp({
             style={{ background: stampColor }}
           />
           
-          {/* Wear patterns */}
+          {/* Ink blot effect */}
           <div 
             className="absolute inset-0 rounded-full opacity-20"
             style={{
@@ -194,7 +227,7 @@ export const VintageVerdictStamp = memo(function VintageVerdictStamp({
         )}
       </div>
 
-      {(status === 'FALSE' || status === 'MISLEADING') && animated && (
+      {(verdictStatus === 'FALSE' || verdictStatus === 'MISLEADING') && animated && (
         <motion.div
           className="absolute -bottom-2 left-1/2 transform -translate-x-1/2"
           initial={{ scaleY: 0, opacity: 0 }}

@@ -11,18 +11,24 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     
-    console.log(`🔍 Research API route called with params:`, Object.fromEntries(searchParams.entries()));
-    
-    // ✅ Extract user preferences from request
+    // Extract user preferences from request
     const userPreferences = userPreferencesApiClient.extractUserPreferences({
       request,
       searchParams
     });
     
-    // ✅ Get translation target from user preferences (NOT hardcoded)
-    const translationTarget = userPreferencesApiClient.getTranslationTarget(userPreferences);
+    // Get translation target from user preferences ONLY
+    let translationTarget = userPreferencesApiClient.getTranslationTarget(userPreferences);
     
-    // ✅ NEW: Parse exclude_ids for article replacement
+    // Fallback: Check URL parameters if headers didn't work
+    if (!translationTarget) {
+      const langParam = searchParams.get('lang') || searchParams.get('translate_to');
+      if (langParam && langParam !== 'en') {
+        translationTarget = langParam;
+      }
+    }
+    
+    // Parse exclude_ids for article replacement
     const excludeIdsParam = searchParams.get('exclude_ids');
     const excludeIds = excludeIdsParam ? excludeIdsParam.split(',').filter(Boolean) : [];
     
@@ -37,37 +43,29 @@ export async function GET(request: NextRequest) {
       search: searchParams.get('search_text') || undefined,
       sort_by: searchParams.get('sort_by') || 'processed_at',
       sort_order: (searchParams.get('sort_order') as 'asc' | 'desc') || 'desc',
-      translateTo: searchParams.get('translate_to') || 'en',
+      translateTo: translationTarget || 'en',
       topicId: searchParams.get('topic_id') || undefined,
       excludeIds: searchParams.get('exclude_ids')?.split(',').filter(Boolean) || [],
     };
     
-    if (translationTarget) {
-      console.log(`🌐 Translation target: ${translationTarget}`);
-    } else {
-      console.log(`📝 No translation needed`);
-    }
-    
     let results: ResearchResult[] = [];
     
-    // Try Supabase first
     try {
-      console.log('🎯 Fetching from Supabase with enhanced filters...');
-      results = await supabaseNewsServiceServer.getNews(filters);
-      console.log(`✅ Supabase returned ${results.length} results`);
+      // Pass translation target to Supabase service
+      const supabaseFilters = {
+        ...filters,
+        translateTo: translationTarget || 'en'
+      };
       
-      // ✅ NEW: Filter out excluded articles client-side as backup
+      results = await supabaseNewsServiceServer.getNews(supabaseFilters);
+      
+      // Filter out excluded articles client-side as backup
       if (excludeIds.length > 0) {
-        const originalLength = results.length;
         results = results.filter(article => !excludeIds.includes(article.id));
-        if (results.length < originalLength) {
-          console.log(`🚫 Filtered out ${originalLength - results.length} excluded articles`);
-        }
       }
       
     } catch (supabaseError) {
       console.error('❌ Supabase fetch failed:', supabaseError);
-  
     }
     
     return NextResponse.json({
@@ -82,7 +80,8 @@ export async function GET(request: NextRequest) {
         userPreferences: {
           translationEnabled: !!translationTarget,
           translationTarget: translationTarget || 'en',
-          originalLanguage: 'en'
+          originalLanguage: 'en',
+          detectionMethod: userPreferences ? 'headers' : 'url_params'
         }
       }
     });
@@ -98,4 +97,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-

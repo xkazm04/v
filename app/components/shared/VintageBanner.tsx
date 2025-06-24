@@ -5,17 +5,18 @@ import { motion } from 'framer-motion';
 import { cn } from '@/app/lib/utils';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { ResearchResult } from '@/app/types/article';
-import NewsCardSpeaker from './NewsCardSpeaker';
+import { Video } from '@/app/types/video_api';
+import UniversalCardSpeaker from './UniversalCardSpeaker';
 
-interface VintageTopicBannerProps {
-  research?: ResearchResult; 
+interface Props {
+  data?: ResearchResult | Video; 
   className?: string;
 }
 
-export const VintageTopicBanner = memo(function VintageTopicBanner({
-  research,
+export const VintageBanner = memo(function VintageBanner({
+  data,
   className
-}: VintageTopicBannerProps) {
+}: Props) {
   const { isDark, vintage, colors } = useLayoutTheme();
 
   return (
@@ -28,7 +29,6 @@ export const VintageTopicBanner = memo(function VintageTopicBanner({
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
-      {/* ✅ Background */}
       <div className="absolute inset-0">
         {isDark ? (
           <div
@@ -67,7 +67,6 @@ export const VintageTopicBanner = memo(function VintageTopicBanner({
         )}
       </div>
 
-      {/* ✅ Topic title */}
       <motion.div
         className="relative z-10 flex items-center gap-3"
         initial={{ x: -20, opacity: 0 }}
@@ -85,7 +84,7 @@ export const VintageTopicBanner = memo(function VintageTopicBanner({
             letterSpacing: '0.1em'
           }}
         >
-          <NewsCardSpeaker research={research} />
+          <UniversalCardSpeaker data={data} />
         </div>
       </motion.div>
     </motion.div>

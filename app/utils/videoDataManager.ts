@@ -40,7 +40,7 @@ export function useVideoDataManager(options: VideoDataManagerOptions = {}): Vide
     enableVideosList = true // ✅ Default to true, but allow disabling
   } = options;
 
-  // ✅ Only fetch videos list if explicitly enabled and we have meaningful filters
+  // ✅ OPTIMIZED: Only fetch videos list if explicitly enabled and we have meaningful filters
   const videosQueryOptions = useMemo(() => {
     if (!enableVideosList) return null;
     
@@ -51,6 +51,7 @@ export function useVideoDataManager(options: VideoDataManagerOptions = {}): Vide
     };
   }, [enableVideosList, limit, sort_by, sort_order]);
 
+  // ✅ OPTIMIZED: Only fetch videos list when needed
   const {
     data: apiVideos,
     isLoading: videosLoading,
@@ -60,6 +61,7 @@ export function useVideoDataManager(options: VideoDataManagerOptions = {}): Vide
     enabled: !!videosQueryOptions && enableVideosList
   });
 
+  // ✅ OPTIMIZED: Always fetch specific video when videoId provided
   const {
     data: specificVideo,
     isLoading: videoLoading,
@@ -86,12 +88,13 @@ export function useVideoDataManager(options: VideoDataManagerOptions = {}): Vide
 
     // Add mock videos as fallback only if we don't have API data or videos list is disabled
     if (!enableVideosList || !apiVideos || apiVideos.length === 0) {
-      combinedVideos.push(...mockVideos);
+      const mockVideoList = mockVideos.slice(0, limit);
+      combinedVideos.push(...mockVideoList);
     }
 
     // Remove duplicates (prefer API data over mock)
     const uniqueVideos = combinedVideos.reduce((acc, current) => {
-      const exists = acc.find(video => video.video.id === current.video.id);
+      const exists = acc.find(v => v.video.id === current.video.id);
       if (!exists) {
         acc.push(current);
       }
@@ -99,10 +102,10 @@ export function useVideoDataManager(options: VideoDataManagerOptions = {}): Vide
     }, [] as VideoWithTimestamps[]);
 
     return uniqueVideos;
-  }, [apiVideos, enableVideosList]);
+  }, [apiVideos, enableVideosList, limit]);
 
   const initialIndex = useMemo(() => {
-    if (!videoId) return 0;
+    if (!videoId) return -1;
     return Math.max(0, videos.findIndex(v => v.video.id === videoId));
   }, [videoId, videos]);
 

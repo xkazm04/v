@@ -1,6 +1,6 @@
 import { ResearchResult } from '@/app/types/article';
 import { 
-  translateResearchStatement, 
+  translateWithMetadata, 
   batchTranslateExpertPerspectives
 } from './translation-service';
 import { supabaseAdmin } from '../supabase';
@@ -16,8 +16,8 @@ export interface SupabaseNewsFilters {
   sort_by?: string;
   sort_order?: 'asc' | 'desc';
   translateTo?: string;
-  excludeIds?: string[]; // ✅ Support for excluding article IDs
-  topicId?: string; // ✅ NEW: Support for topic_id filtering
+  excludeIds?: string[]; 
+  topicId?: string; 
 }
 
 // ✅ Expert perspective interface
@@ -125,15 +125,10 @@ class SupabaseNewsServiceServer {
 
       // Apply pagination
       if (filters.offset) {
-        query = query.range(filters.offset, (filters.offset || 0) + (filters.limit || 10) - 1);
+        query = query.range(filters.offset, filters.offset + (filters.limit || 10) - 1);
       } else if (filters.limit) {
         query = query.limit(filters.limit);
       }
-
-      console.log(`🎯 Executing Supabase query with filters:`, {
-        ...filters,
-        excludeCount: filters.excludeIds?.length || 0
-      });
 
       const { data, error } = await query;
 
@@ -142,11 +137,11 @@ class SupabaseNewsServiceServer {
       }
 
       if (!data || data.length === 0) {
-        console.log('📭 No results returned from Supabase');
+        console.log('🔍 No articles found matching filters');
         return [];
       }
 
-      console.log(`✅ Supabase returned ${data.length} results`);
+      console.log(`📰 Found ${data.length} articles from Supabase`);
 
       // Transform and parse the data
       const results: ResearchResult[] = data.map(row => {
@@ -261,10 +256,10 @@ class SupabaseNewsServiceServer {
       const translatedResults = await Promise.all(
         results.map(async (result) => {
           try {
-            // Translate statement and verdict
-            const [translatedStatement, translatedVerdict] = await Promise.all([
-              translateResearchStatement(result.statement, 'en', targetLanguage, 'news'),
-              translateResearchStatement(result.verdict, 'en', targetLanguage, 'news')
+            // ✅ FIXED: Use translateWithMetadata instead of non-existent translateResearchStatement
+            const [statementResult, verdictResult] = await Promise.all([
+              translateWithMetadata(result.statement, 'en', targetLanguage, 'news'),
+              translateWithMetadata(result.verdict, 'en', targetLanguage, 'news')
             ]);
 
             let translatedExpertPerspectives = result.expert_perspectives;
@@ -293,13 +288,14 @@ class SupabaseNewsServiceServer {
 
             return {
               ...result,
-              statement: translatedStatement || result.statement,
-              verdict: translatedVerdict || result.verdict,
+              statement: statementResult.translatedText || result.statement,
+              verdict: verdictResult.translatedText || result.verdict,
               expert_perspectives: translatedExpertPerspectives,
               __meta: {
                 ...result.__meta,
                 translatedTo: targetLanguage,
-                translationTimestamp: new Date().toISOString()
+                translationTimestamp: new Date().toISOString(),
+                cached: statementResult.wasCached && verdictResult.wasCached
               }
             };
 

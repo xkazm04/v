@@ -1,4 +1,4 @@
-import { FactCheckData, VideoWithTimestamps } from '@/app/types/video_api';
+import { FactCheckData } from '@/app/types/video_api';
 
 export function getFactCheckVerdict(factCheck?: FactCheckData) {
   if (!factCheck) {
@@ -12,60 +12,6 @@ export function getFactCheckVerdict(factCheck?: FactCheckData) {
     sources: factCheck.sources,
     expertAnalysis: factCheck.expertAnalysis,
     processedAt: factCheck.processedAt
-  };
-}
-
-export function getVideoFactCheckSummary(video: VideoWithTimestamps) {
-  const { timestamps } = video;
-  
-  if (timestamps.length === 0) {
-    return {
-      totalClaims: 0,
-      trueClaims: 0,
-      falseClaims: 0,
-      misleadingClaims: 0,
-      unverifiableClaims: 0,
-      averageConfidence: 0,
-      overallStatus: 'UNVERIFIED' as const
-    };
-  }
-
-  const statusCounts = timestamps.reduce((acc, ts) => {
-    const status = ts.factCheck?.status || 'UNVERIFIABLE';
-    acc[status] = (acc[status] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-
-  const averageConfidence = timestamps.reduce((sum, ts) => 
-    //@ts-expect-error Ignore
-    sum + (ts.factCheck?.confidence || 0), 0) / timestamps.length;
-
-  // Determine overall status
-  let overallStatus: 'TRUE' | 'FALSE' | 'MISLEADING' | 'MIXED' | 'UNVERIFIED';
-  
-  const totalVerified = (statusCounts.TRUE || 0) + (statusCounts.FALSE || 0) + (statusCounts.MISLEADING || 0) + (statusCounts.PARTIALLY_TRUE || 0);
-  const totalClaims = timestamps.length;
-  
-  if (totalVerified === 0) {
-    overallStatus = 'UNVERIFIED';
-  } else if (statusCounts.FALSE && statusCounts.FALSE > totalClaims * 0.5) {
-    overallStatus = 'FALSE';
-  } else if (statusCounts.MISLEADING && statusCounts.MISLEADING > totalClaims * 0.3) {
-    overallStatus = 'MISLEADING';
-  } else if (statusCounts.TRUE && statusCounts.TRUE > totalClaims * 0.7) {
-    overallStatus = 'TRUE';
-  } else {
-    overallStatus = 'MIXED';
-  }
-
-  return {
-    totalClaims: timestamps.length,
-    trueClaims: statusCounts.TRUE || 0,
-    falseClaims: statusCounts.FALSE || 0,
-    misleadingClaims: (statusCounts.MISLEADING || 0) + (statusCounts.PARTIALLY_TRUE || 0),
-    unverifiableClaims: statusCounts.UNVERIFIABLE || 0,
-    averageConfidence: Math.round(averageConfidence),
-    overallStatus
   };
 }
 

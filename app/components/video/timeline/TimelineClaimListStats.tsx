@@ -1,6 +1,7 @@
+import { STAT_CONFIG } from "@/app/constants/stat";
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
 import { motion } from "framer-motion";
-import { BookOpen } from 'lucide-react';
+import StatCard from "../../ui/Dashboard/StatCard";
 
 type Props = {
     showStats: boolean;
@@ -16,136 +17,83 @@ type Props = {
     };
 }
 
-const TimelineClaimListStats = ({showStats, colors_enhanced, stats}: Props) => {
-      const { colors, vintage, isVintage } = useLayoutTheme();
-    return <motion.div
-        className="space-y-3"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-    >
-        {/* Title */}
-        <div className="flex items-center justify-between">
-            <h3
-                className="text-lg font-bold flex items-center gap-2"
+
+const TimelineClaimListStats = ({ showStats, colors_enhanced, stats }: Props) => {
+    const { isDark, colors } = useLayoutTheme();
+
+    if (!showStats) return null;
+
+    return (
+        <motion.div
+            className="space-y-3"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+        >
+            {/* ✅ LEAN: Single row layout with dividers instead of borders */}
+            <div
+                className="flex rounded-lg overflow-hidden border"
                 style={{
-                    color: isVintage ? vintage.ink : colors.foreground,
-                    fontFamily: isVintage ? '"Times New Roman", serif' : 'inherit'
+                    backgroundColor: isDark ? colors.card.background : colors.background,
+                    borderColor: colors_enhanced.border
                 }}
             >
-                <BookOpen size={20} style={{ color: colors.primary }} />
-                List of statements
-            </h3>
-        </div>
-
-        {/* Statistics row */}
-        {showStats && (
-            <div className="grid grid-cols-4 gap-3">
-                <motion.div
-                    className="text-center p-2 rounded-lg border"
-                    style={{
-                        backgroundColor: isVintage ? 'rgba(240, 253, 244, 0.6)' : 'rgba(34, 197, 94, 0.1)',
-                        borderColor: isVintage ? '#2d5016' : '#22c55e',
-                        boxShadow: isVintage ? 'inset 0 1px 0 rgba(255, 255, 255, 0.3)' : 'none'
-                    }}
-                    whileHover={{ scale: 1.02 }}
-                >
-                    <div
-                        className="text-lg font-bold"
-                        style={{ color: isVintage ? '#2d5016' : '#22c55e' }}
-                    >
-                        {stats.truthCount}
-                    </div>
-                    <div
-                        className="text-sm"
+                {(stats.truthCount + stats.neutralCount + stats.lieCount) > 0 && (
+                    <motion.div
+                        className="flex items-center gap-2 px-3 py-1 rounded-md border"
                         style={{
-                            color: isVintage ? vintage.faded : colors.mutedForeground,
-                            fontFamily: isVintage ? '"Times New Roman", serif' : 'inherit'
+                            backgroundColor: isDark ? colors.card.background : colors.background,
+                            borderColor: colors_enhanced.border
                         }}
+                        initial={{ opacity: 0, width: 0 }}
+                        animate={{ opacity: 1, width: 'auto' }}
+                        transition={{ delay: 0.3, duration: 0.3 }}
                     >
-                        Truth
-                    </div>
-                </motion.div>
+                        <span
+                            className="text font-medium"
+                            style={{ color: colors.mutedForeground }}
+                        >
+                            Total: {stats.truthCount + stats.neutralCount + stats.lieCount} claims
+                        </span>
 
-                <motion.div
-                    className="text-center p-2 rounded-lg border"
-                    style={{
-                        backgroundColor: isVintage ? 'rgba(255, 251, 235, 0.6)' : 'rgba(234, 179, 8, 0.1)',
-                        borderColor: isVintage ? '#92400e' : '#eab308',
-                        boxShadow: isVintage ? 'inset 0 1px 0 rgba(255, 255, 255, 0.3)' : 'none'
-                    }}
-                    whileHover={{ scale: 1.02 }}
-                >
-                    <div
-                        className="text-lg font-bold"
-                        style={{ color: isVintage ? '#92400e' : '#eab308' }}
-                    >
-                        {stats.neutralCount}
-                    </div>
-                    <div
-                        className="text-sm"
-                        style={{
-                            color: isVintage ? vintage.faded : colors.mutedForeground,
-                            fontFamily: isVintage ? '"Times New Roman", serif' : 'inherit'
-                        }}
-                    >
-                        Neutral
-                    </div>
-                </motion.div>
+                        <div className="flex gap-0.5">
+                            {Array.from({ length: 5 }).map((_, i) => {
+                                const completion = stats.completionRate;
+                                const isActive = i < Math.floor(completion / 20);
+                                return (
+                                    <motion.div
+                                        key={i}
+                                        className="w-1 h-1 rounded-full"
+                                        style={{
+                                            backgroundColor: isActive
+                                                ? colors.primary
+                                                : isDark
+                                                    ? 'rgba(255, 255, 255, 0.2)'
+                                                    : colors.border
+                                        }}
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ delay: 0.4 + i * 0.05 }}
+                                    />
+                                );
+                            })}
+                        </div>
+                    </motion.div>
+                )}
+                {STAT_CONFIG.map((config, index) => (
+                    <StatCard
+                        key={config.key}
+                        config={config}
+                        value={stats[config.key]}
+                        isDark={isDark}
+                        isLast={index === STAT_CONFIG.length - 1}
+                        index={index}
+                    />
+                ))}
 
-                <motion.div
-                    className="text-center p-2 rounded-lg border"
-                    style={{
-                        backgroundColor: isVintage ? 'rgba(254, 242, 242, 0.6)' : 'rgba(239, 68, 68, 0.1)',
-                        borderColor: isVintage ? '#8b1538' : '#ef4444',
-                        boxShadow: isVintage ? 'inset 0 1px 0 rgba(255, 255, 255, 0.3)' : 'none'
-                    }}
-                    whileHover={{ scale: 1.02 }}
-                >
-                    <div
-                        className="text-lg font-bold"
-                        style={{ color: isVintage ? '#8b1538' : '#ef4444' }}
-                    >
-                        {stats.lieCount}
-                    </div>
-                    <div
-                        className="text-sm"
-                        style={{
-                            color: isVintage ? vintage.faded : colors.mutedForeground,
-                            fontFamily: isVintage ? '"Times New Roman", serif' : 'inherit'
-                        }}
-                    >
-                        False
-                    </div>
-                </motion.div>
-
-                <motion.div
-                    className="text-center p-2 rounded-lg border"
-                    style={{
-                        backgroundColor: isVintage ? vintage.highlight : colors.muted,
-                        borderColor: colors_enhanced.border,
-                        boxShadow: isVintage ? 'inset 0 1px 0 rgba(255, 255, 255, 0.3)' : 'none'
-                    }}
-                    whileHover={{ scale: 1.02 }}
-                >
-                    <div
-                        className="text-lg font-bold"
-                        style={{ color: colors.primary }}
-                    >
-                        {stats.avgConfidence}%
-                    </div>
-                    <div
-                        className="text-sm"
-                        style={{
-                            color: isVintage ? vintage.faded : colors.mutedForeground,
-                            fontFamily: isVintage ? '"Times New Roman", serif' : 'inherit'
-                        }}
-                    >
-                        Confidence
-                    </div>
-                </motion.div>
             </div>
-        )}
-    </motion.div>
-}
+        </motion.div>
+    );
+};
 
 export default TimelineClaimListStats;

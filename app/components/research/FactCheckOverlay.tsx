@@ -4,7 +4,6 @@ import { useMemo, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { VideoWithTimestamps, VideoTimestamp } from "@/app/types/video_api";
 import { FactCheckCard } from "./FactCheckCard";
-import { FactCheckSummary } from "./FactCheckSummary";
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
 import FactCheckOverlayEmpty from "./FactCheckOverlayEmpty";
 import FactCheckOverlayPending from "./FactCheckOverlayPending";
@@ -94,7 +93,7 @@ export function FactCheckOverlay({
   };
 
   return (
-    <div className={`relative ${className} max-h-[1000px]`}>
+    <div className={`relative ${className} max-h-[1000px] overflow-y-auto`}>
       {/* Content Container - Full size */}
       <div className="absolute inset-0 flex flex-col">
         {/* Main Content Area - Full height, no position changes */}
@@ -136,22 +135,6 @@ export function FactCheckOverlay({
           </AnimatePresence>
         </div>
       </div>
-
-      {/* Summary Modal */}
-      <AnimatePresence>
-        {showSummary && (
-          <FactCheckSummary
-            //@ts-expect-error Ignore
-            factChecks={video.timestamps
-              .filter(ts => ts.factCheck)
-              .map(ts => convertToLegacyFormat(ts)!)
-              .filter(Boolean)
-            }
-            onDismiss={() => setShowSummary(false)}
-            onClear={() => { }}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 }

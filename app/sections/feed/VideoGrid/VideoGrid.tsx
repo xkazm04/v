@@ -49,27 +49,37 @@ const VideoGrid = memo(function VideoGrid({
   const gridRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(gridRef, { once: true, amount: 0.1 });
 
-  // Only use API hooks if no videos provided as props
-  const shouldFetchFromAPI = !propVideos;
+  const shouldFetchFromAPI = !propVideos || propVideos.length === 0;
 
   const {
     data: regularData,
     isLoading: regularLoading,
     error: regularError,
     refetch: regularRefetch
-  } = useVideos(shouldFetchFromAPI ? filters : {});
+  } = useVideos(shouldFetchFromAPI && !infinite ? filters : {}, {
+    enabled: shouldFetchFromAPI && !infinite
+  });
 
   const {
     data: infiniteData,
     isLoading: infiniteLoading,
     error: infiniteError,
     refetch: infiniteRefetch
-  } = useInfiniteVideos(shouldFetchFromAPI ? filters : {});
+  } = useInfiniteVideos(shouldFetchFromAPI && infinite ? filters : {}, {
+    enabled: shouldFetchFromAPI && infinite
+  });
 
-  // Determine which data to use - prioritize prop videos
-  const videos: Video[] = propVideos || (infinite 
-    ? (infiniteData?.pages.flat() as Video[]) || []
-    : (regularData as Video[]) || []);
+  const videos: Video[] = useMemo(() => {
+    if (propVideos && propVideos.length > 0) {
+      return propVideos;
+    }
+    
+    if (infinite) {
+      return (infiniteData?.pages.flat() as Video[]) || [];
+    }
+    
+    return (regularData as Video[]) || [];
+  }, [propVideos, infinite, infiniteData, regularData]);
   
   const isLoading = shouldFetchFromAPI ? (infinite ? infiniteLoading : regularLoading) : false;
   const error = shouldFetchFromAPI ? (infinite ? infiniteError : regularError) : null;

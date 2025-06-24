@@ -93,11 +93,6 @@ const TimelineClaimItem = ({
                 stiffness: 300,
                 damping: 25
             }}
-            whileHover={{ 
-                scale: 1.02, 
-                y: -2,
-                transition: { duration: 0.2 }
-            }}
             onClick={handleClick}
             className={`
                 flex items-start space-x-3 p-3 rounded-lg border transition-all duration-300 
@@ -183,7 +178,7 @@ const TimelineClaimItem = ({
             {/* Content */}
             <div className="flex-1 min-w-0">
                 <p
-                    className="text-sm leading-relaxed font-medium mb-2 group-hover:text-opacity-90 transition-colors"
+                    className="leading-relaxed font-medium mb-2 group-hover:text-opacity-90 transition-colors"
                     style={{ 
                         color: isVintage ? vintage.ink : colors.foreground,
                         fontFamily: isVintage ? '"Times New Roman", serif' : 'inherit',
@@ -208,7 +203,6 @@ const TimelineClaimItem = ({
                                 ? 'inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 1px 2px rgba(139, 69, 19, 0.1)'
                                 : 'none'
                         }}
-                        whileHover={{ scale: 1.05 }}
                     >
                         {claim.confidence}% confidence
                     </motion.span>

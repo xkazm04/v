@@ -8,34 +8,14 @@ import { Divider } from '../ui/divider';
 import { NewsCardFooter } from './NewsCardFooter';
 import { getCountryFlagSvg, getCountryName } from '@/app/helpers/countries';
 import Image from 'next/image';
+import { contentVariants } from '../animations/variants/playerVariants';
+import { itemVariants } from '@/app/helpers/animation';
 
 interface NewsCardContentProps {
   isCompact?: boolean;
   research: ResearchResult;
   onQuoteClick?: () => void;
 }
-
-const contentVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.4,
-      ease: [0.25, 0.46, 0.45, 0.94] as const,
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 10 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.3 }
-  }
-};
 
 const DynamicCountryFlagBackground = memo(({ 
   countryCode, 
@@ -103,13 +83,11 @@ const DynamicCountryFlagBackground = memo(({
           console.warn(`Failed to load flag image: ${flagSvgPath}`);
           setImageError(true);
         }}
-        // ✅ **Performance optimization**
         loading="lazy"
         quality={75}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       />
       
-      {/* ✅ **Enhanced overlay gradient for better text readability** */}
       <div 
         className="absolute inset-0 transition-all duration-300"
         style={{
@@ -153,7 +131,6 @@ const NewsCardContent = memo(function NewsCardContent({
     return `${research.statement.slice(0, maxLength)}...`;
   }, [research.statement, isExpanded, shouldTruncate, maxLength]);
 
-  // ✅ **Extract and normalize country code**
   const countryCode = useMemo(() => {
     // Handle various country field formats
     const country = research.country || research.source;
@@ -197,13 +174,11 @@ const NewsCardContent = memo(function NewsCardContent({
       onMouseEnter={() => setIsQuoteHovered(true)}
       onMouseLeave={() => setIsQuoteHovered(false)}
     >
-      {/* ✅ **UPDATED: Dynamic country flag background** */}
       <DynamicCountryFlagBackground 
         countryCode={countryCode}
         isHovered={isQuoteHovered}
       />
       
-      {/* ✅ Clean, readable quote section */}
       <motion.div
         className="flex flex-col items-start justify-between flex-1"
         variants={itemVariants}
@@ -225,7 +200,6 @@ const NewsCardContent = memo(function NewsCardContent({
             <motion.span
               className="relative block"
               animate={{
-                // ✅ Simple color transition - no text shadow effects
                 color: isQuoteHovered && !isMobile
                   ? colors.primary
                   : colors.foreground
@@ -235,7 +209,6 @@ const NewsCardContent = memo(function NewsCardContent({
               "{displayText}"
             </motion.span>
 
-            {/* ✅ Clean hover background */}
             {!isMobile && (
               <motion.div
                 className="absolute inset-0 rounded-lg pointer-events-none"

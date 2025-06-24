@@ -6,7 +6,6 @@ import { NewsGrid } from '../feed/NewsGrid';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RefreshCw, AlertCircle, TrendingUp, Trash2, Filter } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-import { Button } from '@/app/components/ui/button';
 import { useNewsTranslations, useCommonTranslations } from '@/app/hooks/useSmartTranslations';
 import LoaderComponent from '@/app/components/animations/LoaderComponent';
 
@@ -124,7 +123,6 @@ const FeaturedNews = memo(({
             {tn('featured_news', 'Featured News')}
           </h2>
           
-          {/* ✅ **ENHANCED: Article stats with active filters and loading indicator** */}
           <div className="flex items-center gap-4 text-sm" style={{ color: colors.mutedForeground }}>
             {loading ? (
               <div className="flex items-center gap-2">
@@ -194,9 +192,9 @@ const FeaturedNews = memo(({
             <p className="text-sm mb-4" style={{ color: colors.mutedForeground }}>
               {error}
             </p>
-            <button onClick={handleRefresh} variant="outline">
+            <button onClick={handleRefresh}>
               {tc('try_again', 'Try Again')}
-            </Button>
+            </button>
           </motion.div>
         ) : (
           <motion.div

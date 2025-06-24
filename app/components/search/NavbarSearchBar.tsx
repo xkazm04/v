@@ -29,32 +29,26 @@ export function NavbarSearchBar({
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Get search text from filter store and update functions
   const { searchText, setSearchText } = useFilterStore((state) => ({
     searchText: state.searchText,
     setSearchText: state.setSearchText
   }));
 
-  // ✅ **Debounce search input to prevent excessive API calls**
   const debouncedQuery = useDebounce(query, 500);
 
-  // ✅ **Sync local query with filter store search text on mount**
   useEffect(() => {
     if (searchText && searchText !== query) {
       setQuery(searchText);
     }
   }, [searchText]);
 
-  // ✅ **FIXED: Update filter store when debounced query changes**
   useEffect(() => {
     if (debouncedQuery !== searchText) {
       console.log(`🔍 Setting search filter: "${debouncedQuery}"`);
       setIsLoading(true);
       
-      // Update the filter store, which will trigger news refresh
       setSearchText(debouncedQuery);
       
-      // ✅ **FIXED: Properly clear loading state**
       const loadingTimeout = setTimeout(() => {
         setIsLoading(false);
       }, 800); // Slightly longer to account for API response time
@@ -94,7 +88,6 @@ export function NavbarSearchBar({
     }, 150);
   }, []);
 
-  // ✅ **Handle keyboard shortcuts**
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Focus search on Ctrl/Cmd + K
@@ -198,7 +191,7 @@ export function NavbarSearchBar({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               className={cn(
-                "absolute right-3 top-1/2 transform -translate-y-1/2",
+                "absolute right-3 top-2 transform -translate-y-1/2",
                 "h-6 w-6 rounded-full flex items-center justify-center",
                 "hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors",
                 "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
@@ -210,32 +203,15 @@ export function NavbarSearchBar({
             </motion.button>
           )}
         </AnimatePresence>
-
-        {/* Keyboard Shortcut Hint */}
-        {!isFocused && !hasQuery && !isLoading && (
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-            <kbd 
-              className="text-xs px-1.5 py-0.5 rounded border border-slate-300 dark:border-slate-600 font-mono"
-              style={{ 
-                color: `${navbarColors.foreground}40`,
-                backgroundColor: `${navbarColors.background}60`,
-                borderColor: `${navbarColors.border}60`
-              }}
-            >
-              ⌘K
-            </kbd>
-          </div>
-        )}
       </motion.div>
 
-      {/* ✅ **ENHANCED: Search Results Indicator** */}
       <AnimatePresence>
         {hasQuery && !isLoading && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute top-full left-0 mt-1 text-xs text-slate-500 dark:text-slate-400"
+            className="absolute top-0 -left-[140px] mt-1 text-xs text-slate-500 dark:text-slate-400"
           >
             Searching for "{query}"...
           </motion.div>
@@ -245,7 +221,7 @@ export function NavbarSearchBar({
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute top-full left-0 mt-1 text-xs text-blue-500 dark:text-blue-400"
+            className="absolute top-0 -left-[140px] mt-1 text-xs text-blue-500 dark:text-blue-400"
           >
             Searching...
           </motion.div>

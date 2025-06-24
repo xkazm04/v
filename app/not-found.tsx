@@ -3,10 +3,10 @@ import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
-import { VintageVerdictStamp } from '@/app/components/news/VintageVerdictStamp';
 import Link from 'next/link';
 import { Home, ArrowLeft, Newspaper, Search, Clock } from 'lucide-react';
 import BackgroundPattern from './components/ui/Decorative/BackgroundPattern';
+import { VintageStamp } from './components/shared/VintageStamp';
 
 const VintagePaperOverlay = memo(() => (
   <div className="fixed inset-0 pointer-events-none">
@@ -124,7 +124,7 @@ export default function NotFound() {
               transition={{ delay: 0.8, duration: 0.6 }}
               className="absolute top-4 right-4"
             >
-              <VintageVerdictStamp
+              <VintageStamp
                 status="UNVERIFIABLE"
                 size="lg"
                 animated={true}

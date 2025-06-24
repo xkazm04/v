@@ -1,7 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
-import { X } from "lucide-react";
+import { motion } from "framer-motion";
 import { LLMResearchResponse } from "@/app/types/research";
 import { FactCheckHeader } from "./card-sections/FactCheckHeader";
 import { FactCheckAnalysis } from "./card-sections/FactCheckAnalysis";
@@ -11,6 +10,8 @@ import { FactCheckExperts } from "./card-sections/FactCheckExperts";
 import { getStatusConfig } from "./utils/statusConfig";
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
 import StampText from "../ui/Decorative/StampText";
+import { containerVariants } from "../animations/variants/votingVariants";
+import { sectionVariants } from "../animations/variants/feedVariants";
 
 interface FactCheckCardProps {
   factCheck: LLMResearchResponse;
@@ -19,34 +20,8 @@ interface FactCheckCardProps {
   animationPhase: 'notification' | 'card' | 'complete' | 'idle';
 }
 
-// Smoother animation variants with proper stagger
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.6, // Reduced for smoother flow
-      delayChildren: 0.2
-    }
-  },
-  exit: {
-    opacity: 0,
-    scale: 0.98,
-    transition: { duration: 0.2 }
-  }
-};
-
-const sectionVariants: Variants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: "easeOut" }
-  }
-};
-
-export function FactCheckCard({ factCheck, onDismiss, onExpertToggle, animationPhase }: FactCheckCardProps) {
-  const { colors, isDark } = useLayoutTheme();
+export function FactCheckCard({ factCheck }: FactCheckCardProps) {
+  const { isDark } = useLayoutTheme();
   const config = getStatusConfig(factCheck.status);
 
   // Theme-aware colors
@@ -80,29 +55,8 @@ export function FactCheckCard({ factCheck, onDismiss, onExpertToggle, animationP
         }}
         layoutId="fact-check-card"
       >
-        {/* Close button - positioned absolute for no layout shift */}
-        <motion.button
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3 }}
-          onClick={onDismiss}
-          className="absolute top-4 right-4 z-20 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200"
-          style={{
-            background: themeColors.closeButton,
-            color: themeColors.closeButtonText
-          }}
-          whileHover={{ 
-            scale: 1.1,
-            backgroundColor: themeColors.closeButtonHover,
-            color: colors.foreground
-          }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <X className="w-4 h-4" />
-        </motion.button>
-
         {/* Header - Appears first */}
-        <motion.div variants={sectionVariants} className="flex-shrink-0">
+        <motion.div variants={sectionVariants} className="">
           <FactCheckHeader
             factCheck={factCheck}
             config={config}
@@ -113,7 +67,7 @@ export function FactCheckCard({ factCheck, onDismiss, onExpertToggle, animationP
         {/* Content - Each section appears with stagger */}
         <div className="flex flex-col gap-3 p-6 pt-2 min-h-0 flex-1">
           {/* Analysis Section with Stamp */}
-          <motion.div variants={sectionVariants} className="relative flex-shrink-0">
+          <motion.div variants={sectionVariants} className="relative ">
             <FactCheckAnalysis factCheck={factCheck} config={config} />
             <StampText
               stampText={factCheck.status}
@@ -123,24 +77,19 @@ export function FactCheckCard({ factCheck, onDismiss, onExpertToggle, animationP
 
           {/* Correction Section */}
           {factCheck.correction && (
-            <motion.div variants={sectionVariants} className="flex-shrink-0">
+            <motion.div variants={sectionVariants} className="">
               <FactCheckCorrection correction={factCheck.correction} />
             </motion.div>
           )}
-
-          {/* Sources Section - Takes remaining space */}
+          <motion.div 
+            variants={sectionVariants} >
+            <FactCheckExperts factCheck={factCheck} />
+          </motion.div>
           <motion.div
             variants={sectionVariants}
             className="flex-1 min-h-0"
           >
             <FactCheckSources factCheck={factCheck} config={config} />
-          </motion.div>
-
-          {/* Experts Section */}
-          <motion.div 
-            variants={sectionVariants} 
-            className="flex-shrink-0 min-h-[300px]">
-            <FactCheckExperts factCheck={factCheck} />
           </motion.div>
         </div>
       </motion.div>

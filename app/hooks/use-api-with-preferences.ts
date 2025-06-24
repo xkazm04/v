@@ -8,7 +8,8 @@ import { userPreferencesApiClient } from '@/app/lib/services/user-preferences-ap
 export function useApiWithPreferences() {
   const { preferences } = useUserPreferences();
 
-  // Update the API client with current preferences
+  // ✅ FORCE: Always reset and update preferences to ensure fresh state
+  userPreferencesApiClient.resetCache();
   userPreferencesApiClient.setPreferences(preferences);
 
   /**
@@ -18,6 +19,15 @@ export function useApiWithPreferences() {
     url: string,
     options: RequestInit = {}
   ): Promise<Response> => {
+    // ✅ Force use of current preferences, don't rely on cached ones
+    console.log('🌐 fetchWithPreferences called:', {
+      url,
+      language: preferences?.language,
+      translationTarget: userPreferencesApiClient.getTranslationTarget(preferences),
+      currentTime: new Date().toISOString()
+    });
+    
+    // ✅ Always pass current preferences explicitly
     return userPreferencesApiClient.fetchWithPreferences(url, options, preferences);
   }, [preferences]);
 
@@ -31,14 +41,23 @@ export function useApiWithPreferences() {
   ): string => {
     const url = new URL(baseUrl, window.location.origin);
     
-    // Add translation parameter if needed
+    // ✅ Force fresh translation target calculation
     const translationTarget = userPreferencesApiClient.getTranslationTarget(preferences);
+    
+    console.log('🔗 createUrlWithPreferences called:', {
+      baseUrl,
+      preferences: preferences?.language,
+      translationTarget,
+      willAddLangParams: !!translationTarget
+    });
+    
     if (translationTarget) {
       url.searchParams.set('lang', translationTarget);
+      url.searchParams.set('translate_to', translationTarget);
     }
     
     // ✅ Only add theme parameter if explicitly requested
-    if (options.includeTheme && preferences.theme && preferences.theme !== 'system') {
+    if (options.includeTheme && preferences?.theme && preferences.theme !== 'system') {
       url.searchParams.set('theme', preferences.theme);
     }
     
@@ -46,6 +65,8 @@ export function useApiWithPreferences() {
     Object.entries(additionalParams).forEach(([key, value]) => {
       url.searchParams.set(key, value);
     });
+    
+    console.log('🔗 Final URL:', url.toString());
     
     return url.toString();
   }, [preferences]);

@@ -2,9 +2,10 @@
 
 import { memo } from 'react';
 import { useFeaturedVideos } from '@/app/hooks/useVideos'; 
-import { Loader2, AlertCircle, Database, Cloud } from 'lucide-react';
+import { AlertCircle, Database, Cloud } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { VideoGrid } from '../feed/VideoGrid/VideoGrid';
+import LoaderComponent from '@/app/components/animations/LoaderComponent';
 
 export const FeaturedVideos = memo(function FeaturedVideos() {
   const { 
@@ -12,22 +13,21 @@ export const FeaturedVideos = memo(function FeaturedVideos() {
     isLoading, 
     error, 
     refetch 
-  } = useFeaturedVideos(6); // Request max 6 videos
+  } = useFeaturedVideos(6);
 
-  // Extract videos and metadata from response
+  //@ts-expect-error Ignore
   const videos = Array.isArray(response) ? response : (response?.videos || []);
+  //@ts-expect-error Ignore
   const metadata = response && !Array.isArray(response) ? response.__meta : null;
 
   // Loading state
   if (isLoading) {
     return (
-      <section className="py-6 relative">
-        <h2 className="text-2xl font-bold mb-6">Featured Videos</h2>
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-          <span className="ml-2 text-slate-600 dark:text-slate-400">Loading featured videos...</span>
-        </div>
-      </section>
+      <LoaderComponent
+        loading={true}
+        text="Loading vidoes..."
+        variant="default"
+      />
     );
   }
 
@@ -61,30 +61,8 @@ export const FeaturedVideos = memo(function FeaturedVideos() {
     );
   }
 
-  // Don't render if no videos
-  if (!videos || videos.length === 0) {
-    return (
-      <section className="py-6 relative">
-        <h2 className="text-2xl font-bold mb-6">Featured Videos</h2>
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center py-8"
-        >
-          <p className="text-slate-600 dark:text-slate-400">
-            No featured videos available at the moment.
-          </p>
-          {metadata?.source === 'none' && (
-            <p className="text-sm text-red-500 mt-2">
-              All video sources are currently unavailable
-            </p>
-          )}
-        </motion.div>
-      </section>
-    );
-  }
 
-  return (
+  if (videos) return (
     <section className="py-6 relative">
       <motion.div
         initial={{ opacity: 0, y: 20 }}

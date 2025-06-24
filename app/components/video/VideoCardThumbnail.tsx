@@ -31,7 +31,7 @@ export const VideoCardThumbnail = memo(function VideoCardThumbnail({
   return (
     <Link 
       href={`/watch?v=${video.id}`}
-      className={cn("relative block overflow-hidden rounded-t-xl group", className)}
+      className={cn("relative block overflow-hidden group", className)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={(e) => e.stopPropagation()} // Prevent parent card click
