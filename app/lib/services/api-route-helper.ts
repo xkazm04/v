@@ -35,7 +35,7 @@ export class ApiRouteHelper {
    */
   public static getTranslationTarget(request: NextRequest): string | null {
     const preferences = this.extractUserPreferences(request);
-    return userPreferencesApiClient.getTranslationTarget(preferences);
+    return userPreferencesApiClient.getTranslationTarget(preferences ?? undefined);
   }
 
   /**
@@ -53,7 +53,7 @@ export class ApiRouteHelper {
     additionalMeta: Record<string, any> = {}
   ): Record<string, any> {
     const preferences = this.extractUserPreferences(request);
-    const translationTarget = userPreferencesApiClient.getTranslationTarget(preferences);
+    const translationTarget = userPreferencesApiClient.getTranslationTarget(preferences ?? undefined);
 
     return {
       timestamp: new Date().toISOString(),
@@ -78,7 +78,7 @@ export class ApiRouteHelper {
   ): void {
     if (process.env.NODE_ENV === 'development') {
       const preferences = this.extractUserPreferences(request);
-      const translationTarget = userPreferencesApiClient.getTranslationTarget(preferences);
+      const translationTarget = userPreferencesApiClient.getTranslationTarget(preferences ?? undefined);
 
       console.log(`🌐 [${context}] API Request:`, {
         url: request.url,

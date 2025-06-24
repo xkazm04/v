@@ -12,7 +12,7 @@ interface SidebarProps {
 
 export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname();
-  const { sidebarColors, isDark, mounted: themeReady } = useLayoutTheme();
+  const { sidebarColors, isDark } = useLayoutTheme();
 
   const isActive = (path: string) => pathname === path;
 
@@ -20,7 +20,7 @@ export function Sidebar({ className }: SidebarProps) {
     <motion.div
       className={cn(
         'min-h-full border-r transition-all duration-300 hidden md:block relative overflow-hidden',
-        'w-[200px]',
+        'w-[220px]',
         className
       )}
       style={{
@@ -31,7 +31,6 @@ export function Sidebar({ className }: SidebarProps) {
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      {/* ✅ Enhanced vintage newspaper background */}
       <div className="absolute inset-0">
         {isDark ? (
           // Dark mode background (keep existing)
@@ -56,7 +55,6 @@ export function Sidebar({ className }: SidebarProps) {
             />
           </>
         ) : (
-          // ✅ NEW: Vintage newspaper light mode
           <>
             {/* Base aged paper background */}
             <div

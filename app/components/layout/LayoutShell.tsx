@@ -12,8 +12,7 @@ interface LayoutShellProps {
 export function LayoutShell({ children }: LayoutShellProps) {
   const pathname = usePathname();
   
-  const isVideoPlayerMode = pathname.startsWith('/watch') || 
-                           pathname.startsWith('/reel/') 
+  const isVideoPlayerMode = pathname.startsWith('/watch') 
 
   return (
     <div className="relative flex min-h-screen flex-col">

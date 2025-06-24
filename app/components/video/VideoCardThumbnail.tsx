@@ -6,7 +6,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
-import { playButtonVariants } from '../animations/variants/cardVariants';
 import { Video, getVideoThumbnailUrl, formatVideoDuration } from '@/app/types/video_api';
 import { Play } from 'lucide-react';
 

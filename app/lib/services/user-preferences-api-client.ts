@@ -165,10 +165,10 @@ export class UserPreferencesApiClient {
    */
   public applyPreferencesToFilters<T extends Record<string, any>>(
     baseFilters: T,
-    preferences?: UserPreferences
+    preferences?: UserPreferences | null
   ): T & { translate_to?: string } {
-    const prefs = preferences || this.preferences;
-    const translationTarget = this.getTranslationTarget(prefs);
+    const prefs = preferences ?? this.preferences;
+    const translationTarget = this.getTranslationTarget(prefs ?? undefined);
 
     return {
       ...baseFilters,
@@ -203,9 +203,9 @@ export class UserPreferencesApiClient {
     options: RequestInit = {},
     preferences?: UserPreferences
   ): Promise<Response> {
-    const prefs = preferences || this.preferences;
+    const prefs = preferences ?? this.preferences ?? undefined;
     const enhancedHeaders = {
-      ...this.createRequestHeaders(prefs),
+      ...this.createRequestHeaders(prefs === null ? undefined : prefs),
       ...options.headers
     };
 

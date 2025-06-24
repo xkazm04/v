@@ -1,16 +1,16 @@
 'use client';
 
-import { Suspense, memo, use } from 'react';
+import { Suspense } from 'react';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
-import { useSimpleTranslations } from '../hooks/useSimpleTranslations';
 import { Sidebar } from '../components/sidebar/sidebar';
 import { FeaturedVideos } from '../sections/home/FeaturedVideos';
 import { Divider } from '../components/ui/divider';
 import FeedHeader from '../sections/feed/FeedHeader';
 import LogoSectionDecor from '../components/ui/Decorative/LogoSectionDecor';
-import { useTheme } from 'next-themes';
 import { useViewport } from '../hooks/useViewport';
+import { containerVariants, itemVariants } from '../components/animations/variants/votingVariants';
+import BackgroundPattern from '../components/ui/Decorative/BackgroundPattern';
 
 const SimpleSkeleton = () => (
   <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-32" />
@@ -21,53 +21,17 @@ const FeaturedNews = dynamic(() => import('../sections/home/FeaturedNews'), {
   ssr: false
 });
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { 
-    opacity: 1,
-    transition: {
-      duration: 0.3,
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.3 }
-  }
-};
-
-const NewsBackground = memo(() => (
-  <div 
-    className="fixed inset-0 opacity-20 bg-cover bg-center bg-no-repeat"
-    style={{
-      backgroundImage: `url('/background/news_bg_1.jpg')`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'fixed'
-    }}
-  />
-));
-
-NewsBackground.displayName = 'NewsBackground';
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
 export default function LocalizedHome({ params }: Props) {
-  const { locale } = use(params);
-  const t = useSimpleTranslations(locale);
   const { isDesktop } = useViewport();
-  const { theme } = useTheme();
 
   return (
     <>
-      {theme !== 'dark' && <NewsBackground />}
+      <BackgroundPattern />
 
       <motion.div 
         className="flex relative min-h-screen overflow-y-hidden"

@@ -76,6 +76,7 @@ class SupabaseVideoDetailService {
         console.error('Database error:', error);
         return null;
       }
+      if (!videoData) return null;
 
       // Convert to Video format
       const video: Video = {
@@ -142,6 +143,10 @@ class SupabaseVideoDetailService {
    */
   async videoExists(videoId: string): Promise<boolean> {
     try {
+      if (!supabaseAdmin) {
+        console.warn('Supabase admin client not available');
+        return false;
+      }
       const { data, error } = await supabaseAdmin
         .from('videos')
         .select('id')
@@ -175,6 +180,10 @@ class SupabaseVideoDetailService {
    */
   async healthCheck(): Promise<boolean> {
     try {
+      if (!supabaseAdmin) {
+        console.warn('Supabase admin client not available');
+        return false;
+      }
       const { error } = await supabaseAdmin
         .from('videos')
         .select('id')

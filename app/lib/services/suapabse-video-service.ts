@@ -384,6 +384,10 @@ class SupabaseVideoService {
    */
   async getAllVideoIds(): Promise<string[]> {
     try {
+      if (!supabaseAdmin) {
+        console.warn('Supabase admin client not available');
+        return [];
+      }
       const { data, error } = await supabaseAdmin
         .from('videos')
         .select('id, video_url')

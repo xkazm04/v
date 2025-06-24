@@ -21,15 +21,12 @@ interface Category {
 
 // Categories from the main app (matching Categories.tsx)
 const AVAILABLE_CATEGORIES: Category[] = [
-  { id: 'politics', label: 'Politics', icon: Users, color: '#3b82f6' },
   { id: 'military', label: 'Military', icon: Shield, color: '#ef4444' },
   { id: 'environment', label: 'Environment', icon: Leaf, color: '#22c55e' },
   { id: 'economy', label: 'Economy', icon: TrendingUp, color: '#f59e0b' },
   { id: 'healthcare', label: 'Healthcare', icon: Heart, color: '#ec4899' },
   { id: 'technology', label: 'Technology', icon: Zap, color: '#8b5cf6' },
-  { id: 'international', label: 'International', icon: Globe, color: '#06b6d4' },
   { id: 'education', label: 'Education', icon: Briefcase, color: '#84cc16' },
-  { id: 'social', label: 'Social', icon: Building, color: '#64748b' },
 ];
 
 interface CompactCategorySelectorProps {
@@ -57,7 +54,7 @@ const CompactCategorySelector: React.FC<CompactCategorySelectorProps> = ({
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Category Icons Grid */}
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap justify-center gap-3">
         {AVAILABLE_CATEGORIES.map((category, index) => {
           const Icon = category.icon;
           const isSelected = selectedCategories.includes(category.id);

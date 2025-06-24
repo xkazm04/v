@@ -16,9 +16,11 @@ export interface SupabaseNewsFilters {
   sort_by?: string;
   sort_order?: 'asc' | 'desc';
   translateTo?: string;
+  excludeIds?: string[]; // ✅ Support for excluding article IDs
+  topicId?: string; // ✅ NEW: Support for topic_id filtering
 }
 
-// ✅ NEW: Expert perspective interface
+// ✅ Expert perspective interface
 interface ExpertPerspective {
   expert_name: string;
   stance: 'SUPPORTING' | 'OPPOSING' | 'NEUTRAL';
@@ -38,8 +40,7 @@ class SupabaseNewsServiceServer {
     try {
       // Check if admin client is available
       if (!supabaseAdmin) {
-        console.error('Supabase admin client not available');
-        return [];
+        throw new Error('Supabase admin client is not available');
       }
 
       // Test connection first
@@ -49,16 +50,15 @@ class SupabaseNewsServiceServer {
         .limit(1);
 
       if (testError) {
-        console.error('Supabase connection test failed:', testError);
-        return [];
+        throw new Error(`Supabase connection test failed: ${testError.message}`);
       }
 
       if (!testData || testData.length === 0) {
-        console.warn('No data found in research_results table');
+        console.warn('⚠️ No data available in research_results table');
         return [];
       }
 
-      // Build main query
+      // ✅ **Build main query with exclusion support**
       let query = supabaseAdmin
         .from('research_results')
         .select(`
@@ -69,106 +69,191 @@ class SupabaseNewsServiceServer {
           request_datetime,
           statement_date,
           country,
-          category,
           valid_sources,
           verdict,
           status,
           correction,
-          resources_agreed,
-          resources_disagreed,
           experts,
           expert_perspectives,
+          resources_agreed,
+          resources_disagreed,
+          profile_id,
           processed_at,
           created_at,
-          topic_id,
           updated_at,
-          profile_id
+          topic_id,
+          category
         `);
 
-      // Apply filters
-      if (filters.status && filters.status !== 'all' && filters.status.trim() !== '') {
-        query = query.eq('status', filters.status.toUpperCase());
+      // ✅ **Apply exclusion filter first**
+      if (filters.excludeIds && filters.excludeIds.length > 0) {
+        console.log(`🚫 Excluding ${filters.excludeIds.length} read articles`);
+        query = query.not('id', 'in', `(${filters.excludeIds.map(id => `"${id}"`).join(',')})`);
       }
 
-      if (filters.category && filters.category !== 'all' && filters.category.trim() !== '') {
+      // ✅ **NEW: Apply topic_id filter**
+      if (filters.topicId) {
+        console.log(`🔥 Filtering by topic_id: ${filters.topicId}`);
+        query = query.eq('topic_id', filters.topicId);
+      }
+
+      // Apply other filters
+      if (filters.status) {
+        query = query.eq('status', filters.status);
+      }
+
+      if (filters.category) {
         query = query.eq('category', filters.category);
       }
 
-      if (filters.country && filters.country !== 'all' && filters.country !== 'worldwide' && filters.country.trim() !== '') {
+      if (filters.country) {
         query = query.eq('country', filters.country);
       }
 
-      if (filters.source && filters.source !== 'all' && filters.source.trim() !== '') {
+      if (filters.source) {
         query = query.ilike('source', `%${filters.source}%`);
       }
 
-      if (filters.search && filters.search.trim() !== '') {
-        query = query.or(`statement.ilike.%${filters.search}%,verdict.ilike.%${filters.search}%`);
+      if (filters.search) {
+        query = query.or(`statement.ilike.%${filters.search}%,context.ilike.%${filters.search}%`);
       }
 
-      // Sorting
+      // Apply sorting
       const sortBy = filters.sort_by || 'processed_at';
       const sortOrder = filters.sort_order || 'desc';
       query = query.order(sortBy, { ascending: sortOrder === 'asc' });
 
-      // Pagination
-      const limit = Math.min(filters.limit || 20, 100);
-      const offset = filters.offset || 0;
-      query = query.range(offset, offset + limit - 1);
+      // Apply pagination
+      if (filters.offset) {
+        query = query.range(filters.offset, (filters.offset || 0) + (filters.limit || 10) - 1);
+      } else if (filters.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      console.log(`🎯 Executing Supabase query with filters:`, {
+        ...filters,
+        excludeCount: filters.excludeIds?.length || 0
+      });
 
       const { data, error } = await query;
 
       if (error) {
-        console.error('Supabase query error:', error);
-        return [];
+        throw new Error(`Supabase query failed: ${error.message}`);
       }
 
       if (!data || data.length === 0) {
-        console.log('No research results found');
+        console.log('📭 No results returned from Supabase');
         return [];
       }
 
-      // Convert to ResearchResult format
-      let results = data.map((item: any): ResearchResult => ({
-        id: item.id,
-        statement: item.statement || '',
-        source: item.source || '',
-        context: item.context || '',
-        request_datetime: item.request_datetime || item.created_at,
-        statement_date: item.statement_date,
-        country: item.country,
-        valid_sources: item.valid_sources || '',
-        verdict: item.verdict || '',
-        status: item.status || 'UNVERIFIABLE',
-        correction: item.correction,
-        experts: this.parseJsonField(item.experts),
-        expert_perspectives: this.parseJsonField(item.expert_perspectives),
-        resources_agreed: this.parseJsonField(item.resources_agreed),
-        resources_disagreed: this.parseJsonField(item.resources_disagreed),
-        profileId: item.profile_id, 
-        topic_id: item.topic_id || null,
-        processed_at: item.processed_at || item.created_at,
-        created_at: item.created_at,
-        updated_at: item.updated_at,
-        category: item.category
-      }));
+      console.log(`✅ Supabase returned ${data.length} results`);
 
-      // ✅ ENHANCED: Apply translation if requested (including expert perspectives)
-      if (filters.translateTo) {
-        results = await this.translateResearchResults(results, filters.translateTo);
+      // Transform and parse the data
+      const results: ResearchResult[] = data.map(row => {
+        try {
+          return {
+            id: row.id,
+            statement: row.statement || '',
+            source: row.source || '',
+            context: row.context || '',
+            request_datetime: row.request_datetime || new Date().toISOString(),
+            statement_date: row.statement_date,
+            country: row.country,
+            valid_sources: row.valid_sources || '',
+            verdict: row.verdict || '',
+            status: row.status || 'UNVERIFIABLE',
+            correction: row.correction,
+            experts: this.parseJsonField(row.experts) || {},
+            expert_perspectives: this.parseJsonField(row.expert_perspectives) || [],
+            resources_agreed: this.parseJsonField(row.resources_agreed),
+            resources_disagreed: this.parseJsonField(row.resources_disagreed),
+            profile_id: row.profile_id,
+            processed_at: row.processed_at || new Date().toISOString(),
+            created_at: row.created_at || new Date().toISOString(),
+            updated_at: row.updated_at || new Date().toISOString(),
+            topic_id: row.topic_id,
+            category: row.category,
+            __meta: {
+              source: 'supabase',
+              fetchTime: Date.now(),
+              timestamp: new Date().toISOString()
+            }
+          };
+        } catch (parseError) {
+          console.error('Failed to parse research result:', parseError, row);
+          return null;
+        }
+      }).filter(Boolean) as ResearchResult[];
+
+      // Apply translation if needed
+      if (filters.translateTo && filters.translateTo !== 'en') {
+        console.log(`🌐 Translating ${results.length} results to ${filters.translateTo}`);
+        return await this.translateResearchResults(results, filters.translateTo);
       }
 
       return results;
 
     } catch (error) {
-      console.error('Supabase news service error:', error);
-      return [];
+      console.error('💥 Supabase service error:', error);
+      throw error;
     }
   }
 
   /**
-   * ✅ ENHANCED: Translate statements, verdicts, and expert perspectives in batch
+   * ✅ NEW: Get count of articles matching filters (for pagination and stats)
    */
+  async getNewsCount(filters: Omit<SupabaseNewsFilters, 'limit' | 'offset' | 'sort_by' | 'sort_order'> = {}): Promise<number> {
+    try {
+      if (!supabaseAdmin) {
+        throw new Error('Supabase admin client is not available');
+      }
+
+      let query = supabaseAdmin
+        .from('research_results')
+        .select('id', { count: 'exact', head: true });
+
+      // Apply same filters as getNews (except pagination)
+      if (filters.excludeIds && filters.excludeIds.length > 0) {
+        query = query.not('id', 'in', `(${filters.excludeIds.map(id => `"${id}"`).join(',')})`);
+      }
+
+      if (filters.topicId) {
+        query = query.eq('topic_id', filters.topicId);
+      }
+
+      if (filters.status) {
+        query = query.eq('status', filters.status);
+      }
+
+      if (filters.category) {
+        query = query.eq('category', filters.category);
+      }
+
+      if (filters.country) {
+        query = query.eq('country', filters.country);
+      }
+
+      if (filters.source) {
+        query = query.ilike('source', `%${filters.source}%`);
+      }
+
+      if (filters.search) {
+        query = query.or(`statement.ilike.%${filters.search}%,context.ilike.%${filters.search}%`);
+      }
+
+      const { count, error } = await query;
+
+      if (error) {
+        throw new Error(`Supabase count query failed: ${error.message}`);
+      }
+
+      return count || 0;
+    } catch (error) {
+      console.error('Error getting news count:', error);
+      throw error;
+    }
+  }
+
   private async translateResearchResults(results: ResearchResult[], targetLanguage: string): Promise<ResearchResult[]> {
     try {
       console.log(`🌐 Translating ${results.length} research results to ${targetLanguage}`);
@@ -182,7 +267,6 @@ class SupabaseNewsServiceServer {
               translateResearchStatement(result.verdict, 'en', targetLanguage, 'news')
             ]);
 
-            // ✅ NEW: Translate expert perspectives if they exist
             let translatedExpertPerspectives = result.expert_perspectives;
 
             if (result.expert_perspectives) {
@@ -245,7 +329,7 @@ class SupabaseNewsServiceServer {
       try {
         return JSON.parse(field);
       } catch {
-        return field; // Return as string if parsing fails
+        return field; 
       }
     }
     return undefined;

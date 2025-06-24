@@ -17,10 +17,9 @@ const NewsCardMobileRead = memo(function MobileReadButton({
   const [isPressed, setIsPressed] = useState(false);
 
   const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent event bubbling
+    e.stopPropagation(); 
     setIsPressed(true);
     
-    // Add slight delay for visual feedback
     setTimeout(() => {
       onMarkRead();
     }, 150);
@@ -33,7 +32,7 @@ const NewsCardMobileRead = memo(function MobileReadButton({
       onMouseUp={() => setIsPressed(false)}
       onMouseLeave={() => setIsPressed(false)}
       className={cn(
-        "absolute right-2 top-1/2 transform -translate-y-1/2 z-30",
+        "absolute left-2 top-1/2 transform -translate-y-1/2 z-30",
         "w-10 h-10 rounded-full flex items-center justify-center",
         "transition-all duration-200 touch-manipulation",
         "shadow-lg border-2",

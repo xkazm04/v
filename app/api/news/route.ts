@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseNewsServiceServer } from '@/app/lib/services/supabase-news-service-server';
-import { ResearchResult } from '@/app/types/article';
 import { userPreferencesApiClient } from '@/app/lib/services/user-preferences-api-client';
+import { ResearchResult } from '@/app/types/article';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,10 +22,14 @@ export async function GET(request: NextRequest) {
     // ✅ Get translation target from user preferences (NOT hardcoded)
     const translationTarget = userPreferencesApiClient.getTranslationTarget(userPreferences);
     
+    // ✅ NEW: Parse exclude_ids for article replacement
+    const excludeIdsParam = searchParams.get('exclude_ids');
+    const excludeIds = excludeIdsParam ? excludeIdsParam.split(',').filter(Boolean) : [];
+    
     // Parse filters from search params
     const filters = {
-      limit: searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined,
-      offset: searchParams.get('offset') ? parseInt(searchParams.get('offset')!) : undefined,
+      limit: parseInt(searchParams.get('limit') || '10'),
+      offset: parseInt(searchParams.get('offset') || '0'),
       status: searchParams.get('status_filter') || undefined,
       category: searchParams.get('category_filter') || undefined,
       country: searchParams.get('country_filter') || undefined,
@@ -33,44 +37,38 @@ export async function GET(request: NextRequest) {
       search: searchParams.get('search_text') || undefined,
       sort_by: searchParams.get('sort_by') || 'processed_at',
       sort_order: (searchParams.get('sort_order') as 'asc' | 'desc') || 'desc',
-      translateTo: translationTarget // ✅ Use user preference instead of hardcoded 'es'
+      translateTo: searchParams.get('translate_to') || 'en',
+      topicId: searchParams.get('topic_id') || undefined,
+      excludeIds: searchParams.get('exclude_ids')?.split(',').filter(Boolean) || [],
     };
     
     if (translationTarget) {
-      console.log(`🌐 Translation enabled: English → ${translationTarget}`);
+      console.log(`🌐 Translation target: ${translationTarget}`);
     } else {
-      console.log(`📄 No translation needed (user prefers English or no preference set)`);
+      console.log(`📝 No translation needed`);
     }
     
     let results: ResearchResult[] = [];
     
     // Try Supabase first
     try {
+      console.log('🎯 Fetching from Supabase with enhanced filters...');
       results = await supabaseNewsServiceServer.getNews(filters);
+      console.log(`✅ Supabase returned ${results.length} results`);
       
-      if (results.length > 0) {
-        console.log(`✅ Research API returning ${results.length} results from Supabase in ${Date.now() - startTime}ms`);
-        
-        return NextResponse.json({
-          results,
-          count: results.length,
-          filters,
-          __meta: {
-            fetchTime: Date.now() - startTime,
-            timestamp: new Date().toISOString(),
-            source: 'supabase',
-            userPreferences: {
-              translationEnabled: !!translationTarget,
-              translationTarget: translationTarget || 'en',
-              originalLanguage: 'en'
-            }
-          }
-        });
+      // ✅ NEW: Filter out excluded articles client-side as backup
+      if (excludeIds.length > 0) {
+        const originalLength = results.length;
+        results = results.filter(article => !excludeIds.includes(article.id));
+        if (results.length < originalLength) {
+          console.log(`🚫 Filtered out ${originalLength - results.length} excluded articles`);
+        }
       }
+      
     } catch (supabaseError) {
-      console.warn('⚠️ Supabase failed in API route:', supabaseError);
-    }
+      console.error('❌ Supabase fetch failed:', supabaseError);
   
+    }
     
     return NextResponse.json({
       results,
@@ -79,9 +77,10 @@ export async function GET(request: NextRequest) {
       __meta: {
         fetchTime: Date.now() - startTime,
         timestamp: new Date().toISOString(),
-        source: 'mock',
+        source: 'supabase',
+        excludedCount: excludeIds.length,
         userPreferences: {
-          translationEnabled: false,
+          translationEnabled: !!translationTarget,
           translationTarget: translationTarget || 'en',
           originalLanguage: 'en'
         }
@@ -90,19 +89,13 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('💥 Research API error:', error);
-    
     return NextResponse.json(
       { 
         error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        results: [],
-        __meta: {
-          fetchTime: Date.now() - startTime,
-          timestamp: new Date().toISOString(),
-          source: 'error'
-        }
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );
   }
 }
+

@@ -10,7 +10,6 @@ import {
   createTargetUpdater,
   setupTargetUpdates,
   createScrollToTarget,
-  createScrollToTargetById,
   createNavigationFunctions,
   setupIntersectionObserver,
   createWheelHandler
@@ -92,11 +91,6 @@ export function useTimelineScroll(
       setActiveMilestoneId,
       setActiveEventId
     ),
-    [scrollTargets]
-  );
-
-  const scrollToTargetById = useCallback(
-    createScrollToTargetById(scrollTargets),
     [scrollTargets]
   );
 

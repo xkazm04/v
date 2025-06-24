@@ -324,11 +324,6 @@ const SetAppearance = memo(function SetAppearance() {
               })}
             </div>
           </motion.div>
-
-          {/* Color Subtone Section */}
-          <motion.div variants={itemVariants}>
-            <ColorSubtoneSelector />
-          </motion.div>
         </div>
       </GlassContainer>
     </motion.div>

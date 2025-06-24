@@ -277,7 +277,19 @@ class SupabaseProfileService {
         return [];
       }
 
-      return data || [];
+      return (data || []).map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        name_normalized: item.name_normalized,
+        avatar_url: item.avatar_url,
+        country: item.country,
+        party: item.party,
+        type: item.type,
+        position: item.position,
+        score: item.score,
+        created_at: item.created_at ?? undefined,
+        updated_at: item.updated_at ?? undefined
+      }));
 
     } catch (error) {
       console.error('💥 Profile name search error:', error);

@@ -28,7 +28,7 @@ const OnboardingHeader = ({onSkip, currentStep, steps, getBackgroundConfig, pref
                             Welcome to Vaai
                         </h1>
                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Let's personalize your experience
+                            Validate, Vet, Verify
                         </p>
                     </div>
                 </div>

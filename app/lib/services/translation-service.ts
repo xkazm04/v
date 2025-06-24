@@ -45,7 +45,12 @@ async function getCachedTranslation(
 ): Promise<string | null> {
   try {
     const contentHash = btoa(content);
-    
+
+    if (!supabaseAdmin) {
+      console.warn('Cache retrieval failed: supabaseAdmin is null');
+      return null;
+    }
+
     const { data, error } = await supabaseAdmin
       .from('lingo_translations')
       .select('translated_text')
@@ -86,6 +91,11 @@ async function cacheTranslation(
       translated_text: translatedContent,
       translation_type: 'text',
     };
+
+    if (!supabaseAdmin) {
+      console.warn('Caching failed: supabaseAdmin is null');
+      return;
+    }
 
     const { error } = await supabaseAdmin
       .from('lingo_translations')
@@ -276,85 +286,5 @@ export async function translateWithMetadata(
       translatedText: statement,
       wasCached: false
     };
-  }
-}
-
-/**
- * Batch translate multiple statements
- */
-export async function batchTranslateStatements(
-  statements: string[],
-  sourceLocale: string = 'en',
-  targetLocale: string = 'es',
-  context?: 'news' | 'timeline' | 'expert-opinion'
-): Promise<string[]> {
-  if (sourceLocale === targetLocale) {
-    return statements;
-  }
-
-  try {
-    const translatedStatements = await Promise.all(
-      statements.map(statement => 
-        translateResearchStatement(statement, sourceLocale, targetLocale, context)
-      )
-    );
-
-    return translatedStatements.map((translated, index) => 
-      translated || statements[index]
-    );
-
-  } catch (error) {
-    console.error('Batch translation error:', error);
-    return statements;
-  }
-}
-
-// Clear translation cache
-export async function clearTranslationCache(): Promise<boolean> {
-  try {
-    const { error } = await supabaseAdmin
-      .from('lingo_translations')
-      .delete()
-      .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all except non-existent ID
-
-    if (error) {
-      console.error('Failed to clear translation cache:', error);
-      return false;
-    }
-
-    console.log('✅ Translation cache cleared successfully');
-    return true;
-  } catch (error) {
-    console.error('Failed to clear translation cache:', error);
-    return false;
-  }
-}
-
-// Get cache statistics
-export async function getTranslationCacheStats() {
-  try {
-    const { data, error } = await supabaseAdmin
-      .from('lingo_translations')
-      .select('target_locale, translation_type', { count: 'exact' });
-
-    if (error) {
-      console.error('Failed to get cache stats:', error);
-      return null;
-    }
-
-    return {
-      totalCached: data?.length || 0,
-      byLanguage: data?.reduce((acc: Record<string, number>, item) => {
-        acc[item.target_locale] = (acc[item.target_locale] || 0) + 1;
-        return acc;
-      }, {}) || {},
-      byType: data?.reduce((acc: Record<string, number>, item) => {
-        acc[item.translation_type] = (acc[item.translation_type] || 0) + 1;
-        return acc;
-      }, {}) || {}
-    };
-  } catch (error) {
-    console.error('Failed to get cache stats:', error);
-    return null;
   }
 }

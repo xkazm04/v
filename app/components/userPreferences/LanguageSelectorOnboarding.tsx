@@ -22,7 +22,6 @@ const LanguageSelectorOnboarding = memo(function LanguageSelectorOnboarding({
   description,
   disabled = false
 }: LanguageSelectorOnboardingProps) {
-  // Safe access to languages with fallback
   const availableLanguages = getAvailableLanguages();
 
   const handleSelect = (languageCode: string) => {
@@ -31,7 +30,7 @@ const LanguageSelectorOnboarding = memo(function LanguageSelectorOnboarding({
 
   return (
     <div className={cn("space-y-4", className)}>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {availableLanguages.map((language) => (
           <motion.button
             key={language.code}

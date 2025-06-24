@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Video, Sparkles, PenToolIcon, TwitterIcon } from 'lucide-react';
+import { Video, PenToolIcon, TwitterIcon } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
 import UploadLayout from "../sections/upload/uploadQuote/UploadLayout";
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
@@ -9,28 +9,9 @@ import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
 import Image from 'next/image';
 import UploadVideo from '../sections/upload/uploadYouTube/UploadVideo';
 import TwitterLayout from '../sections/upload/uploadTwitter/TwitterLayout';
+import { containerVariants } from '../components/animations/variants/feedVariants';
+import { itemVariants } from '../components/animations/variants/votingVariants';
 
-const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: {
-            duration: 0.6,
-            ease: [0.25, 0.46, 0.45, 0.94],
-            staggerChildren: 0.1
-        }
-    }
-};
-
-const itemVariants = {
-    hidden: { opacity: 0, y: 15 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.4 }
-    }
-};
 
 const Page = () => {
     const { isDark } = useLayoutTheme();

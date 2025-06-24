@@ -1,7 +1,6 @@
 'use client';
-import { useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { usePathname } from 'next/navigation';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useNavigationContext } from '@/app/providers/navigation-provider';
 import { ThemeToggle } from '../../components/theme/theme-toggle';
@@ -26,21 +25,12 @@ const navbarVariants: Variants = {
 };
 
 export function DesktopNavbar() {
-  const pathname = usePathname();
   const { colors, mounted, getColors, isDark } = useLayoutTheme();
   const {
     isNavigating,
     setIsNavigating,
-    isMobileMenuOpen,
-    setIsMobileMenuOpen
   } = useNavigationContext();
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    if (isMobileMenuOpen) {
-      setIsMobileMenuOpen(false);
-    }
-  }, [pathname, setIsMobileMenuOpen]);
 
   const handleNavigation = useCallback(() => {
     setIsNavigating(true);
@@ -78,7 +68,7 @@ export function DesktopNavbar() {
           className=""
         />
           <Link href="/">
-            <div className='absolute right-0 opacity-80'>
+            <div className='absolute left-0 opacity-80 z-40'>
               <TitleLogo 
                 height={70} 
                 color={`${isDark ? 'white' : colors.vintage.ink}`} 
@@ -91,7 +81,7 @@ export function DesktopNavbar() {
             navbarColors={navbarColors}
             onNavigation={handleNavigation}
           />
-
+          
           {/* Mobile Actions (for tablet breakpoint) */}
           <motion.div
             className="flex-1 flex justify-end items-center space-x-2 lg:hidden"
@@ -99,11 +89,9 @@ export function DesktopNavbar() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            <ThemeToggle variant="default" size="sm" />
+            <ThemeToggle  size="sm" />
           </motion.div>
         </div>
-         <TranslationProgressIndicator />
-
         {/* Enhanced Loading Indicator */}
         <AnimatePresence>
           {(isNavigating) && (

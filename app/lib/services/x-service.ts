@@ -37,26 +37,6 @@ class ResearchService {
     return response.json();
   }
 
-  // Quote research (existing endpoint)
-  async researchQuote(request: ResearchRequest): Promise<LLMResearchResponse> {
-    try {
-      return await this.request<LLMResearchResponse>('/fc/research', {
-        method: 'POST',
-        body: JSON.stringify({
-          statement: request.statement,
-          source: request.source || 'Unknown',
-          context: request.context || '',
-          datetime: request.datetime || new Date().toISOString(),
-          statement_date: request.statement_date || null,
-          country: request.country || null,
-          category: request.category || null
-        }),
-      });
-    } catch (error: any) {
-      console.error('Failed to research quote:', error);
-      throw new Error(error.message || 'Failed to research quote');
-    }
-  }
 
   // Twitter research (now returns same format as quote research)
   async researchTweet(request: TwitterAnalysisRequest): Promise<LLMResearchResponse> {

@@ -15,6 +15,7 @@ export const countryMap: Record<string, { flag: string; name: string }> = {
     'RU': { flag: '🇷🇺', name: 'Russia' },
     'ZA': { flag: '🇿🇦', name: 'South Africa' },
     'CZ': { flag: '🇨🇿', name: 'Czech Republic' },
+    'UA': { flag: '🇺🇦', name: 'Ukraine' },
 };
 
 export interface LanguageOption {
@@ -54,15 +55,6 @@ export const AVAILABLE_LANGUAGES: LanguageOption[] = [
     flagSvg: '/flags/cz.svg',
     description: 'Automatický překlad',
     voiceId: 'SZXidiHhq5QYe3jRboSZ'
-  },
-  {
-    code: 'ja',
-    name: 'Japanese',
-    nativeName: '日本語',
-    flag: '🇯🇵',
-    flagSvg: '/flags/jp.svg',
-    description: '自動翻訳',
-    voiceId: 'Mv8AjrYZCBkdsmDHNwcB'
   },
   {
     code: 'fr',
@@ -118,12 +110,12 @@ export const AVAILABLE_COUNTRIES: CountryOption[] = [
   { code: 'br', name: 'Brazil', nativeName: 'Brasil', flag: '🇧🇷', flagSvg: '/flags/br.svg', region: 'South America' },
   { code: 'ru', name: 'Russia', nativeName: 'Россия', flag: '🇷🇺', flagSvg: '/flags/ru.svg', region: 'Europe/Asia' },
   { code: 'cz', name: 'Czech Republic', nativeName: 'Česká republika', flag: '🇨🇿', flagSvg: '/flags/cz.svg', region: 'Europe' },
+  { code: 'ua', name: 'Ukraine', nativeName: 'Україна', flag: '🇺🇦', flagSvg: '/flags/ua.svg', region: 'Europe' },
 ];
 
 export type AvailableCountryType = (typeof AVAILABLE_COUNTRIES)[number];
 export type AvailableLanguageType = (typeof AVAILABLE_LANGUAGES)[number];
 
-// Safe getter functions with fallbacks
 export const getCountryFlag = (countryCode: string): string => {
     if (!countryCode || !AVAILABLE_COUNTRIES) return '🌍';
     const country = AVAILABLE_COUNTRIES.find(c => c.code.toLowerCase() === countryCode.toLowerCase());
@@ -185,10 +177,10 @@ export const getAvailableCountries = (): CountryOption[] => {
 
 // Helper to get voice ID for a language
 export const getVoiceIdForLanguage = (languageCode: string): string => {
-  if (!languageCode || !AVAILABLE_LANGUAGES) return 'JBFqnCBsd6RMkjVDRZzb'; // Default English voice
+  if (!languageCode || !AVAILABLE_LANGUAGES) return 'JBFqnCBsd6RMkjVDRZzb'; 
   
   const language = AVAILABLE_LANGUAGES.find(l => l.code === languageCode);
-  return language?.voiceId || 'JBFqnCBsd6RMkjVDRZzb'; // Fallback to English voice
+  return language?.voiceId || 'JBFqnCBsd6RMkjVDRZzb'; 
 };
 
 // Helper to get language info including voice ID

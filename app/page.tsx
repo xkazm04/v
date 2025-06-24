@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, memo } from 'react';
+import { Suspense, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { Sidebar } from '@/app/components/sidebar/sidebar';
@@ -10,74 +10,47 @@ import FeedHeader from './sections/feed/FeedHeader';
 import LogoSectionDecor from './components/ui/Decorative/LogoSectionDecor';
 import { FirstTimeUserModal } from './sections/onboarding/FirstTimeUserModal';
 import { useOnboarding } from './hooks/use-onboarding';
-import { useTheme } from 'next-themes';
 import { useViewport } from './hooks/useViewport';
-
-const SimpleSkeleton = () => (
-  <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-32" />
-);
+import { containerVariants, itemVariants } from './components/animations/variants/votingVariants';
+import BackgroundPattern from './components/ui/Decorative/BackgroundPattern';
+import LoaderComponent from './components/animations/LoaderComponent';
 
 const FeaturedNews = dynamic(() => import('./sections/home/FeaturedNews'), {
-  loading: () => <SimpleSkeleton />,
+  loading: () => <LoaderComponent
+    loading={true}
+    variant="default"
+    speedMultiplier={1.2}
+  />,
   ssr: false
 });
 
-// Simple animation variants
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { 
-    opacity: 1,
-    transition: {
-      duration: 0.3,
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.3 }
-  }
-};
-
-const NewsBackground = memo(() => (
-  <div 
-    className="fixed inset-0 opacity-20 bg-cover bg-center bg-no-repeat"
-    style={{
-      backgroundImage: `url('/background/news_bg_1.jpg')`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'fixed'
-    }}
-  />
-));
-
-NewsBackground.displayName = 'NewsBackground';
 
 export default function Home() {
   const { hasCompletedOnboarding, isLoading, completeOnboarding, skipOnboarding } = useOnboarding();
   const { isDesktop } = useViewport();
-  const {
-    theme
-  } = useTheme();
 
-  // Simple loading state
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!hasCompletedOnboarding) {
+      // Disable body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      // Re-enable body scroll when modal is closed
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
 
-  return (
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [hasCompletedOnboarding]);
+
+
+  if (!isLoading) return (
     <>
-      {/* Onboarding Modal */}
-      {theme !== 'dark' && <NewsBackground />}
-      
+      <BackgroundPattern />
       <FirstTimeUserModal
         isOpen={!hasCompletedOnboarding}
         onComplete={completeOnboarding}
@@ -85,8 +58,11 @@ export default function Home() {
       />
 
       {/* Main Content */}
-      <motion.div 
-        className="flex relative min-h-screen overflow-y-hidden"
+      <motion.div
+        className={`flex relative min-h-screen ${
+          // FIXED: Only hide overflow when modal is closed
+          hasCompletedOnboarding ? 'overflow-y-auto' : 'overflow-y-hidden'
+          }`}
         initial="hidden"
         animate="visible"
         variants={containerVariants}
@@ -103,11 +79,6 @@ export default function Home() {
               <FeedHeader />
             </Suspense>
           </div>
-          {isDesktop && <div className="mb-8 px-8">
-            <Suspense fallback={<></>}>
-              <FeaturedVideos />
-            </Suspense>
-          </div>}
 
           {/* Divider */}
           <div className="my-8">
@@ -117,9 +88,23 @@ export default function Home() {
           {/* Featured News */}
           <div className="pb-8 mb-20 px-8">
             <Suspense fallback={<></>}>
-              <FeaturedNews />
+              <FeaturedNews
+                limit={10}
+                showBreaking={false}
+                autoRefresh={true}
+              />
             </Suspense>
           </div>
+          {isDesktop && <div className="mb-8 px-8">
+            <Suspense fallback={<>
+              <LoaderComponent
+                loading={true}
+                variant="default"
+                speedMultiplier={1.2}
+              /></>}>
+              <FeaturedVideos />
+            </Suspense>
+          </div>}
         </motion.div>
         {/* Background Logo */}
         <LogoSectionDecor condition={true} />
