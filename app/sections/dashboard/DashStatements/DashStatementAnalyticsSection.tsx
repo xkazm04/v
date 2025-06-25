@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { useCombinedProfileStats } from '@/app/hooks/useCombinedProfile';
-import DashTruthTrend from '@/app/sections/dashboard/DashTruthTrend';
 import DashActivity from '@/app/sections/dashboard/DashActivity';
 
 interface DashStatementsAnalyticsSectionProps {
@@ -15,7 +14,6 @@ const DashStatementsAnalyticsSection = ({
   timeRange = '6months' 
 }: DashStatementsAnalyticsSectionProps) => {
   
-  // Fetch profile stats when profileId is provided
   const { 
     data: statsResult, 
     isLoading: statsLoading, 
@@ -24,9 +22,7 @@ const DashStatementsAnalyticsSection = ({
   } = useCombinedProfileStats(profileId);
 
   const profileStatsData = statsResult?.stats; 
-  const statsData = profileStatsData?.stats; 
   const shouldShowRealDataComponents = profileId && profileStatsData && !statsIsError;
-  const shouldShowMockDataComponents = !profileId ;
 
 
   return (

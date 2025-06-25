@@ -171,11 +171,11 @@ class SupabaseProfileServiceServer {
         return null;
       }
 
-      // Get recent statements from research_results table
       const { data: statementsData, error: statementsError } = await supabaseAdmin
         .from('research_results')
         .select(`
           id,
+          statement,
           verdict,
           status,
           correction,
@@ -203,9 +203,9 @@ class SupabaseProfileServiceServer {
         console.warn(`Failed to fetch all statements: ${allStatementsError.message}`);
       }
 
-      // Process the data
       const recent_statements = (statementsData || []).map(item => ({
         id: item.id,
+        original_statement: item.statement, 
         verdict: item.verdict || '',
         status: item.status || 'UNVERIFIABLE',
         correction: item.correction,

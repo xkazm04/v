@@ -3,26 +3,26 @@ import { GlassContainer } from "@/app/components/ui/containers/GlassContainer";
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
 import { Profile } from "@/app/types/profile";
 import { motion } from "framer-motion";
-import { Grid3X3, List, RefreshCcw, Search, Users } from "lucide-react";
+import { RefreshCcw, Search, Users } from "lucide-react";
 import { useEffect } from "react";
+import ProfileFilterBar from "./ProfileFilterBar";
 
 type Props = {
     searchTerm: string;
     setSearchTerm: (term: string) => void;
-    viewMode: 'grid' | 'list';
-    setViewMode: (mode: 'grid' | 'list') => void;
     fetchProfiles: (refresh?: boolean) => void;
     refreshing: boolean;
     profiles: Profile[];
+    selectedCountry: string;
+    handleCountryChange: (country: string) => void;
 }
 
-const ProfilesSearch = ({ searchTerm, setSearchTerm, viewMode, setViewMode, fetchProfiles, refreshing, profiles }: Props) => {
+const ProfilesToolbar = ({ searchTerm, setSearchTerm, fetchProfiles, refreshing, profiles, selectedCountry, handleCountryChange }: Props) => {
     const handleClearSearch = () => {
         setSearchTerm('');
         fetchProfiles();
     };
 
-    // Refresh handler
     const handleRefresh = () => {
         fetchProfiles(true);
     };
@@ -63,7 +63,7 @@ const ProfilesSearch = ({ searchTerm, setSearchTerm, viewMode, setViewMode, fetc
 
                 <div className="flex flex-row gap-4 items-center justify-between relative z-10">
                     {/* Search Input */}
-                    <div className="relative flex-1 max-w-md">
+                    <div className="relative flex-1 max-w-md sm:hidden lg:block">
                         <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${isDark ? 'text-gray-400' : vintage.faded
                             }`} />
 
@@ -72,7 +72,7 @@ const ProfilesSearch = ({ searchTerm, setSearchTerm, viewMode, setViewMode, fetc
                             placeholder="Search profiles..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-400 focus:outline-none focus:ring-2 transition-all duration-300"
+                            className="w-full md:max-w-[250px] lg:max-w-[500px] pl-10 pr-4 py-3 rounded-xl border border-gray-400 focus:outline-none focus:ring-2 transition-all duration-300"
                             style={{
                                 background: isDark
                                     ? 'rgba(255,255,255,0.05)'
@@ -98,39 +98,14 @@ const ProfilesSearch = ({ searchTerm, setSearchTerm, viewMode, setViewMode, fetc
                         )}
                     </div>
 
+                    <ProfileFilterBar
+                        selectedCountry={selectedCountry}
+                        onCountryChange={handleCountryChange}
+                        className="mb-6"
+                    />
+
                     {/* Controls */}
                     <div className="flex items-center gap-4">
-                        {/* View Mode Toggle */}
-                        <div className="flex items-center gap-1 p-1 rounded-lg" style={{
-                            background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(184, 134, 11, 0.1)',
-                            border: isDark ? '1px solid rgba(255,255,255,0.1)' : `1px solid ${vintage.aged}`
-                        }}>
-                            <motion.button
-                                onClick={() => setViewMode('grid')}
-                                className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'grid'
-                                    ? (isDark ? 'bg-purple-600/50 text-purple-300' : 'bg-amber-200 text-amber-800')
-                                    : (isDark ? 'text-gray-400 hover:text-white' : `${vintage.faded} hover:${vintage.ink}`)
-                                    }`}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                            >
-                                <Grid3X3 className="w-4 h-4" />
-                            </motion.button>
-
-                            <motion.button
-                                onClick={() => setViewMode('list')}
-                                className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'list'
-                                    ? (isDark ? 'bg-purple-600/50 text-purple-300' : 'bg-amber-200 text-amber-800')
-                                    : (isDark ? 'text-gray-400 hover:text-white' : `${vintage.faded} hover:${vintage.ink}`)
-                                    }`}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                            >
-                                <List className="w-4 h-4" />
-                            </motion.button>
-                        </div>
-
-                        {/* Stats */}
                         <div className="flex items-center gap-2">
                             <Users className={`w-5 h-5 ${isDark ? colors.primary : vintage.ink}`} />
                             <span
@@ -164,4 +139,4 @@ const ProfilesSearch = ({ searchTerm, setSearchTerm, viewMode, setViewMode, fetc
     </>
 }
 
-export default ProfilesSearch;
+export default ProfilesToolbar;

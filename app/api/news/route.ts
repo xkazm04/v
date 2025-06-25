@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     });
     
     // Get translation target from user preferences ONLY
-    let translationTarget = userPreferencesApiClient.getTranslationTarget(userPreferences);
+    let translationTarget = userPreferencesApiClient.getTranslationTarget(userPreferences ?? undefined);
     
     // Fallback: Check URL parameters if headers didn't work
     if (!translationTarget) {

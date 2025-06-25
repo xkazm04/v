@@ -2,93 +2,48 @@ import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { Timeline } from '@/app/types/timeline';
 
-// Import timeline datasets
-import indiaTimeline from '@/app/components/timeline/TimelineSelector/en/timeline_milestones_india.json';
-import sudanTimeline from '@/app/components/timeline/TimelineSelector/en/timeline_milestones_sudan.json';
-import syriaTimeline from '@/app/components/timeline/TimelineSelector/en/timeline_milestones_syria.json';
-import ukraineTimeline from '@/app/components/timeline/TimelineSelector/en/timeline_milestones_ukraine.json';
-import israelTimeline from '@/app/components/timeline/TimelineSelector/en/timeline_milestones_israel.json';
-
 export interface TimelineDataset {
   id: string;
   title: string;
   data: Timeline;
   description?: string;
-  topic_id?: string; // Added to map with research topic_id
+  topic_id?: string;
+  loadedLanguage?: string;
+  fallbackUsed?: boolean;  
 }
 
-// Timeline datasets available throughout the app
-export const TIMELINE_DATASETS: TimelineDataset[] = [
-  {
-    id: 'india-pakistan',
-    title: 'India x Pakistan 2025',
-    data: indiaTimeline as Timeline,
-    description: 'Escalation leading to conflict',
-    topic_id: 'india-pakistan-conflict'
-  },
-  {
-    id: 'iraq-war',
-    title: 'Iraq War 2003-2011',
-    data: sudanTimeline as Timeline,
-    description: 'Coalition invasion and aftermath',
-    topic_id: 'iraq-war'
-  },
-  {
-    id: 'syria-civil-war',
-    title: 'Syria Civil War 2011-2025',
-    data: syriaTimeline as Timeline,
-    description: 'Ongoing conflict and interventions',
-    topic_id: 'syria-civil-war'
-  },
-  {
-    id: 'russia-ukraine',
-    title: 'Russia x Ukraine 2013-2022',
-    data: ukraineTimeline as Timeline,
-    description: 'From annexation to full invasion',
-    topic_id: 'russia-ukraine-conflict'
-  },
-  {
-    id: 'israel-iran',
-    title: 'Israel x Iran 2017-2025',
-    data: israelTimeline as Timeline,
-    description: 'Shadow war escalation',
-    topic_id: 'israel-iran-tensions'
-  }
-];
+export const TIMELINE_DATASETS: TimelineDataset[] = [];
 
 interface TimelineStoreState {
   // Current selected timeline
-  currentTimeline: Timeline;
+  currentTimeline: Timeline | null; 
   
-  // Loading state for timeline switching
   isLoadingTimeline: boolean;
   
-  // Selected topic from research (used to navigate to timeline)
   selectedTopicId: string | null;
   
+  
   // Actions
-  setCurrentTimeline: (timeline: Timeline) => void;
+  setCurrentTimeline: (timeline: Timeline | null) => void;
   setIsLoadingTimeline: (loading: boolean) => void;
   setSelectedTopicId: (topicId: string | null) => void;
-  selectTimelineByTopicId: (topicId: string) => void;
-  selectTimelineByDatasetId: (datasetId: string) => void;
+  selectTimelineByTopicId: (topicId: string, availableTimelines?: TimelineDataset[]) => void;
+  selectTimelineByDatasetId: (datasetId: string, availableTimelines?: TimelineDataset[]) => void; 
   
-  // Getters
-  getTimelineByTopicId: (topicId: string) => TimelineDataset | undefined;
-  getTimelineByDatasetId: (datasetId: string) => TimelineDataset | undefined;
+  getTimelineByTopicId: (topicId: string, availableTimelines: TimelineDataset[]) => TimelineDataset | undefined;
+  getTimelineByDatasetId: (datasetId: string, availableTimelines: TimelineDataset[]) => TimelineDataset | undefined;
 }
 
 export const useTimelineStore = create<TimelineStoreState>()(
   devtools(
     persist(
       (set, get) => ({
-        // Initial state - default to first timeline
-        currentTimeline: TIMELINE_DATASETS[0].data,
+        currentTimeline: null,
         isLoadingTimeline: false,
         selectedTopicId: null,
 
         // Actions
-        setCurrentTimeline: (timeline: Timeline) => {
+        setCurrentTimeline: (timeline: Timeline | null) => {
           set({ currentTimeline: timeline }, false, 'setCurrentTimeline');
         },
 
@@ -100,33 +55,40 @@ export const useTimelineStore = create<TimelineStoreState>()(
           set({ selectedTopicId: topicId }, false, 'setSelectedTopicId');
         },
 
-        selectTimelineByTopicId: (topicId: string) => {
-          const dataset = get().getTimelineByTopicId(topicId);
+        selectTimelineByTopicId: (topicId: string, availableTimelines: TimelineDataset[] = []) => {
+          const dataset = get().getTimelineByTopicId(topicId, availableTimelines);
           if (dataset) {
             set({ 
               currentTimeline: dataset.data,
               selectedTopicId: topicId 
             }, false, 'selectTimelineByTopicId');
+            
+            console.log(`📊 Selected timeline by topic: ${topicId} (${dataset.title})`);
+          } else {
+            console.warn(`⚠️ Timeline not found for topic: ${topicId}`);
           }
         },
 
-        selectTimelineByDatasetId: (datasetId: string) => {
-          const dataset = get().getTimelineByDatasetId(datasetId);
+        selectTimelineByDatasetId: (datasetId: string, availableTimelines: TimelineDataset[] = []) => {
+          const dataset = get().getTimelineByDatasetId(datasetId, availableTimelines);
           if (dataset) {
             set({ 
               currentTimeline: dataset.data,
               selectedTopicId: dataset.topic_id || null 
             }, false, 'selectTimelineByDatasetId');
+            
+            console.log(`📊 Selected timeline by dataset: ${datasetId} (${dataset.title})`);
+          } else {
+            console.warn(`⚠️ Timeline not found for dataset: ${datasetId}`);
           }
         },
 
-        // Getters
-        getTimelineByTopicId: (topicId: string) => {
-          return TIMELINE_DATASETS.find(dataset => dataset.topic_id === topicId);
+        getTimelineByTopicId: (topicId: string, availableTimelines: TimelineDataset[]) => {
+          return availableTimelines.find(dataset => dataset.topic_id === topicId);
         },
 
-        getTimelineByDatasetId: (datasetId: string) => {
-          return TIMELINE_DATASETS.find(dataset => dataset.id === datasetId);
+        getTimelineByDatasetId: (datasetId: string, availableTimelines: TimelineDataset[]) => {
+          return availableTimelines.find(dataset => dataset.id === datasetId);
         },
       }),
       {
@@ -143,11 +105,7 @@ export const useTimelineStore = create<TimelineStoreState>()(
             localStorage.removeItem(name);
           },
         } : undefined,
-        // Only persist these keys
-        partialize: (state) => ({ 
-          currentTimeline: state.currentTimeline,
-          selectedTopicId: state.selectedTopicId 
-        }),
+        // Removed partialize because it must return a full TimelineStoreState object, not a partial.
       }
     ),
     {

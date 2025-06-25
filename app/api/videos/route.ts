@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     });
     
     // Get translation target from user preferences ONLY
-    let translationTarget = userPreferencesApiClient.getTranslationTarget(userPreferences);
+    let translationTarget = userPreferencesApiClient.getTranslationTarget(userPreferences ?? undefined);
     
     // Parse filters from search params
     const filters: VideoFilters = {
@@ -33,7 +33,11 @@ export async function GET(request: NextRequest) {
       search: searchParams.get('search') || undefined,
       sort_by: searchParams.get('sort_by') || 'processed_at',
       sort_order: (searchParams.get('sort_order') as 'asc' | 'desc') || 'desc',
-      status: searchParams.get('status') || undefined,
+      status: (() => {
+        const statusParam = searchParams.get('status');
+        const allowedStatuses = ['PROCESSING', 'COMPLETED', 'FAILED', 'PENDING'] as const;
+        return allowedStatuses.includes(statusParam as any) ? statusParam as typeof allowedStatuses[number] : undefined;
+      })(),
       topic_id: searchParams.get('topic_id') || undefined,
     };
 

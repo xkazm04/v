@@ -1,0 +1,574 @@
+{
+  "id": "israel-iran-conflict-2017-2025-cs",
+  "title": "Izraelsko-íránský konflikt: Od stínové války k otevřenému válčení",
+  "timeSpan": "2017-2025",
+  "consequences": "**Vojenské a strategické náklady:**\n- **Investice do íránského jaderného programu:** Odhadované náklady 100-500 miliard dolarů (2013-2025)\n- **Izraelské výdaje na protivzdušnou obranu:** 3 miliony dolarů za raketu Arrow, miliardy na provoz Iron Dome\n- **Americká vojenská pomoc Izraeli:** 3,8 miliardy dolarů ročně, dodatečné nouzové financování\n- **Íránský raketový arzenál:** ~2 000 raket dlouhého dosahu schopných zasáhnout Izrael (před 2025)\n- **Výhody pro obranné dodavatele:** Rafael Advanced Defense Systems, Raytheon, Lockheed Martin\n\n**Lidské oběti (2017-2025):**\n- **Útok 7. října 2023:** 1 200 zabitých Izraelců, více než 250 rukojmích\n- **Úmrtí ve válce v Gaze:** Více než 55 000 zabitých Palestinců (2023-2025)\n- **Izraelsko-íránská válka (červen 2025):** Více než 600 zabitých Íránců, více než 24 zabitých Izraelců\n- **Klíčové atentáty:** Qásim Sulejmání (2020), Mohsen Fachrizáde (2020), více než 14 íránských jaderných vědců (2025)\n\n**Ekonomický dopad:**\n- **Náklady íránských sankcí:** Stovky miliard ztracených příjmů z ropy\n- **Nestabilita regionálního ropného trhu:** Cenové výkyvy během eskalací\n- **Zisky obranného průmyslu:** Velké zisky pro izraelské a americké výrobce zbraní\n- **Poškození jaderné infrastruktury:** Miliardy zničených íránských zařízení",
+  "conclusion": "Izraelsko-íránský konflikt se vyvinul z tajných operací a zástupných válek v přímou vojenskou konfrontaci, poháněnou izraelskou odhodlaností zabránit íránským jaderným zbraním a íránskými regionálními ambicemi. Konflikt odhalil, jak mohou zpravodajské operace, atentáty a obavy z jaderné proliferace eskalovat v otevřené válčení s obrovskými lidskými a ekonomickými náklady.",
+  "leftSide": "Izrael a spojenecké síly",
+  "rightSide": "Írán a Osa odporu",
+  "milestones": [
+    {
+      "id": "israeli-strikes-syria-2017-cs",
+      "date": "2017-01-01",
+      "title": "Izraelská kampaň proti Íránu v Sýrii",
+      "context": "Po íránské expanzi přítomnosti v Sýrii během občanské války Izrael zahájil systematické letecké údery proti íránským silám a konvojům se zbraněmi, což znamenalo začátek přímé izraelsko-íránské vojenské konfrontace.",
+      "order": 1,
+      "consequence": "Ustanovil izraelskou vzdušnou nadvládu v syrském vzdušném prostoru a zabránil íránskému vojenskému upevnění blízko izraelských hranic, ale nedokázal zcela odstrašit íránskou regionální expanzi.",
+      "key_persons": [
+        { "name": "Benjamin Netanjahu", "role": "Izraelský premiér" },
+        { "name": "Qásim Sulejmání", "role": "Velitel íránské síly Quds" },
+        { "name": "Gadi Eizenkot", "role": "Náčelník generálního štábu IDF" },
+        { "name": "Bašár al-Asad", "role": "Syrský prezident" },
+        { "name": "Hassan Nasralláh", "role": "Generální tajemník Hizballáhu" }
+      ],
+      "events": [
+        {
+          "id": "daily-strikes-syria-2017-cs",
+          "milestone_id": "israeli-strikes-syria-2017-cs",
+          "title": "Izrael zahajuje denní letecké údery proti íránským cílům v Sýrii, v roce 2018 shazuje pouze 2 000 bomb",
+          "left_type": "president",
+          "right_type": "conspirator",
+          "left_opinion": "Izraelská systematická bombardovací kampaň v Sýrii byla navržena tak, aby zabránila Íránu v ustanovení 'pozemního mostu' z Teheránu do Libanonu, chránila izraelské strategické zájmy a udržovala věrohodné popírání tím, že zřídkakdy uznávala konkrétní údery.",
+          "right_opinion": "Írán záměrně umožnil Izraeli útočit na sekundární infrastrukturu při ochraně klíčového personálu, vypočítavě usoudil, že omezené izraelské údery jsou lepší než rozsáhlá válka, zatímco Írán konsolidoval svou regionální síť prostředníků prostřednictvím Hizballáhu a dalších milicí.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Iran%E2%80%93Israel_proxy_conflict",
+          "right_source_url": "https://en.wikipedia.org/wiki/Iran%E2%80%93Israel_proxy_conflict",
+          "all_opinions": [
+            {
+              "id": "syria-strikes-nerd-1-cs",
+              "event_id": "daily-strikes-syria-2017-cs",
+              "opinion": "Izraelští obranní dodavatelé jako Rafael Advanced Defense Systems a Israel Aerospace Industries viděli obrovské zisky ze zvýšených vojenských operací, zatímco íránské investice do infrastruktury v hodnotě miliard byly systematicky ničeny, což vytvořilo nákladnou dynamiku závodu ve zbrojení.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "syria-strikes-joe-1-cs",
+              "event_id": "daily-strikes-syria-2017-cs",
+              "opinion": "Většina Izraelců podporovala údery jako nezbytné pro národní bezpečnost, zatímco syrští civilisté uvízlí v křížové palbě trpěli dalším ničením. Íránské rodiny ztratily syny sloužící v Sýrii s malým veřejným uznáním z Teheránu.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "syria-strikes-psychic-1-cs",
+              "event_id": "daily-strikes-syria-2017-cs",
+              "opinion": "Izraelská strategie 'kampaně mezi válkami' používala kontrolovanou eskalaci a mediální mlčení k normalizaci útoků na íránské cíle, zatímco Írán zobrazoval izraelské údery jako důkaz sionistické agrese k shromáždění domácí a regionální podpory.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "syria-strikes-dredd-1-cs",
+              "event_id": "daily-strikes-syria-2017-cs",
+              "opinion": "Izrael operoval v právní šedé zóně, tvrdil sebeobranu proti íránskému vojenskému buildupu, zatímco porušoval syrskou suverenitu. Íránská vojenská přítomnost v Sýrii, ačkoli pozvaná Asadem, porušovala izraelské bezpečnostní červené linie a rezoluce OSN týkající se zahraničních sil.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "syria-strikes-president-1-cs",
+              "event_id": "daily-strikes-syria-2017-cs",
+              "opinion": "Izraelské údery měly za cíl zabránit íránské hegemonii v Sýrii při udržení ruské spolupráce prostřednictvím dekonfliktních mechanismů. Íránská strategie v Sýrii se snažila vytvořit trvalou vojenskou přítomnost ohrožující izraelskou severní hranici a podporující Hizballáh.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "syria-strikes-conspirator-1-cs",
+              "event_id": "daily-strikes-syria-2017-cs",
+              "opinion": "Syrská kampaň byla součástí širší izraelské strategie fragmentovat íránskou 'Osu odporu', než se mohla plně konsolidovat. Írán záměrně absorboval omezené údery při budování nezvratné strategické pozice prostřednictvím sítí prostředníků.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "mossad-nuclear-theft-2018-cs",
+          "milestone_id": "israeli-strikes-syria-2017-cs",
+          "title": "Agenti Mossadu kradou 50 000 stránek íránských jaderných dokumentů ze skladu v Teheránu",
+          "left_type": "conspirator",
+          "right_type": "dredd",
+          "left_opinion": "Krádež teheránského jaderného archivu byla mistrovským dílem zpravodajského řemesla, poskytla Izraeli komplexní důkazy o íránském minulém programu jaderných zbraní a demonstrovala izraelské operační schopnosti hluboko uvnitř Íránu k odstrašení budoucího jaderného vývoje.",
+          "right_opinion": "Íránský neúspěch v řádném zabezpečení kritické jaderné dokumentace odhalil systémové bezpečnostní slabiny a poskytl Izraeli propagandistický materiál k podkopání JCPOA, zatímco samotná krádež porušila íránskou suverenitu a mezinárodní právo.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Iran%E2%80%93Israel_proxy_conflict",
+          "right_source_url": "https://en.wikipedia.org/wiki/Iran%E2%80%93Israel_proxy_conflict",
+          "all_opinions": [
+            {
+              "id": "nuclear-theft-nerd-1-cs",
+              "event_id": "mossad-nuclear-theft-2018-cs",
+              "opinion": "Operace Mossadu pravděpodobně stála miliony na plánování a provedení, ale poskytla zpravodajské informace v hodnotě miliard odhalením íránského minulého výzkumu jaderných zbraní, ospravedlnila pokračující sankce a vojenské přípravy proti íránským zařízením.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "nuclear-theft-joe-1-cs",
+              "event_id": "mossad-nuclear-theft-2018-cs",
+              "opinion": "Izraelští občané cítili hrdost na schopnosti svých zpravodajských služeb, zatímco Íránci zažívali ponížení a strach, že jejich vláda nemůže chránit citlivé informace o národní bezpečnosti před zahraničním proniknutím.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "nuclear-theft-psychic-1-cs",
+              "event_id": "mossad-nuclear-theft-2018-cs",
+              "opinion": "Izraelské veřejné odhalení ukradených dokumentů bylo načasováno tak, aby podkopalo JCPOA a ovlivnilo americké veřejné mínění směrem k odstoupení. Íránská špatná operační bezpečnost se stala propagandistickým dárkem pro odpůrce jaderné dohody.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "nuclear-theft-dredd-1-cs",
+              "event_id": "mossad-nuclear-theft-2018-cs",
+              "opinion": "Ačkoli dokumenty odhalily minulý íránský výzkum jaderných zbraní, neposkytly žádný důkaz o porušení JCPOA. Krádež představovala špionáž a porušení íránské suverenity, ačkoli íránský minulý podvod ospravedlnil mezinárodní podezření.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "nuclear-theft-president-1-cs",
+              "event_id": "mossad-nuclear-theft-2018-cs",
+              "opinion": "Operace sloužila izraelskému strategickému cíli přesvědčit Trumpovu administrativu k odstoupení od íránské jaderné dohody, zatímco demonstrovala Íránu, že žádné místo není mimo izraelský dosah. Íránský bezpečnostní neúspěch oslabil jeho regionální důvěryhodnost.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "nuclear-theft-conspirator-1-cs",
+              "event_id": "mossad-nuclear-theft-2018-cs",
+              "opinion": "Krádež byla součástí koordinované izraelsko-americké zpravodajské kampaně k zabití JCPOA, s dokumenty pohodlně 'objevenými' právě když Trump uvažoval o odstoupení. Íránský neúspěch zničit archiv naznačuje vnitřní mocenské boje nebo nekompetentnost.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "soleimani-assassination-2020-cs",
+      "date": "2020-01-03",
+      "title": "Atentát na Sulejmáního a jaderná eskalace",
+      "context": "Americký atentát na Qásima Sulejmáního s izraelskou zpravodajskou pomocí znamenal dramatickou eskalaci konfliktu a přiměl Írán opustit limity obohacování uranu podle JCPOA.",
+      "order": 2,
+      "consequence": "Eliminoval nejschopnějšího íránského vojenského stratéga, ale přiměl Írán zrychlit svůj jaderný program a posílit vazby s prostředními silami, zatímco přivedl USA a Írán na pokraj války.",
+      "key_persons": [
+        { "name": "Donald Trump", "role": "Americký prezident" },
+        { "name": "Qásim Sulejmání", "role": "Velitel íránské síly Quds" },
+        { "name": "Alí Chameneí", "role": "Íránský nejvyšší vůdce" },
+        { "name": "Tamir Hayman", "role": "Šéf izraelské vojenské rozvědky" },
+        { "name": "Esmail Qaaní", "role": "Sulejmáního nástupce" }
+      ],
+      "events": [
+        {
+          "id": "soleimani-drone-strike-cs",
+          "milestone_id": "soleimani-assassination-2020-cs",
+          "title": "Americký dronový útok zabíjí Qásima Sulejmáního na bagdádském letišti s izraelskou zpravodajskou pomocí",
+          "left_type": "conspirator",
+          "right_type": "president",
+          "left_opinion": "Izraelská rozvědka poskytla klíčové informace k cílení, aby umožnila atentát na Sulejmáního, eliminovala nejefektivnějšího íránského vojenského stratéga a architekta regionálních sítí prostředníků při udržení věrohodného popírání přímé účasti na operaci.",
+          "right_opinion": "Íránský neúspěch ochránit Sulejmáního, navzdory jeho vysokému profilu a důležitosti, odhalil vážné bezpečnostní zranitelnosti a zpravodajské proniknutí, které povzbudilo další izraelské a americké operace proti íránskému vedení.",
+          "left_source_url": "https://apnews.com/article/middle-east-iran-jerusalem-israel-military-intelligence-cfba78c69ae656697684ab92c4cac5b9",
+          "right_source_url": "https://www.npr.org/2022/01/03/1069983221/2-years-after-the-u-s-killed-irans-qasem-soleimani-tensions-remain",
+          "all_opinions": [
+            {
+              "id": "soleimani-nerd-1-cs",
+              "event_id": "soleimani-drone-strike-cs",
+              "opinion": "Atentát stál minimální zdroje (jeden dron, jedna raketa), ale eliminoval nejcennější íránské vojenské aktivum v hodnotě miliard v operačních znalostech a vztazích. Obranní dodavatelé viděli zvýšenou poptávku po schopnostech přesných úderů po úspěchu operace.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "soleimani-joe-1-cs",
+              "event_id": "soleimani-drone-strike-cs",
+              "opinion": "Miliony Íránců truchlily za Sulejmáním jako za národním hrdinou a válečným veteránem, zatímco mnoho Američanů se obávalo možné odplaty. Atentát vytvořil mučednickou postavu, kterou Írán využil pro domácí a regionální propagandu.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "soleimani-psychic-1-cs",
+              "event_id": "soleimani-drone-strike-cs",
+              "opinion": "Trumpovo načasování se shodovalo s impeachmentovým řízením a volebním tlakem, použil atentát k projekci síly. Íránské masivní pohřební ceremonie a rétoriku pomsty sloužily k mobilizaci domácí podpory kolem režimu během ekonomických těžkostí.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "soleimani-dredd-1-cs",
+              "event_id": "soleimani-drone-strike-cs",
+              "opinion": "Cílené zabití porušilo mezinárodní právo jako atentát na zahraničního úředníka na půdě třetí země bez ospravedlnění bezprostřední hrozby. Sulejmáního označení za teroristického vůdce a jeho role v útocích na americké síly však poskytly určité právní krytí.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "soleimani-president-1-cs",
+              "event_id": "soleimani-drone-strike-cs",
+              "opinion": "Operace měla za cíl obnovit odstrašení a demonstrovat americkou odhodlanost, zatímco přerušila nejdůležitější íránské operační spojení s regionálními prostředníky. Íránská měřená odplata ukázala jak hněv, tak touhu vyhnout se rozsáhlé válce s nadřazenými americkými silami.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "soleimani-conspirator-1-cs",
+              "event_id": "soleimani-drone-strike-cs",
+              "opinion": "Izraelská rozvědka sledovala Sulejmáního roky, poskytovala informace o letu a odposlechech komunikace k umožnění úderu. Íránský bezpečnostní aparát byl proniknut na nejvyšších úrovních, což vysvětluje, jak byla Sulejmáního poloha přesně známa.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "iran-nuclear-withdrawal-2020-cs",
+          "milestone_id": "soleimani-assassination-2020-cs",
+          "title": "Írán oznamuje úplné odstoupení od limitů obohacování uranu podle JCPOA",
+          "left_type": "dredd",
+          "right_type": "nerd",
+          "left_opinion": "Íránská jaderná eskalace porušila jeho mezinárodní závazky podle JCPOA a NPT, použila Sulejmáního smrt jako ospravedlnění k postupu směrem k schopnostem obohacování uranu na zbrojní úroveň, které ohrožovaly regionální stabilitu a normy jaderné nešíření.",
+          "right_opinion": "Íránské zrychlení obohacování uranu bylo vypočtené reakce k maximalizaci tlaku na zrušení sankcí a demonstraci nákladů vojenské konfrontace, zatímco zůstalo technicky pod úrovní zbrojní kvality, aby se vyhnulo spuštění okamžité vojenské odplaty.",
+          "left_source_url": "https://www.aljazeera.com/news/2020/1/8/us-iran-tensions-timeline-of-events-leading-to-soleimani-killing",
+          "right_source_url": "https://gulfif.org/irans-nuclear-program-might-not-be-worth-the-cost/",
+          "all_opinions": [
+            {
+              "id": "nuclear-withdrawal-nerd-1-cs",
+              "event_id": "iran-nuclear-withdrawal-2020-cs",
+              "opinion": "Íránská expanze obohacování vyžadovala miliardy v dodatečných investicích do centrifug a skladování uranu, zatímco potenciální schopnost jaderných zbraní zvýšila íránskou strategickou hodnotu navzdory masivním nákladům ekonomických sankcí. Evropské společnosti ztratily miliardy v opuštěných íránských investicích.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "nuclear-withdrawal-joe-1-cs",
+              "event_id": "iran-nuclear-withdrawal-2020-cs",
+              "opinion": "Íránští občané čelili stále přísnějším ekonomickým sankcím, zatímco jejich vláda upřednostňovala jaderný vývoj před civilními potřebami. Mezinárodní pozorovatelé se obávali jaderného šíření rozšiřujícího se na další regionální mocnosti v reakci na íránské schopnosti.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "nuclear-withdrawal-psychic-1-cs",
+              "event_id": "iran-nuclear-withdrawal-2020-cs",
+              "opinion": "Írán přímo spojil jadernou eskalaci se Sulejmáního smrtí k ospravedlnění porušení mezinárodních dohod při zobrazování sebe jako oběti. Režim používal jaderný pokrok jako zdroj národní hrdosti k vyvážení ekonomického utrpení ze sankcí.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "nuclear-withdrawal-dredd-1-cs",
+              "event_id": "iran-nuclear-withdrawal-2020-cs",
+              "opinion": "Íránské odstoupení od JCPOA porušilo závazné mezinárodní závazky a povinnosti IAEA, ačkoli USA již dříve porušily dohodu první. Írán si udržel formální členství v NPT, zatímco v podstatě zrušil své závazky k nešíření.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "nuclear-withdrawal-president-1-cs",
+              "event_id": "iran-nuclear-withdrawal-2020-cs",
+              "opinion": "Íránské jaderné zrychlení bylo navrženo k tlaku na evropské spojence, aby poskytli úlevu od sankcí a demonstrovaly náklady amerických politik 'maximálního tlaku'. Krok přiblížil Írán k schopnosti jaderných zbraní jako odstrašení proti budoucím útokům.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "nuclear-withdrawal-conspirator-1-cs",
+              "event_id": "iran-nuclear-withdrawal-2020-cs",
+              "opinion": "Íránští tvrdí členové používali Sulejmáního smrt k eliminaci zbývajících umírněných a obhájců jaderného kompromisu, zrychlovali směrem k zbrojním schopnostem bez ohledu na diplomatické náklady. Jaderný program se stal nezvratně militarizovaným pod kontrolou Revolučních gard.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "october-7-regional-escalation-cs",
+      "date": "2023-10-07",
+      "title": "Útok 7. října a regionální válka",
+      "context": "Hamás zahájil nejsmrtelnější útok na Izrael od jeho založení, zabil 1 200 Izraelců a vzal více než 250 rukojmích, což spustilo masivní izraelskou odpověď v Gaze a eskalovalo napětí s Íránem a jeho sítí prostředníků v celém regionu.",
+      "order": 3,
+      "consequence": "Zdevastoval vojenské schopnosti Hamásu a gazskou infrastrukturu při zabití více než 55 000 Palestinců, zatímco íránská síť prostředníků byla systematicky degradována, což připravilo půdu pro přímou izraelsko-íránskou konfrontaci.",
+      "key_persons": [
+        { "name": "Benjamin Netanjahu", "role": "Izraelský premiér" },
+        { "name": "Jahja Sinvár", "role": "Vůdce Hamásu v Gaze" },
+        { "name": "Ismá'íl Haníja", "role": "Politický vůdce Hamásu" },
+        { "name": "Alí Chameneí", "role": "Íránský nejvyšší vůdce" },
+        { "name": "Hassan Nasralláh", "role": "Generální tajemník Hizballáhu" }
+      ],
+      "events": [
+        {
+          "id": "hamas-october-7-attack-cs",
+          "milestone_id": "october-7-regional-escalation-cs",
+          "title": "Hamás zahajuje koordinovaný útok zabíjející 1 200 Izraelců a bere 251 rukojmích",
+          "left_type": "psychic",
+          "right_type": "conspirator",
+          "left_opinion": "Izraelský zpravodajský neúspěch byl částečně způsoben nadměrnou důvěrou v technologická řešení a podceněním schopností Hamásu, zatímco načasování útoku využilo izraelské politické rozdělení kvůli soudní reformě a sníženou vojenskou připravenost kvůli vnitřním protestům.",
+          "right_opinion": "Útok Hamásu byl pečlivě naplánován s íránskou podporou k vykolejení izraelsko-saúdské normalizace a vtažení Izraele do nákladné války, zatímco Írán vypočítal, že obětování Hamásu posílí jeho další prostředníky a pozici v jaderných jednáních.",
+          "left_source_url": "https://en.wikipedia.org/wiki/October_7_Hamas-led_attack_on_Israel",
+          "right_source_url": "https://www.france24.com/en/middle-east/20241007-hamas-terrorist-attacks-7-october-deadliest-day-israel-history-anniversary",
+          "all_opinions": [
+            {
+              "id": "october-7-nerd-1-cs",
+              "event_id": "hamas-october-7-attack-cs",
+              "opinion": "Hamás investoval roky do budování tunelových sítí a zbrojních schopností s íránským financováním odhadovaným na stovky milionů ročně. Následná izraelská vojenská odpověď stála miliardy, zatímco obranní dodavatelé jako Rafael a Elbit Systems viděli masivní nárůst příjmů z operací Iron Dome.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "october-7-joe-1-cs",
+              "event_id": "hamas-october-7-attack-cs",
+              "opinion": "Izraelské rodiny zažily bezprecedentní trauma z masových únosů a masakrů civilistů, zatímco palestinští civilisté v Gaze zaplatili zdrcující cenu za vojenská rozhodnutí Hamásu. Útok otřásl izraelskou důvěrou ve schopnosti jejich armády je chránit.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "october-7-psychic-1-cs",
+              "event_id": "hamas-october-7-attack-cs",
+              "opinion": "Útok Hamásu využil izraelskou nadměrnou důvěru a vnitřní politické rozdělení, načasoval útok během Simchat Torah, kdy byla bezpečnost uvolněná. Izraelské zpravodajské služby podceňovaly schopnosti Hamásu jako nedostatečné pro takovou koordinovanou operaci.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "october-7-dredd-1-cs",
+              "event_id": "hamas-october-7-attack-cs",
+              "opinion": "Záměrné cílení Hamásu na civilisty, braní rukojmích a použití sexuálního násilí představovalo válečné zločiny a zločiny proti lidskosti. Následné kolektivní trestání Gazy Izraelem však také vyvolalo vážné právní obavy podle mezinárodního humanitárního práva.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "october-7-president-1-cs",
+              "event_id": "hamas-october-7-attack-cs",
+              "opinion": "Útok Hamásu měl za cíl vykolejit rozšíření Abrahamských dohod a izraelsko-saúdskou normalizaci tím, že přinutil Izrael do ničivé války v Gaze. Írán podporoval operaci k demonstraci svých schopností prostředníků při udržení věrohodného popírání přímé účasti.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "october-7-conspirator-1-cs",
+              "event_id": "hamas-october-7-attack-cs",
+              "opinion": "Íránská rozvědka měla detailní znalosti o plánech a načasování útoku Hamásu, používala operaci k obětování Hamásu při posilování íránské pozice v jaderných jednáních. Izraelský zpravodajský neúspěch vyplýval ze zaměření na íránský jaderný program při zanedbávání konvenčního buildupu Hamásu.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "israel-gaza-war-response-cs",
+          "milestone_id": "october-7-regional-escalation-cs",
+          "title": "Izrael zahajuje masivní vojenskou kampaň v Gaze, zabíjí více než 55 000 Palestinců",
+          "left_type": "dredd",
+          "right_type": "psychic",
+          "left_opinion": "Izraelská vojenská odpověď, ačkoli tvrdila sebeobranu, použila nepřiměřenou sílu, která zabila tisíce civilistů a zničila základní infrastrukturu, potenciálně porušujíc mezinárodní humanitární právo ohledně rozlišování mezi vojenskými a civilními cíli.",
+          "right_opinion": "Hamás záměrně umístil vojenská aktiva v civilních oblastech k maximalizaci palestinských obětí pro propagandistické účely, používal strategii lidských štítů k přeměně nevyhnutelných civilních úmrtí v mezinárodní tlak proti izraelskému právu na sebeobranu.",
+          "left_source_url": "https://www.pbs.org/newshour/world/gaza-health-officials-say-55000-palestinians-have-died-in-israel-hamas-war",
+          "right_source_url": "https://www.britannica.com/event/Israel-Hamas-War",
+          "all_opinions": [
+            {
+              "id": "gaza-war-nerd-1-cs",
+              "event_id": "israel-gaza-war-response-cs",
+              "opinion": "Izraelská vojenská operace stála odhadovaných více než 10 miliard dolarů, zatímco zničila gazskou ekonomiku v hodnotě 20+ miliard dolarů kompletně. Americká vojenská pomoc se podstatně zvýšila, benefitující americké obranné dodavatele, zatímco palestinský HDP byl eliminován systematickým ničením infrastruktury.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "gaza-war-joe-1-cs",
+              "event_id": "israel-gaza-war-response-cs",
+              "opinion": "Palestinské rodiny ztratily vše—domovy, podniky, rodinné příslušníky—zatímco izraelské rodiny žily pod neustálou raketovou palbou a traumatem z rukojmických situací. Mezinárodní pozorovatelé byli svědky bezprecedentního ničení civilní infrastruktury a vysídlování celých populací.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "gaza-war-psychic-1-cs",
+              "event_id": "israel-gaza-war-response-cs",
+              "opinion": "Izraelská drtivá vojenská odpověď byla navržena k obnovení odstrašení a demonstraci nákladů útoku na izraelské civilisty. Hamás vypočítal, že masivní palestinské oběti vytvoří mezinárodní tlak na příměří při zachování vedení Hamásu v tunelech.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "gaza-war-dredd-1-cs",
+              "event_id": "israel-gaza-war-response-cs",
+              "opinion": "Izraelská bombardovací kampaň a taktika obléhání vyvolaly vážné otázky o přiměřenosti a rozlišování podle mezinárodního humanitárního práva, zejména ohledně ničení civilní infrastruktury. Použití lidských štítů Hamásem, ačkoli odsouzené, nezbavovalo Izrael právních povinností.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "gaza-war-president-1-cs",
+              "event_id": "israel-gaza-war-response-cs",
+              "opinion": "Izraelská vojenská kampaň měla za cíl eliminovat vládní a vojenské schopnosti Hamásu při demonstraci Íránu a dalším regionálním mocnostem nákladů zástupného válčení. Rozsah operace byl navržen k odstrašení budoucích útoků a obnovení izraelského strategického odstrašení.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "gaza-war-conspirator-1-cs",
+              "event_id": "israel-gaza-war-response-cs",
+              "opinion": "Izraelská kampaň v Gaze byla úvodní fází širší strategie systematického demontování íránské sítě prostředníků, používající útok Hamásu jako ospravedlnění pro regionální válku. Írán obětoval Hamás k posílení svého jaderného programu, zatímco Izrael eliminoval íránská aktiva.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "direct-war-2025-cs",
+      "date": "2025-06-13",
+      "title": "Přímá izraelsko-íránská válka",
+      "context": "Poté, co MAAE prohlásila Írán za nevyhovující jaderným povinnostem, Izrael zahájil Operaci Stoupající lev, přímo útočil na íránská jaderná zařízení a vojenské vedení, což spustilo první otevřenou válku mezi oběma zeměmi.",
+      "order": 4,
+      "consequence": "Izrael dosáhl vzdušné nadvlády nad Íránem a významně poškodil jeho jaderný program a vojenské schopnosti, zatímco Írán demonstroval své raketové schopnosti navzdory těžkým ztrátám, fundamentálně měnící blízkovýchodní mocenskou dynamiku.",
+      "key_persons": [
+        { "name": "Benjamin Netanjahu", "role": "Izraelský premiér" },
+        { "name": "Alí Chameneí", "role": "Íránský nejvyšší vůdce" },
+        { "name": "Donald Trump", "role": "Americký prezident" },
+        { "name": "Rafael Grossi", "role": "Generální ředitel MAAE" },
+        { "name": "Israel Katz", "role": "Izraelský ministr obrany" }
+      ],
+      "events": [
+        {
+          "id": "operation-rising-lion-cs",
+          "milestone_id": "direct-war-2025-cs",
+          "title": "Izrael zahajuje Operaci Stoupající lev cílící na íránská jaderná zařízení a vojenské vedení",
+          "left_type": "president",
+          "right_type": "nerd",
+          "left_opinion": "Izraelský preventivní úder byl vypočten k zabránění íránské schopnosti jaderných zbraní, zatímco byl Írán oslaben ztrátami prostředníků, používal pokročilé stealth stíhačky F-35 a přesné munice k dosažení maximálního strategického efektu s minimálním rizikem eskalace.",
+          "right_opinion": "Íránská jaderná infrastruktura představovala desetiletí investic v hodnotě stovek miliard, zatímco izraelské údery stály relativně málo, ale dosáhly masivního ničení. Íránská raketová odplata demonstrovala nákladné, ale omezené schopnosti proti izraelské protivzdušné obraně.",
+          "left_source_url": "https://www.britannica.com/event/Israel-Iran-conflict",
+          "right_source_url": "https://time.com/7294919/israel-air-supremacy-tehran-iran/",
+          "all_opinions": [
+            {
+              "id": "rising-lion-nerd-1-cs",
+              "event_id": "operation-rising-lion-cs",
+              "opinion": "Izraelská operace stála miliardy, ale zničila íránské jaderné investice v hodnotě stovek miliard, zatímco demonstrovala ekonomickou hodnotu vzdušné nadvlády. Íránské raketové odpovědi stály miliony za raketu s omezeným poškozením, vytvářející neudržitelné nákladové poměry pro Írán.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "rising-lion-joe-1-cs",
+              "event_id": "operation-rising-lion-cs",
+              "opinion": "Íránští civilisté zažili bezprecedentní strach, když izraelské stíhačky letěly nad Teheránem bez odporu, zatímco izraelské rodiny čelily obnovené raketové hrozbě navzdory ochraně iron dome. Obě populace si uvědomily, že jejich vlády je přivedly k přímému válčení.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "rising-lion-psychic-1-cs",
+              "event_id": "operation-rising-lion-cs",
+              "opinion": "Izraelská operace byla načasována k využití íránské slabosti po porážkách prostředníků a tlaku jaderných termínů, demonstrujíc drtivou vojenskou převahu k vynucení íránské kapitulace. Íránská propaganda zdůrazňovala odpor navzdory masivním ztrátám k udržení legitimity režimu.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "rising-lion-dredd-1-cs",
+              "event_id": "operation-rising-lion-cs",
+              "opinion": "Izraelské preventivní údery porušily mezinárodní právo ohledně anticipační sebeobrany, chyběly důkazy bezprostředního íránského jaderného útoku. Opakované íránské hrozby a porušení jaderného programu však poskytly určité ospravedlnění podle doktrín sebeobrany.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "rising-lion-president-1-cs",
+              "event_id": "operation-rising-lion-cs",
+              "opinion": "Izraelský útok využil optimální strategické načasování—íránští prostředníci poraženi, blížící se jaderné termíny a potenciální Trumpova podpora. Íránská slabá odpověď demonstrovala kolaps jeho odstrašovacích schopností a regionálního vlivu.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "rising-lion-conspirator-1-cs",
+              "event_id": "operation-rising-lion-cs",
+              "opinion": "Izraelská rozvědka strávila roky pronikáním do íránského jaderného programu a vojenského velení, umožňujíc přesné cílení klíčových zařízení a personálu. Íránský bezpečnostní aparát byl důkladně proniknut, což vysvětluje ničivou efektivnost operace.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "iran-missile-retaliation-cs",
+          "milestone_id": "direct-war-2025-cs",
+          "title": "Írán vypouští více než 400 raket a více než 1 000 dronů na Izrael, zasahuje vícero cílů",
+          "left_type": "nerd",
+          "right_type": "joe",
+          "left_opinion": "Íránský masivní raketový nálet představoval významnou část jeho strategického arzenálu, stál stovky milionů při dosažení omezeného vojenského efektu kvůli izraelské protivzdušné obraně a americké podpoře, demonstrujíc ekonomickou neudržitelnost raketového válčení proti nadřazené obraně.",
+          "right_opinion": "Íránští občané se semkli kolem své vlády navzdory vojenským ztrátám, zatímco raketové útoky prokázaly, že Írán může útočit hluboko do Izraele a přetížit některé obrany, udržujíc národní hrdost i když byla infrastruktura systematicky ničena izraelskou odplatou.",
+          "left_source_url": "https://www.washingtonpost.com/world/2025/06/17/israel-iran-missile-conflict/",
+          "right_source_url": "https://www.npr.org/2025/06/17/nx-s1-5436749/israel-iran-airstrikes-nuclear-attack-war",
+          "all_opinions": [
+            {
+              "id": "missile-retaliation-nerd-1-cs",
+              "event_id": "iran-missile-retaliation-cs",
+              "opinion": "Íránská salva více než 400 raket stála odhadovaných 200-400 milionů dolarů při dosažení minimálního strategického poškození, demonstrujíc ekonomickou marnost raketového válčení proti pokročilé protivzdušné obraně. Izraelské náklady na zachycovače byly podstatné, ale zvládnutelné s americkou podporou zásobování.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "missile-retaliation-joe-1-cs",
+              "event_id": "iran-missile-retaliation-cs",
+              "opinion": "Íránské rodiny cítily hrdost, že jejich země může udeřit zpět navzdory masivním útokům, zatímco izraelští civilisté zažívali skutečný strach, když některé rakety pronikly obranou. Obě populace si uvědomily, že jsou v genuinní válce s potenciálně katastrofálními důsledky.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "missile-retaliation-psychic-1-cs",
+              "event_id": "iran-missile-retaliation-cs",
+              "opinion": "Íránská raketová odpověď byla navržena k demonstraci vzdoru a schopnosti navzdory vojenským porážkám, používala masivní odpaly k přetížení izraelské obrany a prokázání, že Írán může odplatit. Režim používal úspěšné zásahy jako propagandistická vítězství navzdory celkového strategickému neúspěchu.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "missile-retaliation-dredd-1-cs",
+              "event_id": "iran-missile-retaliation-cs",
+              "opinion": "Íránské raketové útoky na civilní oblasti a infrastrukturu představovaly válečné zločiny podle mezinárodního humanitárního práva, ačkoli íránská tvrzení o cílení vojenských míst poskytla určité právní krytí. Izraelská nepřiměřená odpověď také vyvolala právní obavy.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "missile-retaliation-president-1-cs",
+              "event_id": "iran-missile-retaliation-cs",
+              "opinion": "Íránská raketová odpověď měla za cíl obnovit odstrašení a demonstrovat, že útoky na íránskou půdu spustí masivní odplatu, zatímco prokázala, že Írán si udržel strategické úderné schopnosti navzdory izraelské vzdušné nadvládě. Útoky ukázaly hloubku zbývajícího íránského arzenálu.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "missile-retaliation-conspirator-1-cs",
+              "event_id": "iran-missile-retaliation-cs",
+              "opinion": "Íránské raketové údery byly přesně cílené používajíc rozvědky shromážděné po léta, zasahovaly izraelské zpravodajské ústředí a vojenská zařízení k demonstraci sofistikovaných cílících schopností. Rozsah náletu odhalil skutečnou velikost íránského raketového arzenálu.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "israeli-air-supremacy-cs",
+          "milestone_id": "direct-war-2025-cs",
+          "title": "Izrael ustanovuje vzdušnou nadvládu nad Íránem, ničí protivzdušnou obranu a jaderná zařízení",
+          "left_type": "conspirator",
+          "right_type": "psychic",
+          "left_opinion": "Izraelské dosažení vzdušné nadvlády nad Íránem během dnů demonstrovalo roky příprav, shromažďování rozvědky a technologickou převahu, používalo stealth letadla a přesné munice k systematickému demontování íránské obrany, zatímco íránské vedení selhalo v koordinaci efektivního odporu.",
+          "right_opinion": "Íránská neschopnost bránit svůj vlastní vzdušný prostor odhalila fundamentální slabost jeho armády navzdory desetiletím investic, zatímco režimová propaganda zdůrazňující odpor maskovala realitu, že Írán ztratil kontrolu nad svým strategickým prostředím a jaderným programem.",
+          "left_source_url": "https://time.com/7294919/israel-air-supremacy-tehran-iran/",
+          "right_source_url": "https://www.washingtonpost.com/world/2025/06/20/israel-air-defense-iran-iron-dome-missile-arrow/",
+          "all_opinions": [
+            {
+              "id": "air-supremacy-nerd-1-cs",
+              "event_id": "israeli-air-supremacy-cs",
+              "opinion": "Izraelské dosažení vzdušné nadvlády stálo miliardy v pokročilých letadlech a přesných municích, ale zničilo íránské investice v hodnotě stovek miliard v protivzdušné obraně a jaderných zařízeních. Obranní dodavatelé viděli masivní zisky z nasazení pokročilých zbrojních systémů a smluv na doplňování.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "air-supremacy-joe-1-cs",
+              "event_id": "israeli-air-supremacy-cs",
+              "opinion": "Íránští občané zažívali teror, když izraelská letadla letěla bez odporu nad jejich hlavním městem, zatímco izraelští civilisté se cítili bezpečněji vědomí, že jejich letectvo dominuje íránským nebem. Psychologický dopad vzdušné nadvlády byl stejně důležitý jako vojenská výhoda.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "air-supremacy-psychic-1-cs",
+              "event_id": "israeli-air-supremacy-cs",
+              "opinion": "Izraelská demonstrace vzdušné nadvlády byla navržena k vynucení íránské psychologické kapitulace prokázáním kompletní vojenské dominance nad íránským územím. Íránská propaganda se snažila vysvětlit, jak mohou izraelské stíhačky operovat volně nad Teheránem navzdory tvrzením o silné obraně.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "air-supremacy-dredd-1-cs",
+              "event_id": "israeli-air-supremacy-cs",
+              "opinion": "Izraelské ustanovení vzdušné nadvlády umožnilo systematické cílení íránské infrastruktury a vedení, potenciálně porušujíc principy suverenity. Íránská porušení jaderného programu a vojenské hrozby však poskytly právní ospravedlnění podle doktrín sebeobrany.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "air-supremacy-president-1-cs",
+              "event_id": "israeli-air-supremacy-cs",
+              "opinion": "Izraelská vzdušná nadvláda fundamentálně změnila regionální mocenskou dynamiku demonstrováním íránské neschopnosti bránit své území nebo jaderný program. Toto dosažení posílilo izraelské odstrašení při odhalení íránské vojenské slabosti regionálním rivalům a prostředníkům.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "air-supremacy-conspirator-1-cs",
+              "event_id": "israeli-air-supremacy-cs",
+              "opinion": "Izraelské rychlé dosažení vzdušné nadvlády odhalilo roky zpravodajské přípravy, včetně detailního mapování íránské protivzdušné obrany a infiltrace velitelských systémů. Íránské vojenské komunikace byly pravděpodobně kompromitovány, umožňujíc přesné cílení kritických uzlů.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

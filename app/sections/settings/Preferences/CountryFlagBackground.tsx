@@ -1,17 +1,26 @@
 import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { WorldIconSetting } from "@/app/components/icons/nav/WorldIcons";
 
-const CountryFlagBackground = ({ flagSvg, alt, isSelected, isHovered }: { 
+const CountryFlagBackground = ({ flagSvg, alt, isSelected, isHovered, isWorldwide = false }: { 
   flagSvg: string; 
   alt: string; 
   isSelected: boolean;
   isHovered: boolean;
+  isWorldwide?: boolean;
 }) => {
   const [imageError, setImageError] = useState(false);
   
   if (imageError) {
     return null;
+  }
+
+  if (isWorldwide || alt.toLowerCase().includes('world') || flagSvg.includes('world.svg')) {
+    <WorldIconSetting
+      isSelected={isSelected}
+      isHovered={isHovered}
+      />
   }
   
   return (
@@ -29,9 +38,8 @@ const CountryFlagBackground = ({ flagSvg, alt, isSelected, isHovered }: {
         className="object-cover"
         onError={() => setImageError(true)}
       />
-      {/* Overlay gradient for better text readability */}
       <div 
-        className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-black/20"
+        className="absolute inset-0 bg-gradient-to-br rounded-xl"
         style={{
           background: isSelected 
             ? 'linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.1), rgba(0,0,0,0.3))'

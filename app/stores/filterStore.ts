@@ -12,6 +12,7 @@ export interface FilterState {
   showBreakingOnly: boolean;
   showFactCheckedOnly: boolean;
   selectedTopicId: string | null; 
+  hasAppliedAutoSelection: boolean;
 }
 
 interface FilterActions {
@@ -29,6 +30,8 @@ interface FilterActions {
   setSelectedTopicId: (topicId: string | null) => void; 
   resetAllFilters: () => void;
   getActiveFiltersCount: () => number;
+  applyAutoCountrySelection: (userCountries: string[]) => void;
+  resetAutoSelection: () => void;
   getNewsFilters: () => {
     categoryFilter?: string;
     countryFilter?: string;
@@ -53,7 +56,8 @@ const initialState: FilterState = {
   isFilterPanelOpen: false,
   showBreakingOnly: false,
   showFactCheckedOnly: false,
-  selectedTopicId: null, 
+  selectedTopicId: null,
+  hasAppliedAutoSelection: false,
 };
 
 export const useFilterStore = create<FilterStore>()(
@@ -78,6 +82,39 @@ export const useFilterStore = create<FilterStore>()(
         setSelectedCountry: (country) => {
           console.log(`🔄 Filter store: Setting country to ${country}`);
           set({ selectedCountry: country }, false, 'setSelectedCountry');
+        },
+
+        applyAutoCountrySelection: (userCountries: string[]) => {
+          const state = get();
+          
+          if (state.hasAppliedAutoSelection) {
+            console.log('🔄 Auto-selection: Already applied, skipping');
+            return;
+          }
+
+          let selectedCountry = 'worldwide';
+
+          if (userCountries && userCountries.length > 0) {
+            if (userCountries.includes('worldwide')) {
+              selectedCountry = 'worldwide';
+              console.log('🌍 Auto-selection: Worldwide found in preferences, applying worldwide');
+            } else {
+              selectedCountry = userCountries[0];
+              console.log(`🌍 Auto-selection: Applying first country: ${selectedCountry}`);
+            }
+          }
+
+          console.log(`🔄 Auto-selection: Setting country to ${selectedCountry} from preferences:`, userCountries);
+          
+          set({ 
+            selectedCountry,
+            hasAppliedAutoSelection: true 
+          }, false, 'applyAutoCountrySelection');
+        },
+
+        resetAutoSelection: () => {
+          console.log('🔄 Auto-selection: Resetting for new preferences');
+          set({ hasAppliedAutoSelection: false }, false, 'resetAutoSelection');
         },
 
         setSearchText: (text) =>
@@ -110,6 +147,7 @@ export const useFilterStore = create<FilterStore>()(
           set({
             ...initialState,
             isFilterPanelOpen: get().isFilterPanelOpen,
+            hasAppliedAutoSelection: get().hasAppliedAutoSelection,
           }, false, 'resetAllFilters'),
 
         getActiveFiltersCount: () => {
@@ -183,7 +221,8 @@ export const useFilterStore = create<FilterStore>()(
           selectedCategories: state.selectedCategories,
           selectedCountry: state.selectedCountry,
           showFactCheckedOnly: state.showFactCheckedOnly,
-          selectedTopicId: state.selectedTopicId, 
+          selectedTopicId: state.selectedTopicId,
+          hasAppliedAutoSelection: state.hasAppliedAutoSelection,
         }),
       }
     ),

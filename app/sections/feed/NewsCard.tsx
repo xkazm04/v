@@ -155,7 +155,7 @@ const NewsCard = memo(function NewsCard({
 
             <VintageStamp
               status={research.status}
-              className="absolute -top-1 -right-2 z-50"
+              className="absolute -top-1 -right-2 z-30"
               size={'md'}
             />
 

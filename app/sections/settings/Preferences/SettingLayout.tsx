@@ -10,23 +10,9 @@ import Divider from '@/app/components/ui/divider';
 import { itemVariants } from '@/app/components/animations/variants/votingVariants';
 
 const SettingLayout = memo(function SettingLayout() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  };
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <motion.div>
       <GlassContainer
         style="crystal"
         border="glow"

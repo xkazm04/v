@@ -1,0 +1,519 @@
+{
+  "id": "russia-ukraine-conflict-2014-2022-cs",
+  "title": "Rusko-ukrajinský konflikt: Od Euromajdanu k rozsáhlé válce",
+  "timeSpan": "2013-2022",
+  "conclusion": "Osmiletý konflikt vznikl z ukrajinských evropských aspirací, kterým se postavily ruské geopolitické ambice, což vedlo k územní anexi, zástupnému válčení a více než 14 000 úmrtím, zatímco se ustanovil precedens pro Putinovu invazi z roku 2022. Krize odhalila, jak mohou demokratické hnutí spustit autoritářské odpovědi a jak může být mezinárodní právo systematicky porušováno bez efektivních důsledků.",
+  "leftSide": "Ukrajina a západní spojenci",
+  "rightSide": "Rusko a zástupné síly",
+  "consequences": "**Celkové válečné náklady (2014-2022):**\n- **Ruské vojenské výdaje:** Odhadovaných 211+ miliard dolarů\n- **Mezinárodní pomoc Ukrajině:** 267 miliard eur\n- **Ekonomický dopad sankcí EU:** Projekcí 1,3+ bilionů dolarů ruských ztrát\n- **Náklady na obnovu:** Pro Ukrajinu je potřeba více než 100 miliard eur\n\n**Lidské oběti:**\n- **Celkový počet úmrtí v konfliktu:** 14 200-14 400 (včetně MH17)\n- **Úmrtí civilistů:** Více než 3 400+ ověřených\n- **Vojenská úmrtí:** Odhadovaných více než 10 800+\n- **Oběti MH17:** 298 mezinárodních pasažérů/posádky\n- **Vnitřně vysídlení:** Více než 1,5 milionu Ukrajinců\n\n**Korporátní/finanční beneficienti:**\n- **Ruský energetický sektor:** Gazprom, Rosněfť (využívali plyn/ropu jako zbraň)\n- **Obranní dodavatelé:** Obě strany zvýšily vojenské výdaje\n- **Rekonstrukční společnosti:** Očekávané miliardy ve smlouvách na přestavbu\n- **Sítě obcházení sankcí:** Zprostředkovatelé šedého trhu profitovali\n- **Ruští oligarchové:** Konsolidace aktiv během krizových období",
+  "milestones": [
+    {
+      "id": "euromaidan-revolution-2014-cs",
+      "date": "2013-11-21",
+      "title": "Revoluce Euromajdan a Janukovyčův útěk",
+      "context": "Prezident Janukovyčovo náhlé obrácení ohledně Asociační dohody s EU spustilo masové protesty v Kyjevě, které vedly k největšímu demokratickému hnutí v Evropě od roku 1989. Po násilných zásazích, které zabily více než 100 demonstrantů, Janukovyč utekl do Ruska, což vytvořilo mocenské vakuum, které Putin využil.",
+      "order": 1,
+      "consequence": "Vytvořil legitimní krizi, kterou Rusko použilo k ospravedlnění intervence, zatímco demonstroval ukrajinskou oddanost evropské integraci před ruským vlivem.",
+      "key_persons": [
+        { "name": "Viktor Janukovyč", "role": "Ukrajinský prezident (utekl do Ruska)" },
+        { "name": "Vitalij Kličko", "role": "Opoziční vůdce" },
+        { "name": "Arsenij Jaceňuk", "role": "Dočasný premiér" },
+        { "name": "Vladimir Putin", "role": "Ruský prezident" },
+        { "name": "Angela Merkelová", "role": "Německá kancléřka" }
+      ],
+      "events": [
+        {
+          "id": "eu-association-reversal-cs",
+          "milestone_id": "euromaidan-revolution-2014-cs",
+          "title": "Janukovyč pozastavuje Asociační dohodu s EU pod ruským tlakem",
+          "left_type": "psychic",
+          "right_type": "president",
+          "left_opinion": "Úředníci EU neposkytli dostatečné finanční pobídky ve srovnání s ruskou záchrannou pomocí 15 miliard dolarů, v podstatě umožnili Moskvě přebít je o ukrajinskou loajalitu, zatímco podceňovali sílu grassrootových demokratických hnutí.",
+          "right_opinion": "Janukovyč správně vypočítal, že ukrajinská ekonomická závislost na ruské energii a obchodu učinila okamžitou integraci do EU ekonomicky zničující, ale nepředvídal sílu lidového odporu proti jeho autoritářským tendencím.",
+          "left_source_url": "https://www.britannica.com/topic/Ukraine-crisis",
+          "right_source_url": "https://en.wikipedia.org/wiki/Euromaidan",
+          "all_opinions": [
+            {
+              "id": "eu-reversal-nerd-1-cs",
+              "event_id": "eu-association-reversal-cs",
+              "opinion": "Balíček pomoci EU ve výši 1,6 miliardy eur byl zatměn ruskou záchrannou pomocí 15 miliard dolarů plus snížení cen plynu, odhalil, jak Brusel upřednostňoval právní soulad před strategickou konkurencí. Mezitím ukrajinští oligarchové viděli své ruské obchodní zájmy ohrožené obchodními pravidly EU.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "eu-reversal-joe-1-cs",
+              "event_id": "eu-association-reversal-cs",
+              "opinion": "Obyčejní Ukrajinci se cítili zrazeni po letech slibů o evropské integraci, zatímco rusky mluvící občané ve východních regionech se báli ztráty kulturních vazeb a ekonomických spojení s Ruskem.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "eu-reversal-psychic-1-cs",
+              "event_id": "eu-association-reversal-cs",
+              "opinion": "Putinovo načasování bylo záměrná psychologická válka - čekání až do posledního okamžiku k maximalizaci tlaku, zatímco ruská média posilovala narativy o 'kolonizaci' EU versus slovanském bratrství k ospravedlnění intervence.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "eu-reversal-dredd-1-cs",
+              "event_id": "eu-association-reversal-cs",
+              "opinion": "Janukovyčovo obrácení porušilo parlamentní souhlas a ústavní procedury, ale úředníci EU také selhali v poskytnutí právních mechanismů pro postupnou integraci, která by mohla vyhovět ruským obavám o regionální stabilitu.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "eu-reversal-president-1-cs",
+              "event_id": "eu-association-reversal-cs",
+              "opinion": "Chybný odhad EU spočíval v zacházení s Ukrajinou jako s čistě ekonomickým rozhodnutím, zatímco Putin tomu rozuměl jako existenciální geopolitické konkurenci. Brusel nepředvídal Moskevskou ochotu použít sílu k udržení své sféry vlivu.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "eu-reversal-conspirator-1-cs",
+              "event_id": "eu-association-reversal-cs",
+              "opinion": "Toto byl vrchol Putinovy dlouhodobé strategie zabránit expanzi NATO na východ. Načasování se shodovalo s ruskými programy vojenské modernizace a domácí konsolidací moci, což naznačuje roky příprav na konfrontaci.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "berkut-massacre-february-cs",
+          "milestone_id": "euromaidan-revolution-2014-cs",
+          "title": "Síly Berkut zabíjejí více než 100 demonstrantů v nejsmrtelnějších dnech Kyjeva",
+          "left_type": "dredd",
+          "right_type": "psychic",
+          "left_opinion": "Janukovyčovy bezpečnostní síly porušily mezinárodní právo lidských práv použitím smrtící síly proti mírovým demonstrantům, zatímco evropští mediátoři selhali v ustanovení efektivních monitorovacích mechanismů nebo důsledků pro eskalující násilí.",
+          "right_opinion": "Eskalace byla záměrně vyprovokována radikálními prvky snažícími se vytvořit mučedníky a internacionalizovat krizi, zatímco ruští poradci vypočítali, že násilí ospravedlní případnou intervenci podle doktrín 'odpovědnosti chránit'.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Revolution_of_Dignity",
+          "right_source_url": "https://www.britannica.com/place/Ukraine/The-Maidan-protest-movement",
+          "all_opinions": [
+            {
+              "id": "berkut-massacre-nerd-1-cs",
+              "event_id": "berkut-massacre-february-cs",
+              "opinion": "Násilí stálo Ukrajinu miliardy ve ztracených investicích a ekonomické stabilitě, zatímco ruští vojenští dodavatelé a poradci údajně dostávali platby za 'bezpečnostní konzultace' během zásahu.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "berkut-massacre-joe-1-cs",
+              "event_id": "berkut-massacre-february-cs",
+              "opinion": "Obyčejní demonstranti riskovali své životy, protože věřili, že jejich děti si zaslouží budoucnost svobodnou od korupce, zatímco mnoho policistů později přeběhlo, protože nemohli střílet na své vlastní krajany.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "berkut-massacre-psychic-1-cs",
+              "event_id": "berkut-massacre-february-cs",
+              "opinion": "Masakr byl navržen k zlomení veřejné morálky prostřednictvím šoku a teroru, ale místo toho vytvořil mocný mučednický narativ, který sjednotil ukrajinskou národní identitu proti vnímanému ruskému vlivu.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "berkut-massacre-dredd-1-cs",
+              "event_id": "berkut-massacre-february-cs",
+              "opinion": "Janukovyčovy rozkazy k použití smrtící síly představovaly zločiny proti lidskosti podle mezinárodního práva, přesto evropští vyjednavači pokračovali v jednání s jeho vládou místo okamžitého vyvolání mechanismů odpovědnosti.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "berkut-massacre-president-1-cs",
+              "event_id": "berkut-massacre-february-cs",
+              "opinion": "Násilí bylo strategickým chybným odhadem, který zničil Janukovyčovu legitimitu a poskytl Putinovi záminku pro intervenci, nakonec urychlil spíše než zabránil změně režimu.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "berkut-massacre-conspirator-1-cs",
+              "event_id": "berkut-massacre-february-cs",
+              "opinion": "Vícero vyšetřování naznačuje koordinaci mezi ruskými poradci FSB a ukrajinskými bezpečnostními službami při plánování zásahu, následující příručky používané v Čečensku a Gruzii k ospravedlnění následné vojenské intervence.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "crimea-annexation-2014-cs",
+      "date": "2014-02-27",
+      "title": "Ruská anexe Krymu",
+      "context": "Během dnů po Janukovyčově útěku neoznačené ruské síly obsadily kontrolu nad krymskými vládními budovami a vojenskými instalacemi. Putin později přiznal, že to byli ruští vojáci, kteří provedli první násilnou anexi evropského území od druhé světové války prostřednictvím inscenovaného referenda pod vojenskou okupací.",
+      "order": 2,
+      "consequence": "Ustanovil Putinovu doktrínu ochrany 'rusky mluvících' kdekoli, vytvořil precedens pro územní zabírání a spustil první velký sankční režim proti Rusku od studené války.",
+      "key_persons": [
+        { "name": "Vladimir Putin", "role": "Ruský prezident" },
+        { "name": "Sergej Aksjónov", "role": "Krymský premiér (jmenovaný Ruskem)" },
+        { "name": "Oleksandr Turčynov", "role": "Pověřený ukrajinský prezident" },
+        { "name": "Barack Obama", "role": "Americký prezident" },
+        { "name": "Petro Porošenko", "role": "Ukrajinský prezidentský kandidát" }
+      ],
+      "events": [
+        {
+          "id": "little-green-men-operation-cs",
+          "milestone_id": "crimea-annexation-2014-cs",
+          "title": "Neoznačené ruské síly obsazují krymská letiště a parlamentní budovy",
+          "left_type": "dredd",
+          "right_type": "conspirator",
+          "left_opinion": "Rusko porušilo Budapešťské memorandum z roku 1994 zaručující ukrajinskou územní celistvost výměnou za jaderné odzbrojení, což demonstrovalo, že mezinárodní smlouvy jsou bezcenné bez vynucovacích mechanismů a činí jadernou proliferaci globálně pravděpodobnější.",
+          "right_opinion": "Operace byla naplánována měsíce dopředu jako součást Putinovy širší strategie zabránit expanzi NATO, používající Janukovyčův pád jako záminku pro předem určené územní uchvácení maskované jako ochrana etnických Rusů.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Annexation_of_Crimea_by_the_Russian_Federation",
+          "right_source_url": "https://carnegieendowment.org/posts/2017/03/revisiting-the-2014-annexation-of-crimea?lang=en",
+          "all_opinions": [
+            {
+              "id": "little-green-men-nerd-1-cs",
+              "event_id": "little-green-men-operation-cs",
+              "opinion": "Operace stála Rusko odhadovaných více než 7 miliard dolarů v okamžitém vojenském nasazení, ale zabezpečila strategická námořní aktiva v hodnotě stovek miliard při demonstraci hybridních válečných technik později exportovaných globálně.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "little-green-men-joe-1-cs",
+              "event_id": "little-green-men-operation-cs",
+              "opinion": "Většina Krymčanů byla zmatená ohledně toho, kdo jsou tito neoznačení vojáci, zatímco ukrajinský vojenský personál čelil nemožným volbám mezi odporem, který znamenal jistou smrt, nebo kapitulací, která se cítila jako zrada.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "little-green-men-psychic-1-cs",
+              "event_id": "little-green-men-operation-cs",
+              "opinion": "Psychologická operace 'malých zelených mužíčků' byla navržena k vytvoření zmatku a paralýzy, činíc odpor marným, zatímco udržovala věrohodné popírání pro mezinárodní publikum během kritických prvních hodin.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "little-green-men-dredd-1-cs",
+              "event_id": "little-green-men-operation-cs",
+              "opinion": "Použití neoznačených sil porušilo Ženevské konvence o vedení války, zatímco zabírání cizího území představovalo nezákonnou agresi podle Charty OSN, přesto mezinárodní soudy postrádaly vynucovací moc.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "little-green-men-president-1-cs",
+              "event_id": "little-green-men-operation-cs",
+              "opinion": "Putinova sázka byla, že západní mocnosti budou upřednostňovat ekonomickou stabilitu před územní celistvostí, správně vypočítal, že sankce budou omezené a vojenská odpověď bude zcela vyloučena.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "little-green-men-conspirator-1-cs",
+              "event_id": "little-green-men-operation-cs",
+              "opinion": "Bezproblémová koordinace naznačuje rozsáhlé předem umístění aktiv a dlouhodobé proniknutí ukrajinských bezpečnostních služeb, následující příručky ruské rozvědky vyvinuté od 90. let pro operace v 'blízkém zahraničí'.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "crimean-referendum-march-cs",
+          "milestone_id": "crimea-annexation-2014-cs",
+          "title": "Inscenované referendum hlásí 95,5% podporu pro připojení k Rusku pod okupací",
+          "left_type": "psychic",
+          "right_type": "nerd",
+          "left_opinion": "Referendum bylo provedeno pod vojenskou okupací bez mezinárodního pozorování, používalo sovětské propagandistické techniky a volební možnosti navržené k zaručení ruského vítězství při vytváření nánosu demokratické legitimity pro mezinárodní spotřebu.",
+          "right_opinion": "Moskva vypočítala, že i když bude referendum mezinárodně odmítnuto, poskytne domácí ruské ospravedlnění pro anexi při odhalení západní slabosti tváří v tvář dokonaným faktům podporovaným preferencemi místního obyvatelstva.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Timeline_of_the_annexation_of_Crimea_by_the_Russian_Federation",
+          "right_source_url": "https://www.britannica.com/topic/Ukraine-crisis",
+          "all_opinions": [
+            {
+              "id": "crimean-referendum-nerd-1-cs",
+              "event_id": "crimean-referendum-march-cs",
+              "opinion": "Nezávislá analýza naznačovala skutečnou účast 30-50% s něco málo přes polovinou podporující anexi, ale ekonomické výhody ruského občanství a důchodů poskytly materiální pobídky nad rámec etnických preferencí.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "crimean-referendum-joe-1-cs",
+              "event_id": "crimean-referendum-march-cs",
+              "opinion": "Mnoho Krymčanů se cítilo opuštěno kyjevským zanedbáváním po desetiletí, ale bálo se mluvit proti referendu kvůli ozbrojené přítomnosti, zatímco jiní skutečně preferovali ruskou vládu kvůli kulturním a ekonomickým vazbám.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "crimean-referendum-psychic-1-cs",
+              "event_id": "crimean-referendum-march-cs",
+              "opinion": "Referendum používalo klasickou autoritářskou manipulaci: žádnou možnost pro status quo, masivní propagandistický nápor a ozbrojené zastrašování kombinované se sliby okamžitých ekonomických výhod k výrobě souhlasu.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "crimean-referendum-dredd-1-cs",
+              "event_id": "crimean-referendum-march-cs",
+              "opinion": "Územní změny prostřednictvím vojenské okupace porušují základní principy mezinárodního práva bez ohledu na lidovou podporu, stanovujíc precedens, že jakákoli jaderná mocnost může zabrat území a legitimizovat ho prostřednictvím inscenovaných hlasování.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "crimean-referendum-president-1-cs",
+              "event_id": "crimean-referendum-march-cs",
+              "opinion": "Putin úspěšně vytvořil novou mezinárodní normu, kde lze teritoriální změny ospravedlnit prostřednictvím etnické ochrany a inscenovaných referend, testoval západní odhodlání před většími operacemi.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "crimean-referendum-conspirator-1-cs",
+              "event_id": "crimean-referendum-march-cs",
+              "opinion": "Referendum bylo vyvrcholením desetiletých ruských vlivových operací prostřednictvím médií, kulturních organizací a politických stran navržených k pěstování separatistických sentimentů jako záminky pro intervenci.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "donbas-war-outbreak-2014-cs",
+      "date": "2014-04-12",
+      "title": "Válka v Donbasu a tragédie MH17",
+      "context": "Ruský důstojník vojenské rozvědky Igor Girkin vedl malou sílu k obsazení Slovjansku, což vyvolalo širší konflikt ve východní Ukrajině. Válka se dramaticky eskalovala, když rusky podporované síly sestřelily let Malaysia Airlines 17, zabily 298 civilistů a spustily mezinárodní vyšetřování, které dokumentovalo rozsáhlou ruskou vojenskou účast.",
+      "order": 3,
+      "consequence": "Ustanovil vzorec ruské hybridní války a zástupného konfliktu, který zabil více než 14 000 lidí, zatímco demonstroval limity vynucování mezinárodního práva proti jaderným mocnostem.",
+      "key_persons": [
+        { "name": "Igor Girkin (Strelkov)", "role": "Ruský důstojník GRU/Vojenský velitel DLR" },
+        { "name": "Alexander Borodaj", "role": "Premiér DLR" },
+        { "name": "Petro Porošenko", "role": "Ukrajinský prezident" },
+        { "name": "Alexander Zacharčenko", "role": "Vůdce DLR" },
+        { "name": "Vladimir Putin", "role": "Ruský prezident" }
+      ],
+      "events": [
+        {
+          "id": "girkin-sloviansk-operation-cs",
+          "milestone_id": "donbas-war-outbreak-2014-cs",
+          "title": "Ruský plukovník GRU Igor Girkin obsazuje Slovjansko s 50člennou jednotkou",
+          "left_type": "conspirator",
+          "right_type": "president",
+          "left_opinion": "Girkin později přiznal, že záměrně spustil válku k zabránění ukrajinské stabilizaci, následující plány ruské vojenské rozvědky vyvinuté měsíce dříve k vytvoření 'Novoruska' rozprostírajícího se od Donbasu k Oděse používajíc malou spouštěcí sílu.",
+          "right_opinion": "Ukrajinské úřady selhaly v zabezpečení hranice po anexi Krymu a podceňovaly místní stížnosti na jazykové politiky a ekonomické zanedbávání, které ruští operativci využili k budování počáteční separatistické podpory.",
+          "left_source_url": "https://en.wikipedia.org/wiki/War_in_Donbas",
+          "right_source_url": "https://kyivindependent.com/the-origins-of-the-2014-war-in-donbas/",
+          "all_opinions": [
+            {
+              "id": "girkin-operation-nerd-1-cs",
+              "event_id": "girkin-sloviansk-operation-cs",
+              "opinion": "Operace byla provedena s omezeným rozpočtem pod 10 milionů dolarů zpočátku, ale ruská podpora nakonec dosáhla miliard, zatímco ukrajinská vojenská odpověď byla ztížena desetiletími škrtů v obranných výdajích a korupcí.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "girkin-operation-joe-1-cs",
+              "event_id": "girkin-sloviansk-operation-cs",
+              "opinion": "Většina místních obyvatel byla zpočátku zmatená ohledně toho, kdo jsou tito ozbrojení muži a co chtějí, zatímco mnoho ukrajinských vojáků se ocitlo bojovat se sousedy, kteří mluvili stejným jazykem a sdíleli stejné kulturní zázemí.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "girkin-operation-psychic-1-cs",
+              "event_id": "girkin-sloviansk-operation-cs",
+              "opinion": "Girkinův psychologický profil jako válečného rekonstruktéra a ruského nacionalisty z něj udělal perfektního šťourala pro moskevské věrohodné popírání - vypadajícího skutečně, zatímco následoval scénáře FSB o ochraně rusky mluvících.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "girkin-operation-dredd-1-cs",
+              "event_id": "girkin-sloviansk-operation-cs",
+              "opinion": "Použití aktivních ruských zpravodajských důstojníků na cizím území představovalo nezákonnou agresi podle mezinárodního práva, přesto se právní mechanismy pro stíhání státem sponzorovaného terorismu ukázaly jako nedostatečné.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "girkin-operation-president-1-cs",
+              "event_id": "girkin-sloviansk-operation-cs",
+              "opinion": "Putinova strategie byla vytvořit vícero malých konfliktů, které by přetížily ukrajinskou kapacitu při testování západních odpovědí, používající úspěch ve Slovjansku k ospravedlnění eskalace jinde.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "girkin-operation-conspirator-1-cs",
+              "event_id": "girkin-sloviansk-operation-cs",
+              "opinion": "Operace následovala standardní ruskou doktrínu 'aktivních opatření': použít minimální síly k vytvoření maximálního chaosu, poté tvrdit, že reagují na místní žádosti o ochranu při postupné eskalaci účasti.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "mh17-downing-july-cs",
+          "milestone_id": "donbas-war-outbreak-2014-cs",
+          "title": "Rusky podporované síly sestřelují MH17 raketou Buk, zabíjejí 298 civilistů",
+          "left_type": "dredd",
+          "right_type": "psychic",
+          "left_opinion": "Mezinárodní vyšetřování prokázala, že ruská armáda poskytla raketový systém Buk a pravděpodobně schválila jeho použití, což představuje masovou vraždu a porušení konvencí o bezpečnosti letectví, přesto ruské veto v Radě bezpečnosti OSN zabránilo ustanovení tribunálu.",
+          "right_opinion": "Moskevská okamžitá odpověď byla sofistikovaná dezinformace včetně falešných důkazů a vícero alternativních narativů navržených k zakalení mezinárodního názoru, zatímco její státní média obviňovala Ukrajinu navzdory jasným důkazům o ruské odpovědnosti.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Malaysia_Airlines_Flight_17",
+          "right_source_url": "https://kyivindependent.com/the-downing-of-mh17-and-russias-responsibility/",
+          "all_opinions": [
+            {
+              "id": "mh17-downing-nerd-1-cs",
+              "event_id": "mh17-downing-july-cs",
+              "opinion": "Raketový systém Buk stojí více než 100 milionů dolarů a vyžaduje rozsáhlý výcvik, což dokazuje, že to nebyla amatérská separatistická akce, ale profesionální ruská vojenská operace, která špatně odhadla rizika civilního letectví pro propagandistické zisky.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "mh17-downing-joe-1-cs",
+              "event_id": "mh17-downing-july-cs",
+              "opinion": "Rodiny ztratily blízké včetně celých rodin a dětí jedoucích na dovolenou, zatímco první respondenti na místě havárie byli zděšeni nalezením pasů a zavazadel rozházených po polích kontrolovaných ozbrojenými militanty.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "mh17-downing-psychic-1-cs",
+              "event_id": "mh17-downing-july-cs",
+              "opinion": "Ruská propaganda okamžitě nasadila taktiky 'hadicí lži' včetně tvrzení, že těla byla již mrtvá, obviňování ukrajinských stíhaček a inscenování falešných důkazů k přetížení mezinárodní mediální kapacity pro ověřování faktů.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "mh17-downing-dredd-1-cs",
+              "event_id": "mh17-downing-july-cs",
+              "opinion": "Sestřelení představovalo jak válečný zločin, tak porušení mezinárodního leteckého práva, přesto ruská veto moc v Radě bezpečnosti zabránila ustanovení mezinárodního tribunálu, odhalujíc nedostatky v systémech mezinárodní spravedlnosti.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "mh17-downing-president-1-cs",
+              "event_id": "mh17-downing-july-cs",
+              "opinion": "Putin pravděpodobně autorizoval nasazení Buku k čelení ukrajinské vzdušné převaze, ale nepředvídal rizika civilního letectví, poté si zvolil popírání před odpovědností, aby se vyhnul precedensu pro jiné mezinárodní zločiny.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "mh17-downing-conspirator-1-cs",
+              "event_id": "mh17-downing-july-cs",
+              "opinion": "Telefonní odposlechy ukazují ruské velitele diskutující o pohybu raketového systému, zatímco sofistikovaná dezinformační odpověď byla jasně předem naplánována, naznačujíc institucionální přípravu na zakrývání válečných zločinů.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "minsk-agreements-failure-2014-2015-cs",
+      "date": "2014-09-05",
+      "title": "Minské dohody a zmrazený konflikt",
+      "context": "Po velkých ukrajinských vojenských porážkách u Ilovajsku a Debalceva, kde ruské regulérní síly tajně zasáhly, byla Ukrajina nucena podepsat dohody o příměří. Minské protokoly nikdy plně neukončily boje, ale snížily je na zmrazený konflikt, který umožnil Rusku udržet páku na ukrajinskou zahraniční politiku po osm let.",
+      "order": 4,
+      "consequence": "Vytvořil právní rámec, který legitimizoval ruské prostředníky při ukládání ústavních změn na Ukrajinu, ustanovujíc precedens pro zmrazené konflikty jako nástroje geopolitické kontroly.",
+      "key_persons": [
+        { "name": "Petro Porošenko", "role": "Ukrajinský prezident" },
+        { "name": "Vladimir Putin", "role": "Ruský prezident" },
+        { "name": "Angela Merkelová", "role": "Německá kancléřka" },
+        { "name": "François Hollande", "role": "Francouzský prezident" },
+        { "name": "Alexander Zacharčenko", "role": "Vůdce DLR" }
+      ],
+      "events": [
+        {
+          "id": "ilovaisk-defeat-august-cs",
+          "milestone_id": "minsk-agreements-failure-2014-2015-cs",
+          "title": "Ruské regulérní síly ničí ukrajinskou armádu u Ilovajsku, nutí první minskou dohodu",
+          "left_type": "president",
+          "right_type": "nerd",
+          "left_opinion": "Západní partneři Ukrajiny selhali v poskytnutí smysluplné vojenské pomoci během kritických okamžiků, v podstatě opustili Kyjev k vyjednávání z pozice slabosti, zatímco Rusko systematicky porušovalo podmínky příměří s beztrestností.",
+          "right_opinion": "Náklady ruské intervence byly minimální ve srovnání se strategickými zisky zabránění ukrajinského členství v NATO, zatímco sankce vytvořily výnosné arbitrážní příležitosti pro Putinův vnitřní kruh prostřednictvím importní substituce a černotržních sítí.",
+          "left_source_url": "https://en.wikipedia.org/wiki/Minsk_agreements",
+          "right_source_url": "https://carnegieendowment.org/research/2025/02/ukraine-russia-ceasefire-security-agreement?lang=en",
+          "all_opinions": [
+            {
+              "id": "ilovaisk-defeat-nerd-1-cs",
+              "event_id": "ilovaisk-defeat-august-cs",
+              "opinion": "Ruská vojenská intervence zahrnovala 3 500-6 500 regulérních vojáků a sofistikované zbraně v hodnotě stovek milionů, zatímco ukrajinské síly byly vybaveny sovětským vybavením a dostávaly minimální západní finanční podporu.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "ilovaisk-defeat-joe-1-cs",
+              "event_id": "ilovaisk-defeat-august-cs",
+              "opinion": "Ukrajinští vojáci se cítili zrazeni, když se slíbené humanitární koridory staly zabíjecími poli, zatímco mnoho rodin se nikdy nedozvědělo osud pohřešovaných synů, kteří zmizeli během chaotického ústupu.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "ilovaisk-defeat-psychic-1-cs",
+              "event_id": "ilovaisk-defeat-august-cs",
+              "opinion": "Ruská psychologická válka zahrnovala záměrné cílení evakuačních tras k maximalizaci traumatu a demonstraci marnosti odporu, zatímco státní média zobrazovala vítězství jako důkaz separatistické síly.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "ilovaisk-defeat-dredd-1-cs",
+              "event_id": "ilovaisk-defeat-august-cs",
+              "opinion": "Přímá ruská vojenská intervence při popírání účasti představovala perfidie podle Ženevských konvencí, přesto se mezinárodní právní mechanismy ukázaly jako nedostatečné pro řešení hybridní války vedené jadernými mocnostmi.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "ilovaisk-defeat-president-1-cs",
+              "event_id": "ilovaisk-defeat-august-cs",
+              "opinion": "Putin vypočítal, že omezená eskalace přinutí Ukrajinu k vyjednávání, zatímco demonstruje NATO, že závazky kolektivní obrany jsou bezvýznamné bez skutečné politické vůle konfrontovat Rusko.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "ilovaisk-defeat-conspirator-1-cs",
+              "event_id": "ilovaisk-defeat-august-cs",
+              "opinion": "Načasování se shodovalo s ruskými vojenskými cvičeními, naznačujíc předem naplánovanou intervenci maskovanou jako výcviková manévra, zatímco odposlouchané komunikace ukazují koordinaci mezi FSB a separatistickými velením měsíce před bitvou.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "minsk-ii-agreement-february-cs",
+          "milestone_id": "minsk-agreements-failure-2014-2015-cs",
+          "title": "Minsk II podepsán po ukrajinské porážce u Debalceva uděluje Rusku politickou páku",
+          "left_type": "dredd",
+          "right_type": "conspirator",
+          "left_opinion": "Dohoda nutila Ukrajinu udělit 'zvláštní status' okupovaným územím při udržování fikce ukrajinské suverenity, vytvářejíc ústavní krizi, která by trvale oslabila ústřední vládu a zabránila členství v NATO, jak bylo zamýšleno.",
+          "right_opinion": "Moskva úspěšně transformovala vojenské vítězství v mechanismus politické kontroly, používajíc evropské mediace k legitimizaci zástupných entit při udržování věrohodného popírání přímé účasti v pokračujících porušeních.",
+          "left_source_url": "https://ecfr.eu/article/ukraine-russia-and-the-minsk-agreements-a-post-mortem/",
+          "right_source_url": "https://www.aljazeera.com/news/2022/2/9/what-is-the-minsk-agreement-and-why-is-it-relevant-now",
+          "all_opinions": [
+            {
+              "id": "minsk-ii-nerd-1-cs",
+              "event_id": "minsk-ii-agreement-february-cs",
+              "opinion": "Dohoda stála Ukrajinu odhadovaných více než 60 miliard eur ve ztraceném ekonomickém rozvoji při vyžadování masivního financování rekonstrukce, přesto poskytla Rusku pokračující politickou páku v hodnotě daleko více než náklady vojenské okupace.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "minsk-ii-joe-1-cs",
+              "event_id": "minsk-ii-agreement-february-cs",
+              "opinion": "Rodiny oddělené kontaktní linií nemohly navštěvovat příbuzné roky, zatímco důchodci v okupovaných územích viděli své ukrajinské dávky přerušeny, nutíc závislost na ruských sociálních systémech.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "minsk-ii-psychic-1-cs",
+              "event_id": "minsk-ii-agreement-february-cs",
+              "opinion": "Nejednoznačný jazyk dohody byl záměrně vytvořen k umožnění konfliktních interpretací, umožňujíc Rusku tvrdit ukrajinské nedodržování při zobrazování sebe jako mírotvorce spíše než strany konfliktu.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "minsk-ii-dredd-1-cs",
+              "event_id": "minsk-ii-agreement-february-cs",
+              "opinion": "Ústavní dodatky vyžadované Minskem II by porušily ukrajinskou suverenitu udělením cize kontrolovaným entitám veto moci nad národní zahraniční politikou, stanovujíc precedens pro demontáž národních států prostřednictvím právní manipulace.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "minsk-ii-president-1-cs",
+              "event_id": "minsk-ii-agreement-february-cs",
+              "opinion": "Evropští vůdci upřednostňovali krátkodobou stabilitu před dlouhodobou bezpečností, v podstatě odměňovali ruskou agresi politickými ústupky při selhávání vynucovat i minimální dodržování podmínek příměří.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "minsk-ii-conspirator-1-cs",
+              "event_id": "minsk-ii-agreement-february-cs",
+              "opinion": "Dohoda byla navržena k selhání implementace při poskytování krytí pro pokračující ruskou přítomnost, následující moskevskou příručku z Jižní Osetie a Podněstří k vytváření trvalých 'zmrazených konfliktů' bránících západní integraci.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

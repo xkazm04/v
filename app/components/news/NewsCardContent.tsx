@@ -10,6 +10,8 @@ import { getCountryFlagSvg, getCountryName } from '@/app/helpers/countries';
 import Image from 'next/image';
 import { contentVariants } from '../animations/variants/playerVariants';
 import { itemVariants } from '@/app/helpers/animation';
+import LoaderComponent from '../animations/LoaderComponent';
+import { useTranslationProgress } from '@/app/stores/useTranslationStore';
 
 interface NewsCardContentProps {
   isCompact?: boolean;
@@ -115,6 +117,7 @@ const NewsCardContent = memo(function NewsCardContent({
   const [isQuoteHovered, setIsQuoteHovered] = useState(false);
   const { colors } = useLayoutTheme();
   const { isMobile } = useViewport();
+  const { isTranslating} = useTranslationProgress();
 
   const maxLength = isCompact ? 120 : 180;
   const shouldTruncate = useMemo(() => {
@@ -208,6 +211,10 @@ const NewsCardContent = memo(function NewsCardContent({
             >
               "{displayText}"
             </motion.span>
+            <LoaderComponent
+              text='Translation in progress...'
+              loading={isTranslating}
+              />
 
             {!isMobile && (
               <motion.div

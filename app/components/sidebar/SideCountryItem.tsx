@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { cn } from '@/app/lib/utils';
 import { useUserPreferences } from '@/app/hooks/use-user-preferences';
 import { useFilterStore } from '@/app/stores/filterStore';
-import { getCountryFlagSvg } from '@/app/helpers/countries';
-import { cn } from '@/app/lib/utils';
 import Image from 'next/image';
+import { getCountryFlagSvg } from '@/app/helpers/countries';
+import { WorldIconSide } from '../icons/nav/WorldIcons';
+import SideCountryCounter from './SideCountryCounter';
 
 interface SideCountryItemProps {
     mounted: boolean;
@@ -20,10 +22,10 @@ interface SideCountryItemProps {
     isActiveRoute?: boolean;
 }
 
+
 const SideCountryItem = ({ mounted, isCollapsed, country, isActiveRoute = false }: SideCountryItemProps) => {
     const [isHovered, setIsHovered] = useState(false);
     const { preferences } = useUserPreferences();
-    
 
     const { selectedCountry, setSelectedCountry } = useFilterStore((state) => ({
         selectedCountry: state.selectedCountry,
@@ -35,6 +37,7 @@ const SideCountryItem = ({ mounted, isCollapsed, country, isActiveRoute = false 
                           isActiveRoute;
     
     const flagSvgPath = country.code !== 'worldwide' ? getCountryFlagSvg(country.code) : null;
+    const isWorldwide = country.code === 'worldwide' || country.isDefault;
 
     const handleCountryClick = useCallback(() => {
         const targetCountry = country.isDefault || country.code === 'worldwide' 
@@ -80,41 +83,41 @@ const SideCountryItem = ({ mounted, isCollapsed, country, isActiveRoute = false 
                     'hover:bg-slate-50/80 dark:hover:bg-slate-800/60',
                     'hover:border-slate-300/60 dark:hover:border-slate-600/60'
                 ],
-                isFilterActive && [
-                    'hover:from-blue-500/25 hover:via-purple-500/20 hover:to-indigo-500/15',
-                    'dark:hover:from-blue-500/30 dark:hover:via-purple-500/23 dark:hover:to-indigo-500/18'
-                ]
+
             )}
         >
             {isCollapsed ? (
                 <div className="flex items-center justify-center h-full relative">
-                    <span className="text-xl" title={country.name}>
-                        {country.flag}
-                    </span>
+                    {isWorldwide ? (
+                        <WorldIconSide 
+                            isActive={isFilterActive} 
+                            isHovered={isHovered} 
+                            isCollapsed={true}
+                        />
+                    ) : (
+                        <span className="text-xl" title={country.name}>
+                            {country.flag}
+                        </span>
+                    )}
                     {isFilterActive && (
                         <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full" />
                     )}
                 </div>
             ) : (
                 <div className="flex items-center h-full">
-                    {/* Left 1/4 - Country Code */}
-                    <div className="w-1/4 flex items-center justify-center">
-                        <span 
-                            className={cn(
-                                'text-sm font-bold tracking-wider',
-                                isFilterActive 
-                                    ? 'text-blue-700 dark:text-blue-300' 
-                                    : 'text-slate-600 dark:text-slate-400'
-                            )}
-                        >
-                            {country.code === 'worldwide' ? '🌍' : country.code.toUpperCase()}
-                        </span>
-                    </div>
-
-                    {/* Right 3/4 - Flag + Active Indicator */}
+                    <SideCountryCounter
+                        isWorldwide={isWorldwide}
+                        country={country}
+                        isFilterActive={isFilterActive}
+                    />
                     <div className="w-3/4 relative h-full flex items-center justify-center">
-                        {/* Flag Background */}
-                        {flagSvgPath && (
+                        {isWorldwide ? (
+                            <WorldIconSide 
+                                isActive={isFilterActive} 
+                                isHovered={isHovered} 
+                                isCollapsed={false}
+                            />
+                        ) : flagSvgPath ? (
                             <div 
                                 className={cn(
                                     'absolute inset-1 rounded-lg overflow-hidden transition-opacity duration-300',
@@ -136,17 +139,13 @@ const SideCountryItem = ({ mounted, isCollapsed, country, isActiveRoute = false 
                                     )}
                                 />
                             </div>
-                        )}
-
-                        {/* Flag Emoji Fallback */}
-                        {!flagSvgPath && (
+                        ) : (
                             <span className="text-2xl opacity-60">
                                 {country.flag}
                             </span>
                         )}
 
-                        {/* Active Indicator */}
-                        {isFilterActive && (
+                        {isFilterActive && !isWorldwide && (
                             <div className="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full shadow-sm" />
                         )}
                     </div>

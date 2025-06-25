@@ -11,23 +11,17 @@ type Props = {
 const SettingTabsContent = ({activeTab}: Props) => {
     const { colors, isDark, vintage } = useLayoutTheme();
     return <AnimatePresence mode="wait">
-        <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.4 }}
-        >
-            <TabsContent value="preferences" className="mt-8">
+            <TabsContent key="preferences" value="preferences" className="mt-8">
                 <SettingLayout />
             </TabsContent>
 
-            <TabsContent value="appearance" className="mt-8">
+            <TabsContent key="appearance" value="appearance" className="mt-8">
                 <SetAppearance />
             </TabsContent>
 
-            <TabsContent value="profile" className="mt-8">
+            <TabsContent key="profile" value="profile" className="mt-8">
                 <motion.div
+                    key={activeTab}
                     className="relative overflow-hidden rounded-3xl border p-8"
                     style={{
                         background: isDark
@@ -114,7 +108,6 @@ const SettingTabsContent = ({activeTab}: Props) => {
                     </div>
                 </motion.div>
             </TabsContent>
-        </motion.div>
     </AnimatePresence>
 }
 

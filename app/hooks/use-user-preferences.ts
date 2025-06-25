@@ -49,7 +49,7 @@ export function useUserPreferences() {
     }));
   };
 
-  // Update countries preference with validation
+  // ✅ UPDATED: Update countries preference with validation and auto-selection reset
   const setCountries = (countries: string[]) => {
     // Validate all country codes
     const validCountries = countries.filter(code => isValidCountryCode(code));
@@ -62,10 +62,12 @@ export function useUserPreferences() {
     // Ensure at least one country is selected, default to worldwide
     const finalCountries = validCountries.length > 0 ? validCountries : ['worldwide'];
     
+    console.log('🌍 UserPreferences: Setting countries to:', finalCountries);
+    
     setPreferences(prev => ({
       ...prev,
       countries: finalCountries,
-      lastUpdated: new Date().toISOString()
+      lastUpdated: new Date().toISOString() 
     }));
   };
 
