@@ -181,7 +181,6 @@ export function MobileNavbar({
           {MOBILE_NAV.map((item) => (
             <MobileNavbarItem
               key={item.id}
-              // @ts-expect-error - Type mismatch on item prop
               item={item}
               isActive={activeTab === item.id}
               isPressed={pressedTab === item.id}

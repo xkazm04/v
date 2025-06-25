@@ -54,16 +54,16 @@ export const useVideos = (filters: VideoFilters = {}, options: { enabled?: boole
     translationTarget 
   } = useApiWithPreferences();
 
-  const queryKey = createVideosQueryKey(filters, translationTarget);
+  const queryKey = createVideosQueryKey(filters, translationTarget ?? undefined);
   
   return useQuery({
     queryKey,
     queryFn: () => getVideosLocal(filters, fetchWithPreferences, createUrlWithPreferences),
-    enabled: options.enabled !== false, // ✅ Allow disabling via options
+    enabled: options.enabled !== false,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false, // ✅ Prevent duplicate initial requests
+    refetchOnMount: false, 
     refetchOnReconnect: false,
     retry: 1,
     retryDelay: 1000,

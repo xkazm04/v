@@ -1,3 +1,4 @@
+import { Variants } from "framer-motion";
 
 export const tabVariants = {
   inactive: { 
@@ -118,7 +119,7 @@ export const navbarVariants = {
   }
 };
 
-export const fabVariants = {
+export const fabVariants: Variants = {
   hidden: { 
     scale: 0, 
     opacity: 0, 

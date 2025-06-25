@@ -18,6 +18,7 @@ const OnboardingHeader = ({onSkip, currentStep, steps, getBackgroundConfig, pref
                         showConfidenceRing={false}
                         colors={
                             {
+                                    //@ts-expect-error Ignore
                                 light: getBackgroundConfig().color,
                                 dark: getBackgroundConfig().color
                             }

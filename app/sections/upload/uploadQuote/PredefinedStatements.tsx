@@ -1,10 +1,11 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { Quote, Calendar, MapPin, User } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { generatePositions } from '@/app/constants/positions';
+import { containerVariants } from '@/app/components/animations/variants/votingVariants';
 
 interface PredefinedStatement {
   id: string;
@@ -56,18 +57,8 @@ interface PredefinedStatementsProps {
 }
 
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.2
-    }
-  }
-};
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { 
     opacity: 0, 
     scale: 0,

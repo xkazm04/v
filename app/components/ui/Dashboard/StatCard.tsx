@@ -44,7 +44,7 @@ const StatCard = ({
                     color: theme.text
                 }}
             >
-                {value}{config.suffix || ''}
+                {value}{'suffix' in config && config.suffix ? config.suffix : ''}
             </div>
             <div
                 className="text-xs font-medium"

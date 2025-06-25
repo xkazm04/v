@@ -106,15 +106,13 @@ const CompactThemeSwitcher: React.FC<CompactThemeSwitcherProps> = ({
               }}
               whileHover={{ scale: isSelected ? 1 : 1.05 }}
               whileTap={{ scale: 0.95 }}
-              title={theme.key === 'system' ? `System (currently ${visualTheme})` : theme.label}
+              title={theme.label}
             >
               <Icon className="w-3 h-3" />
               <span>{theme.label}</span>
-              {theme.key === 'system' && (
                 <span className="text-xs opacity-75">
                   ({visualTheme === 'dark' ? '🌙' : '☀️'})
                 </span>
-              )}
             </motion.button>
           );
         })}

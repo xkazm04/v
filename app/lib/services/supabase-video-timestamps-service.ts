@@ -122,6 +122,9 @@ class SupabaseVideoTimestampsService {
    */
   async healthCheck(): Promise<boolean> {
     try {
+      if (!supabaseAdmin) {
+        return false;
+      }
       const { error } = await supabaseAdmin
         .from('video_timestamps')
         .select('id')

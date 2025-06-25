@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNews } from './useNews';
-import { useSearchVideos } from './useVideos';
+import { useNewsWithExchange } from './useNews';
+
 
 interface UseSearchStateProps {
   autoFocus?: boolean;
@@ -41,7 +41,6 @@ interface UseSearchStateReturn {
   handleClear: () => void;
   handleResultClick: (result: any, type: 'news' | 'video') => void;
   handleFocus: () => void;
-  handleBlur: () => void;
   
   // State setters
   setQuery: (query: string) => void;
@@ -85,30 +84,21 @@ export function useSearchState({
     articles: newsResults = [], 
     loading: newsLoading,
     error: newsError
-  } = useNews({
+  } = useNewsWithExchange({
     searchText: shouldSearch ? debouncedQuery : undefined,
     limit: limits.news,
     autoRefresh: false
   });
 
-  const { 
-    data: videoResults = [], 
-    isLoading: videosLoading,
-    error: videosError
-  } = useSearchVideos(
-    shouldSearch ? debouncedQuery : undefined,
-    undefined, // category
-    undefined, // country
-    undefined, // source
-    undefined, // speaker
-    undefined, // status
-    limits.videos, // limit
-    0 // offset
-  );
+  // Loading state (extend if you add more sources, e.g., videos)
+  const isLoading = newsLoading;
 
-  // Computed state
-  const isLoading = newsLoading || videosLoading;
-  const hasResults = newsResults.length > 0 || videoResults.length > 0;
+  // Results (add videoResults if you implement video search)
+  const videoResults: any[] = []; // Placeholder, update if you add video search
+
+  // Whether there are any results
+  const hasResults = (newsResults && newsResults.length > 0) || (videoResults && videoResults.length > 0);
+
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -208,17 +198,6 @@ export function useSearchState({
     }
   }, [query.length]);
 
-  // Blur handler with delay to allow for result clicks
-  const handleBlur = useCallback(() => {
-    // Use a longer delay to ensure result clicks are processed
-    blurTimeoutRef.current = setTimeout(() => {
-      setIsFocused(false);
-      // Only close if not actively searching
-      if (!isLoading) {
-        setIsOpen(false);
-      }
-    }, 300);
-  }, [isLoading]);
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -252,7 +231,6 @@ export function useSearchState({
     handleClear,
     handleResultClick,
     handleFocus,
-    handleBlur,
     
     // State setters (for advanced use cases)
     setQuery,

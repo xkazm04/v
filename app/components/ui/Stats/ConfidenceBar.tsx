@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
 
@@ -13,7 +13,7 @@ interface ConfidenceBarProps {
   className?: string;
 }
 
-const barVariants = {
+const barVariants: Variants = {
   hidden: { 
     scaleX: 0,
     opacity: 0
@@ -29,7 +29,7 @@ const barVariants = {
   }
 };
 
-const fillVariants = {
+const fillVariants: Variants = {
   hidden: { 
     width: '0%',
     opacity: 0
@@ -43,21 +43,6 @@ const fillVariants = {
       delay: 0.4
     }
   })
-};
-
-const labelVariants = {
-  hidden: { 
-    opacity: 0,
-    y: 5
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.4,
-      delay: 0.6
-    }
-  }
 };
 
 export const ConfidenceBar: React.FC<ConfidenceBarProps> = ({

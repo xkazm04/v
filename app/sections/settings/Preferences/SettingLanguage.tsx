@@ -7,26 +7,13 @@ import SettingLanguageActive from './SettingLanguageActive';
 import SettingLanguageHeader from './SettingLanguageHeader';
 import SettingLanguageInfo from './SettingLanguageInfo';
 import SettingLanguageFlagArea from './SettingLanguageFlagArea';
+import { itemVariants } from '@/app/helpers/animation';
 
 const SettingLanguage = memo(function SettingLanguage() {
   const { colors, isDark, vintage, getCardColors } = useLayoutTheme();
   const [hoveredLanguage, setHoveredLanguage] = useState<string | null>(null);
   
   const { preferences, setLanguage } = useUserPreferences();
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 15, scale: 0.95 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 25
-      }
-    }
-  };
 
   if (!AVAILABLE_LANGUAGES || AVAILABLE_LANGUAGES.length === 0) {
     return (

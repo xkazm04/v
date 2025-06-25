@@ -28,7 +28,7 @@ const ExpertOpinionCardWrapper = ({
 }: Props) => {
     const { isDark } = useLayoutTheme();
     const { isMobile, isTablet } = useViewport();
-    const expertConfig = EXPERT_TIMELINE_CONFIG[expertType];
+    const expertConfig = EXPERT_TIMELINE_CONFIG[expertType as keyof typeof EXPERT_TIMELINE_CONFIG];
 
     const getStackTransform = () => {
         if (isSecondaryLayout || !isExpanded || isStrongest) return { x: 0, y: 0, scale: 1 };

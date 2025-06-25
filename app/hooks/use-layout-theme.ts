@@ -135,6 +135,7 @@ export function useLayoutTheme() {
     // Specific component color getters
     navbarColors: getNavbarColors(currentTheme),
     sidebarColors: getSidebarColors(currentTheme),
+    //@ts-expect-error Ignore
     cardColors: getCardColors(currentTheme),
     overlayColors: getOverlayColors(currentTheme),
     isDark: currentTheme === 'dark',

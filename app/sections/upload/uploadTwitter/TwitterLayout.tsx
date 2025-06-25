@@ -8,14 +8,16 @@ import TwitterForm from './TwitterForm';
 import { ResearchResults } from '../ResearchResults';
 import { researchService } from '@/app/lib/services/x-service';
 
+import { animate } from 'framer-motion';
+
 const smoothScrollBy = (distance: number, duration: number = 800) => {
   const startY = window.scrollY;
   const targetY = startY + distance;
-  
-  return motion.animate(startY, targetY, {
+
+  return animate(startY, targetY, {
     duration: duration / 1000,
     ease: [0.25, 0.46, 0.45, 0.94],
-    onUpdate: (value) => {
+    onUpdate: (value: number) => {
       window.scrollTo(0, value);
     }
   });
@@ -40,7 +42,7 @@ const TwitterLayout: React.FC = () => {
       if (mode === 'predefined' && selectedTweet) {
         // Use predefined tweet data
         request = {
-          tweet_url: selectedTweet.url,
+          tweet_url: selectedTweet.tweet_url,
           additional_context: formData.additional_context || `Predefined example: ${selectedTweet.description}`,
           country: formData.country
         };

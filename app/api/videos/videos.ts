@@ -31,7 +31,7 @@ class VideoAPI {
   // NEW: Get video detail with timestamps and research
   async getVideoDetail(videoId: string, options?: { signal?: AbortSignal }): Promise<VideoDetailResponse | null> {
     try {
-      const response = await this.request(`/video/${videoId}`, {
+      const response = await this.request<VideoDetailResponse>(`/video/${videoId}`, {
         method: 'GET',
         signal: options?.signal
       });
@@ -43,8 +43,11 @@ class VideoAPI {
   }
 
   // NEW: Get transformed video detail for frontend consumption
-  async getVideoForPlayer(videoId: string): Promise<VideoDetailResponse> {
+  async getVideoForPlayer(videoId: string): Promise<VideoDetailResponse | null> {
     const response = await this.getVideoDetail(videoId);
+    if (!response) {
+      return null;
+    }
     return this.transformVideoResponse(response, videoId);
   }
 

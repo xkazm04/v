@@ -25,8 +25,9 @@ const TimelineVerticalWrapper = ({ children, userLanguage, voiceId, scrollToMile
     });
 
     useEffect(() => {
-        const handleAudioPlay = async (event: CustomEvent) => {
-            const { track } = event.detail;
+        const handleAudioPlay = async (event: Event) => {
+            const customEvent = event as CustomEvent;
+            const { track } = customEvent.detail;
             try {
                 console.log('Handling audio play for track:', track.title);
                 console.log('Using language:', userLanguage, 'voiceId:', voiceId);
@@ -42,13 +43,13 @@ const TimelineVerticalWrapper = ({ children, userLanguage, voiceId, scrollToMile
             console.log('Handling audio pause');
             pause();
         };
-
-        window.addEventListener('timeline-audio-play', handleAudioPlay as EventListener);
-        window.addEventListener('timeline-audio-pause', handleAudioPause as EventListener);
+        
+        window.addEventListener('timeline-audio-play', handleAudioPlay);
+        window.addEventListener('timeline-audio-pause', handleAudioPause);
 
         return () => {
-            window.removeEventListener('timeline-audio-play', handleAudioPlay as EventListener);
-            window.removeEventListener('timeline-audio-pause', handleAudioPause as EventListener);
+            window.removeEventListener('timeline-audio-play', handleAudioPlay);
+            window.removeEventListener('timeline-audio-pause', handleAudioPause);
         };
     }, [generateAndPlay, pause, userLanguage, voiceId]);
     return <div className={`relative`}>
