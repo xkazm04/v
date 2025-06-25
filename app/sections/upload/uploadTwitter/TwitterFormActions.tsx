@@ -2,9 +2,9 @@ import { contentVariants } from '@/app/components/animations/variants/placeholde
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useTwitterResearch } from '@/app/hooks/useTwitterResearch';
 import { motion } from 'framer-motion';
-import { Play, RotateCcw } from 'lucide-react';
-import { TwitterAnalysisRequest } from './TwitterForm';
+import { RotateCcw } from 'lucide-react';
 import AnalyzeButton from '@/app/components/ui/Buttons/AnalyzeButton';
+import { TwitterAnalysisRequest } from '@/app/types/research';
 
 type Props = {
     mode: 'url' | 'predefined';
@@ -47,7 +47,6 @@ const TwitterFormActions = ({ mode, xService, formData, selectedTweet, resetForm
 
             const result = await researchTweet(request);
             console.log('Research result:', result);
-            alert(`Research completed!\nProcessing time: ${result.processing_time_seconds}s\nMethod: ${result.research_method}`);
 
         } catch (error) {
             console.error('Failed to research tweet:', error);

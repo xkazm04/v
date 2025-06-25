@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { Button } from '@/app/components/ui/button';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { LucideIcon } from 'lucide-react';
@@ -25,7 +25,7 @@ interface NavDButtonProps {
   };
 }
 
-const buttonVariants = {
+const buttonVariants: Variants = {
   idle: { scale: 1 },
   hover: { 
     scale: 1.05,

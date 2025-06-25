@@ -55,7 +55,7 @@ export default function TimelineSummaryStatements({
         
         // Group statements by person and limit to 5 per person
         const grouped: GroupedStatements = {};
-        loadedStatements.forEach((statement) => {
+        loadedStatements.forEach((statement: TimelineStatement) => {
           if (!grouped[statement.name]) {
             grouped[statement.name] = [];
           }

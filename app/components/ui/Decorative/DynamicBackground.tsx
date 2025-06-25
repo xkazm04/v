@@ -8,7 +8,7 @@ type Props = {
         bgGradient: string;
         stampOpacity: string;
     };
-    currentTheme: 'light' | 'dark';
+    currentTheme: 'light' | 'dark' | 'system';
     setIsVisible?: (visible: boolean) => void;
 }
 

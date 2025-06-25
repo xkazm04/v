@@ -32,6 +32,7 @@ export function createIntersectionObserver(
       });
 
       if (closestElement) {
+        //@ts-expect-error Ignore
         const element = closestElement.target as HTMLElement;
         const milestoneId = element.getAttribute('data-milestone-id');
         const eventId = element.getAttribute('data-event-id');

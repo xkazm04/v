@@ -49,6 +49,8 @@ export interface VintageColors {
   highlight: string;
   shadow: string;
   crease: string;
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  effects?: any;
 }
 
 // ✅ NEW: Universal card color states

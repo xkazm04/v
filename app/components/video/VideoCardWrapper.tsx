@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
 
@@ -14,7 +14,7 @@ interface VideoCardWrapperProps {
   onClick?: () => void;
 }
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { 
     opacity: 0, 
     y: 15, 
@@ -41,7 +41,7 @@ const cardVariants = {
   }
 };
 
-const glowVariants = {
+const glowVariants: Variants = {
   hidden: { opacity: 0, scale: 0.8 },
   visible: { 
     opacity: 1, 

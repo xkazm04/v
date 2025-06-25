@@ -49,11 +49,8 @@ export function TimelineClaimList({
     data: fetchedTimestamps, 
     isLoading: timestampsLoading, 
     error: timestampsError 
-  } = useVideoTimestamps(video?.video.id || '', {
-    enabled: !!video?.video.id && (!video.timestamps || video.timestamps.length === 0)
-  });
+  } = useVideoTimestamps(video?.video.id || '');
 
-  // ✅ UNIFIED: Determine which timestamps to use
   const timestamps = (() => {
     // Use video timestamps if available
     if (video?.timestamps && video.timestamps.length > 0) {

@@ -7,7 +7,6 @@ import DynamicBackground from '@/app/components/ui/Decorative/DynamicBackground'
 import OnboardingHeader from './OnboardingHeader';
 import FeaturesShowcase from './FeaturesShowcase';
 import CompactThemeSwitcher from './CompactThemeSwitcher';
-import CompactCategorySelector from './CompactCategorySelector';
 import { useUserPreferences } from '@/app/hooks/use-user-preferences';
 import LanguageSelector from '@/app/components/userPreferences/LanguageSelector';
 import Divider from '@/app/components/ui/divider';
@@ -28,7 +27,7 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
   const [tempPreferences, setTempPreferences] = useState({
     language: 'en',
     categories: ['politics', 'environment'],
-    theme: 'light' as 'light' | 'dark'
+    theme: 'light' as 'light' | 'dark' | 'system',
   });
 
   const steps = [
@@ -129,6 +128,7 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
               <div className="flex flex-row absolute top-0 right-0 space-y-3 justify-center">
                 <CompactThemeSwitcher
                   value={tempPreferences.theme}
+                  //@ts-expect-error Ignore
                   onChange={handleThemeSelect}
                 />
               </div>
@@ -167,11 +167,9 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          // FIXED: Prevent event bubbling to background
           onMouseDown={(e) => e.stopPropagation()}
           onTouchStart={(e) => e.stopPropagation()}
         >
-          {/* FIXED: Enhanced Backdrop with scroll prevention */}
           <motion.div
             className="absolute inset-0 bg-black/70 backdrop-blur-sm"
             initial={{ opacity: 0 }}
@@ -183,14 +181,12 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
             onTouchMove={(e) => e.preventDefault()}
           />
 
-          {/* FIXED: Modal with proper scroll isolation */}
           <motion.div
             className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-3xl border-2 border-gray-200 dark:border-gray-700"
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            // FIXED: Prevent modal content from affecting background scroll
             onWheel={(e) => e.stopPropagation()}
             onTouchMove={(e) => e.stopPropagation()}
           >

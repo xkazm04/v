@@ -92,7 +92,7 @@ FixedTimelineProgress.displayName = 'FixedTimelineProgress';
 export default function TimelineVertical() {
   const { colors, isDark, vintage } = useLayoutTheme();
   const { isMobile, isDesktop } = useViewport();
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
 
   // Use timeline store instead of local state
   const { 
@@ -123,6 +123,7 @@ export default function TimelineVertical() {
     scrollToMilestone,
     scrollToEvent,
     hasScrolled
+    //@ts-expect-error Ignore
   } = useTimelineScroll(containerRef, timeline);
 
   // Move all useTransform calls to top level

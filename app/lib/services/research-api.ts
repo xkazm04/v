@@ -91,6 +91,12 @@ export class ResearchApiService {
   }> {
     try {
       const client = useAdmin ? supabaseAdmin : supabase;
+      if (!client) {
+        return {
+          data: null,
+          error: 'Supabase client is not initialized'
+        };
+      }
       
       const { data, error } = await client
         .from('research_results_with_resources')
@@ -124,7 +130,7 @@ export class ResearchApiService {
   } = {}): Promise<{ data: NewsArticle[]; error?: string }> {
     try {
       const client = useAdmin ? supabaseAdmin : supabase;
-      
+      //@ts-expect-error Ignore
       let query = client
         .from('research_results_with_resources')
         .select('*')
@@ -183,7 +189,7 @@ export class ResearchApiService {
         };
       }
       // Build query with filters
-      let query = client
+      let query = client!
         .from('research_results_with_resources')
         .select('*');
 

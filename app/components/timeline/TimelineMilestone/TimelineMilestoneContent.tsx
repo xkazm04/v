@@ -8,6 +8,7 @@ import { Milestone } from '../../../types/timeline';
 import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
 import TimelineMilestoneDateBadge from './TimelineMilestoneDateBadge';
 import TimelineMilestoneImpact from './TimelineMilestoneImpact';
+import { itemVariants } from '@/app/helpers/animation';
 
 interface TimelineMilestoneContentProps {
   milestone: Milestone;
@@ -55,20 +56,8 @@ export default function TimelineMilestoneContent({
     }
   }), [colors.primary, colors.background, colors.border, isDark]);
 
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 30, scale: 0.98 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        duration: 0.6,
-        ease: [0.16, 1, 0.3, 1]
-      }
-    }
-  };
 
-  const floatingVariants = {
+  const floatingVariants: Variants = {
     idle: { y: 0 },
     floating: {
       y: [-2, 2, -2],
@@ -81,7 +70,6 @@ export default function TimelineMilestoneContent({
   };
 
   return (
-    // FIXED: Remove min-h-screen and centering - just natural content height
     <div className="w-full py-16">
       {/* Milestone Header with Badge */}
       <motion.div

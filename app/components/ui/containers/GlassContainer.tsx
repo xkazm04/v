@@ -105,12 +105,12 @@ export const GlassContainer = forwardRef<HTMLDivElement, GlassContainerProps>(({
   const { isDark, subtone } = useLayoutTheme();
   
   // Determine theme
-  const currentTheme = theme === 'auto' 
+  const currentTheme: 'light' | 'dark' = theme === 'auto' 
     ? (isDark ? 'dark' : 'light')
-    : theme;
+    : theme as 'light' | 'dark';
 
   // Build glass effect classes
-  const glassClass = glassStyles[style][currentTheme];
+  const glassClass = glassStyles[style as keyof typeof glassStyles][currentTheme];
   const roundedClass = roundedStyles[rounded as keyof typeof roundedStyles];
   
   // ✅ Enhanced border and shadow with subtone support
@@ -122,7 +122,12 @@ export const GlassContainer = forwardRef<HTMLDivElement, GlassContainerProps>(({
         borderStyle: 'solid'
       };
     }
-    return border === 'none' ? {} : { className: borderStyles[border as keyof typeof borderStyles][currentTheme] };
+    const borderValue = borderStyles[border as keyof typeof borderStyles];
+    if (border === 'none') return {};
+    if (typeof borderValue === 'string') {
+      return { className: borderValue };
+    }
+    return { className: borderValue[currentTheme] };
   };
   
   const getShadowStyle = () => {

@@ -90,7 +90,11 @@ export const useTranslationStore = create<TranslationStoreState>()(
         set((state) => {
           const updatedTasks = state.activeTasks.map(task =>
             task.id === taskId
-              ? { ...task, status: wasCached ? 'cached' : 'completed' as const, endTime: Date.now() }
+              ? { 
+                  ...task, 
+                  status: (wasCached ? 'cached' : 'completed') as TranslationTask['status'], 
+                  endTime: Date.now() 
+                }
               : task
           );
 

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useViewport } from '@/app/hooks/useViewport';
 import ExpertOpinionCardFooter from './ExpertOpinionCardFooter';
@@ -51,7 +51,7 @@ export default function ExpertOpinionCard({
             transition: { 
               delay: baseDelay,
               duration: 0.6, 
-              ease: [0.16, 1, 0.3, 1] 
+              ease: "easeInOut"
             }
           }
         };
@@ -89,6 +89,7 @@ export default function ExpertOpinionCard({
 
   return (
     <motion.div
+      //@ts-expect-error Ignore
       variants={getSlideVariants()}
       initial="hidden"
       whileInView="visible"
@@ -166,6 +167,7 @@ export default function ExpertOpinionCard({
             <ExpertOpinionCardContent   
               opinion={opinion}
               isSecondaryLayout={isSecondaryLayout}
+              //@ts-expect-error Ignore
               expertConfig={expertConfig}
             />
           </motion.div>

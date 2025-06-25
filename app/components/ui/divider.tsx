@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { cn } from '@/app/lib/utils';
 
@@ -16,7 +16,7 @@ interface DividerProps {
   labelPosition?: 'left' | 'center' | 'right';
 }
 
-const dividerVariants = {
+const dividerVariants: Variants = {
   hidden: { scaleX: 0, opacity: 0 },
   visible: { 
     scaleX: 1, 
@@ -28,7 +28,7 @@ const dividerVariants = {
   }
 };
 
-const shimmerVariants = {
+const shimmerVariants: Variants = {
   animate: {
     x: ['-100%', '100%'],
     transition: {

@@ -1,5 +1,5 @@
 import { memo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { ChevronDown, Check } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { getAvailableLanguages } from '@/app/helpers/countries';
@@ -13,7 +13,7 @@ interface LanguageSelectorCompactProps {
   disabled?: boolean;
 }
 
-const dropdownVariants = {
+const dropdownVariants: Variants = {
   hidden: {
     opacity: 0,
     scale: 0.95,
@@ -104,7 +104,6 @@ const LanguageSelectorCompact = memo(function LanguageSelectorCompact({
             exit="exit"
             className="absolute top-full left-0 mt-1 z-50 min-w-[160px] rounded-lg shadow-lg border"
             style={{
-              background: colors.popover,
               borderColor: colors.border
             }}
           >

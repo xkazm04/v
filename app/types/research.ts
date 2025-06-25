@@ -27,7 +27,6 @@ export interface ExpertOpinion {
   psychic?: string | null;
 }
 
-// ✅ UPDATED: Enhanced ExpertPerspective interface to match new backend structure
 export interface ExpertPerspective {
   expert_name: string;
   stance: 'SUPPORTING' | 'OPPOSING' | 'NEUTRAL';
@@ -39,7 +38,6 @@ export interface ExpertPerspective {
   publication_date?: string | null;
 }
 
-// ✅ NEW: Expert perspective stance types
 export type ExpertStance = 'SUPPORTING' | 'OPPOSING' | 'NEUTRAL';
 
 export interface ResearchMetadata {
@@ -125,19 +123,23 @@ export interface ResearchRequest {
   category?: string;
 }
 
-// Predefined tweet interface
+// ✅ UPDATED: Simplified and cleaned up PredefinedTweet interface
 export interface PredefinedTweet {
   id: string;
-  username: string;
-  content: string;
-  posted_at: string;
   tweet_url: string;
-  user_display_name: string;
-  user_verified: boolean;
-  retweet_count: number;
-  like_count: number;
-  reply_count: number;
-  category?: string;
+  category: string;
+  description: string;
+  preview: {
+    username: string;
+    display_name: string;
+    content: string;
+    verified: boolean;
+    engagement: {
+      likes: number;
+      retweets: number;
+      replies: number;
+    };
+  };
 }
 
 export interface Daily {

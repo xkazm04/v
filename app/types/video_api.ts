@@ -137,6 +137,12 @@ export interface VideoDetailResponse {
   total_statements: number;
   researched_statements: number;
   research_completion_rate: number;
+  thumbnail_url?: string;
+  description?: string;
+  categories?: string;
+  status?: 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'PENDING';
+  topic_id?: string;
+  id?: string; // Optional ID for the video
 }
 
 // ONLY conversion function we need - Backend → Frontend

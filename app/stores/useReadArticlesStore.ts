@@ -18,7 +18,7 @@ export const useReadArticlesStore = create<ReadArticlesState>()(
       
       addReadArticle: (articleId: string) => {
         set((state) => ({
-          readArticleIds: new Set([...state.readArticleIds, articleId])
+          readArticleIds: new Set([...Array.from(state.readArticleIds), articleId])
         }));
         console.log(`📖 Added article to read list: ${articleId}`);
       },

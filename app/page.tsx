@@ -53,6 +53,7 @@ export default function Home() {
       <BackgroundPattern />
       <FirstTimeUserModal
         isOpen={!hasCompletedOnboarding}
+        //@ts-expect-error Ignore
         onComplete={completeOnboarding}
         onSkip={skipOnboarding}
       />

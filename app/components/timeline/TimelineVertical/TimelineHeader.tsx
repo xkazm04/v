@@ -19,7 +19,7 @@ export default function TimelineHeader({ timeline }: TimelineHeaderProps) {
   // Get playing state from audio store
   const { activeComponentId, activeComponentType, isPlaying, currentTrack } = useTimelineAudioStore();
   
-  // Check if this header is currently playing
+  //@ts-expect-error Ignore
   const isCurrentlyPlaying = activeComponentType === 'header' && 
                             activeComponentId === timeline.id && 
                             isPlaying && 

@@ -13,20 +13,7 @@ import { ProcessingStatus, ProcessingUpdate, StatementResult, VideoProcessingReq
 import { useSSE } from '@/app/hooks/useSSE';
 import { CardContent } from '@/app/components/ui/card';
 import AnalyzeButton from '@/app/components/ui/Buttons/AnalyzeButton';
-
-const containerVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.6,
-      ease: [0.25, 0.46, 0.45, 0.94],
-      staggerChildren: 0.1
-    }
-  }
-};
+import { containerVariants } from '@/app/components/animations/variants/votingVariants';
 
 const fieldVariants = {
   hidden: { opacity: 0, y: 20 },

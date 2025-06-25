@@ -8,9 +8,10 @@ import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import { useRouter } from "next/navigation"; 
 import { useState } from "react";
+import { Daily } from "@/app/types/research";
 
 type Props = {
-    data?: ResearchResult | Video;
+    data?: ResearchResult | Video | Daily;
 }
 
 // Type guards

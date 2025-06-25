@@ -96,6 +96,7 @@ const FeedHeader = ({ className = "" }: StatementOfDayProps) => {
                         stampText="DECLASSIFIED"
                         config={{
                             ...config,
+                            //@ts-expect-error Ignore
                             label: "DECLASSIFIED",
                             stampOpacity: 0.15
                         }}

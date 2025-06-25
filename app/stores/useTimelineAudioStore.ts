@@ -97,7 +97,7 @@ const generateTracklist = (timeline: Timeline): AudioTrack[] => {
       tracks.push({
         id: `${milestone.id}-context`,
         type: 'milestone_context',
-        text: milestone.context,
+        text: milestone.context || '',
         title: milestone.title,
         milestoneId: milestone.id,
         order: index + 1,

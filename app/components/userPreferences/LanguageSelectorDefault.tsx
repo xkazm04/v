@@ -1,10 +1,11 @@
 import { memo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { Globe, ChevronDown, Check } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { getAvailableLanguages } from '@/app/helpers/countries';
 import { cn } from '@/app/lib/utils';
 import { LanguageFlagSvg } from './LanguageFlagSvg';
+import { itemVariants } from '@/app/helpers/animation';
 
 interface LanguageSelectorDefaultProps {
   value: string;
@@ -15,7 +16,7 @@ interface LanguageSelectorDefaultProps {
   disabled?: boolean;
 }
 
-const dropdownVariants = {
+const dropdownVariants: Variants = {
   hidden: {
     opacity: 0,
     scale: 0.95,
@@ -38,18 +39,6 @@ const dropdownVariants = {
       duration: 0.15
     }
   }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, x: -10 },
-  visible: (index: number) => ({
-    opacity: 1,
-    x: 0,
-    transition: {
-      delay: index * 0.05,
-      duration: 0.2
-    }
-  })
 };
 
 const LanguageSelectorDefault = memo(function LanguageSelectorDefault({
@@ -99,8 +88,7 @@ const LanguageSelectorDefault = memo(function LanguageSelectorDefault({
           style={{
             background: colors.input,
             borderColor: colors.border,
-            color: colors.foreground,
-            ringColor: isOpen ? `${colors.primary}50` : 'transparent'
+            color: colors.foreground
           }}
           whileHover={!disabled ? { scale: 1.01 } : undefined}
           whileTap={!disabled ? { scale: 0.99 } : undefined}
@@ -135,7 +123,6 @@ const LanguageSelectorDefault = memo(function LanguageSelectorDefault({
               exit="exit"
               className="absolute top-full left-0 right-0 mt-1 z-50 rounded-lg shadow-lg border overflow-hidden"
               style={{
-                background: colors.popover,
                 borderColor: colors.border
               }}
             >

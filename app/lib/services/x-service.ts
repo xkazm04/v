@@ -37,7 +37,6 @@ class ResearchService {
     return response.json();
   }
 
-
   // Twitter research (now returns same format as quote research)
   async researchTweet(request: TwitterAnalysisRequest): Promise<LLMResearchResponse> {
     try {
@@ -64,59 +63,93 @@ class ResearchService {
     }
   }
 
-  // Predefined tweets for demo/testing
+  // ✅ UPDATED: Predefined tweets with clean, consistent structure
   getPredefinedTweets(): PredefinedTweet[] {
     return [
       {
-        id: 'climate-1',
-        url: 'https://x.com/ClimateReality/status/1700000000000000000',
+        id: 'climate-warming-2025',
+        tweet_url: 'https://x.com/ClimateReality/status/1700000000000000000',
+        category: 'Climate Science',
+        description: 'Scientific claim about global temperature rise and climate records',
         preview: {
           username: 'ClimateReality',
           display_name: 'Climate Reality Project',
-          content: 'Global temperatures have risen by 1.1°C since pre-industrial times, making this the warmest decade on record.',
+          content: 'Global temperatures have risen by 1.1°C since pre-industrial times, making this the warmest decade on record according to NASA and NOAA data.',
           verified: true,
           engagement: {
             likes: 2847,
             retweets: 891,
             replies: 234
           }
-        },
-        category: 'Climate',
-        description: 'Scientific claim about global temperature rise'
+        }
       },
       {
-        id: 'health-1',
-        url: 'https://x.com/WHO/status/1700000000000000001',
+        id: 'health-exercise-benefits',
+        tweet_url: 'https://x.com/WHO/status/1700000000000000001',
+        category: 'Public Health',
+        description: 'WHO claim about exercise benefits and disease prevention statistics',
         preview: {
           username: 'WHO',
           display_name: 'World Health Organization',
-          content: 'Studies show that regular exercise can reduce the risk of heart disease by up to 35% and stroke by up to 20%.',
+          content: 'Studies show that regular exercise can reduce the risk of heart disease by up to 35% and stroke by up to 20%. Just 150 minutes per week makes a difference! 💪 #HealthyLiving',
           verified: true,
           engagement: {
             likes: 5623,
             retweets: 1204,
             replies: 567
           }
-        },
-        category: 'Health',
-        description: 'Health statistics about exercise benefits'
+        }
       },
       {
-        id: 'tech-1',
-        url: 'https://x.com/TechCrunch/status/1700000000000000002',
+        id: 'tech-ai-energy-consumption',
+        tweet_url: 'https://x.com/TechCrunch/status/1700000000000000002',
+        category: 'Technology',
+        description: 'Tech industry claim about AI energy consumption and environmental impact',
         preview: {
           username: 'TechCrunch',
           display_name: 'TechCrunch',
-          content: 'AI models now consume 10x more energy than traditional computing systems, raising concerns about sustainability.',
+          content: 'AI models now consume 10x more energy than traditional computing systems, raising serious concerns about sustainability in the tech industry. 🌱⚡',
           verified: true,
           engagement: {
             likes: 1892,
             retweets: 445,
             replies: 178
           }
-        },
-        category: 'Technology',
-        description: 'Claim about AI energy consumption'
+        }
+      },
+      {
+        id: 'economics-inflation-rate',
+        tweet_url: 'https://x.com/federalreserve/status/1700000000000000003',
+        category: 'Economics',
+        description: 'Federal Reserve statement about current inflation trends and economic indicators',
+        preview: {
+          username: 'federalreserve',
+          display_name: 'Federal Reserve',
+          content: 'Core inflation has dropped to 3.2% year-over-year, the lowest level since early 2021, signaling economic stabilization efforts are working. 📊',
+          verified: true,
+          engagement: {
+            likes: 3456,
+            retweets: 789,
+            replies: 123
+          }
+        }
+      },
+      {
+        id: 'space-mars-discovery',
+        tweet_url: 'https://x.com/nasa/status/1700000000000000004',
+        category: 'Space Science',
+        description: 'NASA announcement about recent Mars exploration findings',
+        preview: {
+          username: 'nasa',
+          display_name: 'NASA',
+          content: 'BREAKING: Perseverance rover has discovered organic compounds in ancient Martian rock samples, potentially indicating past microbial life! 🚀🔬 #Mars2025',
+          verified: true,
+          engagement: {
+            likes: 15234,
+            retweets: 4567,
+            replies: 2891
+          }
+        }
       }
     ];
   }
@@ -134,7 +167,7 @@ class ResearchService {
   }
 
   formatEngagement(count?: number): string {
-    if (!count) return '0';
+    if (!count || count === 0) return '0';
     
     if (count >= 1000000) {
       return `${(count / 1000000).toFixed(1)}M`;
@@ -143,6 +176,18 @@ class ResearchService {
     }
     
     return count.toString();
+  }
+
+  // ✅ NEW: Get tweet by ID (for easier testing/debugging)
+  getPredefinedTweetById(id: string): PredefinedTweet | undefined {
+    return this.getPredefinedTweets().find(tweet => tweet.id === id);
+  }
+
+  // ✅ NEW: Get tweets by category
+  getPredefinedTweetsByCategory(category: string): PredefinedTweet[] {
+    return this.getPredefinedTweets().filter(tweet => 
+      tweet.category.toLowerCase().includes(category.toLowerCase())
+    );
   }
 }
 

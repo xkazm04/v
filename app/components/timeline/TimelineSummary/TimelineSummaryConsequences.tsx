@@ -90,7 +90,7 @@ export default function TimelineSummaryConsequences({
     return sectionColors[index % sectionColors.length];
   };
 
-  const sections = parseConsequenceSections(timeline.consequences);
+  const sections = parseConsequenceSections(timeline.consequences ?? "");
 
   return (
     <div className="h-full flex flex-col">
@@ -142,8 +142,7 @@ export default function TimelineSummaryConsequences({
                       borderColor: isDark ? colors.border : vintage.sepia,
                       boxShadow: isActive 
                         ? `0 8px 25px -5px ${sectionColor}20, 0 0 0 2px ${sectionColor}30`
-                        : `0 4px 15px -3px ${colors.primary}10`,
-                      ringColor: isActive ? sectionColor : 'transparent'
+                        : `0 4px 15px -3px ${colors.primary}10`
                     }}
                   >
                     {/* Paper texture for vintage effect */}

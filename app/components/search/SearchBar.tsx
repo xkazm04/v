@@ -60,7 +60,6 @@ export function SearchBar({
     handleClear,
     handleResultClick,
     handleFocus,
-    handleBlur
   } = useSearchState({
     autoFocus,
     onResultSelect,
@@ -95,7 +94,6 @@ export function SearchBar({
           value={query}
           onChange={handleInputChange}
           onFocus={handleFocus}
-          onBlur={handleBlur}
           className={cn(
             "transition-all z-10 duration-200 relative", 
             showIcon ? "pl-10" : "pl-4",

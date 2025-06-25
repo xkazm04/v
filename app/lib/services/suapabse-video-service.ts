@@ -205,6 +205,9 @@ class SupabaseVideoService {
 
   async healthCheck(): Promise<boolean> {
     try {
+      if (!supabaseAdmin) {
+        return false;
+      }
       const { data, error } = await supabaseAdmin
         .from('videos')
         .select('id')
