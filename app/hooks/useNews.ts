@@ -5,6 +5,7 @@ import { useApiWithPreferences } from './use-api-with-preferences';
 import { useUserPreferences } from './use-user-preferences';
 import { useReadArticlesStore } from '@/app/stores/useReadArticlesStore';
 import { useFilterStore } from '@/app/stores/filterStore'; 
+import { useTranslationStore } from '@/app/stores/useTranslationStore';
 import { ResearchResult } from '@/app/types/article';
 
 export interface UseNewsFilters {
@@ -31,7 +32,6 @@ interface UseNewsWithExchangeReturn {
   hasMoreArticles: boolean;
 }
 
-// ✅ Extracted filter creation logic
 function createNewsFilters(
   filters: UseNewsFilters,
   storeFilters: any,
@@ -80,6 +80,8 @@ export function useNewsWithExchange(filters: UseNewsFilters = {}): UseNewsWithEx
     needsTranslation
   } = useApiWithPreferences();
 
+  const { startTranslation, completeTranslation, failTranslation } = useTranslationStore();
+
   const stableFilters = useMemo(() => {
     const storeFilters = getNewsFilters();
     const excludeIds = getExcludeIds();
@@ -99,14 +101,26 @@ export function useNewsWithExchange(filters: UseNewsFilters = {}): UseNewsWithEx
     translationTarget
   ]);
 
-  // ✅ Extracted fetch logic
   const fetchNews = useCallback(async () => {
+    let translationTaskId: string | null = null;
+    
     try {
       setLoading(true);
       setError(null);
       
       const apiUrl = createUrlWithPreferences('/api/news', stableFilters, { includeTheme: false });
       
+      // ✅ Start translation task if translation is needed
+      if (needsTranslation && translationTarget) {
+        translationTaskId = startTranslation({
+          text: `Loading ${stableFilters.limit || 10} news articles...`,
+          sourceLocale: 'en',
+          targetLocale: translationTarget,
+          context: 'news'
+        });
+        console.log(`🌐 Started translation task for news fetch: ${translationTaskId}`);
+      }
+
       const response = await fetchWithPreferences(apiUrl, {
         cache: 'no-store'
       });
@@ -133,15 +147,38 @@ export function useNewsWithExchange(filters: UseNewsFilters = {}): UseNewsWithEx
         setDataSource('unknown');
       }
 
+      // ✅ Complete translation task if it was started
+      if (translationTaskId) {
+        const wasTranslated = data.__meta?.userPreferences?.translationEnabled || false;
+        completeTranslation(translationTaskId, !wasTranslated); // cached = not translated
+        console.log(`✅ Completed translation task: ${translationTaskId} (translated: ${wasTranslated})`);
+      }
+
     } catch (err) {
       console.error('❌ Failed to fetch news:', err);
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
       setArticles([]);
       setDataSource('error');
+      
+      // ✅ Fail translation task if it was started
+      if (translationTaskId) {
+        failTranslation(translationTaskId, err instanceof Error ? err.message : 'Unknown error');
+        console.log(`❌ Failed translation task: ${translationTaskId}`);
+      }
+      
     } finally {
       setLoading(false);
     }
-  }, [stableFilters, fetchWithPreferences, createUrlWithPreferences, translationTarget, needsTranslation]);
+  }, [
+    stableFilters, 
+    fetchWithPreferences, 
+    createUrlWithPreferences, 
+    translationTarget, 
+    needsTranslation,
+    startTranslation,      
+    completeTranslation,   
+    failTranslation   
+  ]);
 
   // Replace read article with a new one
   const replaceReadArticle = useCallback(async (articleId: string) => {

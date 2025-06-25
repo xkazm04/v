@@ -139,3 +139,21 @@ export interface PredefinedTweet {
   reply_count: number;
   category?: string;
 }
+
+export interface Daily {
+  id: string;
+  text: string;
+  verdict: string;
+  status: 'TRUE' | 'FALSE' | 'MISLEADING' | 'UNVERIFIED';
+  impact_score: number;
+  date: string;
+  dateDisplay: string;
+  speaker: string;
+  speakerTitle: string;
+  source: string;
+  reach: string;
+  venue: string;
+  referenceUrl: string;
+  impactDescription: string;
+  tags: string[];
+};

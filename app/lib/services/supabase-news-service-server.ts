@@ -194,20 +194,20 @@ class SupabaseNewsServiceServer {
     }
   }
 
-  /**
-   * ✅ NEW: Get count of articles matching filters (for pagination and stats)
-   */
+
   async getNewsCount(filters: Omit<SupabaseNewsFilters, 'limit' | 'offset' | 'sort_by' | 'sort_order'> = {}): Promise<number> {
     try {
       if (!supabaseAdmin) {
         throw new Error('Supabase admin client is not available');
       }
 
+      console.log('📊 Getting news count with filters:', filters);
+
       let query = supabaseAdmin
         .from('research_results')
         .select('id', { count: 'exact', head: true });
 
-      // Apply same filters as getNews (except pagination)
+      // Apply same filters as getNews (except pagination and sorting)
       if (filters.excludeIds && filters.excludeIds.length > 0) {
         query = query.not('id', 'in', `(${filters.excludeIds.map(id => `"${id}"`).join(',')})`);
       }
@@ -225,6 +225,7 @@ class SupabaseNewsServiceServer {
       }
 
       if (filters.country) {
+        console.log(`🌍 Filtering count by country: ${filters.country}`);
         query = query.eq('country', filters.country);
       }
 
@@ -239,9 +240,11 @@ class SupabaseNewsServiceServer {
       const { count, error } = await query;
 
       if (error) {
-        throw new Error(`Supabase count query failed: ${error.message}`);
+        console.error('Supabase count query error:', error);
+        throw error;
       }
 
+      console.log(`📈 Count result for filters:`, { filters, count });
       return count || 0;
     } catch (error) {
       console.error('Error getting news count:', error);

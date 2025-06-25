@@ -1,0 +1,602 @@
+{
+    "id": "iraq-war-2003-2011-cs",
+    "title": "Irácká válka 2003-2011",
+    "timeSpan": "Březen 2003 - Prosinec 2011",
+    "conclusion": "Irácká válka vyvěrala z bezpečnostních obav po 11. září a falešných zpravodajských informací o zbraních hromadného ničení, vedoucích ke změně režimu, ale uvolnila sektářské násilí, povstání a masivní rekonstrukční kontrakty, které primárně prospěly spojeným korporacím. Konflikt odhalil limity vojenské intervence v dosahování politické transformace při generování enormních zisků pro obranné dodavatele a devastujících nákladů pro iráčtí civilisty a americké vojáky.",
+    "consequences": "",
+    "leftSide": "Spojené státy a koaliční síly",
+    "rightSide": "Irácká vláda a povstalci",
+    "milestones": [
+        {
+            "id": "wmd-claims-invasion-planning-cs",
+            "date": "2002-09-01",
+            "title": "Tvrzení o ZHN a plánování invaze",
+            "context": "Po 11. září Bushova administrativa spojila Irák s terorismem navzdory absenci věrohodných důkazů, používající údajné zbraně hromadného ničení jako primární ospravedlnění války. Zpravodajské služby vyprodukovaly chybná hodnocení, zatímco politický tlak narůstal pro změnu režimu, kulminující v prezentaci v OSN a schválení Kongresu.",
+            "order": 1,
+            "consequence": "Kongres autorizoval použití síly na základě falešných předpokladů, připravujících půdu pro invazi, která měla trvat téměř devět let a stát stovky tisíc životů.",
+            "key_persons": [
+                {
+                    "name": "George W. Bush",
+                    "role": "prezident"
+                },
+                {
+                    "name": "Dick Cheney",
+                    "role": "viceprezident, bývalý CEO Halliburton"
+                },
+                {
+                    "name": "Colin Powell",
+                    "role": "ministr zahraničí"
+                },
+                {
+                    "name": "Donald Rumsfeld",
+                    "role": "ministr obrany"
+                },
+                {
+                    "name": "Saddam Hussein",
+                    "role": "irácký prezident"
+                }
+            ],
+            "events": [
+                {
+                    "id": "bush-admin-links-iraq-911",
+                    "milestone_id": "wmd-claims-invasion-planning",
+                    "title": "Bushova administrativa falešně spojuje Irák s Al-Kajdou po 11. září",
+                    "left_type": "psychic",
+                    "right_type": "president",
+                    "left_opinion": "Bushova administrativa využila amerického traumatu po 11. září záměrným slučováním Iráku s terorismem, používající opakované sdělování a selektivní zpravodajské briefingy k vytvoření falešných asociací ve veřejném vědomí. Během hodin po 11. září již ministr obrany Rumsfeld nasměroval personál k hledání způsobů 'zasáhnout SH [Saddáma Husajna] současně - nejen UBL [Usámu bin Ládina].' Tato kampaň psychologické manipulace ignorovala zpravodajství ukazující absenci věrohodného spojení Irák-Al-Kajda.",
+                    "right_opinion": "Saddámův režim čelil nemožným volbám, protože USA malovaly Irák jako sponzora terorismu navzdory vědomí, že to bylo falešné. Irácké vedení pokusilo o několik diplomatických iniciativ, včetně nabídky umožnit 2 000 agentům FBI prohledat ZHN a poskytování ropných koncesí, ale tyto mírové nabídky byly ignorovány, protože Bushova administrativa již rozhodla o změně režimu z širších strategických důvodů na Blízkém východě.",
+                    "left_source_url": "https://www.britannica.com/event/Iraq-War",
+                    "right_source_url": "https://en.wikipedia.org/wiki/2003_invasion_of_Iraq",
+                    "all_opinions": [
+                        {
+                            "id": "iraq-911-nerd-1",
+                            "event_id": "bush-admin-links-iraq-911",
+                            "opinion": "Útoky 11. září poskytly vhodné politické krytí pro předem stanovené plány expanze vojensko-průmyslového komplexu. Obranné výdaje klesly po studené válce, ale spojení Iráku s terorismem ospravedlnilo masivní nárůsty vojenských kontraktů a rekonstrukčních výdajů, přičemž společnosti jako Halliburton byly již pozicovány k profitování ze svých vládních spojení.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "iraq-911-joe-1",
+                            "event_id": "bush-admin-links-iraq-911",
+                            "opinion": "Běžným Američanům bylo řečeno, že Irák představuje bezprostřední hrozbu pro vnitřní bezpečnost, ale zpravodajské služby věděly, že to bylo falešné. Veřejnost byla manipulována prostřednictvím sdělování založeného na strachu, zatímco úředníci soukromě přiznávali, že neexistují věrohodné důkazy spolupráce Irák-Al-Kajda, zrazujíce veřejnou důvěru během zranitelného národního momentu.",
+                            "isLeft": true,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "iraq-911-psychic-1",
+                            "event_id": "bush-admin-links-iraq-911",
+                            "opinion": "Tvrzení administrativy porušila principy mezinárodního práva vyžadující skutečné ospravedlnění sebeobrany pro preventivní válku. Zpravodajství bylo vybíráno a zkresľováno k výrobě právních záminek, zatímco inspektoři OSN pro zbraně nenacházeli žádné důkazy programů ZHN, které údajně ospravedlňovaly naléhavou vojenskou akci.",
+                            "isLeft": true,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "iraq-911-dredd-1",
+                            "event_id": "bush-admin-links-iraq-911",
+                            "opinion": "Tvrzení administrativy porušila principy mezinárodního práva vyžadující skutečné ospravedlnění sebeobrany pro preventivní válku. Zpravodajství bylo vybíráno a zkresľováno k výrobě právních záminek, zatímco inspektoři OSN pro zbraně nenacházeli žádné důkazy programů ZHN, které údajně ospravedlňovaly naléhavou vojenskou akci.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "iraq-911-president-1",
+                            "event_id": "bush-admin-links-iraq-911",
+                            "opinion": "Diplomatické iniciativy irácké vlády byly odmítnuty, protože USA měly širší strategické cíle včetně regionální transformace, demonstrace americké síly a ustanovení trvalé vojenské přítomnosti na Blízkém východě. Irák se stal cílem příležitosti spíše než nutnosti v širší strategii války proti terorismu.",
+                            "isLeft": false,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "iraq-911-conspirator-1",
+                            "event_id": "bush-admin-links-iraq-911",
+                            "opinion": "Rychlý obrat z Afghánistánu k Iráku naznačuje pre-existující plány změny režimu aktivované příležitostí 11. září. Klíčoví architekti jako Cheney, Rumsfeld a Wolfowitz obhajovali invazi do Iráku od 90. let, používajíce teroristické útoky k implementaci dlouho držených neokonzervativních strategií transformace Blízkého východu.",
+                            "isLeft": true,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                },
+                {
+                    "id": "powell-un-wmd-presentation",
+                    "milestone_id": "wmd-claims-invasion-planning",
+                    "title": "Colin Powell představil falešné důkazy o ZHN Radě bezpečnosti OSN",
+                    "left_type": "dredd",
+                    "right_type": "joe",
+                    "left_opinion": "Powellova prezentace v OSN z února 2003 porušila mezinárodní právní standardy prezentováním zpravodajství jako faktů, když služby soukromě přiznávaly vážná omezení a rozpory ve svých hodnoceních. Dvě desetiletí později pokračuje debata o tom, zda byla administrativa obětí chybného zpravodajství, nebo zda Bush a jeho seniorní poradci záměrně oklamali veřejnost o schopnostech ZHN. Prezentace vytvořila falešné právní ospravedlnění války.",
+                    "right_opinion": "Iráčtí úředníci zoufale se snažili demonstrovat dodržování inspekcí OSN, umožňujíce neomezený přístup k podezřelým místům, zatímco inspektoři zbraní nenacházeli žádné důkazy aktivních programů ZHN. Irácká vláda byla chycena mezi nemožnými požadavky dokázat negativ při čelení nevyhnutelné invazi bez ohledu na úsilí o dodržování.",
+                    "left_source_url": "https://www.pewresearch.org/politics/2023/03/14/a-look-back-at-how-fear-and-false-beliefs-bolstered-u-s-public-support-for-war-in-iraq/",
+                    "right_source_url": "https://en.wikipedia.org/wiki/Iraq_War",
+                    "all_opinions": [
+                        {
+                            "id": "powell-un-nerd-1",
+                            "event_id": "powell-un-wmd-presentation",
+                            "opinion": "Načasování Powellovy prezentace se shodovalo s masivními předválečnými přípravami kontraktů. V listopadu 2002 pověřil Armádní ženijní sbor KBR vyvinout pohotovostní plán pro hasení požárů ropných vrtů v Iráku měsíce před prezentací v OSN, naznačujíce, že finanční opatření předcházela právním ospravedlněním.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "powell-un-joe-1",
+                            "event_id": "powell-un-wmd-presentation",
+                            "opinion": "Iráčtí civilisté neměli kontrolu nad údajnými programy ZHN své vlády a čelili vyhlídce devastující války na základě důkazů, které nemohli ověřit. Mnoho Iráčanů vědělo, že jejich země byla oslabena lety sankcí a nemohla představovat hrozby tvrzené americkými úředníky.",
+                            "isLeft": false,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "powell-un-psychic-1",
+                            "event_id": "powell-un-wmd-presentation",
+                            "opinion": "Prezentace používala sofistikované vizuální pomůcky a autoritativní přednesení k výrobě důvěryhodnosti pro pochybné zpravodajství. Powellova pověst 'umírněného' z něj učinila ideálního posla pro prodej pochybných důkazů, využívajíce veřejnou důvěru v jeho vojenské pověření k legitimizaci předem stanovených politických rozhodnutí.",
+                            "isLeft": true,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "powell-un-dredd-1",
+                            "event_id": "powell-un-wmd-presentation",
+                            "opinion": "Prezentace porušila principy řádného procesu prezentováním neověřeného zpravodajství jako ustanovených faktů, zatímco právní práva Iráku pod mezinárodním právem byla ignorována. Spěch k soudu obešel správné právní postupy pro autorizaci použití síly proti svrchovanému národu.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "powell-un-president-1",
+                            "event_id": "powell-un-wmd-presentation",
+                            "opinion": "Prezentace v OSN sloužila k diplomatické izolaci Iráku při udržování fasády multilaterální konzultace. I když hlavní spojenci jako Francie a Německo se postavili proti válce, prezentace vytvořila tlak na mezinárodní podporu při přípravě ospravedlnění pro unilaterální akci, pokud diplomacie selže.",
+                            "isLeft": true,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "powell-un-conspirator-1",
+                            "event_id": "powell-un-wmd-presentation",
+                            "opinion": "Powell později nazval svou prezentaci v OSN 'skvrnou' na svém záznamu, naznačujíce vědomí, že zpravodajství bylo manipulováno. Prezentace následovala známé vzorce výroby souhlasu prostřednictvím autoritativní prezentace selektivních důkazů, podobné Gulf of Tonkin a dalším historickým precedentům pro kontroverzní vojenské intervence.",
+                            "isLeft": true,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                },
+                {
+                    "id": "congressional-war-authorization",
+                    "milestone_id": "wmd-claims-invasion-planning",
+                    "title": "Kongres autorizoval iráckou válku na základě falešného zpravodajství o ZHN",
+                    "left_type": "nerd",
+                    "right_type": "dredd",
+                    "left_opinion": "Kongres autorizoval potenciálně neomezené vojenské výdaje bez správné analýzy nákladů a přínosů, připravujíce půdu pro masivní zisky dodavatelů. Více než 70 amerických společností a jednotlivců vyhralo až $8 miliard v kontraktech za práci v poválečném Iráku a Afghánistánu. Autorizace umožnila zisky vojensko-průmyslového komplexu na bianko šek bez adekvátních dozorových mechanismů.",
+                    "right_opinion": "Irácké vedení čelilo nemožné právní situaci, kde dodržování rezolucí OSN nemohlo zabránit invazi, protože USA již rozhodly o změně režimu. Kongresní autorizace porušila mezinárodní právo schválením agresivní války založené na vymyšlených důkazech, zatímco irácké nabídky úplného dodržování byly ignorovány.",
+                    "left_source_url": "https://www.icij.org/investigations/windfalls-war/us-contractors-reap-windfalls-post-war-reconstruction-0/",
+                    "right_source_url": "https://en.wikipedia.org/wiki/Iraq_War",
+                    "all_opinions": [
+                        {
+                            "id": "congress-auth-nerd-1",
+                            "event_id": "congressional-war-authorization",
+                            "opinion": "Autorizační proces se odehrál bez správné analýzy dlouhodobých finančních nákladů nebo mechanismů dohledu nad dodavateli. Lobbisté obranného průmyslu měli bezprecedentní přístup k kongresním rozhodovatelům, zatímco nákladové projekce byly záměrně podhodnoceny pro usnadnění přijetí.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "congress-auth-joe-1",
+                            "event_id": "congressional-war-authorization",
+                            "opinion": "Američtí voliči podporovali válku na základě falešných informací o bezprostředních hrozbách, s většinami mezi 55% a 68% podporujícími vojenskou akci k ukončení Husajnovy vlády v Iráku. Veřejnost byla zrazena vůdci, kteří věděli, že tvrzení o ZHN nebyla podpořena solidními důkazy.",
+                            "isLeft": true,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "congress-auth-psychic-1",
+                            "event_id": "congressional-war-authorization",
+                            "opinion": "Autorizační proces používal vyrobenou naléhavost a sdělování založené na strachu k urychlení Kongresu ke schválení války bez adekvátní deliberace. Zpravodajství bylo selektivně prezentováno zákonodárcům, zatímco protikladná hodnocení byla potlačena, manipulujíce demokratické procesy prostřednictvím kontroly informací.",
+                            "isLeft": true,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "congress-auth-dredd-1",
+                            "event_id": "congressional-war-authorization",
+                            "opinion": "Autorizace porušila ústavní principy vyžadující kongresní prohlášení války a správnou deliberaci založenou na přesných informacích. Proces obešel kontroly a rovnováhy navržené k zabránění výkonné moci v iniciování nepotřebných konfliktů.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "congress-auth-president-1",
+                            "event_id": "congressional-war-authorization",
+                            "opinion": "Kongresní autorizace poskytla domácí politickou legitimitu pro válku již naplánovanou z širších strategických důvodů včetně regionální transformace, kontroly ropy a demonstrace americké vojenské dominance po 11. září. Právní formality maskovovaly předem stanovené geopolitické cíle.",
+                            "isLeft": true,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "congress-auth-conspirator-1",
+                            "event_id": "congressional-war-authorization",
+                            "opinion": "Autorizace následovala vzorce manipulace výkonné moci během krizí národní bezpečnosti, s Kongresem v podstatě razítkujícím předem stanovenou vojenskou akci. Proces odhalil systémové selhání v dozoru a oddělení mocí, když zpravodajské služby a vojenští dodavatelé mají sladěné zájmy.",
+                            "isLeft": true,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "invasion-regime-collapse",
+            "date": "2003-03-20",
+            "title": "Invaze a kolaps režimu",
+            "context": "Koalice vedená USA zahájila masivní vzdušný a pozemní útok 20. března 2003, přemáhající irácké vojenské síly a zaujímající Bagdád během týdnů. Navzdory rychlému vojenskému vítězství se plánování po invazi ukázalo jako katastrofálně nedostatečné, vedoucí k rozšířenému drancování, kolapsu infrastruktury a rozpuštění iráčkých bezpečnostních sil.",
+            "order": 2,
+            "consequence": "Kolaps režimu vytvořil mocenské vakuum, které podpořilo povstání a sektářské násilí, zatímco ukvapené politiky de-baasifikace odcizily stovky tisíc bývalých vládních a vojenských pracovníků, kteří se později připojili k odporovým hnutím.",
+            "key_persons": [
+                {
+                    "name": "George W. Bush",
+                    "role": "prezident"
+                },
+                {
+                    "name": "Tommy Franks",
+                    "role": "velitel koaličních sil"
+                },
+                {
+                    "name": "Saddam Hussein",
+                    "role": "svržený irácký prezident"
+                },
+                {
+                    "name": "Jay Garner",
+                    "role": "počáteční vedoucí rekonstrukce"
+                },
+                {
+                    "name": "Paul Bremer",
+                    "role": "vedoucí koaliční provizorní autority"
+                }
+            ],
+            "events": [
+                {
+                    "id": "shock-awe-bombing",
+                    "milestone_id": "invasion-regime-collapse",
+                    "title": "Koaliční síly zahájily vzdušný útok 'Šok a úžas' na Irák",
+                    "left_type": "president",
+                    "right_type": "joe",
+                    "left_opinion": "Strategie 'Šok a úžas' měla za cíl demonstrovat ohromující americkou vojenskou převahu k odstrašení budoucích výzev od regionálních mocností jako Íránu a Sýrie. Válka začala 20. března 2003, když USA, připojené Velkou Británií, Austrálií a Polskem, iniciovala bombardovací kampaň 'šok a úžas'. Masivní předvedení síly sloužilo širšímu strategickému sdělování nad rámec pouhého svržení Saddáma.",
+                    "right_opinion": "Iráčtí civilisté nesli hlavní tíhu bombardovací kampaně, zatímco neměli kontrolu nad politikami své vlády nebo schopnost ovlivnit konflikt. Ohromující vojenský útok traumatizoval populaci a zničil kritickou infrastrukturu, na které běžní Iráčané záviseli pro základní služby, elektřinu a bezpečnost.",
+                    "left_source_url": "https://en.wikipedia.org/wiki/Iraq_War",
+                    "right_source_url": "https://apnews.com/article/iraq-invasion-war-timeline-saddam-hussein-50828061c98e410063753045179bdcfb",
+                    "all_opinions": [
+                        {
+                            "id": "shock-awe-nerd-1",
+                            "event_id": "shock-awe-bombing",
+                            "opinion": "Bombardovací kampaň předvedla drahé přesné zbraně, které generovaly masivní zisky pro obranné dodavatele při vytváření poptávky po rekonstrukčních kontraktech v hodnotě miliard. Každá křižníková střela stála přibližně $1 milion, demonstrujíce, jak moderní válčení konvertuje daňové dolary na korporátní zisky prostřednictvím destrukce následované přestavbou.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "shock-awe-joe-1",
+                            "event_id": "shock-awe-bombing",
+                            "opinion": "Irácké rodiny se krčily ve svých domovech, zatímco americké bomby ničily vládní budovy, vojenské instalace a infrastrukturu kolem nich. Děti zažívaly trauma, které mělo trvat roky, zatímco rodiče se snažili chránit své rodiny před násilím, které nemohli kontrolovat nebo mu uniknout.",
+                            "isLeft": false,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "shock-awe-psychic-1",
+                            "event_id": "shock-awe-bombing",
+                            "opinion": "Terminologie 'Šok a úžas' byla specificky zvolena pro svůj psychologický dopad na globální publikum, navržená k projektování americké vojenské dominance při zastrašování dalších potenciálních protivníků. Mediální spektákl sloužil propagandistickým účelům nad rámec vojenské nutnosti, vytvářející přesvědčivé televizní pokrytí ovlivňující veřejné mínění po celém světě.",
+                            "isLeft": true,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "shock-awe-dredd-1",
+                            "event_id": "shock-awe-bombing",
+                            "opinion": "Preventivní bombardování porušilo principy mezinárodního práva vyžadující ospravedlnění bezprostřední sebeobrany, protože Irák nepředstavoval bezprostřední hrozbu pro koaliční země. Masivní destrukce civilní infrastruktury překročila požadavky vojenské nutnosti a představovala kolektivní trest iráčtí populaci za akce jejich vlády.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "shock-awe-president-1",
+                            "event_id": "shock-awe-bombing",
+                            "opinion": "Ohromující síla koalice demonstrovala americké vojenské schopnosti regionálním mocnostem při minimalizaci amerických ztrát prostřednictvím technologické převahy. Nicméně destrukce irácké státní kapacity vytvořila dlouhodobé výzvy stability, které vojenští plánovači podhodnotili.",
+                            "isLeft": true,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "shock-awe-conspirator-1",
+                            "event_id": "shock-awe-bombing",
+                            "opinion": "Bombardovací kampaň následovala známou americkou vojenskou doktrínu používání ohromující síly k minimalizaci amerických ztrát při maximalizaci psychologického dopadu. Strategie odrážela post-vietnamské lekce o udržování domácí podpory prostřednictvím rychlé, rozhodující akce spíše než prolongovaných pozemních bojů, které by mohly generovat protiválečné nálady.",
+                            "isLeft": true,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                },
+                {
+                    "id": "baghdad-fall-statue-toppling",
+                    "milestone_id": "invasion-regime-collapse",
+                    "title": "Koaliční síly zaujaly Bagdád, když se Saddámova vláda zhroutila",
+                    "left_type": "psychic",
+                    "right_type": "conspirator",
+                    "left_opinion": "Ikonická scéna bourání sochy byla zinscenována pro maximální propagandistický dopad, s iráčtí civilisty a americkými vojáky strhávajícími sochu Saddáma na bagdádském náměstí Firdos. Pečlivě organizovaná mediální událost vytvořila mocné symbolické obrazy osvobození, zatímco širší město zažívalo chaos, drancování a rozklad infrastruktury, který dostal méně pokrytí.",
+                    "right_opinion": "Rychlý kolaps režimu odhalil křehkost autoritářských systémů, ale také odhalil nedostatek vážného poválečného plánování koalice. Iráčtí vojenští a vládní úředníci utekli nebo změnili strany, naznačujíce, že mnozí již ztratili víru v Saddámovo vedení, ale zanechávajíce nebezpečné mocenské vakuum bez legitimních nástupnických institucí.",
+                    "left_source_url": "https://www.pbs.org/newshour/world/a-timeline-of-the-iraq-war",
+                    "right_source_url": "https://totalmilitaryinsight.com/iraq-war-timeline/",
+                    "all_opinions": [
+                        {
+                            "id": "baghdad-fall-nerd-1",
+                            "event_id": "baghdad-fall-statue-toppling",
+                            "opinion": "Pád Bagdádu otevřel iráckou ekonomiku zahraniční exploataci při ničení existujících institucí, které by mohly regulovat rekonstrukční kontrakty. Kolaps umožnil výhodné podmínky pro americké korporace při eliminaci iráčtích konkurentů a dozorových mechanismů, které by mohly chránit národní zdroje.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "baghdad-fall-joe-1",
+                            "event_id": "baghdad-fall-statue-toppling",
+                            "opinion": "Iráčtí civilisté zažívali změnu režimu jako osvobození od diktatury, ale také jako devastující ztrátu základní bezpečnosti, služeb a pořádku. Zatímco mnozí vítali Saddámovo odstranění, bezprostřední následky přinesly bezpráví, drancování a nejistotu o budoucnosti, která ovlivnila denní přežití každé rodiny.",
+                            "isLeft": false,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "baghdad-fall-psychic-1",
+                            "event_id": "baghdad-fall-statue-toppling",
+                            "opinion": "Bourání sochy bylo pečlivě zorganizováno pro globální mediální spotřebu, s úhly kamery a řízením davu navrženými k naznačení spontánní oslavy. Událost se stala ikonickým obrazem 'mise splněna', zatímco maskovala chaos a odpor probíhající v celém zbytku města.",
+                            "isLeft": true,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "baghdad-fall-dredd-1",
+                            "event_id": "baghdad-fall-statue-toppling",
+                            "opinion": "Kolaps režimu vytvořil právní chaos, když existující zákony, soudy a administrativní systémy přestaly fungovat bez adekvátních náhradních institucí. Koaliční síly převzaly odpovědnosti okupační moci pod mezinárodním právem, ale ukázaly se nepřipravené na povinnosti vládnutí v komplexní společnosti s hlubokými sektářskými rozděleními.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "baghdad-fall-president-1",
+                            "event_id": "baghdad-fall-statue-toppling",
+                            "opinion": "Zajetí Bagdádu dosáhlo primárního vojenského cíle, ale odhalilo fundamentální nepochopení komplexity irácké společnosti. Rychlý kolaps režimu překvapil i koaliční plánovače, kteří se připravovali na prolongované městské válčení, ale ne na řízení fragmentované společnosti s konkurujícími etnickými a náboženskými frakcemi.",
+                            "isLeft": true,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "baghdad-fall-conspirator-1",
+                            "event_id": "baghdad-fall-statue-toppling",
+                            "opinion": "Kolaps režimu následoval vzorce autoritářských systémů, kde zdánlivá síla maskuje vnitřní slabost a lidovou nespokojenost. Nicméně nedostatek připravených nástupnických institucí naznačuje, že koalice upřednostňovala vojenské vítězství před dlouhodobou stabilitou, možná naznačujíce krátkodobé myšlení nebo záměrnou destabilizační strategii.",
+                            "isLeft": true,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                },
+                {
+                    "id": "mission-accomplished-declaration",
+                    "milestone_id": "invasion-regime-collapse",
+                    "title": "Bush prohlásil konec hlavních bojových operací z letadlové lodi",
+                    "left_type": "joe",
+                    "right_type": "dredd",
+                    "left_opinion": "Bushův projev 'Mise splněna' z roku 2003 byl později uznán jako chyba samotným Bushem. Předčasné prohlášení vítězství klamalo americké rodiny o nebezpečích, kterým budou jejich blízcí nadále čelit, podkopávajíce veřejnou důvěru, když povstání prokázalo, že válka byla daleko od konce.",
+                    "right_opinion": "Prohlášení porušilo mezinárodněprávní povinnosti okupačních mocností tím, že naznačovalo, že vojenské cíle byly dokončeny, zatímco se nepodařilo ustanovit legitimní vládnutí nebo bezpečnost pro iráčtí civilisty. Okupační síly zůstaly právně odpovědné za udržení pořádku a ochranu populace navzdory politickému divadlu.",
+                    "left_source_url": "https://www.pewresearch.org/politics/2023/03/14/a-look-back-at-how-fear-and-false-beliefs-bolstered-u-s-public-support-for-war-in-iraq/",
+                    "right_source_url": "https://en.wikipedia.org/wiki/Iraq_War",
+                    "all_opinions": [
+                        {
+                            "id": "mission-accomplished-nerd-1",
+                            "event_id": "mission-accomplished-declaration",
+                            "opinion": "Prohlášení 'Mise splněna' se odehrálo právě když byly udělovány nejlukrativnější rekonstrukční kontrakty, naznačujíce politické divadlo k odvedení pozornosti od masivních výdajových závazků. Krátce po pádu Bagdádu v roce 2003 byly uděleny obrovské kontrakty několika americkým společnostem, některé bez soutěže, jako kontrakt za $1,4 miliardy předaný společnosti Halliburton na přestavbu irácké ropné industrie.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "mission-accomplished-joe-1",
+                            "event_id": "mission-accomplished-declaration",
+                            "opinion": "Americké vojenské rodiny věřily, že jejich blízcí se brzy vrátí domů, na základě prezidentova prohlášení, že hlavní boje skončily. Falešná naděje vytvořila dodatečné trauma, když nasazení pokračovala a oběti narůstaly během následující fáze povstání.",
+                            "isLeft": true,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "mission-accomplished-psychic-1",
+                            "event_id": "mission-accomplished-declaration",
+                            "opinion": "Inscenace letadlové lodi a transparent 'Mise splněna' vytvořily mocnou vizuální propagandu pro domácí spotřebu, navržené k posílení Bushova ratingu a projektování úspěšného vojenského vedení. Propracované produkční hodnoty odhalily prioritu administrativy na řízení veřejného vnímání spíše než iráčtích realit.",
+                            "isLeft": true,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "mission-accomplished-dredd-1",
+                            "event_id": "mission-accomplished-declaration",
+                            "opinion": "Předčasné prohlášení porušilo povinnosti okupační moci pod mezinárodním humanitárním právem udržovat bezpečnost a ustanovit fungující vládnutí. Divadelní oznámení upřednostnilo domácí politiku před právními odpovědnostmi vůči iráčtí civilní populaci.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "mission-accomplished-president-1",
+                            "event_id": "mission-accomplished-declaration",
+                            "opinion": "Prohlášení sloužilo k nárokování vítězství pro širší strategické cíle demonstrace americké vojenské dominance na Blízkém východě při přípravě na přesun pozornosti k dalším regionálním cílům jako Íránu a Sýrii. Předčasné nároky vítězství umožnily přesun pozornosti mimo Irák před tím, než vyvstaly komplikace povstání.",
+                            "isLeft": true,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "mission-accomplished-conspirator-1",
+                            "event_id": "mission-accomplished-declaration",
+                            "opinion": "Načasování se shodovalo s vrcholnou veřejnou podporou před tím, než se skutečné náklady a následky staly zřejmými, následujíce historické vzorce prohlašování vítězství během 'líbánek' vojenských intervencí. Prohlášení mělo za cíl zajistit politické zisky před tím, než nevyhnutelné komplikace podkopaly veřejné schválení.",
+                            "isLeft": true,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "insurgency-sectarian-violence",
+            "date": "2004-04-01",
+            "title": "Povstání a sektářské násilí",
+            "context": "Odhalení zneužívání vězňů ve věznici Abu Ghraib v dubnu 2004 poškodilo americkou důvěryhodnost, zatímco Irák sestoupil do krutého sektářského válčení. Bombardování mešity Samarra v roce 2006 spustilo rozšířené sunitsko-šíitské násilí, vytvářející kampaně etnického čištění, které zabily stovky tisíc a vysídlily miliony Iráčanů.",
+            "order": 3,
+            "consequence": "Sektářské krveprolití diskreditovalo okupaci a iráckou vládu při demonstraci selhání amerických úsilí o budování národa, nakonec nutícím změnu strategie s nárůstem vojsk v roce 2007 a sunitskými hnutími probuzení.",
+            "key_persons": [
+                {
+                    "name": "Abu Musab al-Zarqawi",
+                    "role": "vůdce Al-Kajdy v Iráku"
+                },
+                {
+                    "name": "Nouri al-Maliki",
+                    "role": "irácký premiér"
+                },
+                {
+                    "name": "Muqtada al-Sadr",
+                    "role": "šíitský klerik a vůdce milicí"
+                },
+                {
+                    "name": "Donald Rumsfeld",
+                    "role": "ministr obrany"
+                },
+                {
+                    "name": "David Petraeus",
+                    "role": "vojenský velitel"
+                }
+            ],
+            "events": [
+                {
+                    "id": "abu-ghraib-scandal",
+                    "milestone_id": "insurgency-sectarian-violence",
+                    "title": "Fotografie odhalily systematické mučení a zneužívání ve věznici Abu Ghraib",
+                    "left_type": "dredd",
+                    "right_type": "joe",
+                    "left_opinion": "Administrativa George W. Bushe prohlásila, že zneužívání v Abu Ghraib byly izolované incidenty a nebyly ukazatelem americké politiky. To bylo zpochybněno humanitárními organizacemi včetně Červeného kříže, Amnesty International a Human Rights Watch. Systematická povaha zneužívání odhalila politická selhání na nejvyšších úrovních velení a porušila Ženevské konvence.",
+                    "right_opinion": "Talib al-Majli věří, že je jedním z mužů na fotografii lidské pyramidy. Pamatuje si, jak byl nucen ležet nahý na holé kůži jiného vězně. Iráčtí zadržení, mnozí drženi bez obvinění, utrpěli devastující psychologické trauma, které nadále ovlivňuje jejich životy o desetiletí později, s rodinami žijícími v hanbě a chudobě bez kompenzace nebo omluv.",
+                    "left_source_url": "https://en.wikipedia.org/wiki/Abu_Ghraib_torture_and_prisoner_abuse",
+                    "right_source_url": "https://www.npr.org/2023/04/11/1167341565/us-iraq-war-abu-ghraib-survivor",
+                    "all_opinions": [
+                        {
+                            "id": "abu-ghraib-nerd-1",
+                            "event_id": "abu-ghraib-scandal",
+                            "opinion": "Skandál zneužívání se odehrál, zatímco soukromí dodavatelé vydělávali miliardy z operací zadržování a bezpečnostních služeb, vytvářející pervertní finanční pobídky pro masové uvěznění. Důstojníci vojenského zpravodajství z koaličních sil vedených USA později řekli Mezinárodnímu výboru Červeného kříže, že mezi 70% a 90% zadržených Iráčanů bylo drženo omylem, představujíce masivní plýtvání zdroji na nesprávné zadržení.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "abu-ghraib-joe-1",
+                            "event_id": "abu-ghraib-scandal",
+                            "opinion": "Irácké rodiny objevily, že jejich příbuzní byli mučeni v americké vazbě, ničíce jakoukoliv zbývající důvěru v sliby osvobození. Obrázky ukazovaly irácké muže ponižované a zneužívané stejnými silami, které tvrdily, že přinášejí svobodu a demokracii do jejich země.",
+                            "isLeft": false,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "abu-ghraib-psychic-1",
+                            "event_id": "abu-ghraib-scandal",
+                            "opinion": "Globální šíření fotografií devastovalo americkou morální autoritu a stalo se nástroji náboru pro povstalecké skupiny při demonstraci toho, jak digitální média mohla podkopat vojenské cíle. Obrázky se staly mocnými propagandistickými nástroji pro protiamerické síly, dokazujíce, že kontrola informačních toků se stala klíčovou pro úspěch moderního válčení.",
+                            "isLeft": true,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "abu-ghraib-dredd-1",
+                            "event_id": "abu-ghraib-scandal",
+                            "opinion": "Systematické zneužívání porušilo Ženevské konvence a americké vojenské právo, zatímco tvrzení administrativy o 'izolovaných incidentech' odporovalo důkazům institucionálních selhání. Nedostatek odpovědnosti na vysoké úrovni demonstroval rozklad vojenské spravedlnosti a principů právního státu.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "abu-ghraib-president-1",
+                            "event_id": "abu-ghraib-scandal",
+                            "opinion": "Skandál podkopal úsilí o budování koalice a poskytl ospravedlnění spojencům k distancování se od amerických operací. Regionální vlády používaly Abu Ghraib ke kritice amerického záznamu lidských práv, zatímco povstalecké skupiny využívaly obrazy k náboru bojovníků a ospravedlnění útoků proti koaličním silám.",
+                            "isLeft": true,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "abu-ghraib-conspirator-1",
+                            "event_id": "abu-ghraib-scandal",
+                            "opinion": "Načasování a rozsah zneužívání naznačuje systematický výcvik dehumanizace a institucionální selhání spíše než individuální pochybení, následujíce vzorce z předchozích konfliktů, kde okupační síly rozvíjejí pohrdání místními populacemi. Skandál odhalil hlubší problémy s vojenskou kulturou a dohledem nad dodavateli v asymetrických válečných prostředích.",
+                            "isLeft": true,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                },
+                {
+                    "id": "samarra-mosque-bombing",
+                    "milestone_id": "insurgency-sectarian-violence",
+                    "title": "Al-Kajda zničila šíitskou svatyni, což vyvolalo celonárodní sektářské násilí",
+                    "left_type": "conspirator",
+                    "right_type": "president",
+                    "left_opinion": "Sunničtí muslimští extremisté zničili pozlacenou šíitskou svatyni v Samarře, uvolnivše vlny sektářského násilí v bagdádské šíitské čtvrti Sadr City, které se rozšířily po celé zemi. Bombardování dosáhlo strategického cíle Al-Kajdy spustit občanskou válku, která by učinila Irák neovladatelným, odhalujíce americkou neschopnost poskytovat základní bezpečnost a nutíce stažení.",
+                    "right_opinion": "Bombardování mešity využilo fundamentální sektářská rozdělení Iráku, která američtí plánovači podhodnotili, odhalujíce selhání koalice pochopit komplexnost irácké společnosti. Šíitské milice odpověděly pomstychtivými útoky proti sunitským civilistům, vytvářející cykly násilí, které přemohly bezpečnostní síly a podkopaly jakoukoli možnost národního smíření.",
+                    "left_source_url": "https://www.cfr.org/timeline/iraq-war",
+                    "right_source_url": "https://en.wikipedia.org/wiki/Iraq_War",
+                    "all_opinions": [
+                        {
+                            "id": "samarra-bombing-nerd-1",
+                            "event_id": "samarra-mosque-bombing",
+                            "opinion": "Sektářské násilí vytvořilo dodatečné bezpečnostní náklady, které prospěly soukromým vojenským dodavatelům při devastaci irácké ekonomiky a ropné produkce. Pojistné náklady pro rekonstrukční projekty vystřelily nahoru, když dodavatelé požadovali prémiové platby za provoz ve stále nebezpečnějších prostředích, znásobujíce příležitosti válečného profitérství.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "samarra-bombing-joe-1",
+                            "event_id": "samarra-mosque-bombing",
+                            "opinion": "Irácké rodiny byly nuceny utéci ze smíšených čtvrtí, když sektářské smrtící komanda vedla kampaně etnického čištění, s miliony se stávajícími uprchlíky ve své vlastní zemi. Děti vyrůstaly jako svědci hrůzného násilí, zatímco základní služby jako elektřina, voda a zdravotní péče se zhroutily pod chaosem občanské války.",
+                            "isLeft": false,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "samarra-bombing-psychic-1",
+                            "event_id": "samarra-mosque-bombing",
+                            "opinion": "Bombardování mešity používalo náboženskou symboliku k spuštění maximální emocionální reakce a komunitní mobilizace, demonstrujíce sofistikované porozumění iráčtím psychologickým zranitelnostem. Načasování útoku a výběr cíle ukázaly, jak teroristické skupiny mohly manipulovat sektářskými identitami k dosažení strategických politických cílů.",
+                            "isLeft": false,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "samarra-bombing-dredd-1",
+                            "event_id": "samarra-mosque-bombing",
+                            "opinion": "Sektářské násilí představovalo válečné zločiny a zločiny proti lidskosti všemi stranami, zatímco koaliční síly selhaly ve svých právních povinnostech chránit civilní populace pod mezinárodním humanitárním právem. Masové zabíjení, mučení a nucené vysídlování se odehrávalo, zatímco okupační mocnosti se ukázaly neschopné udržet základní zákon a pořádek.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "samarra-bombing-president-1",
+                            "event_id": "samarra-mosque-bombing",
+                            "opinion": "Bombardování odhalilo fundamentální chyby v americkém porozumění iráčtým sektářským dynamikám a odhalilo limity vojenské síly v prevenci náboženských konfliktů. Výsledná občanská válka hrozila destabilizací celého regionu a podkopala americké strategické cíle na Blízkém východě.",
+                            "isLeft": true,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "samarra-bombing-conspirator-1",
+                            "event_id": "samarra-mosque-bombing",
+                            "opinion": "Útok následoval záměrnou strategii Al-Kajdy provokování sektářského konfliktu k učinění Iráku neovladatelným a donucení amerického stažení. Bombardování uspělo ve spuštění občanské války, které předchozí povstalecké taktiky nedokázaly dosáhnout, demonstrujíce sofistikované porozumění iráčtým společenským lomům.",
+                            "isLeft": false,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                },
+                {
+                    "id": "peak-sectarian-violence",
+                    "milestone_id": "insurgency-sectarian-violence",
+                    "title": "Irák zažívá masivní etnické čištění a kampaně smrtících komand",
+                    "left_type": "president",
+                    "right_type": "nerd",
+                    "left_opinion": "Občanská válka odhalila fundamentální chyby v americké doktríně budování národa a odhalila limity vojenské síly v vytváření politické stability. Do roku 2007 irácký Červený půlměsíc odhadl 2,3 milionu vnitřně vysídlených Iráčanů, s odhadovanými 2 miliony Iráčanů utíkajícími do sousedních zemí, většinou do Sýrie a Jordánska. Krize vysídlení destabilizovala celý region.",
+                    "right_opinion": "Iráčtí civilisté zaplatili nejvyšší cenu za politická selhání, zatímco dodavatelé a bezpečnostní společnosti profitovali z chaosu prostřednictvím prémiových bezpečnostních kontraktů a nouzových rekonstrukčních výdajů. Násilí ospravedlnilo vyšší fakturační sazby a delší prodloužení kontraktů, vytvářející finanční pobídky udržovat spíše než řešit nestabilitu.",
+                    "left_source_url": "https://en.wikipedia.org/wiki/Iraq_War",
+                    "right_source_url": "https://www.cnn.com/2013/03/19/business/iraq-war-contractors/index.html",
+                    "all_opinions": [
+                        {
+                            "id": "peak-violence-nerd-1",
+                            "event_id": "peak-sectarian-violence",
+                            "opinion": "Bezpečnostní dodavatelé jako Blackwater vydělali miliardy z chaosu, zatímco rekonstrukční projekty stagnovaly, vytvářející pervertní pobídky, kde nestabilita generovala více zisků než mír. Násilí ospravedlnilo prémiové bezpečnostní sazby a nouzové výdaje, které znásobily příjmy dodavatelů daleko nad normální mírové operace.",
+                            "isLeft": true,
+                            "expert_type": "nerd"
+                        },
+                        {
+                            "id": "peak-violence-joe-1",
+                            "event_id": "peak-sectarian-violence",
+                            "opinion": "Obyčejní Iráčané čelili nemožným volbám mezi zůstáním ve stále nebezpečnějších čtvrtích nebo opuštěním domovů a živobytí, aby se stali uprchlíky. Rodiny byly roztrhány sektářskými identifikačními kartami, které určovaly život nebo smrt na kontrolních stanovištích, zatímco děti byly svědky traumatického násilí, které by ovlivnilo generace.",
+                            "isLeft": false,
+                            "expert_type": "joe"
+                        },
+                        {
+                            "id": "peak-violence-psychic-1",
+                            "event_id": "peak-sectarian-violence",
+                            "opinion": "Extrémní násilí bylo záměrně navrženo k terorizování populací do etnické segregace prostřednictvím taktik psychologického válčení včetně veřejných poprav, mučení a vystavování mrtvol. Smrtící komanda používala strach jako zbraň k dosažení politických cílů demografického oddělení a územní kontroly.",
+                            "isLeft": false,
+                            "expert_type": "psychic"
+                        },
+                        {
+                            "id": "peak-violence-dredd-1",
+                            "event_id": "peak-sectarian-violence",
+                            "opinion": "Rozšířené zabíjení představovalo genocidu a zločiny proti lidskosti pod mezinárodním právem, zatímco koaliční síly a irácká vláda selhaly v prevenci masových atrocit navzdory právním povinnostem. Systematická povaha etnického čištění odhalila státní selhání a kolaps právního státu ve velkých oblastech země.",
+                            "isLeft": true,
+                            "expert_type": "dredd"
+                        },
+                        {
+                            "id": "peak-violence-president-1",
+                            "event_id": "peak-sectarian-violence",
+                            "opinion": "Sektářská válka demonstrovala úplné selhání amerického plánování po invazi a odhalila, že vojenská okupace nemohla vnucovat politická řešení hlubokým společenským rozdělením. Konflikt hrozil rozšířením po celém regionu a podkopal americkou důvěryhodnost globálně.",
+                            "isLeft": true,
+                            "expert_type": "president"
+                        },
+                        {
+                            "id": "peak-violence-conspirator-1",
+                            "event_id": "peak-sectarian-violence",
+                            "opinion": "Občanská válka následovala předvídatelné vzorce strategií rozděl a panuj, s některými důkazy naznačujícími, že externí aktéři včetně Íránu, Sýrie a Saúdské Arábie podporovali různé frakce k prosazení svých regionálních zájmů. Konflikt sloužil cílům různých stran oslabení irácké státní kapacity a amerického vlivu.",
+                            "isLeft": false,
+                            "expert_type": "conspirator"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -8,7 +8,7 @@ type Props = {
     mounted: boolean;
 }
 
-const SideNavMainSection = ( {isActive, mounted}: Props) => {
+const SideNavMainSection = ( {isActive}: Props) => {
     return (
         <AnimatePresence initial={false}>
                 <motion.div

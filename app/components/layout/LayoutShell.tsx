@@ -16,7 +16,7 @@ export function LayoutShell({ children }: LayoutShellProps) {
 
   return (
     <div className="relative flex min-h-screen flex-col">
-      <div className="hidden sm:block relative z-50">
+      <div className="hidden sm:block relative z-20">
         <DesktopNavbar />
       </div>
 

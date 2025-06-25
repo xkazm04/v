@@ -68,7 +68,8 @@ export interface ExpertPerspective {
 
 export interface StatementSummary {
   id?: string;
-  verdict: string;
+  original_statement?: string; 
+  verdict: string; 
   status: StatementStatus;
   correction?: string;
   country?: string;

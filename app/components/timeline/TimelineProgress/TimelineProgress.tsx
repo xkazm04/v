@@ -27,7 +27,7 @@ export default function TimelineProgress({
   hasScrolled = false
 }: TimelineProgressProps) {
   const { colors, isDark } = useLayoutTheme();
-  const { isHd, isMobile } = useViewport();
+  const { isHd } = useViewport();
   
   // Move all useTransform calls to top level - FIXED!
   const indicatorOpacity = useTransform(

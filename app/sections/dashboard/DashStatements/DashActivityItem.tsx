@@ -1,97 +1,22 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Clock, MapPin, Tag } from 'lucide-react';
+import { Clock, MapPin, Tag, Quote } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { StatementSummary, StatementStatus } from '@/app/types/profile';
+import { StatementSummary } from '@/app/types/profile';
 import { FloatingVerdictIcon } from '@/app/components/ui/Decorative/FloatingVerdictIcon';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-import { CheckCircle, AlertCircle, Hash } from 'lucide-react';
-
+import { getStatusConfig } from '@/app/helpers/statusConfig'; 
 interface DashActivityItemProps {
   statement: StatementSummary;
   index: number;
   itemVariants: any;
 }
 
-// Enhanced status configuration with colors and icons
-const getStatusConfig = (status: StatementStatus, isDark: boolean) => {
-  const configs = {
-    TRUE: {
-      colors: {
-        glowColor: isDark ? '#10b981' : '#059669',
-        ringColor: isDark ? '#34d399' : '#10b981',
-        backgroundColor: isDark ? 'rgba(16, 185, 129, 0.1)' : 'rgba(16, 185, 129, 0.05)',
-        textColor: isDark ? '#34d399' : '#059669',
-        badgeBackground: isDark ? 'rgba(16, 185, 129, 0.15)' : 'rgba(240, 253, 244, 0.9)',
-        badgeBorder: isDark ? 'rgba(16, 185, 129, 0.3)' : 'rgba(16, 185, 129, 0.2)',
-      },
-      icon: CheckCircle,
-      label: 'TRUE',
-      confidence: 95
-    },
-    FALSE: {
-      colors: {
-        glowColor: isDark ? '#ef4444' : '#dc2626',
-        ringColor: isDark ? '#f87171' : '#ef4444',
-        backgroundColor: isDark ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.05)',
-        textColor: isDark ? '#f87171' : '#dc2626',
-        badgeBackground: isDark ? 'rgba(239, 68, 68, 0.15)' : 'rgba(254, 242, 242, 0.9)',
-        badgeBorder: isDark ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.2)',
-      },
-      icon: AlertCircle,
-      label: 'FALSE',
-      confidence: 90
-    },
-    MISLEADING: {
-      colors: {
-        glowColor: isDark ? '#f59e0b' : '#d97706',
-        ringColor: isDark ? '#fbbf24' : '#f59e0b',
-        backgroundColor: isDark ? 'rgba(245, 158, 11, 0.1)' : 'rgba(245, 158, 11, 0.05)',
-        textColor: isDark ? '#fbbf24' : '#d97706',
-        badgeBackground: isDark ? 'rgba(245, 158, 11, 0.15)' : 'rgba(255, 251, 235, 0.9)',
-        badgeBorder: isDark ? 'rgba(245, 158, 11, 0.3)' : 'rgba(245, 158, 11, 0.2)',
-      },
-      icon: AlertCircle,
-      label: 'MISLEADING',
-      confidence: 85
-    },
-    PARTIALLY_TRUE: {
-      colors: {
-        glowColor: isDark ? '#3b82f6' : '#2563eb',
-        ringColor: isDark ? '#60a5fa' : '#3b82f6',
-        backgroundColor: isDark ? 'rgba(59, 130, 246, 0.1)' : 'rgba(59, 130, 246, 0.05)',
-        textColor: isDark ? '#60a5fa' : '#2563eb',
-        badgeBackground: isDark ? 'rgba(59, 130, 246, 0.15)' : 'rgba(239, 246, 255, 0.9)',
-        badgeBorder: isDark ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.2)',
-      },
-      icon: CheckCircle,
-      label: 'PARTIAL',
-      confidence: 75
-    },
-    UNVERIFIABLE: {
-      colors: {
-        glowColor: isDark ? '#8b5cf6' : '#7c3aed',
-        ringColor: isDark ? '#a78bfa' : '#8b5cf6',
-        backgroundColor: isDark ? 'rgba(139, 92, 246, 0.1)' : 'rgba(139, 92, 246, 0.05)',
-        textColor: isDark ? '#a78bfa' : '#7c3aed',
-        badgeBackground: isDark ? 'rgba(139, 92, 246, 0.15)' : 'rgba(245, 243, 255, 0.9)',
-        badgeBorder: isDark ? 'rgba(139, 92, 246, 0.3)' : 'rgba(139, 92, 246, 0.2)',
-      },
-      icon: Hash,
-      label: 'UNVERIFIABLE',
-      confidence: 50
-    }
-  };
-
-  return configs[status] || configs.UNVERIFIABLE;
-};
-
 const DashActivityItem = ({ statement, index, itemVariants }: DashActivityItemProps) => {
   const { isDark } = useLayoutTheme();
   const statusConfig = getStatusConfig(statement.status, isDark);
 
-  // Enhanced theme colors with better contrast and accessibility
   const themeColors = {
     itemBackground: isDark 
       ? 'linear-gradient(135deg, rgba(71, 85, 105, 0.2), rgba(51, 65, 85, 0.1))'
@@ -103,6 +28,8 @@ const DashActivityItem = ({ statement, index, itemVariants }: DashActivityItemPr
     primaryText: isDark ? 'rgba(248, 250, 252, 0.95)' : 'rgba(15, 23, 42, 0.95)',
     secondaryText: isDark ? 'rgba(148, 163, 184, 0.9)' : 'rgba(100, 116, 139, 0.9)',
     mutedText: isDark ? 'rgba(148, 163, 184, 0.7)' : 'rgba(100, 116, 139, 0.7)',
+    quoteBackground: isDark ? 'rgba(71, 85, 105, 0.15)' : 'rgba(241, 245, 249, 0.7)',
+    quoteBorder: isDark ? 'rgba(148, 163, 184, 0.2)' : 'rgba(203, 213, 225, 0.4)',
   };
 
   return (
@@ -124,7 +51,7 @@ const DashActivityItem = ({ statement, index, itemVariants }: DashActivityItemPr
       />
       
       {/* Header with FloatingVerdictIcon */}
-      <div className="flex items-start gap-3 mb-3">
+      <div className="flex items-start gap-3 mb-4">
         <FloatingVerdictIcon
           size="xs"
           confidence={statusConfig.confidence}
@@ -171,16 +98,50 @@ const DashActivityItem = ({ statement, index, itemVariants }: DashActivityItemPr
         </div>
       </div>
       
-      {/* Statement Content */}
+      {statement.original_statement && (
+        <div className="ml-11 mb-4">
+          <div 
+            className="relative p-3 rounded-lg border-l-4"
+            style={{
+              background: themeColors.quoteBackground,
+              borderLeftColor: statusConfig.colors.glowColor,
+              borderColor: themeColors.quoteBorder
+            }}
+          >
+            <Quote 
+              className="absolute top-2 right-2 w-4 h-4 opacity-30"
+              style={{ color: statusConfig.colors.glowColor }}
+            />
+            <p 
+              className="text-sm leading-relaxed italic font-medium"
+              style={{ color: themeColors.primaryText }}
+            >
+              "{statement.original_statement}"
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="ml-11 space-y-3">
-        <p 
-          className="text-sm leading-relaxed line-clamp-3"
-          style={{ color: themeColors.primaryText }}
-        >
-          "{statement.verdict}"
-        </p>
+        <div>
+          <h4 
+            className="text-xs font-bold uppercase tracking-wide mb-1"
+            style={{ 
+              color: statusConfig.colors.textColor,
+              letterSpacing: '0.1em'
+            }}
+          >
+            Verdict
+          </h4>
+          <p 
+            className="text-sm leading-relaxed"
+            style={{ color: themeColors.primaryText }}
+          >
+            {statement.verdict}
+          </p>
+        </div>
         
-        {/* Correction Preview */}
+        {/* Correction/Additional Info */}
         {statement.correction && (
           <div 
             className="text-xs p-3 rounded-lg border-l-4 line-clamp-2"
@@ -190,10 +151,10 @@ const DashActivityItem = ({ statement, index, itemVariants }: DashActivityItemPr
               color: themeColors.secondaryText
             }}
           >
-            <span className="font-semibold" style={{ color: themeColors.primaryText }}>
-              Fact Check: 
+            <span className="" style={{ color: themeColors.primaryText }}>
+              {statement.correction}
             </span>
-            {statement.correction}
+           
           </div>
         )}
         

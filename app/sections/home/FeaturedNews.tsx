@@ -1,13 +1,12 @@
-import { useCallback, useMemo, memo } from 'react';
-import { useNewsWithExchange } from '@/app/hooks/useNews';
-import { useReadArticlesStore } from '@/app/stores/useReadArticlesStore';
-import { useNewsFilters } from '@/app/stores/filterStore'; 
-import { NewsGrid } from '../feed/NewsGrid';
+import { memo, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RefreshCw, AlertCircle, TrendingUp, Trash2, Filter } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import { useNewsFilters } from '@/app/stores/filterStore';
+import { useNewsWithExchange } from '@/app/hooks/useNews';
 import { useNewsTranslations, useCommonTranslations } from '@/app/hooks/useSmartTranslations';
-import LoaderComponent from '@/app/components/animations/LoaderComponent';
+import { NewsGrid } from '../feed/NewsGrid';
+import FeaturedNewsHead from './FeaturedNewsHead';
 
 interface FeaturedNewsProps {
   limit?: number;
@@ -21,13 +20,11 @@ const FeaturedNews = memo(({
   autoRefresh = true,
 }: FeaturedNewsProps) => {
   const { colors } = useLayoutTheme();
-  const { getExcludeIds } = useReadArticlesStore();
-  
   const newsFilters = useNewsFilters();
   
-  // Translation hooks
   const { t: tn } = useNewsTranslations();
   const { t: tc } = useCommonTranslations();
+
   const enhancedFilters = useMemo(() => {
     const filters = {
       limit,
@@ -65,8 +62,6 @@ const FeaturedNews = memo(({
     error, 
     refreshNews,
     replaceReadArticle,
-    dataSource,
-    totalFetched,
     hasMoreArticles
   } = useNewsWithExchange(enhancedFilters);
 
@@ -99,83 +94,15 @@ const FeaturedNews = memo(({
     return filtered;
   }, [researchResults]);
 
-  const excludedCount = getExcludeIds().length;
 
-  // ✅ **NEW: Show active filters**
-  const activeFiltersDisplay = useMemo(() => {
-    const activeFilters = [];
-    if (newsFilters.categoryFilter) activeFilters.push(`📂 ${newsFilters.categoryFilter}`);
-    if (newsFilters.countryFilter) activeFilters.push(`🌍 ${newsFilters.countryFilter}`);
-    if (newsFilters.searchText) activeFilters.push(`🔍 "${newsFilters.searchText}"`);
-    if (newsFilters.topicFilter) activeFilters.push(`🔥 Topic: ${newsFilters.topicFilter}`);
-    return activeFilters;
-  }, [newsFilters.categoryFilter, newsFilters.countryFilter, newsFilters.searchText, newsFilters.topicFilter]);
 
   return (
     <div className="space-y-6 max-w-[1600px]">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <h2 
-            className="text-2xl font-bold"
-            style={{ color: colors.foreground }}
-          >
-            {tn('featured_news', 'Featured News')}
-          </h2>
-          
-          <div className="flex items-center gap-4 text-sm" style={{ color: colors.mutedForeground }}>
-            {loading ? (
-              <div className="flex items-center gap-2">
-                <LoaderComponent loading={true} variant="small" />
-                <span>Loading...</span>
-              </div>
-            ) : (
-              <>
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4" />
-                  <span>{validResearchResults.length} active</span>
-                </div>
-                
-                {excludedCount > 0 && (
-                  <div className="flex items-center gap-1 text-xs opacity-75">
-                    <Trash2 className="w-3 h-3" />
-                    <span>{excludedCount} read</span>
-                  </div>
-                )}
-
-                {/* ✅ **NEW: Active filters display** */}
-                {activeFiltersDisplay.length > 0 && (
-                  <div className="flex items-center gap-1 text-xs">
-                    <Filter className="w-3 h-3" />
-                    <span className="font-medium">
-                      {activeFiltersDisplay.join(' • ')}
-                    </span>
-                  </div>
-                )}
-                
-                {totalFetched > validResearchResults.length && (
-                  <span className="text-xs opacity-60">
-                    ({totalFetched} total fetched)
-                  </span>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleRefresh}
-            disabled={loading}
-            className="flex items-center gap-2"
-          >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            {tc('refresh', 'Refresh')}
-          </button>
-        </div>
-      </div>
-
-      {/* Content */}
+      <FeaturedNewsHead
+        loading={loading}
+        validResearchResults={validResearchResults}
+        handleRefresh={handleRefresh}
+      />
       <AnimatePresence mode="wait">
         {error ? (
           <motion.div
@@ -187,12 +114,15 @@ const FeaturedNews = memo(({
           >
             <AlertCircle className="w-12 h-12 mx-auto mb-4 text-red-500" />
             <h3 className="text-lg font-semibold mb-2" style={{ color: colors.foreground }}>
-              {tc('error_loading', 'Error loading news')}
+              {tn('error_title', 'Unable to Load News')}
             </h3>
             <p className="text-sm mb-4" style={{ color: colors.mutedForeground }}>
-              {error}
+              {tn('error_message', 'There was a problem loading the latest news. Please try again.')}
             </p>
-            <button onClick={handleRefresh}>
+            <button 
+              onClick={handleRefresh}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            >
               {tc('try_again', 'Try Again')}
             </button>
           </motion.div>
@@ -213,17 +143,28 @@ const FeaturedNews = memo(({
             
             {loading && validResearchResults.length > 0 && (
               <div className="text-center py-4">
-                <div className="inline-flex items-center gap-3 text-sm" style={{ color: colors.mutedForeground }}>
-                  <LoaderComponent loading={true} variant="small" />
-                  {tc('updating_feed', 'Updating feed...')}
-                </div>
+                <span style={{ color: colors.mutedForeground }}>
+                  {tn('loading_more', 'Loading more articles')}...
+                </span>
               </div>
             )}
             
             {!hasMoreArticles && validResearchResults.length > 0 && !loading && (
               <div className="text-center py-4">
+                <span style={{ color: colors.mutedForeground }}>
+                  {tn('no_more_articles', 'No more articles to load')}
+                </span>
+              </div>
+            )}
+
+            {validResearchResults.length === 0 && !loading && (
+              <div className="text-center py-12">
+                <div className="text-4xl mb-4">📰</div>
+                <h3 className="text-lg font-semibold mb-2" style={{ color: colors.foreground }}>
+                  {tn('no_articles_title', 'No Articles Found')}
+                </h3>
                 <p className="text-sm" style={{ color: colors.mutedForeground }}>
-                  {tc('no_more_articles', 'No more articles available')}
+                  {tn('no_articles_message', 'Try adjusting your filters or check back later for new content.')}
                 </p>
               </div>
             )}

@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { GraduationCap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-import { useTimelineStore, TIMELINE_DATASETS } from '@/app/stores/useTimelineStore';
+import { useTimelineStore } from '@/app/stores/useTimelineStore';
+import { useTimelineLoader } from '@/app/hooks/useTimelineLoader';
 
 interface NewsTopicProps {
   topicId: string;
@@ -19,24 +20,20 @@ const NewsTopic: React.FC<NewsTopicProps> = ({
   const { colors, isDark, vintage } = useLayoutTheme();
   const router = useRouter();
   const { selectTimelineByTopicId } = useTimelineStore();
+  const { timelines: availableTimelines } = useTimelineLoader();
   
   const [isHovered, setIsHovered] = useState(false);
 
-  // Find the corresponding timeline dataset
   const timelineDataset = useMemo(() => {
-    return TIMELINE_DATASETS.find(dataset => dataset.topic_id === topicId);
-  }, [topicId]);
+    return availableTimelines.find(dataset => dataset.topic_id === topicId);
+  }, [topicId, availableTimelines]);
 
-  // Don't render if no matching timeline found
   if (!timelineDataset) {
     return null;
   }
 
   const handleClick = () => {
-    // Set the timeline in the store
-    selectTimelineByTopicId(topicId);
-    
-    // Navigate to timeline page
+    selectTimelineByTopicId(topicId, availableTimelines);
     router.push('/timeline');
   };
 
@@ -96,6 +93,15 @@ const NewsTopic: React.FC<NewsTopicProps> = ({
           />
         </motion.div>
 
+        {/* Translation indicator */}
+        {timelineDataset.fallbackUsed && (
+          <div
+            className="absolute -top-1 -left-1 w-2 h-2 rounded-full"
+            style={{ backgroundColor: '#f59e0b' }}
+            title="Using English fallback"
+          />
+        )}
+
         {/* Expandable Text */}
         <AnimatePresence>
           {isHovered && (
@@ -137,7 +143,15 @@ const NewsTopic: React.FC<NewsTopicProps> = ({
               >
                 {timelineDataset.title}
                 
-                {/* Small arrow pointing to icon */}
+                {/* Language indicator */}
+                {timelineDataset.loadedLanguage && timelineDataset.loadedLanguage !== 'en' && (
+                  <div className="text-xs opacity-60 mt-1">
+                    📖 {timelineDataset.loadedLanguage.toUpperCase()}
+                    {timelineDataset.fallbackUsed && ' (fallback)'}
+                  </div>
+                )}
+                
+                {/* Arrow */}
                 <div
                   className="absolute top-1/2 -right-1 w-2 h-2 transform rotate-45 -translate-y-1/2"
                   style={{
@@ -151,7 +165,7 @@ const NewsTopic: React.FC<NewsTopicProps> = ({
           )}
         </AnimatePresence>
 
-        {/* Subtle pulse animation when not hovered */}
+        {/* Pulse animation */}
         {!isHovered && (
           <motion.div
             className="absolute inset-0 rounded-full"

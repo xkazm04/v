@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import { Sidebar } from '@/app/components/sidebar/sidebar';
 import { FeaturedVideos } from '@/app/sections/home/FeaturedVideos';
 import { Divider } from './components/ui/divider';
-import FeedHeader from './sections/feed/FeedHeader';
+import FeedHeader from './sections/feed/Daily/FeedHeader';
 import LogoSectionDecor from './components/ui/Decorative/LogoSectionDecor';
 import { FirstTimeUserModal } from './sections/onboarding/FirstTimeUserModal';
 import { useOnboarding } from './hooks/use-onboarding';

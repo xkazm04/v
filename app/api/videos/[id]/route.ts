@@ -98,11 +98,7 @@ export async function GET(
         }
       } catch (timeoutError) {
         clearTimeout(timeoutId);
-        if (timeoutError.name === 'AbortError') {
-          console.warn('⚠️ FastAPI request timed out');
-        } else {
-          throw timeoutError;
-        }
+        throw timeoutError;
       }
       
     } catch (fastApiError) {
@@ -176,7 +172,15 @@ export async function GET(
 
   } catch (error) {
     console.error('💥 Unexpected error in video detail route:', error);
-    
+    let videoId: string | undefined = undefined;
+    try {
+      const url = new URL(request.url);
+      const pathParts = url.pathname.split('/');
+      videoId = pathParts[pathParts.length - 1] || undefined;
+    } catch {
+      videoId = undefined;
+    }
+
     return NextResponse.json(
       { 
         error: 'Internal server error',

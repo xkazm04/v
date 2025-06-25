@@ -3,8 +3,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-import { useTimelineStore, TIMELINE_DATASETS } from '@/app/stores/useTimelineStore';
-import { Timeline } from '@/app/types/timeline';
+import { useTimelineStore } from '@/app/stores/useTimelineStore';
+import { useTimelineLoader } from '@/app/hooks/useTimelineLoader';
+import TimelineAvailable from './TimelineAvailable'; 
 
 interface TimelineSelectorProps {
   className?: string;
@@ -14,26 +15,33 @@ export default function TimelineSelector({
   className = ''
 }: TimelineSelectorProps) {
   const { colors, isDark } = useLayoutTheme();
+  
   const { 
     currentTimeline, 
     isLoadingTimeline, 
     setIsLoadingTimeline, 
-    selectTimelineByDatasetId 
+    selectTimelineByDatasetId
   } = useTimelineStore();
+
+  const {
+    timelines: availableTimelines,
+    loading: timelinesLoading,
+    error: timelinesError,
+    getLoadingStats,
+    targetLanguage
+  } = useTimelineLoader();
 
   const handleNoteClick = (datasetId: string) => {
     handleTimelineSelect(datasetId);
   };
 
   const handleTimelineSelect = async (datasetId: string) => {
-    const dataset = TIMELINE_DATASETS.find(d => d.id === datasetId);
-    if (!dataset || dataset.data.id === currentTimeline.id) return;
+    const dataset = availableTimelines.find(d => d.id === datasetId);
+    if (!dataset || dataset.data.id === currentTimeline?.id) return;
 
     setIsLoadingTimeline(true);
     try {
-      selectTimelineByDatasetId(datasetId);
-
-      // Reset scroll position to top
+      selectTimelineByDatasetId(datasetId, availableTimelines);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Failed to load timeline:', error);
@@ -42,149 +50,95 @@ export default function TimelineSelector({
     }
   };
 
-  const vintageColors = colors.vintage || {
-    paper: '#f8f6f0',
-    ink: '#2c1810',
-    faded: '#7a6f47',
-    aged: '#e8dcc0',
-    sepia: '#d4c4a8',
-    highlight: '#fff8e7',
-    shadow: 'rgba(139, 69, 19, 0.15)',
-    crease: '#e0d5c0',
-  };
+  // ✅ Show loading state while timelines are being loaded
+  if (timelinesLoading) {
+    return (
+      <div className={`w-full ${className}`}>
+        <motion.div
+          className="text-center py-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <motion.div
+            className="inline-block w-8 h-8 border-2 border-current border-t-transparent rounded-full"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            style={{ borderColor: colors.primary }}
+          />
+          <p className="mt-4 text-lg opacity-80">Loading timelines...</p>
+          <p className="mt-1 text-sm opacity-60">
+            Preparing {targetLanguage === 'en' ? 'English' : targetLanguage.toUpperCase()} content
+          </p>
+        </motion.div>
+      </div>
+    );
+  }
 
-  // Use vintage colors for light mode, fallback to theme colors for dark mode
-  const noteColors = isDark ? {
-    background: colors.muted,
-    text: colors.foreground,
-    border: colors.border,
-    shadow: 'rgba(0, 0, 0, 0.3)',
-    hover: colors.hover || colors.muted,
-    active: colors.active || colors.primary + '20'
-  } : {
-    background: vintageColors.paper,
-    text: vintageColors.ink,
-    border: vintageColors.sepia,
-    shadow: vintageColors.shadow,
-    hover: vintageColors.highlight,
-    active: vintageColors.aged
-  };
+  // ✅ Show error state if timelines failed to load
+  if (timelinesError) {
+    return (
+      <div className={`w-full ${className}`}>
+        <motion.div
+          className="text-center py-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="text-red-500 mb-4">⚠️ Failed to load timelines</div>
+          <p className="text-sm opacity-60">{timelinesError}</p>
+        </motion.div>
+      </div>
+    );
+  }
+
+  const loadingStats = getLoadingStats();
 
   return (
     <div className={`w-full ${className}`}>
+      {/* Translation status indicator (only show if not English) */}
+      {targetLanguage !== 'en' && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-4"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs"
+               style={{ 
+                 backgroundColor: colors.muted,
+                 color: colors.mutedForeground
+               }}>
+            <span>🌐</span>
+            <span>
+              {loadingStats.nativeCount > 0 
+                ? `${targetLanguage.toUpperCase()} content loaded`
+                : `English fallback (${targetLanguage.toUpperCase()} not available)`}
+            </span>
+            {loadingStats.fallbackCount > 0 && (
+              <span className="opacity-70">
+                ({loadingStats.nativeCount}/{loadingStats.totalLoaded} translated)
+              </span>
+            )}
+          </div>
+        </motion.div>
+      )}
+
+      {/* ✅ SIMPLIFIED: Timeline grid using the new component */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="flex flex-wrap justify-center gap-3 mb-8 px-4"
       >
-        {TIMELINE_DATASETS.map((dataset, index) => {
+        {availableTimelines.map((dataset, index) => {
           const isActive = currentTimeline?.id === dataset.data.id;
 
           return (
-            <motion.div
+            <TimelineAvailable
               key={dataset.id}
-              initial={{ opacity: 0, scale: 0.9, rotate: Math.random() * 4 - 2 }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                rotate: Math.random() * 6 - 3 
-              }}
-              transition={{
-                delay: index * 0.1,
-                duration: 0.4,
-                ease: "easeOut"
-              }}
-              whileHover={{
-                scale: 1.05,
-                rotate: 0,
-                zIndex: 10
-              }}
-              whileTap={{ scale: 0.98 }}
-              className="relative cursor-pointer group"
-              onClick={() => handleNoteClick(dataset.id)}
-            >
-              {/* Sticky note */}
-              <div
-                className={`
-                  relative p-4 min-w-[180px] max-w-[220px] min-h-[100px]
-                  transition-all duration-200 ease-out
-                  shadow-md hover:shadow-lg
-                  ${isActive ? 'ring-2 ring-opacity-50' : ''}
-                `}
-                style={{
-                  backgroundColor: noteColors.background,
-                  color: noteColors.text,
-                  border: `1px solid ${noteColors.border}`,
-                  boxShadow: `
-                    0 2px 8px ${noteColors.shadow},
-                    inset 0 1px 0 rgba(255, 255, 255, 0.2)
-                  `,
-                  transform: `rotate(${Math.random() * 4 - 2}deg)`,
-                  ringColor: isActive ? colors.primary : 'transparent',
-                }}
-              >
-                {/* Paper texture overlay for vintage effect */}
-                {!isDark && (
-                  <div
-                    className="absolute inset-0 opacity-20 pointer-events-none"
-                    style={{
-                      backgroundImage: `
-                        radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.1) 1px, transparent 1px),
-                        radial-gradient(circle at 80% 70%, rgba(139, 69, 19, 0.1) 1px, transparent 1px)
-                      `,
-                      backgroundSize: '20px 20px'
-                    }}
-                  />
-                )}
-
-                {/* Corner fold effect */}
-                <div
-                  className="absolute top-0 right-0 w-4 h-4 transform rotate-45 translate-x-2 -translate-y-2"
-                  style={{
-                    backgroundColor: noteColors.active,
-                    borderLeft: `1px solid ${noteColors.border}`,
-                    borderBottom: `1px solid ${noteColors.border}`,
-                  }}
-                />
-
-                {/* Content */}
-                <div className="relative z-10">
-                  <h3 className="font-semibold text-sm mb-2 leading-tight">
-                    {dataset.title}
-                  </h3>
-                  {dataset.description && (
-                    <p
-                      className="text-xs opacity-75 leading-relaxed"
-                      style={{ color: vintageColors?.faded || noteColors.text }}
-                    >
-                      {dataset.description}
-                    </p>
-                  )}
-                </div>
-
-                {/* Active indicator */}
-                {isActive && (
-                  <motion.div
-                    className="absolute -top-1 -right-1 w-3 h-3 rounded-full"
-                    style={{ backgroundColor: colors.primary }}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  />
-                )}
-              </div>
-
-              {/* Hover state background */}
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none -z-10"
-                style={{
-                  backgroundColor: noteColors.hover,
-                  filter: 'blur(8px)',
-                  transform: 'scale(1.1)',
-                }}
-              />
-            </motion.div>
+              dataset={dataset}
+              index={index}
+              isActive={isActive}
+              onClick={handleNoteClick}
+            />
           );
         })}
       </motion.div>

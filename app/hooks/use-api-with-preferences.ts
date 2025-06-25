@@ -1,35 +1,71 @@
 import { useCallback } from 'react';
 import { useUserPreferences } from './use-user-preferences';
 import { userPreferencesApiClient } from '@/app/lib/services/user-preferences-api-client';
+import { useTranslationStore } from '@/app/stores/useTranslationStore'; 
 
 /**
  * Hook that provides API functions with automatic user preference injection
  */
 export function useApiWithPreferences() {
   const { preferences } = useUserPreferences();
+  const { startTranslation, completeTranslation, failTranslation } = useTranslationStore();
 
-  // ✅ FORCE: Always reset and update preferences to ensure fresh state
   userPreferencesApiClient.resetCache();
   userPreferencesApiClient.setPreferences(preferences);
 
   /**
-   * Enhanced fetch that automatically includes user preferences
+   * Enhanced fetch that automatically includes user preferences AND tracks translations
    */
   const fetchWithPreferences = useCallback(async (
     url: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
+    trackTranslation: boolean = true
   ): Promise<Response> => {
-    // ✅ Force use of current preferences, don't rely on cached ones
+    const translationTarget = userPreferencesApiClient.getTranslationTarget(preferences);
+    const needsTranslation = userPreferencesApiClient.needsTranslation(preferences);
+    
+    let translationTaskId: string | null = null;
+    
+    // ✅ Start translation tracking if needed
+    if (trackTranslation && needsTranslation && translationTarget) {
+      translationTaskId = startTranslation({
+        text: `API request to ${url}`,
+        sourceLocale: 'en',
+        targetLocale: translationTarget,
+        context: url.includes('/news') ? 'news' : 'timeline'
+      });
+    }
+    
     console.log('🌐 fetchWithPreferences called:', {
       url,
       language: preferences?.language,
-      translationTarget: userPreferencesApiClient.getTranslationTarget(preferences),
+      translationTarget,
+      trackingTranslation: !!translationTaskId,
       currentTime: new Date().toISOString()
     });
     
-    // ✅ Always pass current preferences explicitly
-    return userPreferencesApiClient.fetchWithPreferences(url, options, preferences);
-  }, [preferences]);
+    try {
+      const response = await userPreferencesApiClient.fetchWithPreferences(url, options, preferences);
+      
+      if (translationTaskId) {
+        // Check if the response indicates translation occurred
+        const responseClone = response.clone();
+        const data = await responseClone.json();
+        const wasTranslated = data.__meta?.userPreferences?.translationEnabled || false;
+        
+        completeTranslation(translationTaskId, !wasTranslated);
+      }
+      
+      return response;
+      
+    } catch (error) {
+      // ✅ Fail translation task on error
+      if (translationTaskId) {
+        failTranslation(translationTaskId, error instanceof Error ? error.message : 'Request failed');
+      }
+      throw error;
+    }
+  }, [preferences, startTranslation, completeTranslation, failTranslation]);
 
   /**
    * Create URL with preference parameters
@@ -56,7 +92,6 @@ export function useApiWithPreferences() {
       url.searchParams.set('translate_to', translationTarget);
     }
     
-    // ✅ Only add theme parameter if explicitly requested
     if (options.includeTheme && preferences?.theme && preferences.theme !== 'system') {
       url.searchParams.set('theme', preferences.theme);
     }

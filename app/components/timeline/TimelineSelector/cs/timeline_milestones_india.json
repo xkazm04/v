@@ -1,0 +1,567 @@
+{
+  "id": "india-pakistan-pre-conflict-2025",
+  "title": "Cesta k válce: Události vedoucí ke konfliktu mezi Indií a Pákistánem 2025",
+  "timeSpan": "Leden 2025 - Duben 2025",
+  "consequences": "**Náklady na strategické budování:**\n- **Indické obranné výdaje:** $76+ miliard ročního nárůstu rozpočtu\n- **Pákistánský vojenský dluh:** $12+ miliard vypůjčených na čínské zbraně\n- **Americký prodej zbraní:** $8,5 miliardy Indii (modernizace F-16, systémy S-400)\n- **Čínská vojenská pomoc:** $4,2 miliardy ve zbraňových systémech Pákistánu\n\n**Regionální napětí:**\n- **Incidenty v Kašmíru:** 47 porušení příměří v Q1 2025\n- **Přeshraniční infiltrace:** 23 zdokumentovaných pokusů\n- **Narušení obchodu:** $2,1 miliardy ročního obchodu v ohrožení\n- **Diplomatický rozklad:** Všechna bilaterální jednání pozastavena\n\n**Ekonomická válka:**\n- **Porušení vodní smlouvy:** 14 nevyřešených technických sporů\n- **Status nejvyšších výhod:** Zrušen oběma zeměmi\n- **Zmrazení investic:** $890 milionů přeshraničních projektů zastaveno\n- **Zisky obranných dodavatelů:** Izraelské, francouzské, turecké, čínské firmy získaly $15+ miliard v objednávkách",
+  "conclusion": "Konflikt mezi Indií a Pákistánem v roce 2025 nebyl náhlým výbuchem, ale nevyhnutelným výsledkem eskalujícího napětí, dynamiky zbrojního závodu a systematických diplomatických selhání v průběhu začátku roku 2025. Snaha obou národů o vojenskou převahu prostřednictvím zahraničních partnerství vytvořila soudek prachu, který potřeboval pouze jiskru, aby explodoval do nejnebezpečnější jihoasijské krize za desetiletí.",
+  "leftSide": "Indie a západní spojenci",
+  "rightSide": "Pákistán a čínsko-turecká osa",
+  "milestones": [
+    {
+      "id": "trump-administration-reset",
+      "date": "2025-01-20",
+      "title": "Trump 2.0: Přeorientace politiky v jižní Asii",
+      "context": "Návrat Donalda Trumpa na prezidentský post označil dramatickou změnu v americko-jihoasijských vztazích s novými politikami upřednostňujícími Indii při současném zapojení Pákistánu. Trumpův transakční přístup a zaměření na prodej zbraní vytvořilo novou dynamiku v regionu.",
+      "order": 1,
+      "consequence": "Změny americké politiky povzbudily Indii i Pákistán k prosazování agresivnějších vojenských postojů, věříce, že mají americkou podporu, zatímco Čína a další mocnosti se pohnuly k boji proti rostoucímu americkému vlivu.",
+      "key_persons": [
+        { "name": "Donald Trump", "role": "americký prezident" },
+        { "name": "Marco Rubio", "role": "americký ministr zahraničí" },
+        { "name": "JD Vance", "role": "americký viceprezident" },
+        { "name": "Narendra Modi", "role": "indický premiér" },
+        { "name": "Shehbaz Sharif", "role": "pákistánský premiér" }
+      ],
+      "events": [
+        {
+          "id": "trump-modi-trade-deal",
+          "milestone_id": "trump-administration-reset",
+          "title": "Trump slibuje Indii velkou obchodní dohodu a pokročilé zbraňové systémy během Modiho návštěvy",
+          "left_type": "nerd",
+          "right_type": "president",
+          "left_opinion": "Trumpova dohoda byla navržena k podpoře amerických obranných dodavatelů a snížení obchodního deficitu, přičemž Indie platila prémiové ceny za zbraňové systémy. Balíček zbraní za $8,5 miliardy zahrnoval významnou přirážku nad náklady, generující masivní zisky pro Lockheed Martin, Boeing a Raytheon.",
+          "right_opinion": "Indické vedení vypočítalo, že bližší vazby s USA poskytnou bezpečnostní záruky proti Číně a Pákistánu, zatímco Trump viděl Indii jako klíčový trh pro americké zbraně a protiváhu čínského vlivu v Asii.",
+          "left_source_url": "https://www.reuters.com/world/asia-pacific/indias-diplomatic-ambitions-tested-trump-pushes-deal-kashmir-2025-05-11/",
+          "right_source_url": "https://www.bloomberg.com/news/articles/2025-05-05/kashmir-attack-india-and-pakistan-face-a-conflict-neither-economy-can-afford",
+          "all_opinions": [
+            {
+              "id": "trump-modi-joe-1",
+              "event_id": "trump-modi-trade-deal",
+              "opinion": "Indičtí občané oslavovali bližší vazby s USA jako ověření rostoucího globálního postavení své země, zatímco Pákistánci se cítili zrazeni jasnou favorizací Ameriky vůči jejich rivalovi navzdory historické alianci Pákistánu.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "trump-modi-psychic-1",
+              "event_id": "trump-modi-trade-deal",
+              "opinion": "Trumpovo veřejné objetí Modiho bylo navrženo k tlaku na Čínu a signalizování Pákistánu, že americké priority se posunuly. Načasování se shodovalo s čínskými vojenskými cvičeními u Tchaj-wanu, naznačující koordinované sdělování s širší indo-pacifickou strategií.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "trump-modi-dredd-1",
+              "event_id": "trump-modi-trade-deal",
+              "opinion": "Dohoda o zbrojích porušila americké závazky neutrality ve sporu o Kašmír a potenciálně porušila dohody o nešíření týkající se pokročilých raketových technologií. Nicméně dohody spadaly do právních rámců pro spojenecké národy.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "trump-modi-president-1",
+              "event_id": "trump-modi-trade-deal",
+              "opinion": "Partnerství představovalo Trumpův transakční přístup k zahraniční politice, nabízející Indii pokročilé zbraně výměnou za masivní nákupy a strategické sladění proti Číně. To zásadně změnilo regionální rovnováhu mocenské dynamiky.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "trump-modi-conspirator-1",
+              "event_id": "trump-modi-trade-deal",
+              "opinion": "Dohoda byla koordinována s izraelským a francouzským obranným průmyslem k vytvoření integrovaného západního zbraňového systému pro Indii. Načasování naznačuje přípravu na předem stanovené konfliktní scénáře s dodavateli zbraní pozicujícími se pro maximální zisk z regionálního napětí.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "pakistan-china-military-pact",
+          "milestone_id": "trump-administration-reset",
+          "title": "Pákistán podepsal rozšířenou dohodu o vojenské spolupráci s Čínou a Tureckem",
+          "left_type": "conspirator",
+          "right_type": "nerd",
+          "left_opinion": "Prohlubující se vojenské vazby Pákistánu s Čínou a Tureckem byly organizovány jako součást širší strategie Pekingu k obklíčení Indie a testování západních aliančních systémů. Načasování se shodovalo s čínskými obavami o rostoucí americko-indické partnerství.",
+          "right_opinion": "Vedení Pákistánu vypočítalo, že čínské a turecké zbraně nabízely lepší hodnotu a méně omezení než západní systémy, při poskytování klíčového transferu technologií a domácích výrobních schopností v hodnotě miliard ekonomických výhod.",
+          "left_source_url": "https://www.stimson.org/2025/four-days-in-may-the-india-pakistan-crisis-of-2025/",
+          "right_source_url": "https://www.reuters.com/business/aerospace-defense/with-militaries-upgraded-risks-multiply-any-potential-india-pakistan-conflict-2025-05-05/",
+          "all_opinions": [
+            {
+              "id": "pakistan-china-nerd-1",
+              "event_id": "pakistan-china-military-pact",
+              "opinion": "Čína poskytla $4,2 miliardy ve zbraňových systémech za silně dotované sazby, v podstatě kupující pákistánskou věrnost při terénním testování pokročilých systémů proti západní technologii. Turecký prodej dronů přidal dalších $800 milionů k pákistánským vojenským schopnostem.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "pakistan-china-joe-1",
+              "event_id": "pakistan-china-military-pact",
+              "opinion": "Pákistánští občané pociťovali úlevu, že Čína nabídla spolehlivou vojenskou podporu, když Amerika upřednostňovala Indii, zatímco obyčejní Číňané to viděli jako nezbytné k čelení americkému úsilí o zadržování v Asii.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "pakistan-china-psychic-1",
+              "event_id": "pakistan-china-military-pact",
+              "opinion": "Oznámení bylo načasováno k vyslání jasného poselství Indii a USA, že Pákistán má mocné podporovatele, při demonstraci čínského závazku spojencům, kteří se sladí s pekinskými strategickými zájmy proti západnímu vlivu.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "pakistan-china-dredd-1",
+              "event_id": "pakistan-china-military-pact",
+              "opinion": "Dohoda o vojenské spolupráci porušila několik mezinárodních smluv o kontrole zbraní a potenciálně umožnila transfery technologií, které porušily závazky o nešíření. Nicméně obě země argumentovaly, že šlo o legitimní obrannou spolupráci mezi spojenci.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "pakistan-china-president-1",
+              "event_id": "pakistan-china-military-pact",
+              "opinion": "Pakt představoval čínský protitah k americko-indickému sladění, vytvářející novou osu vojenské spolupráce, která vyzvala západní dominanci v jižní Asii. To zásadně změnilo regionální bezpečnostní architekturu.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "pakistan-china-conspirator-1",
+              "event_id": "pakistan-china-military-pact",
+              "opinion": "Dohoda byla součástí systematické čínské strategie obklopit Indii nepřátelskými silami při testování nových zbraňových systémů v potenciálních konfliktních scénářích. Zahrnutí Turecka naznačovalo širší formování protiwesternské aliance.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "arms-race-escalation",
+      "date": "2025-02-15",
+      "title": "Jihoasijský zbrojní závod dosáhl kritického bodu",
+      "context": "Únor 2025 označil bezprecedentní vojenské budování Indie i Pákistánu s masivními nákupy zbraní od konkurenčních globálních dodavatelů. Nové systémy zahrnovaly pokročilou protivzdušnou obranu, roje dronů a schopnosti přesného úderu, které zásadně změnily regionální vojenskou rovnováhu.",
+      "order": 2,
+      "consequence": "Zbrojní závod vytvořil nebezpečný cyklus akce-reakce, kde se obranná opatření každé strany jevila jako hrozivá pro druhou, zatímco obranní dodavatelé z více zemí enormě profitovali z eskalujícího napětí.",
+      "key_persons": [
+        { "name": "Asim Munir", "role": "pákistánský náčelník armády" },
+        { "name": "Anil Chauhan", "role": "indický náčelník obranného štábu" },
+        { "name": "Wang Yi", "role": "čínský ministr zahraničí" },
+        { "name": "Yoav Gallant", "role": "izraelský ministr obrany" },
+        { "name": "Sébastien Lecornu", "role": "francouzský ministr obrany" }
+      ],
+      "events": [
+        {
+          "id": "india-s400-deployment",
+          "milestone_id": "arms-race-escalation",
+          "title": "Indie dokončila nasazení systému protivzdušné obrany S-400 podél pákistánské hranice",
+          "left_type": "president",
+          "right_type": "psychic",
+          "left_opinion": "Nasazení indického S-400 bylo navrženo k dosažení vzdušné převahy a odstrašení operací pákistánského letectva, zatímco také sloužilo jako demonstrace Číně, že Indie vlastní pokročilé ruské systémy schopné ohrožovat čínská letadla.",
+          "right_opinion": "Pákistán viděl nasazení S-400 jako přípravu na agresivní vojenskou akci, navržené k vytvoření ochranného deštníku, pod kterým by Indie mohla spouštět útoky při zabránění pákistánské odplatě prostřednictvím vzdušné síly.",
+          "left_source_url": "https://thediplomat.com/2025/06/the-100-hour-war-india-versus-pakistan/",
+          "right_source_url": "https://www.foreignaffairs.com/india/next-war-between-india-and-pakistan",
+          "all_opinions": [
+            {
+              "id": "s400-nerd-1",
+              "event_id": "india-s400-deployment",
+              "opinion": "Systémy S-400 stály Indii $5,4 miliardy s ruskými výrobci a podporujícími dodavateli vydělávajícími masivní zisky. Nasazení vyžadovalo dodatečných $2,1 miliardy ve vývoji infrastruktury, prospívající indickým a ruským stavebním společnostem.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "s400-joe-1",
+              "event_id": "india-s400-deployment",
+              "opinion": "Indičtí občané se cítili bezpečněji vědomí, že jejich země má špičkovou protivzdušnou obranu, zatímco Pákistánci viděli systémy jako přípravu na indickou agresi a cítili se stále zranitelnějšími vůči útoku.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "s400-psychic-1",
+              "event_id": "india-s400-deployment",
+              "opinion": "Vysoce profilové nasazení bylo navrženo k demonstraci indické vojenské převahy a zastrašování Pákistánu, aby se vyhnul konfrontaci. Psychologický dopad byl zamýšlen jako stejně důležitý jako samotná vojenská schopnost.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "s400-dredd-1",
+              "event_id": "india-s400-deployment",
+              "opinion": "Nasazení porušilo několik dohod o kontrole zbraní týkajících se obranných systémů, které by mohly mít útočné aplikace. Nicméně Indie argumentovala, že systémy byly čistě obranné a v rámci suverénních práv k nasazení.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "s400-president-1",
+              "event_id": "india-s400-deployment",
+              "opinion": "Nasazení S-400 signalizovalo indický závazek k vojenské modernizaci a ochotu vzdorovat americkým sankcím k získání ruských systémů. To demonstrovalo nezávislé strategické myšlení navzdory rostoucímu americkému partnerství.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "s400-conspirator-1",
+              "event_id": "india-s400-deployment",
+              "opinion": "Nasazení bylo koordinováno s izraelskými a francouzskými systémy k vytvoření integrované sítě protivzdušné obrany navržené k dominanci jihoasijskému vzdušnému prostoru. Načasování naznačovalo přípravu na specifické konfliktní scénáře.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "pakistan-drone-acquisition",
+          "milestone_id": "arms-race-escalation",
+          "title": "Pákistán získal pokročilé turecké a čínské roje dronů pro asymetrické válčení",
+          "left_type": "conspirator",
+          "right_type": "nerd",
+          "left_opinion": "Získání dronů Pákistánem bylo součástí koordinované strategie s Čínou a Tureckem k vývoji nových válečných konceptů, které by mohly být exportovány globálně, používající potenciální konflikt Indie-Pákistán jako testovací plochu pro vojenské technologie nové generace.",
+          "right_opinion": "Pákistánské vojenské vedení vypočítalo, že roje dronů nabízely nákladově efektivní prostředky k přemožení drahých indických protivzdušných obran, poskytující asymetrickou výhodu, která by mohla vyrovnat hrací pole navzdory konvenční převaze Indie.",
+          "left_source_url": "https://www.brookings.edu/articles/lessons-for-the-next-india-pakistan-war/",
+          "right_source_url": "https://www.nbr.org/publication/the-may-2025-india-pakistan-conflict-neither-quite-the-same-nor-quite-another/",
+          "all_opinions": [
+            {
+              "id": "drones-nerd-1",
+              "event_id": "pakistan-drone-acquisition",
+              "opinion": "Turečtí výrobci Bayraktar a čínští Wing Loong vydělali $1,8 miliardy z pákistánských nákupů dronů, zatímco místní dohody o sestavování slibovaly $400 milionů v příjmech z transferu technologií pro pákistánské společnosti.",
+              "isLeft": false,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "drones-joe-1",
+              "event_id": "pakistan-drone-acquisition",
+              "opinion": "Pákistánští vojenští úředníci a občané oslavovali získání schopností 'moderního válčení', které by mohly odpovídat indické technologii, zatímco Indové se obávali čelení rojům sebevražedných dronů v budoucích konfliktech.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "drones-psychic-1",
+              "event_id": "pakistan-drone-acquisition",
+              "opinion": "Získání dronů bylo zveřejněno k signalizování pákistánského technologického pokroku a ochoty přijmout nové válečné metody, navržené k vytvoření nejistoty v indickém vojenském plánování o tom, jak čelit rojovým útokům.",
+              "isLeft": false,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "drones-dredd-1",
+              "event_id": "pakistan-drone-acquisition",
+              "opinion": "Transfery dronů potenciálně porušily mezinárodní zákony upravující autonomní zbraňové systémy a vyvolaly otázky o odpovědnosti za civilní oběti v budoucích konfliktech. Nicméně oba dodavatelé argumentovali, že systémy vyžadovaly lidskou kontrolu.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "drones-president-1",
+              "event_id": "pakistan-drone-acquisition",
+              "opinion": "Získání dronů představovalo přijetí moderních asymetrických válečných konceptů vyvinutých v ukrajinských a blízkovýchodních konfliktech Pákistánem, zásadně měnící povahu potenciálních konfrontací Indie-Pákistán.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "drones-conspirator-1",
+              "event_id": "pakistan-drone-acquisition",
+              "opinion": "Načasování a rozsah akvizic naznačoval koordinované plánování s Čínou pro testování nových válečných konceptů, s Pákistánem sloužícím jako proxy pro širší čínské strategické cíle proti západně sladěné Indii.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "diplomatic-breakdown",
+      "date": "2025-03-30",
+      "title": "Úplný rozklad diplomatických vztahů mezi Indií a Pákistánem",
+      "context": "Březen 2025 byl svědkem kolapsu všech zbývajících diplomatických kanálů mezi Indií a Pákistánem, včetně pozastavení obchodu, kulturních výměn a dokonce kriketových zápasů. Obě strany stáhly diplomaty a zavřely konzuláty, zanechávajíce pouze minimální personál ambasád.",
+      "order": 3,
+      "consequence": "Diplomatický rozklad eliminoval všechny mechanismy mírumilovného řešení a systémy včasného varování, vytvářející podmínky, kde by vojenské incidenty mohly rychle eskalovat bez diplomatické intervence nebo kanálů krizového řízení.",
+      "key_persons": [
+        { "name": "S. Jaishankar", "role": "indický ministr vnějších věcí" },
+        { "name": "Ishaq Dar", "role": "pákistánský ministr zahraničí" },
+        { "name": "Ajit Doval", "role": "indický poradce pro národní bezpečnost" },
+        { "name": "Asim Malik", "role": "šéf pákistánské ISI" },
+        { "name": "Antonio Guterres", "role": "generální tajemník OSN" }
+      ],
+      "events": [
+        {
+          "id": "trade-suspension",
+          "milestone_id": "diplomatic-breakdown",
+          "title": "Obě země pozastavily veškerý bilaterální obchod a zrušily status nejvyšších výhod",
+          "left_type": "nerd",
+          "right_type": "joe",
+          "left_opinion": "Pozastavení obchodu Indií bylo navrženo k ekonomickému tlaku na Pákistán při ochraně indických průmyslů před pákistánskou konkurencí, generující podporu od obchodních lobby, které profitovaly ze snížené konkurence a politik náhrady importu.",
+          "right_opinion": "Pákistánští obchodníci a obyčejní občané utrpěli okamžité ekonomické strádání ze ztracených indických trhů, zvláště postihující zemědělské vývozce a malé podniky závislé na přeshraničním obchodu v hodnotě miliard ročně.",
+          "left_source_url": "https://www.aljazeera.com/economy/2025/6/9/india-pakistan-conflict-claims-an-unlikely-victim-himalayan-pink-salt",
+          "right_source_url": "https://www.cfr.org/global-conflict-tracker/conflict/conflict-between-india-and-pakistan",
+          "all_opinions": [
+            {
+              "id": "trade-nerd-1",
+              "event_id": "trade-suspension",
+              "opinion": "Pozastavení obchodu eliminovalo $2,1 miliardy v ročním bilaterálním obchodu, prospívající domácím výrobcům v obou zemích, kteří čelili menší konkurenci při poškozování spotřebitelů prostřednictvím vyšších cen a snížené volby.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "trade-joe-1",
+              "event_id": "trade-suspension",
+              "opinion": "Malí obchodníci a farmáři na obou stranách ztratili svá živobytí přes noc, zatímco politici používali ekonomický nacionalismus k shromažďování veřejné podpory a odvrácení pozornosti od domácích ekonomických problémů způsobených jejich vlastními politikami.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "trade-psychic-1",
+              "event_id": "trade-suspension",
+              "opinion": "Obchodní válka byla navržena k demonstraci rozhodnosti a potrestání druhé strany, při vytváření domácích politických výhod prostřednictvím ekonomického nacionalismu, který apeloval na emoce voličů spíše než na racionální ekonomické zájmy.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "trade-dredd-1",
+              "event_id": "trade-suspension",
+              "opinion": "Pozastavení obchodu porušila dohody WTO a bilaterální obchodní smlouvy, potenciálně vystavující obě země mezinárodním právním výzvám. Nicméně obě vlády se odvolaly na výjimky národní bezpečnosti k ospravedlnění opatření.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "trade-president-1",
+              "event_id": "trade-suspension",
+              "opinion": "Ekonomické válčení představovalo novou fázi v rivalitě Indie-Pákistán, používající obchod jako zbraň při přípravě na potenciální vojenský konflikt snížením ekonomické vzájemné závislosti, která by mohla omezit vojenské možnosti.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "trade-conspirator-1",
+              "event_id": "trade-suspension",
+              "opinion": "Současná pozastavení obchodu naznačovala koordinované plánování tvrdými zastánci v obou zemích, které těžily ze zvýšeného napětí, s vojensko-průmyslovými komplexy a nacionalistickými politiky získávajícími moc a zdroje.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "water-treaty-disputes",
+          "milestone_id": "diplomatic-breakdown",
+          "title": "Indie hrozí pozastavením smlouvy o vodách Indu s odkazem na pákistánskou podporu terorismu",
+          "left_type": "president",
+          "right_type": "dredd",
+          "left_opinion": "Indická vodní zbraň představovala ultimátní ekonomickou páku nad Pákistánem, navržená k donucení pákistánského dodržování otázek terorismu při demonstraci indické ochoty použít všechny dostupné tlakové body bez ohledu na mezinárodní smlouvy.",
+          "right_opinion": "Pákistán viděl vodní hrozby jako porušení mezinárodního práva a potenciální válečné akty, protože přístup k vodě byl základní pro národní přežití a zemědělskou ekonomiku podporující stovky milionů lidí.",
+          "left_source_url": "https://responsiblestatecraft.org/india-pakistan/",
+          "right_source_url": "https://asiatimes.com/2025/04/india-pakistan-war-fallout-would-spread-far-and-wide/",
+          "all_opinions": [
+            {
+              "id": "water-nerd-1",
+              "event_id": "water-treaty-disputes",
+              "opinion": "Kontrola vody dala Indii páku nad pákistánským zemědělským sektorem v hodnotě $40+ miliard, zatímco indické hydroelektrické projekty generovaly miliardy v příjmech, které by mohly být zbraněny pro politické účely.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "water-joe-1",
+              "event_id": "water-treaty-disputes",
+              "opinion": "Pákistánští farmáři panikařili kvůli potenciálnímu nedostatku vody ovlivňujícímu úrodu a živobytí, zatímco indičtí občané podporovali použití 'každé zbraně' proti Pákistánu včetně kontroly nad řekami, které stejně patřily Indii.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "water-psychic-1",
+              "event_id": "water-treaty-disputes",
+              "opinion": "Vodní hrozby byly navrženy k vytvoření maximálního psychologického tlaku na Pákistán ohrožením základních potřeb přežití, nutícími pákistánské vůdce vybrat si mezi podporou terorismu a ochranou zásobování vodou svého lidu.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "water-dredd-1",
+              "event_id": "water-treaty-disputes",
+              "opinion": "Indické hrozby pozastavit smlouvu o vodách Indu porušily mezinárodní vodní právo a rámec smlouvy z roku 1960 zprostředkované Světovou bankou. Takové akce by mohly představovat kolektivní trest proti pákistánským civilistům.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "water-president-1",
+              "event_id": "water-treaty-disputes",
+              "opinion": "Vodní zbraň představovala nejsilnější nevojenskou páku Indie, schopnou ochromit Pákistán ekonomicky při vyhnutí se přímé vojenské konfrontaci, která by mohla spustit jadernou eskalaci nebo mezinárodní intervenci.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "water-conspirator-1",
+              "event_id": "water-treaty-disputes",
+              "opinion": "Vodní hrozby byly koordinovány se širší indickou strategií izolovat a tlačit na Pákistán prostřednictvím více kanálů současně, při testování reakce mezinárodního společenství na taktiky ekonomického válčení.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kashmir-tensions-peak-cs",
+      "date": "2025-04-15",
+      "title": "Kašmír vzplaňuje: Násilí dosahuje bodu zlomu",
+      "context": "Duben 2025 viděl bezprecedentní násilí v Kašmíru s denními přestřelkami podél linie kontroly, zvýšenými pokusy o infiltraci militantů a rostoucími civilními oběťmi. Obě armády začaly přesouvat dodatečné síly do regionu při uvalování komunitních zákazů vycházení a výpadků komunikací.",
+      "order": 4,
+      "consequence": "Eskalace v Kašmíru vytvořila okamžité spouštěče pro větší konflikt, zatímco obě strany pozicovaly síly pro potenciální vojenskou akci, připravující půdu pro teroristický útok, který by vyvolal válku v květnu 2025.",
+      "key_persons": [
+        { "name": "Lieutenant General Upendra Dwivedi", "role": "indický velitel severní armády" },
+        { "name": "Lieutenant General Sahir Shamshad Mirza", "role": "pákistánský velitel sboru" },
+        { "name": "Mehbooba Mufti", "role": "kašmírská politická vůdkyně" },
+        { "name": "Yasin Malik", "role": "kašmírský separatistický vůdce" },
+        { "name": "Resistance Front", "role": "militantní organizace" }
+      ],
+      "events": [
+        {
+          "id": "loc-violations-spike",
+          "milestone_id": "kashmir-tensions-peak",
+          "title": "Porušení příměří linie kontroly dosáhla nejvyšších úrovní od krize Balakot 2019",
+          "left_type": "psychic",
+          "right_type": "conspirator",
+          "left_opinion": "Indie záměrně eskalovala hraniční napětí k ospravedlnění vojenského budování a vytvoření záminek pro větší vojenskou akci, používající provokace k testování pákistánských reakcí a mezinárodních reakcí na zvýšenou agresi.",
+          "right_opinion": "Pákistánské hraniční akce byly navrženy k přitažení mezinárodní pozornosti ke Kašmíru a demonstraci, že situace zůstává nestabilní, při sondování indických obran a testování nových čínských zbraňových systémů v omezených střetnutích.",
+          "left_source_url": "https://time.com/7284654/india-pakistan-ceasefire-trump-us-mediation-kashmir-conflict-strikes/",
+          "right_source_url": "https://www.asiapacific.ca/publication/reflections-india-pakistan-crisis-takeaways-and-implications",
+          "all_opinions": [
+            {
+              "id": "loc-nerd-1",
+              "event_id": "loc-violations-spike",
+              "opinion": "Zvýšená vojenská aktivita generovala miliardy v nákladech na munici a vybavení pro obě strany, zatímco obranní dodavatelé dodávali náhradní zbraně a sledovací systémy k monitorování stále aktivnější hranice.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "loc-joe-1",
+              "event_id": "loc-violations-spike",
+              "opinion": "Kašmírští civilisté na obou stranách žili v teroru z neustálého ostřelování a střelby, zatímco populace v Indii a Pákistánu stále více podporovaly vojenskou akci k 'naučení druhé strany lekci' jednou provždy.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "loc-psychic-1",
+              "event_id": "loc-violations-spike",
+              "opinion": "Eskalující porušení byla navržena k normalizaci vyšších úrovní násilí a přípravě veřejného mínění na větší vojenskou akci, při testování rozhodnosti druhé strany a schopností reakce.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "loc-dredd-1",
+              "event_id": "loc-violations-spike",
+              "opinion": "Porušení příměří porušila dohodu z roku 2021 a několik rezolucí OSN vyzývajících k míru podél linie kontroly. Nicméně obě strany argumentovaly, že reagovaly na provokace od druhé.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "loc-president-1",
+              "event_id": "loc-violations-spike",
+              "opinion": "Hraniční eskalace sloužila jako testovací plocha pro nové zbraňové systémy a taktiky při demonstraci rozhodnosti domácím publikům a mezinárodním pozorovatelům o ochotě použít sílu.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "loc-conspirator-1",
+              "event_id": "loc-violations-spike",
+              "opinion": "Synchronizovaná eskalace naznačovala koordinaci vojensko-průmyslových komplexů v obou zemích snažících se ospravedlnit větší obranné rozpočty a nákupy zbraní při vytváření podmínek pro ziskový konflikt.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "militant-infiltration-surge",
+          "milestone_id": "kashmir-tensions-peak",
+          "title": "Zpravodajské zprávy dokumentují masivní nárůst pokusů o infiltraci militantů z Pákistánu",
+          "left_type": "conspirator",
+          "right_type": "psychic",
+          "left_opinion": "Indické zpravodajské služby záměrně nafoukly zprávy o infiltraci k budování případu pro vojenskou akci proti Pákistánu, používající selektivní zpravodajství a možnosti falešné vlajky k ospravedlnění předem stanovené politiky eskalace a případné války.",
+          "right_opinion": "Pákistánské zpravodajské služby skutečně usnadňovaly zvýšenou militantní aktivitu k udržení Kašmíru 'vroucího' a přitažení mezinárodní pozornosti, při poskytování věrohodného popření pro jakékoli větší teroristické útoky, které by mohly poskytnout záminky pro indickou vojenskou akci.",
+          "left_source_url": "https://www.pbs.org/newshour/world/india-disputes-trumps-claim-that-u-s-trade-incentives-led-to-ceasefire-with-pakistan",
+          "right_source_url": "https://www.cnn.com/2025/05/10/india/analysis-us-role-india-pakistan-ceasefire-latam-intl",
+          "all_opinions": [
+            {
+              "id": "infiltration-nerd-1",
+              "event_id": "militant-infiltration-surge",
+              "opinion": "Zvýšená bezpečnostní opatření a operace proti infiltraci stály obě země miliony denně v dodatečných vojenských nasazeních, sledovací technologii a zpravodajských aktivitách prospívajících obranným dodavatelům.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "infiltration-joe-1",
+              "event_id": "militant-infiltration-surge",
+              "opinion": "Indické hraniční komunity žily ve strachu z teroristických útoků při požadování vládní ochrany, zatímco Pákistánci odmítali tvrzení o infiltraci jako indickou propagandu navrženou k ospravedlnění agrese proti Pákistánu.",
+              "isLeft": true,
+              "expert_type": "joe"
+            },
+            {
+              "id": "infiltration-psychic-1",
+              "event_id": "militant-infiltration-surge",
+              "opinion": "Zpravodajské zprávy byly strategicky uniknuty médiím k budování veřejné podpory pro vojenskou akci při vytváření psychologického tlaku na Pákistán k kontrole militantních skupin nebo čelení následkům.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "infiltration-dredd-1",
+              "event_id": "militant-infiltration-surge",
+              "opinion": "Údajná pákistánská podpora přeshraničního terorismu porušila mezinárodní právo a rezoluce Rady bezpečnosti OSN proti ukrývání teroristických skupin. Nicméně Pákistán tvrdil, že šlo o domorodé kašmírské bojovníky za svobodu, ne pákistánem sponzorované teroristy.",
+              "isLeft": false,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "infiltration-president-1",
+              "event_id": "militant-infiltration-surge",
+              "opinion": "Nárůst infiltrace představoval pokračování pákistánské strategie proxy války k udržení aktivního kašmírského konfliktu při vyhnutí se přímé vojenské konfrontaci, která by mohla eskalovat na jaderné úrovně.",
+              "isLeft": false,
+              "expert_type": "president"
+            },
+            {
+              "id": "infiltration-conspirator-1",
+              "event_id": "militant-infiltration-surge",
+              "opinion": "Načasování zvýšené infiltrace se shodovalo se zbrojním budováním a diplomatickým rozkladem, naznačující koordinovanou strategii k vytvoření podmínek pro velký teroristický útok, který by ospravedlnil indickou vojenskou odvetu.",
+              "isLeft": false,
+              "expert_type": "conspirator"
+            }
+          ]
+        },
+        {
+          "id": "military-buildup-kashmir",
+          "milestone_id": "kashmir-tensions-peak",
+          "title": "Obě armády nasadily dodatečné síly do Kašmíru, vytvářející největší vojenskou koncentraci od války Kargil",
+          "left_type": "president",
+          "right_type": "nerd",
+          "left_opinion": "Indické vojenské budování bylo navrženo k demonstraci ohromující síly a odstrašení pákistánského dobrodružství při pozicování pro potenciální rozhodující vojenskou akci k vyřešení kašmírské otázky trvale prostřednictvím převažujících konvenčních schopností.",
+          "right_opinion": "Pákistánské nasazení sil bylo vypočítáno k ukázání připravenosti k obraně při zvyšování nákladů jakékoli indické vojenské akce, používající asymetrické schopnosti a výhody terénu k vyrovnání indické početní a technologické převahy.",
+          "left_source_url": "https://www.washingtonpost.com/world/2025/05/10/india-pakistan-ceasefire-trump-kashmir-violations/",
+          "right_source_url": "https://thefridaytimes.com/12-May-2025/the-2025-war-india-s-strategic-and-economic-losses",
+          "all_opinions": [
+            {
+              "id": "buildup-nerd-1",
+              "event_id": "military-buildup-kashmir",
+              "opinion": "Vojenské nasazení stálo obě země více než $500 milionů měsíčně v dodatečných logistických, muničních a personálních nákladech, při vytváření masivní poptávky po vybavení pro studené počasí, komunikačním vybavení a systémech pro horské válčení.",
+              "isLeft": true,
+              "expert_type": "nerd"
+            },
+            {
+              "id": "buildup-joe-1",
+              "event_id": "military-buildup-kashmir",
+              "opinion": "Kašmírští civilisté čelili rostoucím omezením a vojenské přítomnosti v jejich denním životě, zatímco rodiny v Indii i Pákistánu se obávaly o své syny umístěné v nebezpečných hraničních pozicích.",
+              "isLeft": false,
+              "expert_type": "joe"
+            },
+            {
+              "id": "buildup-psychic-1",
+              "event_id": "military-buildup-kashmir",
+              "opinion": "Viditelné vojenské budování bylo navrženo k signalizování rozhodnosti domácím a mezinárodním publikům při vytváření psychologického tlaku na druhou stranu k ustoupení nebo čelení následkům.",
+              "isLeft": true,
+              "expert_type": "psychic"
+            },
+            {
+              "id": "buildup-dredd-1",
+              "event_id": "military-buildup-kashmir",
+              "opinion": "Masivní nasazení vojsk porušilo několik opatření pro budování důvěry dohodnutých v předchozích dohodách a vytvořilo podmínky spouštěče vlasového, kde menší incidenty by mohly rychle eskalovat.",
+              "isLeft": true,
+              "expert_type": "dredd"
+            },
+            {
+              "id": "buildup-president-1",
+              "event_id": "military-buildup-kashmir",
+              "opinion": "Budování sil představovalo přípravu obou stran na potenciální konflikt při demonstraci mezinárodnímu společenství vážnosti jejich pozic a potřeby řešení.",
+              "isLeft": true,
+              "expert_type": "president"
+            },
+            {
+              "id": "buildup-conspirator-1",
+              "event_id": "military-buildup-kashmir",
+              "opinion": "Současné vojenské budování naznačovalo koordinovanou eskalaci tvrdými zastánci v obou armádách snažícími se vytvořit podmínky fait accompli, které by přinutily politické vůdce směrem ke konfliktu spíše než ke kompromisu.",
+              "isLeft": true,
+              "expert_type": "conspirator"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

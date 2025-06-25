@@ -8,10 +8,10 @@ import { Profile } from '@/app/types/profile';
 import { Users, Loader2 } from 'lucide-react';
 import { GlassContainer } from '@/app/components/ui/containers/GlassContainer';
 import { containerVariants } from '@/app/components/animations/variants/votingVariants';
-import ProfilesSearch from '../../../components/profile/ProfilesSearch';
 import ProfilesError from '@/app/components/profile/ProfilesError';
 import ProfileItemGrid from '@/app/components/profile/ProfileItemGrid';
-import ProfileFilterBar from '@/app/components/profile/ProfileFilterBar';
+import { itemVariants } from '@/app/helpers/animation';
+import ProfilesToolbar from '@/app/components/profile/ProfilesSearch';
 
 
 interface ProfileGridItemProps {
@@ -33,13 +33,12 @@ const AllProfilesTab: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [refreshing, setRefreshing] = useState(false);
-    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [selectedCountry, setSelectedCountry] = useState('all');
     const getCountryApiValue = (filterValue: string): string | undefined => {
         const countryMap: Record<string, string> = {
             'all': '', 
             'us': 'us',
-            'cz': 'cz'
+            'cs': 'cs'
         };
 
         return filterValue === 'all' ? undefined : countryMap[filterValue];
@@ -88,17 +87,6 @@ const AllProfilesTab: React.FC = () => {
         setSelectedCountry(country);
     };
 
-    const itemVariants: Variants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 0.5,
-                ease: "easeOut"
-            }
-        }
-    };
 
     const gridVariants: Variants = {
         hidden: { opacity: 0 },
@@ -118,24 +106,16 @@ const AllProfilesTab: React.FC = () => {
             animate="visible"
             className="space-y-6"
         >
-            <motion.div variants={itemVariants}>
-                <ProfileFilterBar
-                    selectedCountry={selectedCountry}
-                    onCountryChange={handleCountryChange}
-                    className="mb-6"
-                />
-            </motion.div>
-
-            {/* Enhanced Search and Controls */}
-            <ProfilesSearch
+            <ProfilesToolbar
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
-                viewMode={viewMode}
-                setViewMode={setViewMode}
                 fetchProfiles={fetchProfiles}
                 refreshing={refreshing}
                 profiles={profiles}
+                selectedCountry={selectedCountry}
+                handleCountryChange={handleCountryChange}
             />
+
 
             {/* Loading State */}
             {loading && (
@@ -172,21 +152,12 @@ const AllProfilesTab: React.FC = () => {
                     <AnimatePresence mode="wait">
                         {profiles.length > 0 ? (
                             <motion.div
-                                key={viewMode}
+                                key={`profiles-grid-${selectedCountry}`}
                                 variants={gridVariants}
                                 initial="hidden"
                                 animate="visible"
                                 exit="hidden"
-                                className={
-                                    viewMode === 'grid'
-                                        ? `grid gap-6 
-                       grid-cols-1 
-                       sm:grid-cols-2 
-                       lg:grid-cols-3 
-                       xl:grid-cols-4 
-                       2xl:grid-cols-4
-                       `
-                                        : 'space-y-4'
+                                className={`grid gap-6  grid-cols-1   sm:grid-cols-2   lg:grid-cols-3   xl:grid-cols-4    2xl:grid-cols-4    `
                                 }
                             >
                                 {profiles.map((profile, index) => (

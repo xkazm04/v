@@ -148,26 +148,6 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
                 </div>
               </div>
             </div>
-
-            {/* Divider */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200 dark:border-gray-700" />
-              </div>
-              <div className="relative flex justify-center">
-                <span className="bg-white dark:bg-gray-900 px-4 text-sm text-gray-500 dark:text-gray-400">
-                  What interests you most?
-                </span>
-              </div>
-            </div>
-
-            {/* Bottom Section: Categories - Compact Icons */}
-            <div className="max-w-4xl mx-auto">
-              <CompactCategorySelector
-                selectedCategories={tempPreferences.categories}
-                onChange={handleCategoriesChange}
-              />
-            </div>
           </div>
         );
 

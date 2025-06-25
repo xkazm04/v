@@ -38,15 +38,15 @@ export const AVAILABLE_LANGUAGES: LanguageOption[] = [
     description: 'Default language',
     voiceId: 'JBFqnCBsd6RMkjVDRZzb'
   },
-  {
-    code: 'es',
-    name: 'Spanish',
-    nativeName: 'Español',
-    flag: '🇪🇸',
-    flagSvg: '/flags/es.svg',
-    description: 'Traducción automática',
-    voiceId: '6xftrpatV0jGmFHxDjUv'
-  },
+  // {
+  //   code: 'es',
+  //   name: 'Spanish',
+  //   nativeName: 'Español',
+  //   flag: '🇪🇸',
+  //   flagSvg: '/flags/es.svg',
+  //   description: 'Traducción automática',
+  //   voiceId: '6xftrpatV0jGmFHxDjUv'
+  // },
   {
     code: 'cs',
     name: 'Czech',
@@ -56,24 +56,24 @@ export const AVAILABLE_LANGUAGES: LanguageOption[] = [
     description: 'Automatický překlad',
     voiceId: 'SZXidiHhq5QYe3jRboSZ'
   },
-  {
-    code: 'fr',
-    name: 'French',
-    nativeName: 'Français',
-    flag: '🇫🇷',
-    flagSvg: '/flags/fr.svg',
-    description: 'Traduction automatique',
-    voiceId: 'ohItIVrXTBI80RrUECOD'
-  },
-  {
-    code: 'de',
-    name: 'German',
-    nativeName: 'Deutsch',
-    flag: '🇩🇪',
-    flagSvg: '/flags/de.svg',
-    description: 'Automatische Übersetzung',
-    voiceId: 'kkJxCnlRCckmfFvzDW5Q'
-  },
+  // {
+  //   code: 'fr',
+  //   name: 'French',
+  //   nativeName: 'Français',
+  //   flag: '🇫🇷',
+  //   flagSvg: '/flags/fr.svg',
+  //   description: 'Traduction automatique',
+  //   voiceId: 'ohItIVrXTBI80RrUECOD'
+  // },
+  // {
+  //   code: 'de',
+  //   name: 'German',
+  //   nativeName: 'Deutsch',
+  //   flag: '🇩🇪',
+  //   flagSvg: '/flags/de.svg',
+  //   description: 'Automatische Übersetzung',
+  //   voiceId: 'kkJxCnlRCckmfFvzDW5Q'
+  // },
   {
     code: 'ru',
     name: 'Russian',
@@ -95,19 +95,19 @@ export interface CountryOption {
 }
 
 export const AVAILABLE_COUNTRIES: CountryOption[] = [
-  { code: 'worldwide', name: 'Worldwide', nativeName: 'Global', flag: '🌍', flagSvg: '/flags/worldwide.svg', region: 'Global' },
+  { code: 'worldwide', name: 'Worldwide', nativeName: 'Global', flag: '🌍', flagSvg: '/flags/world.svg', region: 'Global' },
   { code: 'us', name: 'United States', nativeName: 'United States', flag: '🇺🇸', flagSvg: '/flags/us.svg', region: 'North America' },
-  { code: 'uk', name: 'United Kingdom', nativeName: 'United Kingdom', flag: '🇬🇧', flagSvg: '/flags/gb.svg', region: 'Europe' },
-  { code: 'ca', name: 'Canada', nativeName: 'Canada', flag: '🇨🇦', flagSvg: '/flags/ca.svg', region: 'North America' },
-  { code: 'au', name: 'Australia', nativeName: 'Australia', flag: '🇦🇺', flagSvg: '/flags/au.svg', region: 'Oceania' },
-  { code: 'de', name: 'Germany', nativeName: 'Deutschland', flag: '🇩🇪', flagSvg: '/flags/de.svg', region: 'Europe' },
-  { code: 'fr', name: 'France', nativeName: 'France', flag: '🇫🇷', flagSvg: '/flags/fr.svg', region: 'Europe' },
-  { code: 'es', name: 'Spain', nativeName: 'España', flag: '🇪🇸', flagSvg: '/flags/es.svg', region: 'Europe' },
-  { code: 'it', name: 'Italy', nativeName: 'Italia', flag: '🇮🇹', flagSvg: '/flags/it.svg', region: 'Europe' },
-  { code: 'jp', name: 'Japan', nativeName: '日本', flag: '🇯🇵', flagSvg: '/flags/jp.svg', region: 'Asia' },
-  { code: 'cn', name: 'China', nativeName: '中国', flag: '🇨🇳', flagSvg: '/flags/cn.svg', region: 'Asia' },
-  { code: 'in', name: 'India', nativeName: 'भारत', flag: '🇮🇳', flagSvg: '/flags/in.svg', region: 'Asia' },
-  { code: 'br', name: 'Brazil', nativeName: 'Brasil', flag: '🇧🇷', flagSvg: '/flags/br.svg', region: 'South America' },
+  // { code: 'uk', name: 'United Kingdom', nativeName: 'United Kingdom', flag: '🇬🇧', flagSvg: '/flags/gb.svg', region: 'Europe' },
+  // { code: 'ca', name: 'Canada', nativeName: 'Canada', flag: '🇨🇦', flagSvg: '/flags/ca.svg', region: 'North America' },
+  // { code: 'au', name: 'Australia', nativeName: 'Australia', flag: '🇦🇺', flagSvg: '/flags/au.svg', region: 'Oceania' },
+  // { code: 'de', name: 'Germany', nativeName: 'Deutschland', flag: '🇩🇪', flagSvg: '/flags/de.svg', region: 'Europe' },
+  // { code: 'fr', name: 'France', nativeName: 'France', flag: '🇫🇷', flagSvg: '/flags/fr.svg', region: 'Europe' },
+  // { code: 'es', name: 'Spain', nativeName: 'España', flag: '🇪🇸', flagSvg: '/flags/es.svg', region: 'Europe' },
+  // { code: 'it', name: 'Italy', nativeName: 'Italia', flag: '🇮🇹', flagSvg: '/flags/it.svg', region: 'Europe' },
+  // { code: 'jp', name: 'Japan', nativeName: '日本', flag: '🇯🇵', flagSvg: '/flags/jp.svg', region: 'Asia' },
+  // { code: 'cn', name: 'China', nativeName: '中国', flag: '🇨🇳', flagSvg: '/flags/cn.svg', region: 'Asia' },
+  // { code: 'in', name: 'India', nativeName: 'भारत', flag: '🇮🇳', flagSvg: '/flags/in.svg', region: 'Asia' },
+  // { code: 'br', name: 'Brazil', nativeName: 'Brasil', flag: '🇧🇷', flagSvg: '/flags/br.svg', region: 'South America' },
   { code: 'ru', name: 'Russia', nativeName: 'Россия', flag: '🇷🇺', flagSvg: '/flags/ru.svg', region: 'Europe/Asia' },
   { code: 'cz', name: 'Czech Republic', nativeName: 'Česká republika', flag: '🇨🇿', flagSvg: '/flags/cz.svg', region: 'Europe' },
   { code: 'ua', name: 'Ukraine', nativeName: 'Україна', flag: '🇺🇦', flagSvg: '/flags/ua.svg', region: 'Europe' },

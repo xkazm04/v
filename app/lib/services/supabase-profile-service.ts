@@ -298,66 +298,47 @@ class SupabaseProfileService {
   }
 
   /**
-   * Get profile statistics (mock implementation for now)
-   * TODO: Replace with actual stats table queries when available
+   * Get profile statistics using server-side API route
+   * Uses the /api/profile/[id]/stats endpoint for full data access
    */
   async getProfileStats(profileId: string): Promise<ProfileStatsResponse | null> {
     try {
-      // Verify profile exists
-      const profile = await this.getProfileById(profileId);
-      if (!profile) {
+      console.log(`🔄 Fetching profile stats for: ${profileId}`);
+      
+      // Use server-side API route for stats
+      const response = await fetch(`/api/profile/${profileId}/stats`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // Add cache headers for better performance
+        cache: 'default',
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          console.warn(`Profile stats not found for: ${profileId}`);
+          return null;
+        }
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      if (!result.data) {
+        console.warn(`No stats data returned for profile: ${profileId}`);
         return null;
       }
 
-      // Mock stats data following the expected structure
-      // TODO: Replace with actual research_results table queries
-      const mockStats: ProfileStatsResponse = {
-        profile_id: profileId,
-        recent_statements: [
-          {
-            id: `stmt_${Math.random()}`,
-            verdict: "This statement has been analyzed and found to be accurate based on current data.",
-            status: "TRUE",
-            correction: undefined,
-            country: "US",
-            category: "politics",
-            expert_perspectives: [],
-            created_at: new Date().toISOString()
-          },
-          {
-            id: `stmt_${Math.random()}`,
-            verdict: "This claim requires additional context and may be misleading without proper explanation.",
-            status: "MISLEADING",
-            correction: "The actual data shows a different trend when accounting for seasonal variations.",
-            country: "US",
-            category: "economy",
-            expert_perspectives: [],
-            created_at: new Date().toISOString()
-          }
-          // Add more mock statements as needed
-        ],
-        stats: {
-          total_statements: 47,
-          categories: [
-            { category: "politics", count: 15 },
-            { category: "economy", count: 12 },
-            { category: "healthcare", count: 8 },
-            { category: "environment", count: 7 },
-            { category: "education", count: 5 }
-          ],
-          status_breakdown: {
-            "TRUE": 28,
-            "FALSE": 5,
-            "MISLEADING": 8,
-            "PARTIALLY_TRUE": 4,
-            "UNVERIFIABLE": 2
-          }
-        }
-      };
-
-      return mockStats;
+      console.log(`✅ Successfully fetched profile stats for: ${profileId}`);
+      return result.data;
+      
     } catch (error) {
-      console.error('Get profile stats error:', error);
+      console.error(`❌ Failed to fetch profile stats for ${profileId}:`, error);
       return null;
     }
   }

@@ -49,10 +49,9 @@ const ProfileFilterBar: React.FC<ProfileFilterBarProps> = ({
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className={`flex items-center justify-center ${className}`}
     >
       <div
-        className="inline-flex items-center p-2 rounded-2xl gap-2"
+        className="inline-flex items-center rounded-2xl gap-2"
         style={{
           background: isDark 
             ? 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04))'
