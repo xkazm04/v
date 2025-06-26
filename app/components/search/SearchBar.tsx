@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { Search, X } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import { cn } from '@/app/lib/utils';
@@ -37,6 +37,10 @@ export function SearchBar({
   debounceDelay,
   limits
 }: SearchBarProps) {
+  // ✅ FIX: Create local refs with proper typing
+  const searchRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const {
     // State
     query,
@@ -51,10 +55,6 @@ export function SearchBar({
     newsResults,
     videoResults,
     
-    // Refs
-    searchRef,
-    inputRef,
-    
     // Handlers
     handleInputChange,
     handleClear,
@@ -65,7 +65,10 @@ export function SearchBar({
     onResultSelect,
     minQueryLength,
     debounceDelay,
-    limits
+    limits,
+    // ✅ FIX: Pass refs to the hook
+    searchRef,
+    inputRef
   });
 
   const isCompact = variant === 'compact';

@@ -16,6 +16,8 @@ interface UseSearchStateProps {
     news: number;
     videos: number;
   };
+  searchRef?: React.RefObject<HTMLDivElement | null>;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
 }
 
 interface UseSearchStateReturn {

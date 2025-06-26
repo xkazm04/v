@@ -17,7 +17,7 @@ export function useSmartTimeTracking(videoId: string, duration: number) {
     isTracking: false
   });
 
-  const intervalRef = useRef<NodeJS.Timeout>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startTimeRef = useRef<number>(Date.now());
   const lastUpdateRef = useRef<number>(0);
 
