@@ -3,6 +3,7 @@ import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
 import { supabaseAdmin } from '@/app/lib/supabase';
 import { getVoiceIdForLanguage } from '@/app/helpers/countries';
 import crypto from 'crypto';
+import { Readable } from 'stream';
 
 const client = new ElevenLabsClient({ 
   apiKey: process.env.ELEVENLABS_API_KEY!
@@ -88,6 +89,42 @@ async function cacheAudio(
   }
 }
 
+/**
+ * Convert Node.js Readable stream to Buffer
+ */
+async function streamToBuffer(stream: Readable): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    const chunks: Uint8Array[] = [];
+    
+    stream.on('data', (chunk: Buffer | Uint8Array) => {
+      // Convert Buffer to Uint8Array if needed
+      const uint8Chunk = chunk instanceof Buffer ? new Uint8Array(chunk) : chunk;
+      chunks.push(uint8Chunk);
+    });
+    
+    stream.on('end', () => {
+      // Calculate total length
+      const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+      
+      // Create a single Uint8Array and copy all chunks into it
+      const result = new Uint8Array(totalLength);
+      let offset = 0;
+      
+      for (const chunk of chunks) {
+        result.set(chunk, offset);
+        offset += chunk.length;
+      }
+      
+      // Convert Uint8Array to Buffer
+      resolve(Buffer.from(result));
+    });
+    
+    stream.on('error', (error: Error) => {
+      reject(error);
+    });
+  });
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { text, voiceId, languageCode } = await request.json();
@@ -150,14 +187,8 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    // Collect stream data
-    const chunks: Uint8Array[] = [];
-    for await (const chunk of audioStream) {
-      chunks.push(chunk);
-    }
-
-    // Combine chunks into single buffer
-    const audioBuffer = Buffer.concat(chunks);
+    // ✅ FIX: Handle Node.js Readable stream properly
+    const audioBuffer = await streamToBuffer(audioStream);
     
     // Cache the audio (fire and forget)
     const base64Audio = audioBuffer.toString('base64');
