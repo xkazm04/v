@@ -3,6 +3,7 @@ import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
 import { supabaseAdmin } from '@/app/lib/supabase';
 import { getVoiceIdForLanguage } from '@/app/helpers/countries';
 import crypto from 'crypto';
+import { Readable } from 'stream';
 
 const client = new ElevenLabsClient({ 
   apiKey: process.env.ELEVENLABS_API_KEY!
@@ -89,25 +90,39 @@ async function cacheAudio(
 }
 
 /**
- * Convert ReadableStream to Buffer
+ * Convert Node.js Readable stream to Buffer
  */
-async function streamToBuffer(stream: ReadableStream<Uint8Array>): Promise<Buffer> {
-  const reader = stream.getReader();
-  const chunks: Uint8Array[] = [];
-  
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      if (value) {
-        chunks.push(value);
+async function streamToBuffer(stream: Readable): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    const chunks: Uint8Array[] = [];
+    
+    stream.on('data', (chunk: Buffer | Uint8Array) => {
+      // Convert Buffer to Uint8Array if needed
+      const uint8Chunk = chunk instanceof Buffer ? new Uint8Array(chunk) : chunk;
+      chunks.push(uint8Chunk);
+    });
+    
+    stream.on('end', () => {
+      // Calculate total length
+      const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+      
+      // Create a single Uint8Array and copy all chunks into it
+      const result = new Uint8Array(totalLength);
+      let offset = 0;
+      
+      for (const chunk of chunks) {
+        result.set(chunk, offset);
+        offset += chunk.length;
       }
-    }
-  } finally {
-    reader.releaseLock();
-  }
-  
-  return Buffer.concat(chunks);
+      
+      // Convert Uint8Array to Buffer
+      resolve(Buffer.from(result));
+    });
+    
+    stream.on('error', (error: Error) => {
+      reject(error);
+    });
+  });
 }
 
 export async function POST(request: NextRequest) {
@@ -144,6 +159,7 @@ export async function POST(request: NextRequest) {
       
       // Convert base64 back to buffer
       const audioBuffer = Buffer.from(cachedAudio, 'base64');
+      
       return new NextResponse(audioBuffer, {
         status: 200,
         headers: {
@@ -171,13 +187,15 @@ export async function POST(request: NextRequest) {
       }
     });
 
-      //@ts-expect-error Ignore
+    // ✅ FIX: Handle Node.js Readable stream properly
     const audioBuffer = await streamToBuffer(audioStream);
     
     // Cache the audio (fire and forget)
     const base64Audio = audioBuffer.toString('base64');
     cacheAudio(textHash, finalVoiceId, base64Audio, 'mp3_44100_128')
       .catch(error => console.warn('Background caching failed:', error));
+
+    console.log(`✅ Generated audio: ${audioBuffer.length} bytes with voice: ${finalVoiceId}`);
 
     return new NextResponse(audioBuffer, {
       status: 200,
