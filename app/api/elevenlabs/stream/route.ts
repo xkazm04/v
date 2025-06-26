@@ -156,7 +156,7 @@ export async function POST(request: NextRequest) {
       
       // Convert base64 back to buffer
       const audioBuffer = Buffer.from(cachedAudio, 'base64');
-      return new NextResponse(audioBuffer, {
+      return new NextResponse(new Uint8Array(audioBuffer), {
         status: 200,
         headers: {
           'Content-Type': 'audio/mpeg',
@@ -190,7 +190,7 @@ export async function POST(request: NextRequest) {
     cacheAudio(textHash, finalVoiceId, base64Audio, 'mp3_44100_128')
       .catch(error => console.warn('Background caching failed:', error));
 
-    return new NextResponse(audioBuffer, {
+    return new NextResponse(new Uint8Array(audioBuffer), {
       status: 200,
       headers: {
         'Content-Type': 'audio/mpeg',
