@@ -144,7 +144,6 @@ export async function POST(request: NextRequest) {
       
       // Convert base64 back to buffer
       const audioBuffer = Buffer.from(cachedAudio, 'base64');
-      
       return new NextResponse(audioBuffer, {
         status: 200,
         headers: {
@@ -172,15 +171,13 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    // ✅ FIX: Convert ReadableStream to Buffer properly
+      //@ts-expect-error Ignore
     const audioBuffer = await streamToBuffer(audioStream);
     
     // Cache the audio (fire and forget)
     const base64Audio = audioBuffer.toString('base64');
     cacheAudio(textHash, finalVoiceId, base64Audio, 'mp3_44100_128')
       .catch(error => console.warn('Background caching failed:', error));
-
-    console.log(`✅ Generated audio: ${audioBuffer.length} bytes with voice: ${finalVoiceId}`);
 
     return new NextResponse(audioBuffer, {
       status: 200,
