@@ -29,7 +29,7 @@ export const VideoCardLayout = memo(function VideoCard({
   const router = useRouter();
 
   const handleCardClick = () => {
-    router.push(`/watch/${video.id}`);
+    router.push(`/watch?v=${video.id}`);
   };
 
   return (

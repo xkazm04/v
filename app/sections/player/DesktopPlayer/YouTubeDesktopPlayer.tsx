@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { VideoInfoHeader } from '@/app/sections/player/VideoInfoHeader'; // ✅ RESTORED
+import { VideoInfoHeader } from '@/app/sections/player/VideoInfoHeader';
 import { useState, useRef, useEffect } from 'react';
 import { Video } from '@/app/types/video_api';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
@@ -202,7 +202,6 @@ export function YouTubeDesktopPlayer({
       transition={{ duration: 0.5 }}
       className="w-full"
     >
-      {/* ✅ RESTORED: Video Info Header */}
       <VideoInfoHeader video={video} />
       
       {/* Video Player Container */}

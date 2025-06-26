@@ -9,10 +9,14 @@ import ResearchFormContent from './ResearchFormContent';
 import ResearchFormStatement from './ResearchFormStatement';
 import PredefinedStatements from './PredefinedStatements';
 import { scrollDown } from '@/app/components/animations/Scroll';
+import { ChevronUp, ChevronDown } from 'lucide-react';
+import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 
 interface ResearchFormProps {
   onSubmit: (data: ResearchRequest) => Promise<void>;
   isLoading: boolean;
+  hasSubmitted?: boolean;
+  hasError?: boolean;
 }
 
 const containerVariants: Variants = {
@@ -43,7 +47,37 @@ const contentVariants: Variants = {
   }
 };
 
-export function ResearchForm({ onSubmit, isLoading }: ResearchFormProps) {
+const collapseVariants: Variants = {
+  expanded: {
+    height: 'auto',
+    opacity: 1,
+    transition: {
+      height: {
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94]
+      },
+      opacity: {
+        duration: 0.4,
+        delay: 0.1
+      }
+    }
+  },
+  collapsed: {
+    height: 0,
+    opacity: 0,
+    transition: {
+      height: {
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94]
+      },
+      opacity: {
+        duration: 0.3
+      }
+    }
+  }
+};
+
+export function ResearchForm({ onSubmit, isLoading, hasSubmitted = false, hasError = false }: ResearchFormProps) {
   const [formData, setFormData] = useState<ResearchRequest>({
     statement: '',
     source: '',
@@ -54,6 +88,22 @@ export function ResearchForm({ onSubmit, isLoading }: ResearchFormProps) {
   const [mode, setMode] = useState<'predefined' | 'custom'>('predefined');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [isExpanded, setIsExpanded] = useState(!hasSubmitted);
+  const { colors } = useLayoutTheme();
+
+  // Auto-collapse after successful submission
+  React.useEffect(() => {
+    if (hasSubmitted && !hasError) {
+      setIsExpanded(false);
+    }
+  }, [hasSubmitted, hasError]);
+
+  // Auto-expand on error
+  React.useEffect(() => {
+    if (hasError) {
+      setIsExpanded(true);
+    }
+  }, [hasError]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,21 +157,18 @@ export function ResearchForm({ onSubmit, isLoading }: ResearchFormProps) {
       animate="visible"
       className="w-full"
     >
-
       <CardContent className="pb-6 sm:pb-8">
-        <motion.div
-          className="text-center mb-8 flex flex-col items-center gap-2"
-        >
+        <motion.div className="text-center mb-8 flex flex-col items-center gap-2">
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-yellow-500 bg-clip-text text-transparent mb-2">
             Statement analysis
           </h1>
-
           <p className="text-sm sm:text-base text-muted-foreground font-normal max-w-md leading-relaxed">
             Write or select a statement and get your insights
           </p>
         </motion.div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Always visible statement section */}
           <ResearchFormStatement
             formData={formData}
             handleChange={handleChange}
@@ -132,41 +179,76 @@ export function ResearchForm({ onSubmit, isLoading }: ResearchFormProps) {
             touched={touched}
           />
 
-          <AnimatePresence mode="wait">
-            {mode === 'predefined' ? (
-              <motion.div
-                key="predefined"
-                variants={contentVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-              >
-                <PredefinedStatements
-                  onSelect={handlePredefinedSelect}
-                  selectedStatement={formData.statement}
-                />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="custom"
-                variants={contentVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="space-y-6"
-              >
-                <ResearchFormContent
-                  formData={formData}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Collapsible toggle button (only show after submission) */}
+          {hasSubmitted && (
+            <motion.button
+              type="button"
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-lg border transition-all duration-200 hover:bg-opacity-80"
+              style={{
+                borderColor: colors.border,
+                color: colors.mutedForeground
+              }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <span className="text-sm font-medium">
+                {isExpanded ? 'Hide Details' : 'Show Details'}
+              </span>
+              {isExpanded ? (
+                <ChevronUp className="h-4 w-4" />
+              ) : (
+                <ChevronDown className="h-4 w-4" />
+              )}
+            </motion.button>
+          )}
+
+          {/* Collapsible content sections */}
+          <motion.div
+            variants={collapseVariants}
+            animate={isExpanded ? 'expanded' : 'collapsed'}
+            style={{ overflow: 'hidden' }}
+          >
+            <div className="space-y-6 pb-2">
+              <AnimatePresence mode="wait">
+                {mode === 'predefined' ? (
+                  <motion.div
+                    key="predefined"
+                    variants={contentVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                  >
+                    <PredefinedStatements
+                      onSelect={handlePredefinedSelect}
+                      selectedStatement={formData.statement}
+                    />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="custom"
+                    variants={contentVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="space-y-6"
+                  >
+                    <ResearchFormContent
+                      formData={formData}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
 
           <ResearchFormSubmit
             formData={formData}
             isLoading={isLoading}
+            hasError={hasError}
           />
         </form>
       </CardContent>

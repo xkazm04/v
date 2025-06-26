@@ -10,11 +10,16 @@ import { LLMResearchResponse } from '@/app/types/research';
 export default function UploadLayout() {
   const [result, setResult] = useState<LLMResearchResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   const handleResearch = async (data: ResearchRequest) => {
     setIsLoading(true);
+    setHasError(false);
+    setHasSubmitted(true);
+
     try {
-      const response = await fetch('http://localhost:8000/fc/research', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/fc/research`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,9 +33,11 @@ export default function UploadLayout() {
 
       const researchResult: LLMResearchResponse = await response.json();
       setResult(researchResult);
+      setHasError(false);
       toast.success('Fact-check completed successfully!');
     } catch (error) {
       console.error('Research failed:', error);
+      setHasError(true);
       toast.error('Failed to research statement. Please try again.');
     } finally {
       setIsLoading(false);
@@ -41,7 +48,12 @@ export default function UploadLayout() {
     <div className="">
       <div className="space-y-8">
         {/* Form */}
-        <ResearchForm onSubmit={handleResearch} isLoading={isLoading} />
+        <ResearchForm
+          onSubmit={handleResearch}
+          isLoading={isLoading}
+          hasSubmitted={hasSubmitted}
+          hasError={hasError}
+        />
 
         {/* Results */}
         <ResearchResults result={result} isLoading={isLoading} />

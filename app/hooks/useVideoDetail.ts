@@ -3,6 +3,17 @@ import { VideoWithTimestamps } from '@/app/types/video_api';
 import { supabaseVideoDetailService } from '@/app/lib/services/supabase-video-detail-service';
 import { videos as mockVideos } from '@/app/constants/videos';
 
+// ✅ ADDED: Helper to check if a string is a valid YouTube ID
+const isValidYouTubeId = (id: string): boolean => {
+  // YouTube IDs are 11 characters long and contain only alphanumeric, underscore, and hyphen
+  return /^[a-zA-Z0-9_-]{11}$/.test(id);
+};
+
+// ✅ ADDED: Helper to check if a string is a UUID (database ID)
+const isUUID = (id: string): boolean => {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+};
+
 async function getVideoDetail(videoId: string): Promise<VideoWithTimestamps> {
   try {
     console.log(`🎬 Fetching video detail: ${videoId}`);
@@ -56,30 +67,42 @@ async function getVideoDetail(videoId: string): Promise<VideoWithTimestamps> {
     return mockVideo;
   }
 
-  // ✅ **ULTIMATE FALLBACK: Generate minimal video**
-  console.warn(`⚠️ Creating minimal video object for: ${videoId}`);
+  // ✅ **IMPROVED ULTIMATE FALLBACK: Only create valid fallback for YouTube IDs**
+  console.warn(`⚠️ No video data found for: ${videoId}`);
   
-  return {
-    video: {
-      id: videoId,
-      video_url: `https://youtube.com/watch?v=${videoId}`,
-      source: 'youtube',
-      researched: false,
-      title: `Video ${videoId}`,
-      verdict: null,
-      duration_seconds: null,
-      speaker_name: null,
-      language_code: 'en',
-      audio_extracted: false,
-      transcribed: false,
-      analyzed: false,
-      created_at: new Date().toISOString(),
-      updated_at: null,
-      processed_at: null,
-      duration: 'Unknown'
-    },
-    timestamps: []
-  };
+  // If the videoId is a UUID (database ID), don't create a fake YouTube video
+  if (isUUID(videoId)) {
+    throw new Error(`Video with database ID ${videoId} not found in any data source`);
+  }
+  
+  // If it looks like a YouTube ID, create a minimal fallback
+  if (isValidYouTubeId(videoId)) {
+    console.log(`🔧 Creating minimal YouTube video object for: ${videoId}`);
+    return {
+      video: {
+        id: videoId,
+        video_url: `https://youtube.com/watch?v=${videoId}`,
+        source: 'youtube',
+        researched: false,
+        title: `Video ${videoId}`,
+        verdict: null,
+        duration_seconds: null,
+        speaker_name: null,
+        language_code: 'en',
+        audio_extracted: false,
+        transcribed: false,
+        analyzed: false,
+        created_at: new Date().toISOString(),
+        updated_at: null,
+        processed_at: null,
+        duration: 'Unknown'
+      },
+      timestamps: []
+    };
+  }
+  
+  // For any other invalid ID format
+  throw new Error(`Invalid video ID format: ${videoId}. Expected YouTube video ID or valid database UUID.`);
 }
 
 export const useVideoDetail = (videoId: string, options?: {
@@ -95,6 +118,11 @@ export const useVideoDetail = (videoId: string, options?: {
     gcTime: 30 * 60 * 1000, // 30 minutes
     refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false,
     retry: (failureCount, error) => {
+      // Don't retry for invalid ID formats
+      if (error instanceof Error && error.message.includes('Invalid video ID format')) {
+        return false;
+      }
+      
       // Only retry if we haven't found mock data
       if (failureCount === 0) {
         const mockVideo = mockVideos.find(v =>

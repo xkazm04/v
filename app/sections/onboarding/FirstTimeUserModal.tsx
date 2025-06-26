@@ -36,7 +36,7 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
       subtitle: 'Choose your language, interests, and preferred theme to get started'
     },
     {
-      title: 'Discover Powerful Features',
+      title: 'Discover Features',
       subtitle: 'Explore the comprehensive fact-checking tools at your disposal'
     },
   ];
@@ -163,7 +163,7 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center p-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -198,7 +198,6 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
 
             {/* FIXED: Content with explicit height and scroll isolation */}
             <div className="relative z-20 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm h-full flex flex-col max-h-[90vh]">
-              {/* Header - Fixed height */}
               <div className="flex-shrink-0">
                 <OnboardingHeader
                   onSkip={handleSkip}
@@ -211,7 +210,7 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
 
               {/* FIXED: Step Content - Properly scrollable with explicit dimensions */}
               <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
-                <div className="p-6 md:p-8 min-h-full">
+                <div className="p-2 min-h-full">
                   <motion.div
                     key={currentStep}
                     initial={{ opacity: 0, x: 20 }}
@@ -220,17 +219,7 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
                     transition={{ duration: 0.3 }}
                     className="space-y-6 h-full"
                   >
-                    {/* Step Title */}
-                    <div className="text-center space-y-2">
-                      <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
-                        {steps[currentStep].title}
-                      </h2>
-                      <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                        {steps[currentStep].subtitle}
-                      </p>
-                    </div>
-
-                    {/* Step Content */}
+                    {/* Step Content - Full height available */}
                     <div className="flex-1">
                       {renderStepContent()}
                     </div>
@@ -239,7 +228,7 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
               </div>
 
               {/* Footer - Fixed height */}
-              <div className="flex-shrink-0 p-6 md:p-8 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+              <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
                 <div className="flex justify-between items-center">
                   <Button
                     variant="outline"

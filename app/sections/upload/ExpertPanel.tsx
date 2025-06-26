@@ -17,20 +17,18 @@ interface ExpertPanelProps {
   isLoading?: boolean;
 }
 
-export function ExpertPanel({ 
-  experts, 
+export function ExpertPanel({  
   expert_perspectives, 
   isLoading = false 
 }: ExpertPanelProps) {
   const { colors, isDark } = useLayoutTheme();
 
-  // ✅ NEW: Use expert_perspectives if available, fallback to legacy experts
   const expertData = expert_perspectives && expert_perspectives.length > 0 
     ? expert_perspectives 
     : null;
 
 
-  // ✅ NEW: Helper function to get stance color
+
   const getStanceColor = (stance: string) => {
     switch (stance) {
       case 'SUPPORTING':
@@ -58,6 +56,7 @@ export function ExpertPanel({
     }
   };
 
+  // ✅ FIXED: Show section even if no data for debugging
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -73,8 +72,8 @@ export function ExpertPanel({
         </h3>
         <p className="text-sm sm:text-lg max-w-2xl mx-auto px-4" style={{ color: colors.mutedForeground }}>
           {expertData 
-            ? 'Advanced AI experts analyze your statement from multiple perspectives'
-            : 'Diverse panel of experts provides multiple perspectives on your statement'
+            ? 'Diverse panel of experts provides multiple perspectives on your statement'
+            : 'Loading expert analysis...'
           }
         </p>
         {isLoading && (
@@ -91,10 +90,15 @@ export function ExpertPanel({
       
       {/* Expert Cards Grid */}
       <div className="grid md:grid-cols-2 gap-6">
-        {/* ✅ NEW: Render new expert_perspectives data */}
         {expertData && expertData.map((perspective, index) => {
           const profileKey = mapExpertToProfile(perspective.expert_name, perspective.expertise_area);
           const profile = EXPERT_PROFILES[profileKey];
+          
+          if (!profile) {
+            console.warn('No profile found for expert:', perspective.expert_name, 'with expertise:', perspective.expertise_area);
+            return null;
+          }
+          
           const SvgComponent = profile.SvgComponent;
 
           return (

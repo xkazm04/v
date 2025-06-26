@@ -74,9 +74,6 @@ export function FactCheckHeader({ factCheck, config, onDismiss }: FactCheckHeade
             <div className="space-y-1">
               {/* Main Status Text - Stamp Style Typography */}
               <motion.h3
-                initial={{ opacity: 0, x: -30, scale: 0.8 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                transition={{ delay: 0.8, type: "spring" }}
                 className="text-2xl font-black tracking-tight leading-none"
                 style={{ 
                   color: config.color,
@@ -91,9 +88,6 @@ export function FactCheckHeader({ factCheck, config, onDismiss }: FactCheckHeade
               
               {/* Subtitle */}
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 1.0 }}
                 className="text-sm font-semibold text-slate-600 dark:text-slate-300"
               >
                 {config.text}
@@ -102,9 +96,6 @@ export function FactCheckHeader({ factCheck, config, onDismiss }: FactCheckHeade
               {/* Category Badge */}
               {factCheck.category && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.2 }}
                   className="flex items-center gap-2 px-3 py-1 rounded-full 
                            bg-white/80 dark:bg-slate-800/60 backdrop-blur-sm
                            border border-slate-200/80 dark:border-slate-700/50"
