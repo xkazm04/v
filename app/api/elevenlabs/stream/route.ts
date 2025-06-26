@@ -88,6 +88,28 @@ async function cacheAudio(
   }
 }
 
+/**
+ * Convert ReadableStream to Buffer
+ */
+async function streamToBuffer(stream: ReadableStream<Uint8Array>): Promise<Buffer> {
+  const reader = stream.getReader();
+  const chunks: Uint8Array[] = [];
+  
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (value) {
+        chunks.push(value);
+      }
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  
+  return Buffer.concat(chunks);
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { text, voiceId, languageCode } = await request.json();
@@ -150,14 +172,8 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    // Collect stream data
-    const chunks: Uint8Array[] = [];
-    for await (const chunk of audioStream) {
-      chunks.push(chunk);
-    }
-
-    // Combine chunks into single buffer
-    const audioBuffer = Buffer.concat(chunks);
+    // ✅ FIX: Convert ReadableStream to Buffer properly
+    const audioBuffer = await streamToBuffer(audioStream);
     
     // Cache the audio (fire and forget)
     const base64Audio = audioBuffer.toString('base64');
