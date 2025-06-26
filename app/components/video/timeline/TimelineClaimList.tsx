@@ -1,14 +1,9 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Activity, Clock } from 'lucide-react';
+import React, { useMemo } from 'react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-import { VideoWithTimestamps, VideoTimestamp } from '@/app/types/video_api';
-import TimelineClaimItem from './TimelineClaimItem';
-import { Divider } from '@/app/components/ui/divider';
-import { useViewport } from '@/app/hooks/useViewport';
-import TimelineClaimListStats from './TimelineClaimListStats';
 import { useVideoTimestamps } from '@/app/hooks/useVideoDetail';
+import { VideoWithTimestamps, VideoTimestamp } from '@/app/types/video_api';
 
 interface TimelineClaimListProps {
   video?: VideoWithTimestamps;
@@ -51,7 +46,7 @@ export function TimelineClaimList({
     error: timestampsError 
   } = useVideoTimestamps(video?.video.id || '');
 
-  const timestamps = (() => {
+  const timestamps = useMemo(() => {
     // Use video timestamps if available
     if (video?.timestamps && video.timestamps.length > 0) {
       console.log('Using video.timestamps:', video.timestamps.length);
@@ -67,15 +62,15 @@ export function TimelineClaimList({
     // Fallback to empty array
     console.log('No timestamps available');
     return [];
-  })();
+  }, [video?.timestamps, fetchedTimestamps]); 
 
-  // Find active timestamps at current time
-  const activeTimestamps = timestamps.filter(timestamp => {
-    return currentTime >= timestamp.startTime && currentTime <= timestamp.endTime;
-  });
+  const activeTimestamps = useMemo(() => {
+    return timestamps.filter(timestamp => {
+      return currentTime >= timestamp.startTime && currentTime <= timestamp.endTime;
+    });
+  }, [timestamps, currentTime]);
 
-  // Calculate statistics
-  const stats = (() => {
+  const stats = useMemo(() => {
     const total = timestamps.length;
     const researched = timestamps.filter(ts => ts.factCheck).length;
     const truthful = timestamps.filter(ts => 
@@ -100,14 +95,14 @@ export function TimelineClaimList({
       avgConfidence,
       completionRate: total > 0 ? Math.round((researched / total) * 100) : 0
     };
-  })();
+  }, [timestamps]);
 
-  // Enhanced colors with fallback
-  const colors_enhanced = {
+  // ✅ FIXED: Memoize enhanced colors
+  const colors_enhanced = useMemo(() => ({
     border: timelineColors?.border || (isDark ? 'rgba(71, 85, 105, 0.2)' : 'rgba(226, 232, 240, 0.3)'),
     background: timelineColors?.background || (isVintage ? vintage.paper : isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)'),
     foreground: timelineColors?.foreground || (isVintage ? vintage.ink : colors.foreground),
-  };
+  }), [timelineColors, isDark, isVintage, vintage, colors.foreground]);
 
   const handleSeek = (timestamp: number) => {
     console.log('TimelineClaimList: Seeking to', timestamp);
@@ -116,185 +111,189 @@ export function TimelineClaimList({
     }
   };
 
-  // ✅ LOADING STATE
+  // ✅ FIXED: Memoize claim conversion function
+  const convertTimestampToClaim = useMemo(() => {
+    return (timestamp: VideoTimestamp, index: number) => {
+      const getTypeFromStatus = (status?: string): 'truth' | 'lie' | 'neutral' => {
+        switch (status) {
+          case 'TRUE': return 'truth';
+          case 'FALSE': return 'lie';
+          default: return 'neutral';
+        }
+      };
+
+      return {
+        id: `timestamp-${timestamp.startTime}-${index}`,
+        claim: timestamp.statement,
+        type: getTypeFromStatus(timestamp.factCheck?.status),
+        confidence: timestamp.confidence || 75,
+        timestamp: timestamp.startTime,
+        endTime: timestamp.endTime,
+        category: timestamp.category,
+        factCheck: timestamp.factCheck
+      };
+    };
+  }, []);
+
+  // ✅ FIXED: Memoize claims data
+  const allClaims = useMemo(() => {
+    return timestamps.map((timestamp, index) => 
+      convertTimestampToClaim(timestamp, index)
+    );
+  }, [timestamps, convertTimestampToClaim]);
+
+  const activeClaimsData = useMemo(() => {
+    return activeTimestamps.map((timestamp, index) => 
+      ({ ...convertTimestampToClaim(timestamp, index), isActive: true })
+    );
+  }, [activeTimestamps, convertTimestampToClaim]);
+
+  // Loading state
   if (timestampsLoading) {
     return (
       <div className="text-center py-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4" />
-        <p className="text-sm text-muted-foreground">Loading timeline data...</p>
+        <p className="text-muted-foreground">Loading timeline data...</p>
       </div>
     );
   }
 
-  // ✅ ERROR STATE
+  // Error state
   if (timestampsError) {
     return (
       <div className="text-center py-8">
-        <Clock className="w-12 h-12 mx-auto mb-4 opacity-30" style={{ color: colors.primary }} />
-        <h3 className="text-lg font-medium mb-2" style={{ color: colors.foreground }}>
-          Error Loading Timeline
-        </h3>
-        <p className="text-sm" style={{ color: colors.mutedForeground }}>
-          {timestampsError instanceof Error ? timestampsError.message : 'Failed to load timeline data'}
+        <div className="text-red-500 mb-4">⚠️</div>
+        <p className="text-muted-foreground">Failed to load timeline data</p>
+        <p className="text-xs text-muted-foreground mt-2">
+          {timestampsError.message || 'Unknown error'}
         </p>
       </div>
     );
   }
-  // ✅ CONVERT timestamps to claim format for TimelineClaimItem
-  const convertTimestampToClaim = (timestamp: VideoTimestamp, index: number) => {
-    const getTypeFromStatus = (status?: string): 'truth' | 'lie' | 'neutral' => {
-      switch (status) {
-        case 'TRUE': return 'truth';
-        case 'FALSE': return 'lie';
-        case 'PARTIALLY_TRUE':
-        case 'MISLEADING':
-        case 'UNVERIFIABLE':
-        default: return 'neutral';
-      }
-    };
-
-    return {
-      id: `timestamp-${timestamp.startTime}-${index}`,
-      claim: timestamp.statement,
-      type: getTypeFromStatus(timestamp.factCheck?.status),
-      confidence: timestamp.confidence || 75,
-      timestamp: timestamp.startTime,
-      endTime: timestamp.endTime,
-      category: timestamp.category,
-      factCheck: timestamp.factCheck
-    };
-  };
-
-  const allClaims = timestamps.map((timestamp, index) => 
-    convertTimestampToClaim(timestamp, index)
-  );
-
-  const activeClaimsData = activeTimestamps.map((timestamp, index) => 
-    ({ ...convertTimestampToClaim(timestamp, index), isActive: true })
-  );
 
   return (
     <div className={`space-y-4 ${className}`}>
-      {/* Header with stats */}
+      {/* Stats Section */}
       {showHeader && showStats && (
-        <TimelineClaimListStats
-          showStats={showStats}
-          colors_enhanced={colors_enhanced}
-          stats={stats}
-        />
+        <div
+          className="p-4 rounded-lg border"
+          style={{
+            background: colors_enhanced.background,
+            borderColor: colors_enhanced.border
+          }}
+        >
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+            <div>
+              <div className="text-2xl font-bold" style={{ color: colors_enhanced.foreground }}>
+                {stats.total}
+              </div>
+              <div className="text-xs text-muted-foreground">Total Claims</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-green-600">
+                {stats.truthCount}
+              </div>
+              <div className="text-xs text-muted-foreground">Verified</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-red-600">
+                {stats.lieCount}
+              </div>
+              <div className="text-xs text-muted-foreground">False</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold" style={{ color: colors_enhanced.foreground }}>
+                {stats.completionRate}%
+              </div>
+              <div className="text-xs text-muted-foreground">Researched</div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Active Claims */}
       {activeClaimsData.length > 0 && (
-        <motion.div
-          className="space-y-3"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <h4
-            className="text-sm font-bold flex items-center gap-2"
-            style={{
-              color: isVintage ? vintage.ink : colors.foreground,
-              fontFamily: isVintage ? '"Times New Roman", serif' : 'inherit'
-            }}
-          >
-            <Activity size={16} style={{ color: colors.primary }} />
+        <div className="space-y-2">
+          <h4 className="font-semibold" style={{ color: colors_enhanced.foreground }}>
             Active Claims ({activeClaimsData.length})
           </h4>
-          
-          <div className="space-y-2">
-            {activeClaimsData.map((claim, index) => (
-              <TimelineClaimItem
-                key={`active-${claim.id}`}
-                claim={claim}
-                timelineColors={colors_enhanced}
-                index={index}
-                isActive={true}
-                onSeek={handleSeek}
-              />
-            ))}
-          </div>
-          
-          {!isCompact && <Divider />}
-        </motion.div>
+          {activeClaimsData.map((claim) => (
+            <div
+              key={claim.id}
+              className="p-3 rounded-lg border-l-4 cursor-pointer hover:bg-opacity-80 transition-colors"
+              style={{
+                background: colors_enhanced.background,
+                borderLeftColor: claim.type === 'truth' ? '#22c55e' : claim.type === 'lie' ? '#ef4444' : '#f59e0b'
+              }}
+              onClick={() => handleSeek(claim.timestamp)}
+            >
+              <p className="text-sm font-medium" style={{ color: colors_enhanced.foreground }}>
+                {claim.claim}
+              </p>
+              <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">
+                <span>
+                  {Math.floor(claim.timestamp / 60)}:{String(Math.floor(claim.timestamp % 60)).padStart(2, '0')}
+                </span>
+                <span className="capitalize">{claim.type}</span>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
 
-      {/* All Claims */}
-      {!isCompact && (
-        <motion.div
-          className="space-y-3"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          {showHeader && (
-            <h4
-              className="text-sm font-bold flex items-center gap-2"
-              style={{
-                color: isVintage ? vintage.ink : colors.foreground,
-                fontFamily: isVintage ? '"Times New Roman", serif' : 'inherit'
-              }}
-            >
-              <Clock size={16} style={{ color: colors.primary }} />
-              All Claims ({allClaims.length})
-            </h4>
-          )}
-          
+      {/* All Claims (when not compact) */}
+      {!isCompact && allClaims.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="font-semibold" style={{ color: colors_enhanced.foreground }}>
+            All Claims ({allClaims.length})
+          </h4>
           <div 
-            className="space-y-2 overflow-y-auto custom-scrollbar"
+            className="space-y-1 overflow-y-auto"
             style={{ maxHeight }}
           >
-            {allClaims.map((claim, index) => {
-              const isCurrentlyActive = activeClaimsData.some(active => 
-                active.timestamp === claim.timestamp
-              );
-              return (
-                <TimelineClaimItem
-                  key={claim.id}
-                  claim={claim}
-                  timelineColors={colors_enhanced}
-                  index={index}
-                  isActive={isCurrentlyActive}
-                  onSeek={handleSeek}
-                />
-              );
-            })}
+            {allClaims.map((claim) => (
+              <div
+                key={claim.id}
+                className="p-2 rounded border cursor-pointer hover:bg-opacity-80 transition-colors text-sm"
+                style={{
+                  background: colors_enhanced.background,
+                  borderColor: colors_enhanced.border
+                }}
+                onClick={() => handleSeek(claim.timestamp)}
+              >
+                <p className="font-medium truncate" style={{ color: colors_enhanced.foreground }}>
+                  {claim.claim}
+                </p>
+                <div className="flex items-center justify-between mt-1 text-xs text-muted-foreground">
+                  <span>
+                    {Math.floor(claim.timestamp / 60)}:{String(Math.floor(claim.timestamp % 60)).padStart(2, '0')}
+                  </span>
+                  <span className="capitalize">{claim.type}</span>
+                </div>
+              </div>
+            ))}
           </div>
-        </motion.div>
+        </div>
       )}
 
-      {/* Mobile compact mode footer */}
+      {/* Compact view showing only count */}
       {isCompact && allClaims.length > activeClaimsData.length && (
-        <motion.div
-          className="text-center pt-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          <p className="text-xs" style={{ color: colors.mutedForeground }}>
-            {allClaims.length - activeClaimsData.length} more claims in this video
-          </p>
-        </motion.div>
+        <div className="text-center">
+          <button
+            className="text-sm text-primary hover:underline"
+            onClick={() => {/* Handle expand */}}
+          >
+            View {allClaims.length - activeClaimsData.length} more claims
+          </button>
+        </div>
       )}
 
-      {/* Custom scrollbar styles */}
-      <style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: ${isDark ? 'rgba(71, 85, 105, 0.1)' : 'rgba(139, 69, 19, 0.08)'};
-          border-radius: 3px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: ${isDark ? 'rgba(148, 163, 184, 0.3)' : 'rgba(139, 69, 19, 0.25)'};
-          border-radius: 3px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: ${isDark ? 'rgba(148, 163, 184, 0.5)' : 'rgba(139, 69, 19, 0.4)'};
-        }
-      `}</style>
+      {/* Empty state */}
+      {timestamps.length === 0 && !timestampsLoading && (
+        <div className="text-center py-8 text-muted-foreground">
+          <p>No timeline data available for this video</p>
+        </div>
+      )}
     </div>
   );
 }

@@ -35,7 +35,7 @@ const DashActivityItem = ({ statement, index, itemVariants }: DashActivityItemPr
   return (
     <motion.div
       variants={itemVariants}
-      className="border rounded-xl p-4 transition-all duration-300 cursor-pointer group relative overflow-hidden hover:shadow hover:shadow-gray-600/20"
+      className="border rounded-xl p-4 transition-all duration-300 group relative overflow-hidden hover:shadow hover:shadow-gray-600/20"
       style={{
         background: themeColors.itemBackground,
         borderColor: themeColors.itemBorder
@@ -144,7 +144,7 @@ const DashActivityItem = ({ statement, index, itemVariants }: DashActivityItemPr
         {/* Correction/Additional Info */}
         {statement.correction && (
           <div 
-            className="text-xs p-3 rounded-lg border-l-4 line-clamp-2"
+            className="text-sm p-3 rounded-lg border-l-4"
             style={{
               background: isDark ? 'rgba(59, 130, 246, 0.05)' : 'rgba(59, 130, 246, 0.02)',
               borderLeftColor: statusConfig.colors.glowColor,

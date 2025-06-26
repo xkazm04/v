@@ -2,16 +2,16 @@
 
 import { Button } from "@/app/components/ui/button";
 import { motion } from "framer-motion";
-import { Loader2, Search } from "lucide-react";
 import { ResearchRequest } from "../types";
 import AnalyzeButton from "@/app/components/ui/Buttons/AnalyzeButton";
 
 type Props = {
     formData: ResearchRequest;
     isLoading: boolean;
+    hasError?: boolean;
 }
 
-const ResearchFormSubmit = ({ formData, isLoading }: Props) => {
+const ResearchFormSubmit = ({ formData, isLoading, hasError = false }: Props) => {
     const isDisabled = !formData.statement.trim() || isLoading;
 
     return (
@@ -24,20 +24,31 @@ const ResearchFormSubmit = ({ formData, isLoading }: Props) => {
             <motion.div
                 whileHover={!isDisabled ? { scale: 1.02 } : {}}
                 whileTap={!isDisabled ? { scale: 0.98 } : {}}
+                animate={hasError ? { 
+                    x: [-10, 10, -10, 10, 0],
+                    transition: { duration: 0.4 }
+                } : {}}
             >
                 <Button
                     type="submit"
                     disabled={isDisabled}
-                    className="w-full h-12 sm:h-14 text-base sm:text-lg font-semibold rounded-xl transition-all duration-300 relative overflow-hidden group border-0"
+                    className={`w-full h-12 sm:h-14 text-base sm:text-lg font-semibold rounded-xl transition-all duration-300 relative overflow-hidden group border-0 ${
+                        hasError ? 'bg-red-500 hover:bg-red-600' : ''
+                    }`}
                     style={{
                         boxShadow: isDisabled
                             ? 'none'
+                            : hasError
+                            ? '0 8px 25px -8px rgba(239, 68, 68, 0.5)'
                             : '0 8px 25px -8px rgba(59, 130, 246, 0.5)',
-                        cursor: isDisabled ? 'not-allowed' : 'pointer'
+                        cursor: isDisabled ? 'not-allowed' : 'pointer',
+                        background: hasError 
+                            ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
+                            : undefined
                     }}
                 >
                     {/* Enhanced Background Animation */}
-                    {!isDisabled && (
+                    {!isDisabled && !hasError && (
                         <>
                             <motion.div
                                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -62,7 +73,7 @@ const ResearchFormSubmit = ({ formData, isLoading }: Props) => {
                         </>
                     )}
 
-                    <AnalyzeButton isLoading={isLoading} />
+                    <AnalyzeButton isLoading={isLoading} hasError={hasError} />
                 </Button>
             </motion.div>
         </motion.div>

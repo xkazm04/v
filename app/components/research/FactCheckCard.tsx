@@ -3,13 +3,11 @@
 import { motion } from "framer-motion";
 import { LLMResearchResponse } from "@/app/types/research";
 import { FactCheckHeader } from "./card-sections/FactCheckHeader";
-import { FactCheckAnalysis } from "./card-sections/FactCheckAnalysis";
 import { FactCheckCorrection } from "./card-sections/FactCheckCorrection";
 import { FactCheckSources } from "./card-sections/FactCheckSources";
 import { FactCheckExperts } from "./card-sections/FactCheckExperts";
 import { getStatusConfig } from "./utils/statusConfig";
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
-import StampText from "../ui/Decorative/StampText";
 import { containerVariants } from "../animations/variants/votingVariants";
 import { sectionVariants } from "../animations/variants/feedVariants";
 
@@ -66,14 +64,6 @@ export function FactCheckCard({ factCheck }: FactCheckCardProps) {
 
         {/* Content - Each section appears with stagger */}
         <div className="flex flex-col gap-3 p-6 pt-2 min-h-0 flex-1">
-          {/* Analysis Section with Stamp */}
-          <motion.div variants={sectionVariants} className="relative ">
-            <FactCheckAnalysis factCheck={factCheck} config={config} />
-            <StampText
-              stampText={factCheck.status}
-              config={config}
-            />
-          </motion.div>
 
           {/* Correction Section */}
           {factCheck.correction && (

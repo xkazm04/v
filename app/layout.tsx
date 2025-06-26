@@ -7,7 +7,6 @@ import { Toaster } from 'sonner';
 import './globals.css';
 import { NoFlashThemeProvider } from './providers/theme-provider';
 
-// Font configurations with improved performance
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
@@ -117,6 +116,8 @@ export default function RootLayout({
         <link rel="prefetch" href="/timeline" />
         <link rel="prefetch" href="/" />
         <link rel="prefetch" href="/settings" />
+        <link rel="prefetch" href="/dashboard" />
+        <link rel="prefetch" href="/upload" />
       </head>
       
       <body className="min-h-screen bg-background font-sans antialiased relative overflow-x-hidden">

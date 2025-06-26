@@ -110,13 +110,10 @@ const WatchContent = () => {
             animate={{ opacity: 1, y: 0 }}
           >
             <LoaderComponent 
+              text='Loading Video...'
               loading={videoLoading}
               size={18}
             />
-            <h2 className="text-2xl font-bold mb-4">Loading Video...</h2>
-            <p className="text-muted-foreground">
-              Please wait while we fetch the video details.
-            </p>
           </motion.div>
         </div>
       </div>
@@ -130,7 +127,6 @@ const WatchContent = () => {
   const handleSeekToTimestamp = (timestamp: number) => {
     console.log('WatchContent: Seeking to timestamp:', timestamp);
     setVideoCurrentTime(timestamp);
-    // TODO: Add direct player seek communication if needed
   };
 
   return (
@@ -204,7 +200,6 @@ const WatchContent = () => {
                   </ErrorBoundary>
                 </div>
                 
-                {/* ✅ RIGHT COLUMN: Real-time Fact-check (Preserved Position) */}
                 <div className="lg:col-span-2 xl:col-span-2">
                   <div className="sticky top-6">
                     <ErrorBoundary>

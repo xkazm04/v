@@ -11,6 +11,7 @@ import LogoSectionDecor from './components/ui/Decorative/LogoSectionDecor';
 import { FirstTimeUserModal } from './sections/onboarding/FirstTimeUserModal';
 import { useOnboarding } from './hooks/use-onboarding';
 import { useViewport } from './hooks/useViewport';
+import { useUserPreferences } from './hooks/use-user-preferences';
 import { containerVariants, itemVariants } from './components/animations/variants/votingVariants';
 import BackgroundPattern from './components/ui/Decorative/BackgroundPattern';
 import LoaderComponent from './components/animations/LoaderComponent';
@@ -28,6 +29,9 @@ const FeaturedNews = dynamic(() => import('./sections/home/FeaturedNews'), {
 export default function Home() {
   const { hasCompletedOnboarding, isLoading, completeOnboarding, skipOnboarding } = useOnboarding();
   const { isDesktop } = useViewport();
+  const { preferences } = useUserPreferences();
+
+  const shouldShowVideos = !preferences.language || preferences.language === 'en';
 
   useEffect(() => {
     if (!hasCompletedOnboarding) {
@@ -96,18 +100,20 @@ export default function Home() {
               />
             </Suspense>
           </div>
-          {isDesktop && <div className="mb-8 px-8">
-            <Suspense fallback={<>
-              <LoaderComponent
-                loading={true}
-                variant="default"
-                speedMultiplier={1.2}
-              /></>}>
-              <FeaturedVideos />
-            </Suspense>
-          </div>}
+          
+          {isDesktop && shouldShowVideos && (
+            <div className="mb-8 px-8">
+              <Suspense fallback={<>
+                <LoaderComponent
+                  loading={true}
+                  variant="default"
+                  speedMultiplier={1.2}
+                /></>}>
+                <FeaturedVideos />
+              </Suspense>
+            </div>
+          )}
         </motion.div>
-        {/* Background Logo */}
         <LogoSectionDecor condition={true} />
       </motion.div>
     </>

@@ -46,7 +46,7 @@ const UniversalCardSpeaker = ({ data }: Props) => {
     } else if (isVideo(data)) {
         speakerName = data.speaker_name || data.source || '';
         // For videos, you might navigate to a different route
-        navigationPath = `/watch/${data.id}`;
+        navigationPath = `/watch?v=?${data.id}`;
         profileId = data.id; // Use video ID as the clickable identifier
     }
 

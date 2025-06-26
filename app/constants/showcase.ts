@@ -25,7 +25,7 @@ export const SHOWCASE_FEATURES: Feature[] = [
     description: 'Comprehensive analysis of political statements and claims with evidence-based fact-checking and source verification.',
     icon: FileText,
     gradient: 'from-blue-500 to-indigo-600',
-    imagePlaceholder: '/features/statement-analysis.jpg',
+    imagePlaceholder: '/gifs/gif_news.gif',
     benefits: ['Instant fact verification', 'Evidence-based scoring', 'Source transparency']
   },
   {
@@ -65,7 +65,7 @@ export const SHOWCASE_FEATURES: Feature[] = [
     description: 'Upload tweets, quotes, or YouTube videos for instant fact-checking analysis with our advanced AI verification system.',
     icon: Zap,
     gradient: 'from-yellow-500 to-orange-600',
-    imagePlaceholder: '/features/quick-analysis.jpg',
+    imagePlaceholder: '/gifs/gif_news.gif',
     benefits: ['Multiple formats', 'Instant results', 'AI-powered analysis']
   }
 ];

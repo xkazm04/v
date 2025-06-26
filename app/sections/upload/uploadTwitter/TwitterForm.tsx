@@ -2,16 +2,16 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { CardContent } from '../../../components/ui/card';
-import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import { Card, CardContent } from '@/app/components/ui/card';
 import { Label } from '@/app/components/ui/label';
 import { Switch } from '@/app/components/ui/switch';
-import { TwitterAnalysisRequest, PredefinedTweet } from '@/app/types/research';
-import TwitterUrlInput from './TwitterUrlInput';
-import PredefinedTweets from './PredefinedTweets';
-import TwitterFormActions from './TwitterFormActions';
+import { Input } from '@/app/components/ui/input';
+import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { contentVariants } from '@/app/components/animations/variants/placeholderVariants';
+import TwitterFormActions from './TwitterFormActions';
+import PredefinedTweets from './PredefinedTweets';
 import { researchService } from '@/app/lib/services/x-service';
+import type { TwitterAnalysisRequest, PredefinedTweet } from '@/app/types/research';
 
 interface TwitterFormProps {
   onSubmit: (
@@ -40,7 +40,7 @@ const containerVariants: Variants = {
 
 const TwitterForm: React.FC<TwitterFormProps> = ({ onSubmit, isLoading, error: submitError, onReset }) => {
   const { colors, isDark } = useLayoutTheme();
-  const [mode, setMode] = useState<'url' | 'predefined'>('url');
+  const [mode, setMode] = useState<'url' | 'predefined'>('predefined');
   const [formData, setFormData] = useState<TwitterAnalysisRequest>({
     tweet_url: '',
     additional_context: '',
@@ -74,7 +74,7 @@ const TwitterForm: React.FC<TwitterFormProps> = ({ onSubmit, isLoading, error: s
 
   const handlePredefinedTweetSelect = (tweet: PredefinedTweet) => {
     setSelectedTweet(tweet);
-    setFormData(prev => ({ ...prev, tweet_url: tweet.tweet_url }));
+    setFormData(prev => ({ ...prev, tweet_url: tweet.tweet_url })); // ✅ FIXED: Use tweet_url
     setLocalError('');
     setTouched(false);
   };
@@ -88,16 +88,33 @@ const TwitterForm: React.FC<TwitterFormProps> = ({ onSubmit, isLoading, error: s
   };
 
   const handleSubmit = async () => {
+    // ✅ FIXED: Get the correct URL from either mode
+    const currentUrl = mode === 'predefined' ? selectedTweet?.tweet_url : formData.tweet_url;
+    
     // Validate form before submission
-    const urlError = validateUrl(formData.tweet_url);
-    if (urlError) {
-      setLocalError(urlError);
+    if (!currentUrl) {
+      setLocalError(mode === 'predefined' ? 'Please select a tweet' : 'Twitter URL is required');
       setTouched(true);
       return;
     }
 
+    if (mode === 'url') {
+      const urlError = validateUrl(currentUrl);
+      if (urlError) {
+        setLocalError(urlError);
+        setTouched(true);
+        return;
+      }
+    }
+
     try {
-      await onSubmit(mode, formData, selectedTweet);
+      // ✅ FIXED: Ensure formData has the correct URL
+      const submitData = {
+        ...formData,
+        tweet_url: currentUrl
+      };
+      
+      await onSubmit(mode, submitData, selectedTweet);
     } catch (error: any) {
       console.error('Form submission error:', error);
       // Error is handled by parent component
@@ -144,59 +161,79 @@ const TwitterForm: React.FC<TwitterFormProps> = ({ onSubmit, isLoading, error: s
               setMode(checked ? 'predefined' : 'url');
               setLocalError('');
               setTouched(false);
-              setSelectedTweet(null);
-              setFormData(prev => ({ ...prev, tweet_url: '' }));
             }}
             disabled={isLoading}
           />
           <Label htmlFor="mode-switch" className="text-sm font-medium">
-            Predefined
+            Examples
           </Label>
         </motion.div>
 
-        {/* Form Content */}
-        <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-6">
+        <form onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }} className="space-y-6">
+          
           <AnimatePresence mode="wait">
-            {mode === 'url' && (
-              <motion.div
+            {mode === 'url' ? (
+              <motion.div 
                 key="url-mode"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.3 }}
+                variants={contentVariants}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                className="space-y-4"
               >
-                <TwitterUrlInput
-                  value={formData.tweet_url}
-                  onChange={handleUrlChange}
-                  onBlur={handleUrlBlur}
-                  error={currentError}
-                  touched={touched}
-                  disabled={isLoading}
-                />
-              </motion.div>
-            )}
-            
-            <div
-              className="text-xs px-3 py-2 rounded-lg border 2xl:max-w-[50%] max-w-full"
-              style={{
-                borderColor: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(226, 232, 240, 0.4)',
-                background: isDark ? 'rgba(15, 23, 42, 0.3)' : 'rgba(248, 250, 252, 0.5)',
-                color: colors.mutedForeground
-              }}
-            >
-              {mode === 'url'
-                ? "💭 Due to the rate limit it is allowed to pass only 1 tweet per 15 minutes"
-                : "📋 Choose from curated examples below to test fact-checking capabilities"
-              }
-            </div>
+                {/* Twitter URL Input */}
+                <div className="space-y-2">
+                  <Label htmlFor="tweet-url" className="text-sm font-medium">
+                    Twitter/X URL *
+                  </Label>
+                  <Input
+                    id="tweet-url"
+                    type="url"
+                    placeholder="https://x.com/username/status/123456789"
+                    value={formData.tweet_url}
+                    onChange={(e) => handleUrlChange(e.target.value)}
+                    onBlur={handleUrlBlur}
+                    disabled={isLoading}
+                    className={`transition-all duration-200 ${
+                      currentError && touched ? 'border-red-500 focus:border-red-500' : ''
+                    }`}
+                  />
+                  {currentError && touched && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-sm text-red-500 mt-1"
+                    >
+                      {currentError}
+                    </motion.p>
+                  )}
+                </div>
 
-            {mode === 'predefined' && (
-              <motion.div
+                {/* Country Filter */}
+                <div className="space-y-2">
+                  <Label htmlFor="country" className="text-sm font-medium">
+                    Country Context (Optional)
+                  </Label>
+                  <Input
+                    id="country"
+                    placeholder="e.g., US, UK, CA..."
+                    value={formData.country}
+                    onChange={(e) => setFormData(prev => ({ ...prev, country: e.target.value }))
+                    }
+                    disabled={isLoading}
+                  />
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div 
                 key="predefined-mode"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
+                variants={contentVariants}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
               >
                 <PredefinedTweets
                   onSelectTweet={handlePredefinedTweetSelect}
@@ -207,18 +244,33 @@ const TwitterForm: React.FC<TwitterFormProps> = ({ onSubmit, isLoading, error: s
             )}
           </AnimatePresence>
 
-          {/* Action Buttons */}
+          {/* ✅ FIXED: Action Buttons with correct props */}
           <TwitterFormActions
             mode={mode}
             formData={formData}
             selectedTweet={selectedTweet}
             resetForm={resetForm}
-            //@ts-expect-error Ignore
             onSubmit={handleSubmit}
             isLoading={isLoading}
             hasValidData={mode === 'predefined' ? !!selectedTweet : researchService.validateTwitterUrl(formData.tweet_url)}
           />
         </form>
+
+        {/* Error Display */}
+        {currentError && (
+          <motion.div
+            variants={contentVariants}
+            className="mt-6 p-4 rounded-xl border"
+            style={{
+              borderColor: isDark ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.4)',
+              background: isDark ? 'rgba(239, 68, 68, 0.1)' : 'rgba(254, 226, 226, 0.5)'
+            }}
+          >
+            <p className="text-sm text-red-600 dark:text-red-400">
+              {currentError}
+            </p>
+          </motion.div>
+        )}
 
         {/* Help Text */}
         <motion.div
@@ -229,22 +281,15 @@ const TwitterForm: React.FC<TwitterFormProps> = ({ onSubmit, isLoading, error: s
             background: isDark ? 'rgba(15, 23, 42, 0.3)' : 'rgba(248, 250, 252, 0.5)'
           }}
         >
-          <h4 className="font-semibold text-sm mb-2" style={{ color: colors.foreground }}>
-            {mode === 'url' ? 'Supported URL Formats:' : 'About Predefined Tweets:'}
+          <h4 className="font-semibold mb-2" style={{ color: colors.foreground }}>
+            How it works:
           </h4>
-          {mode === 'url' ? (
-            <ul className="text-xs space-y-1" style={{ color: colors.mutedForeground }}>
-              <li>• Individual tweets: x.com/username/status/123456789</li>
-              <li>• Extract: Get tweet content and metadata</li>
-              <li>• Research: Full fact-checking analysis</li>
-            </ul>
-          ) : (
-            <ul className="text-xs space-y-1" style={{ color: colors.mutedForeground }}>
-              <li>• Curated examples for testing fact-checking</li>
-              <li>• Research only (content pre-extracted)</li>
-              <li>• Covers various categories and claim types</li>
-            </ul>
-          )}
+          <ul className="text-sm space-y-1" style={{ color: colors.mutedForeground }}>
+            <li>• Paste any Twitter/X URL or select from examples</li>
+            <li>• Our AI analyzes the tweet's claims for accuracy</li>
+            <li>• Get detailed fact-checking results with sources</li>
+            <li>• Review expert opinions and credibility assessment</li>
+          </ul>
         </motion.div>
       </CardContent>
     </motion.div>
