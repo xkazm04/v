@@ -3,7 +3,6 @@ import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
 import { supabaseAdmin } from '@/app/lib/supabase';
 import { getVoiceIdForLanguage } from '@/app/helpers/countries';
 import crypto from 'crypto';
-import { Readable } from 'stream';
 
 const client = new ElevenLabsClient({ 
   apiKey: process.env.ELEVENLABS_API_KEY!
@@ -89,37 +88,86 @@ async function cacheAudio(
   }
 }
 
-async function streamToBuffer(stream: Readable): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    const chunks: Uint8Array[] = [];
-    
-    stream.on('data', (chunk: Buffer | Uint8Array) => {
-      // Convert Buffer to Uint8Array if needed
-      const uint8Chunk = chunk instanceof Buffer ? new Uint8Array(chunk) : chunk;
-      chunks.push(uint8Chunk);
-    });
-    
-    stream.on('end', () => {
-      // Calculate total length
-      const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
-      
-      // Create a single Uint8Array and copy all chunks into it
-      const result = new Uint8Array(totalLength);
-      let offset = 0;
-      
-      for (const chunk of chunks) {
-        result.set(chunk, offset);
-        offset += chunk.length;
+/**
+ * Convert any stream type to Buffer - works with ElevenLabs v2.2.0
+ */
+async function streamToBuffer(stream: any): Promise<Buffer> {
+  // Handle if it's already a Buffer
+  if (Buffer.isBuffer(stream)) {
+    return stream;
+  }
+
+  // Handle if it's a Uint8Array
+  if (stream instanceof Uint8Array) {
+    return Buffer.from(stream);
+  }
+
+  // Handle async iterable (most likely for ElevenLabs v2.2.0)
+  if (stream && typeof stream[Symbol.asyncIterator] === 'function') {
+    const chunks: Buffer[] = [];
+    try {
+      for await (const chunk of stream) {
+        if (Buffer.isBuffer(chunk)) {
+          chunks.push(chunk);
+        } else if (chunk instanceof Uint8Array) {
+          chunks.push(Buffer.from(chunk));
+        } else if (typeof chunk === 'string') {
+          chunks.push(Buffer.from(chunk));
+        }
       }
+      return Buffer.concat(chunks);
+    } catch (error) {
+      console.error('Error reading async iterable:', error);
+      throw error;
+    }
+  }
+
+  // Handle Node.js readable stream
+  if (stream && typeof stream.on === 'function') {
+    return new Promise((resolve, reject) => {
+      const chunks: Buffer[] = [];
       
-      // Convert Uint8Array to Buffer
-      resolve(Buffer.from(result));
+      stream.on('data', (chunk: any) => {
+        if (Buffer.isBuffer(chunk)) {
+          chunks.push(chunk);
+        } else if (chunk instanceof Uint8Array) {
+          chunks.push(Buffer.from(chunk));
+        } else if (typeof chunk === 'string') {
+          chunks.push(Buffer.from(chunk));
+        }
+      });
+      
+      stream.on('end', () => {
+        resolve(Buffer.concat(chunks));
+      });
+      
+      stream.on('error', reject);
     });
+  }
+
+  // Handle Web ReadableStream
+  if (stream && typeof stream.getReader === 'function') {
+    const reader = stream.getReader();
+    const chunks: Buffer[] = [];
     
-    stream.on('error', (error: Error) => {
-      reject(error);
-    });
-  });
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        if (Buffer.isBuffer(value)) {
+          chunks.push(value);
+        } else if (value instanceof Uint8Array) {
+          chunks.push(Buffer.from(value));
+        }
+      }
+      return Buffer.concat(chunks);
+    } finally {
+      reader.releaseLock();
+    }
+  }
+
+  throw new Error(`Unsupported stream type: ${typeof stream}`);
 }
 
 export async function POST(request: NextRequest) {
@@ -156,7 +204,8 @@ export async function POST(request: NextRequest) {
       
       // Convert base64 back to buffer
       const audioBuffer = Buffer.from(cachedAudio, 'base64');
-      return new NextResponse(new Uint8Array(audioBuffer), {
+      
+      return new NextResponse(audioBuffer, {
         status: 200,
         headers: {
           'Content-Type': 'audio/mpeg',
@@ -183,6 +232,7 @@ export async function POST(request: NextRequest) {
       }
     });
 
+    // ✅ FIX: Use flexible streamToBuffer that handles ElevenLabs v2.2.0
     const audioBuffer = await streamToBuffer(audioStream);
     
     // Cache the audio (fire and forget)
@@ -190,7 +240,9 @@ export async function POST(request: NextRequest) {
     cacheAudio(textHash, finalVoiceId, base64Audio, 'mp3_44100_128')
       .catch(error => console.warn('Background caching failed:', error));
 
-    return new NextResponse(new Uint8Array(audioBuffer), {
+    console.log(`✅ Generated audio: ${audioBuffer.length} bytes with voice: ${finalVoiceId}`);
+
+    return new NextResponse(audioBuffer, {
       status: 200,
       headers: {
         'Content-Type': 'audio/mpeg',

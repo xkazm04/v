@@ -1,5 +1,5 @@
 import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google';
-import { Metadata, Viewport } from 'next';
+import { Metadata } from 'next';
 import { QueryProvider } from './providers/query-provider';
 import { NavigationProvider } from './providers/navigation-provider';
 import { LayoutShell } from './components/layout/LayoutShell';
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
 };
 
 // Moved viewport and themeColor to separate export
-export const viewport: Viewport = {
+export const viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
