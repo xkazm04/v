@@ -7,6 +7,7 @@ import { useViewport } from '@/app/hooks/useViewport';
 import { useTimelineScroll } from '@/app/hooks/useTimelineScroll';
 import { useTimelineAudioStore } from '@/app/stores/useTimelineAudioStore';
 import { useTimelineStore } from '@/app/stores/useTimelineStore';
+import { useTimelineLoader } from '@/app/hooks/useTimelineLoader'; // ✅ ADD: Import timeline loader
 import TimelineMilestone from '../../components/timeline/TimelineMilestone/TimelineMilestone';
 import TimelineProgress from '../../components/timeline/TimelineProgress/TimelineProgress';
 import TimelineBackground from '../../components/timeline/TimelineVertical/TimelineBackground';
@@ -19,18 +20,19 @@ import { getVoiceIdForLanguage } from '@/app/helpers/countries';
 import TimelineVerticalWrapper from './TimelineVerticalWrapper';
 import FloatingSummaryButton from '@/app/components/timeline/TimelineSummary/FloatingSummaryButton';
 import FloatingAudioButton from '@/app/components/timeline/FloatingAudioButton/FloatingAudioButton';
+import { VerifyWordsPattern } from '@/app/components/backgrounds/VerifyWordsPattern';
 
 const MemoizedTimelineBackground = React.memo(TimelineBackground);
 const MemoizedTimelineHeader = React.memo(TimelineHeader);
 const MemoizedTimelineProgress = React.memo(TimelineProgress);
 
 // Fixed OptimizedTimelineMilestone with proper key handling
-const OptimizedTimelineMilestone = React.memo(({ 
-  milestone, 
-  index, 
-  activeEventId, 
-  activeMilestoneId, 
-  smoothScrollProgress 
+const OptimizedTimelineMilestone = React.memo(({
+  milestone,
+  index,
+  activeEventId,
+  activeMilestoneId,
+  smoothScrollProgress
 }: {
   milestone: any;
   index: number;
@@ -49,12 +51,12 @@ const OptimizedTimelineMilestone = React.memo(({
 
 OptimizedTimelineMilestone.displayName = 'OptimizedTimelineMilestone';
 
-const FixedTimelineProgress = React.memo(({ 
-  smoothScrollProgress, 
-  sortedMilestones, 
-  activeMilestoneId, 
-  activeEventId, 
-  handleNavigateToMilestone, 
+const FixedTimelineProgress = React.memo(({
+  smoothScrollProgress,
+  sortedMilestones,
+  activeMilestoneId,
+  activeEventId,
+  handleNavigateToMilestone,
   handleNavigateToEvent,
   hasScrolled,
   timelineId // Add timelineId for unique key
@@ -94,12 +96,24 @@ export default function TimelineVertical() {
   const { isMobile, isDesktop } = useViewport();
   const containerRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
 
-  // Use timeline store instead of local state
-  const { 
-    currentTimeline: timeline, 
+  // Use timeline store and loader
+  const {
+    currentTimeline: timeline,
     isLoadingTimeline,
-    selectedTopicId 
+    selectedTopicId,
+    selectTimelineByTopicId // ✅ ADD: Get the action
   } = useTimelineStore();
+
+  const { timelines: availableTimelines, loading: timelinesLoading } = useTimelineLoader(); // ✅ ADD
+
+  // ✅ ADD: Timeline fallback logic - load default timeline if none selected
+  useEffect(() => {
+    if (!timeline && !timelinesLoading && availableTimelines.length > 0 && !selectedTopicId) {
+      console.log('🎯 No timeline selected, using default (first available)');
+      const defaultTimeline = availableTimelines[0];
+      selectTimelineByTopicId(defaultTimeline.topic_id || defaultTimeline.id, availableTimelines);
+    }
+  }, [timeline, timelinesLoading, availableTimelines, selectedTopicId, selectTimelineByTopicId]);
 
   // State for summary modal
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
@@ -166,13 +180,13 @@ export default function TimelineVertical() {
   }, [selectedTopicId, timeline]);
 
   // Memoize sorted milestones
-  const sortedMilestones = useMemo(() => 
-    timeline ? [...timeline.milestones].sort((a, b) => a.order - b.order) : [], 
+  const sortedMilestones = useMemo(() =>
+    timeline ? [...timeline.milestones].sort((a, b) => a.order - b.order) : [],
     [timeline]
   );
 
   // Memoize style objects
-  const backgroundGradient = useMemo(() => 
+  const backgroundGradient = useMemo(() =>
     isDark
       ? 'linear-gradient(180deg, rgb(15, 23, 42) 0%, rgb(30, 41, 59) 100%)'
       : 'linear-gradient(180deg, rgb(248, 250, 252) 0%, rgb(241, 245, 249) 100%)',
@@ -192,8 +206,8 @@ export default function TimelineVertical() {
     color: colors.foreground
   }), [isDark, colors.border, colors.foreground]);
 
-  // Don't render anything if no timeline is loaded
-  if (!timeline) {
+  // ✅ IMPROVED: Show loading while timelines are being loaded OR timeline is loading
+  if (timelinesLoading || isLoadingTimeline || !timeline) {
     return (
       <div key="timeline-loading-state" className="min-h-screen flex items-center justify-center">
         <motion.div
@@ -207,7 +221,9 @@ export default function TimelineVertical() {
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
             style={{ borderColor: colors.primary }}
           />
-          <p className="text-lg opacity-60">Loading timeline...</p>
+          <p className="text-lg opacity-60">
+            {timelinesLoading ? 'Loading timelines...' : 'Loading timeline...'}
+          </p>
         </motion.div>
       </div>
     );
@@ -257,19 +273,24 @@ export default function TimelineVertical() {
             transform: 'translateZ(0)'
           }}
         >
-          <TimelineSelector 
+          <TimelineSelector
             key={`timeline-selector-${timeline.id}`}
-            className="pt-4" 
+            className="pt-4"
           />
-          
+          <VerifyWordsPattern
+            opacity={0.8}
+            density="medium"
+            className="z-0"
+          />
+
           <MemoizedTimelineBackground
             key={`timeline-background-${timeline.id}`}
             scrollProgress={smoothScrollProgress.get()}
             isDark={isDark}
             colors={colors}
           />
-          
-          <div 
+
+          <div
             key={`timeline-progress-line-${timeline.id}`}
             className="fixed left-1/2 top-0 w-px h-full -translate-x-1/2 z-10 opacity-60"
             style={{ willChange: 'transform' }}
@@ -278,7 +299,7 @@ export default function TimelineVertical() {
               className="w-full h-full"
               style={{ background: timelineLineGradients.background }}
             />
-            
+
             <motion.div
               className="absolute top-0 left-0 w-full origin-top"
               style={{
@@ -312,18 +333,18 @@ export default function TimelineVertical() {
           <motion.div
             key={`timeline-header-section-${timeline.id}`}
             style={{ opacity: headerOpacity }}
-            className="relative z-25" 
+            className="relative z-25"
             initial={{ y: -30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
-            data-scroll-target="hero" 
+            data-scroll-target="hero"
           >
             <FloatingAudioButton
               isVisible={true}
               milestones={sortedMilestones}
             />
-            <MemoizedTimelineHeader timeline={timeline} />          
-            
+            <MemoizedTimelineHeader timeline={timeline} />
+
             {/* Loading indicator */}
             {isLoadingTimeline && (
               <motion.div
@@ -343,11 +364,10 @@ export default function TimelineVertical() {
             )}
           </motion.div>
 
-          <div 
+          <div
             key={`milestones-container-${timeline.id}`}
-            className={`relative z-20 mx-auto px-4 pt-6 ${
-              isDesktop ? 'max-w-5xl' : isMobile ? 'max-w-full' : 'max-w-3xl'
-            }`}
+            className={`relative z-20 mx-auto px-4 pt-6 ${isDesktop ? 'max-w-5xl' : isMobile ? 'max-w-full' : 'max-w-3xl'
+              }`}
             style={{ willChange: 'transform' }}
           >
             {sortedMilestones.map((milestone, index) => (
@@ -376,7 +396,7 @@ export default function TimelineVertical() {
             </motion.div>
           )}
         </div>
-        
+
         <TimelineSummaryModal
           key={`timeline-summary-modal-${timeline.id}`}
           isOpen={isSummaryOpen}

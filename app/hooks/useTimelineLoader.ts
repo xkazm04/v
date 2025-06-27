@@ -4,8 +4,22 @@ import { useState, useEffect, useCallback } from 'react';
 import { useUserPreferences } from './use-user-preferences';
 import { Timeline } from '@/app/types/timeline';
 
+// English files
+import timelineIndiaEn from '@/app/components/timeline/TimelineSelector/en/timeline_milestones_india.json';
+import timelineIraqEn from '@/app/components/timeline/TimelineSelector/en/timeline_milestones_iraq.json';
+import timelineSyriaEn from '@/app/components/timeline/TimelineSelector/en/timeline_milestones_syria.json';
+import timelineUkraineEn from '@/app/components/timeline/TimelineSelector/en/timeline_milestones_ukraine.json';
+import timelineIsraelEn from '@/app/components/timeline/TimelineSelector/en/timeline_milestones_israel.json';
+import timelineSudanEn from '@/app/components/timeline/TimelineSelector/en/timeline_milestones_sudan.json';
+
+// Czech files (only available ones)
+import timelineIndiaCs from '@/app/components/timeline/TimelineSelector/cs/timeline_milestones_india.json';
+import timelineIraqCs from '@/app/components/timeline/TimelineSelector/cs/timeline_milestones_iraq.json';
+import timelineUkraineCs from '@/app/components/timeline/TimelineSelector/cs/timeline_milestones_ukraine.json';
+import timelineIsraelCs from '@/app/components/timeline/TimelineSelector/cs/timeline_milestones_israel.json';
+
 // Supported languages for timeline translations
-const SUPPORTED_TIMELINE_LANGUAGES = ['en', 'cs', 'ru'] as const;
+const SUPPORTED_TIMELINE_LANGUAGES = ['en', 'cs'] as const;
 type SupportedTimelineLanguage = typeof SUPPORTED_TIMELINE_LANGUAGES[number];
 
 // Timeline file metadata
@@ -17,25 +31,24 @@ interface TimelineFileInfo {
   topic_id?: string;
 }
 
-// Available timeline files (these should match your current files)
 const TIMELINE_FILES: TimelineFileInfo[] = [
   {
     filename: 'timeline_milestones_india',
     id: 'india-pakistan',
     title: 'India x Pakistan 2025',
     description: 'Escalation leading to conflict',
-    topic_id: 'india-pakistan-conflict'
+    topic_id: 'india-pakistan-conflict'  
   },
   {
-    filename: 'timeline_milestones_sudan', // Note: Currently used for Iraq War
+    filename: 'timeline_milestones_iraq',
     id: 'iraq-war',
-    title: 'Iraq War 2003-2011', 
+    title: 'Iraq War 2003-2011',
     description: 'Coalition invasion and aftermath',
     topic_id: 'iraq-war'
   },
   {
     filename: 'timeline_milestones_syria',
-    id: 'syria-civil-war',
+    id: 'syria-civil-war', 
     title: 'Syria Civil War 2011-2025',
     description: 'Ongoing conflict and interventions',
     topic_id: 'syria-civil-war'
@@ -43,7 +56,7 @@ const TIMELINE_FILES: TimelineFileInfo[] = [
   {
     filename: 'timeline_milestones_ukraine',
     id: 'russia-ukraine',
-    title: 'Russia x Ukraine 2013-2022',
+    title: 'Russia x Ukraine 2013-2022', 
     description: 'From annexation to full invasion',
     topic_id: 'russia-ukraine-conflict'
   },
@@ -55,6 +68,24 @@ const TIMELINE_FILES: TimelineFileInfo[] = [
     topic_id: 'israel-iran-tensions'
   }
 ];
+
+// ✅ STATIC TIMELINE MAP: Direct mapping to imported files  
+const STATIC_TIMELINES = {
+  en: {
+    'timeline_milestones_india': timelineIndiaEn,
+    'timeline_milestones_iraq': timelineIraqEn,
+    'timeline_milestones_syria': timelineSyriaEn,
+    'timeline_milestones_ukraine': timelineUkraineEn,
+    'timeline_milestones_israel': timelineIsraelEn,
+    'timeline_milestones_sudan': timelineSudanEn,
+  },
+  cs: {
+    'timeline_milestones_india': timelineIndiaCs,
+    'timeline_milestones_iraq': timelineIraqCs,
+    'timeline_milestones_ukraine': timelineUkraineCs,
+    'timeline_milestones_israel': timelineIsraelCs,
+  }
+} as const;
 
 interface LoadedTimeline extends TimelineFileInfo {
   data: Timeline;
@@ -68,65 +99,73 @@ export function useTimelineLoader() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Get target language for timeline loading
+  // ✅ IMPROVED: Better language detection with fallback to English
   const getTargetLanguage = useCallback((): SupportedTimelineLanguage => {
-    const userLang = preferences.language;
+    const userLang = preferences?.language;
+    
+    if (!userLang || userLang === '' || userLang === 'en') {
+      return 'en';
+    }
     
     if (SUPPORTED_TIMELINE_LANGUAGES.includes(userLang as SupportedTimelineLanguage)) {
       return userLang as SupportedTimelineLanguage;
     }
     
-    return 'en'; // Default fallback
-  }, [preferences.language]);
+    console.log(`🌐 Language '${userLang}' not supported for timelines, falling back to English`);
+    return 'en';
+  }, [preferences?.language]);
 
-  // Load a single timeline file with fallback logic
-  const loadTimelineFile = useCallback(async (
+  // ✅ STATIC LOADING: Load timeline file from static imports
+  const loadTimelineFile = useCallback((
     fileInfo: TimelineFileInfo, 
     targetLanguage: SupportedTimelineLanguage
-  ): Promise<LoadedTimeline> => {
-    const filename = `${fileInfo.filename}.json`;
+  ): LoadedTimeline => {
+    const filename = fileInfo.filename;
     
-    // Try to load in target language first
+    // Try to load in target language first (if not English and file exists)
     if (targetLanguage !== 'en') {
-      try {
-        console.log(`📖 Loading timeline file: ${targetLanguage}/${filename}`);
-        const module = await import(
-          `@/app/components/timeline/TimelineSelector/${targetLanguage}/${filename}`
-        );
-        
+      const targetTimelines = STATIC_TIMELINES[targetLanguage];
+      if (targetTimelines && filename in targetTimelines) {
+        console.log(`📖 Loading timeline file: ${targetLanguage}/${filename}.json`);
         return {
           ...fileInfo,
-          data: module.default as Timeline,
+          data: targetTimelines[filename as keyof typeof targetTimelines] as Timeline,
           loadedLanguage: targetLanguage,
           fallbackUsed: false
         };
-      } catch (error) {
-        console.warn(`⚠️ Timeline file not found in ${targetLanguage}, falling back to English: ${filename}`);
-        // Fall through to English fallback
+      } else {
+        console.warn(`⚠️ Timeline file not available in ${targetLanguage}, falling back to English: ${filename}`);
       }
     }
     
-    // Fallback to English
-    try {
-      console.log(`📖 Loading English timeline file: en/${filename}`);
-      const module = await import(
-        `@/app/components/timeline/TimelineSelector/en/${filename}`
-      );
-      
+    // Fallback to English - try primary filename first
+    const englishTimelines = STATIC_TIMELINES.en;
+    if (filename in englishTimelines) {
+      console.log(`📖 Loading English timeline file: en/${filename}.json`);
       return {
         ...fileInfo,
-        data: module.default as Timeline,
+        data: englishTimelines[filename as keyof typeof englishTimelines] as Timeline,
         loadedLanguage: 'en',
         fallbackUsed: targetLanguage !== 'en'
       };
-    } catch (error) {
-      console.error(`❌ Failed to load timeline file: ${filename}`, error);
-      throw new Error(`Failed to load timeline: ${fileInfo.title}`);
     }
+    
+    // Special case: Iraq War fallback to Sudan file
+    if (filename === 'timeline_milestones_iraq' && 'timeline_milestones_sudan' in englishTimelines) {
+      console.log(`📖 Loading English timeline file with sudan fallback: en/timeline_milestones_sudan.json`);
+      return {
+        ...fileInfo,
+        data: englishTimelines.timeline_milestones_sudan as Timeline,
+        loadedLanguage: 'en',
+        fallbackUsed: true
+      };
+    }
+    
+    throw new Error(`Timeline file not found: ${fileInfo.title}`);
   }, []);
 
-  // Load all timeline files
-  const loadAllTimelines = useCallback(async () => {
+  // ✅ SYNCHRONOUS LOADING: Load all timelines synchronously
+  const loadAllTimelines = useCallback(() => {
     setLoading(true);
     setError(null);
     
@@ -134,19 +173,35 @@ export function useTimelineLoader() {
       const targetLanguage = getTargetLanguage();
       console.log(`🌐 Loading timelines for language: ${targetLanguage}`);
       
-      const promises = TIMELINE_FILES.map(fileInfo => 
-        loadTimelineFile(fileInfo, targetLanguage)
-      );
+      const results: LoadedTimeline[] = [];
+      const errors: string[] = [];
       
-      const results = await Promise.all(promises);
+      for (const fileInfo of TIMELINE_FILES) {
+        try {
+          const result = loadTimelineFile(fileInfo, targetLanguage);
+          results.push(result);
+        } catch (error) {
+          const errorMsg = `Failed to load ${fileInfo.title}: ${error instanceof Error ? error.message : 'Unknown error'}`;
+          console.error(`❌ ${errorMsg}`);
+          errors.push(errorMsg);
+        }
+      }
       
-      // Log loading summary
-      const fallbackCount = results.filter(r => r.fallbackUsed).length;
-      const nativeCount = results.length - fallbackCount;
-      
-      console.log(`✅ Loaded ${results.length} timelines: ${nativeCount} in ${targetLanguage}, ${fallbackCount} fallback to English`);
-      
-      setLoadedTimelines(results);
+      if (results.length > 0) {
+        const fallbackCount = results.filter(r => r.fallbackUsed).length;
+        const nativeCount = results.length - fallbackCount;
+        
+        console.log(`✅ Loaded ${results.length}/${TIMELINE_FILES.length} timelines: ${nativeCount} in ${targetLanguage}, ${fallbackCount} fallback to English`);
+        
+        if (errors.length > 0) {
+          console.warn(`⚠️ Some timelines failed to load:`, errors);
+          setError(`Partially loaded: ${errors.length} files failed`);
+        }
+        
+        setLoadedTimelines(results);
+      } else {
+        throw new Error('No timeline files could be loaded');
+      }
       
     } catch (err) {
       console.error('❌ Failed to load timelines:', err);
@@ -157,12 +212,16 @@ export function useTimelineLoader() {
     }
   }, [getTargetLanguage, loadTimelineFile]);
 
-  // Load timelines when language changes
+  // Load timelines when language changes or component mounts
   useEffect(() => {
-    loadAllTimelines();
+    const timer = setTimeout(() => {
+      loadAllTimelines();
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, [loadAllTimelines]);
 
-  // Reload timelines manually
+  // Reload timelines manually  
   const reloadTimelines = useCallback(() => {
     loadAllTimelines();
   }, [loadAllTimelines]);
@@ -186,9 +245,11 @@ export function useTimelineLoader() {
     return {
       targetLanguage,
       totalLoaded: loadedTimelines.length,
+      expectedTotal: TIMELINE_FILES.length,
       nativeCount,
       fallbackCount,
-      translationCoverage: loadedTimelines.length > 0 ? (nativeCount / loadedTimelines.length) * 100 : 0
+      translationCoverage: loadedTimelines.length > 0 ? (nativeCount / loadedTimelines.length) * 100 : 0,
+      loadingSuccess: loadedTimelines.length / TIMELINE_FILES.length * 100
     };
   }, [loadedTimelines, getTargetLanguage]);
 
@@ -204,5 +265,12 @@ export function useTimelineLoader() {
     // Computed values
     targetLanguage: getTargetLanguage(),
     hasTimelines: loadedTimelines.length > 0,
+    
+    // Debug helpers
+    availableFiles: Object.keys(STATIC_TIMELINES.en),
+    expectedFiles: TIMELINE_FILES.map(f => f.filename),
+    isLoading: loading,
+    hasError: !!error,
+    isEmpty: !loading && loadedTimelines.length === 0,
   };
 }

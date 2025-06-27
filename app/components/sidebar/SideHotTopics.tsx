@@ -22,12 +22,19 @@ const SideHotTopics: React.FC<SideHotTopicsProps> = ({
   }, [setSelectedTopicId]);
 
   const hotTopics = useMemo(() => {
-    return availableTimelines.map(dataset => ({
-      id: dataset.topic_id || dataset.id,
-      title: dataset.title,
-      description: dataset.description || '',
-      timelineId: dataset.id,
-    }));
+    // ✅ FIX: Add safety check and filter out invalid topics
+    if (!Array.isArray(availableTimelines)) {
+      return [];
+    }
+    
+    return availableTimelines
+      .filter(dataset => dataset && dataset.topic_id && dataset.title) // ✅ Filter out invalid entries
+      .map(dataset => ({
+        id: dataset.topic_id || dataset.id,
+        title: dataset.title,
+        description: dataset.description || '',
+        timelineId: dataset.id,
+      }));
   }, [availableTimelines]);
 
   if (!mounted) {
@@ -64,7 +71,7 @@ const SideHotTopics: React.FC<SideHotTopicsProps> = ({
     );
   }
 
-  if (availableTimelines.length === 0) {
+  if (hotTopics.length === 0) {
     return (
       <div className="space-y-2">
         <div className="flex items-center justify-center p-4 text-sm opacity-60">
@@ -77,12 +84,15 @@ const SideHotTopics: React.FC<SideHotTopicsProps> = ({
   return (
     <div className="space-y-2">
       {hotTopics.map((topic, index) => (
-        <SideHotTopic
-          key={topic.id}
-          topic={topic}
-          isCollapsed={isCollapsed}
-          index={index}
-        />
+        // ✅ FIX: Add safety check for topic.id
+        topic?.id ? (
+          <SideHotTopic
+            key={topic.id}
+            topic={topic}
+            isCollapsed={isCollapsed}
+            index={index}
+          />
+        ) : null
       ))}
     </div>
   );

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useUserPreferences } from './use-user-preferences';
 import { userPreferencesApiClient } from '@/app/lib/services/user-preferences-api-client';
 import { useTranslationStore } from '@/app/stores/useTranslationStore'; 
@@ -10,8 +10,31 @@ export function useApiWithPreferences() {
   const { preferences } = useUserPreferences();
   const { startTranslation, completeTranslation, failTranslation } = useTranslationStore();
 
-  userPreferencesApiClient.resetCache();
-  userPreferencesApiClient.setPreferences(preferences);
+  // ✅ FIX: Only update preferences when they actually change
+  const stablePreferences = useMemo(() => {
+    return {
+      language: preferences?.language || 'en',
+      theme: preferences?.theme || 'light',
+      countries: preferences?.countries || ['worldwide'],
+      categories: preferences?.categories || [],
+    };
+  }, [
+    preferences?.language,
+    preferences?.theme,
+    preferences?.countries?.join(','), // ✅ Stable string comparison
+    preferences?.categories?.join(',') // ✅ Stable string comparison
+  ]);
+
+  // ✅ FIX: Use useEffect to update client only when preferences change
+  useEffect(() => {
+    userPreferencesApiClient.resetCache();
+    userPreferencesApiClient.setPreferences(preferences);
+  }, [
+    stablePreferences.language,
+    stablePreferences.theme,
+    stablePreferences.countries.join(','),
+    stablePreferences.categories.join(',')
+  ]);
 
   /**
    * Enhanced fetch that automatically includes user preferences AND tracks translations
@@ -38,7 +61,7 @@ export function useApiWithPreferences() {
     
     console.log('🌐 fetchWithPreferences called:', {
       url,
-      language: preferences?.language,
+      language: stablePreferences.language,
       translationTarget,
       trackingTranslation: !!translationTaskId,
       currentTime: new Date().toISOString()
@@ -65,7 +88,13 @@ export function useApiWithPreferences() {
       }
       throw error;
     }
-  }, [preferences, startTranslation, completeTranslation, failTranslation]);
+  }, [
+    stablePreferences.language, // ✅ Use stable values instead of full preferences object
+    startTranslation, 
+    completeTranslation, 
+    failTranslation,
+    preferences // ✅ Keep this for the actual API call
+  ]);
 
   /**
    * Create URL with preference parameters
@@ -82,7 +111,7 @@ export function useApiWithPreferences() {
     
     console.log('🔗 createUrlWithPreferences called:', {
       baseUrl,
-      preferences: preferences?.language,
+      preferences: stablePreferences.language,
       translationTarget,
       willAddLangParams: !!translationTarget
     });
@@ -92,8 +121,8 @@ export function useApiWithPreferences() {
       url.searchParams.set('translate_to', translationTarget);
     }
     
-    if (options.includeTheme && preferences?.theme && preferences.theme !== 'system') {
-      url.searchParams.set('theme', preferences.theme);
+    if (options.includeTheme && stablePreferences.theme && stablePreferences.theme !== 'system') {
+      url.searchParams.set('theme', stablePreferences.theme);
     }
     
     // Add additional parameters
@@ -104,14 +133,14 @@ export function useApiWithPreferences() {
     console.log('🔗 Final URL:', url.toString());
     
     return url.toString();
-  }, [preferences]);
+  }, [stablePreferences.language, stablePreferences.theme, preferences]);
 
   /**
    * Get request headers with user preferences
    */
   const getPreferenceHeaders = useCallback((): HeadersInit => {
     return userPreferencesApiClient.createRequestHeaders(preferences);
-  }, [preferences]);
+  }, [stablePreferences.language, stablePreferences.theme, preferences]);
 
   /**
    * Apply preferences to filter object
@@ -120,15 +149,21 @@ export function useApiWithPreferences() {
     baseFilters: T
   ): T & { translate_to?: string } => {
     return userPreferencesApiClient.applyPreferencesToFilters(baseFilters, preferences);
-  }, [preferences]);
+  }, [stablePreferences.language, preferences]);
+
+  // ✅ FIX: Memoize computed values to prevent recalculation
+  const computedValues = useMemo(() => ({
+    translationTarget: userPreferencesApiClient.getTranslationTarget(preferences),
+    needsTranslation: userPreferencesApiClient.needsTranslation(preferences),
+  }), [stablePreferences.language]);
 
   return {
     fetchWithPreferences,
     createUrlWithPreferences,
     getPreferenceHeaders,
     applyPreferencesToFilters,
-    translationTarget: userPreferencesApiClient.getTranslationTarget(preferences),
-    needsTranslation: userPreferencesApiClient.needsTranslation(preferences),
-    preferences
+    translationTarget: computedValues.translationTarget,
+    needsTranslation: computedValues.needsTranslation,
+    preferences: stablePreferences 
   };
 }

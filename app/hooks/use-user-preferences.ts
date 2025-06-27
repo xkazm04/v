@@ -1,7 +1,6 @@
 'use client';
 
 import { useLocalStorage } from './use-local-storage';
-import { AVAILABLE_COUNTRIES, AVAILABLE_LANGUAGES, isValidCountryCode, isValidLanguageCode } from '@/app/helpers/countries';
 
 export interface UserPreferences {
   language: string;
@@ -18,15 +17,38 @@ export interface UserPreferences {
 }
 
 const DEFAULT_PREFERENCES: UserPreferences = {
-  language: 'en',
+  language: 'en', // ✅ ENSURE: Always defaults to 'en'
   countries: ['worldwide'],
   categories: ['politics', 'environment'],
-  theme: 'light', // Default to light theme instead of system
+  theme: 'light',
   hasCompletedOnboarding: false,
   autoRefresh: true,
   notificationsEnabled: false,
   lastUpdated: new Date().toISOString(),
   version: '1.0.0'
+};
+
+// ✅ VALIDATION: Available language codes
+const AVAILABLE_LANGUAGES = [
+  { code: 'en', name: 'English', flag: '🇺🇸' },
+  { code: 'cs', name: 'Česky', flag: '🇨🇿' },
+  // Add more languages as they become available
+];
+
+// ✅ VALIDATION: Available country codes
+const AVAILABLE_COUNTRIES = [
+  { code: 'worldwide', name: 'Worldwide', flag: '🌍' },
+  { code: 'us', name: 'United States', flag: '🇺🇸' },
+  { code: 'cz', name: 'Czech Republic', flag: '🇨🇿' },
+  // Add more countries as needed
+];
+
+const isValidLanguageCode = (code: string): boolean => {
+  return AVAILABLE_LANGUAGES.some(lang => lang.code === code);
+};
+
+const isValidCountryCode = (code: string): boolean => {
+  return AVAILABLE_COUNTRIES.some(country => country.code === code);
 };
 
 export function useUserPreferences() {
@@ -35,11 +57,12 @@ export function useUserPreferences() {
     DEFAULT_PREFERENCES
   );
 
-  // Update language preference with validation
+  // ✅ IMPROVED: Update language preference with validation and fallback
   const setLanguage = (language: string) => {
-    if (!isValidLanguageCode(language)) {
-      console.warn(`Invalid language code: ${language}`);
-      return;
+    // If empty or invalid language, default to English
+    if (!language || language === '' || !isValidLanguageCode(language)) {
+      console.warn(`🌐 Invalid language code: ${language}, defaulting to English`);
+      language = 'en';
     }
     
     setPreferences(prev => ({
@@ -49,14 +72,13 @@ export function useUserPreferences() {
     }));
   };
 
-  // ✅ UPDATED: Update countries preference with validation and auto-selection reset
+  // Update countries preference with validation and auto-selection reset
   const setCountries = (countries: string[]) => {
     // Validate all country codes
     const validCountries = countries.filter(code => isValidCountryCode(code));
     
     if (validCountries.length !== countries.length) {
-      console.warn('Some invalid country codes were filtered out:', 
-        countries.filter(code => !isValidCountryCode(code)));
+      console.warn('🌍 Some invalid country codes were filtered out:', countries);
     }
     
     // Ensure at least one country is selected, default to worldwide
@@ -113,12 +135,13 @@ export function useUserPreferences() {
     setPreferences(DEFAULT_PREFERENCES);
   };
 
-  // Get translation target language (null if English or no translation needed)
+  // ✅ IMPROVED: Get translation target language with proper fallback
   const getTranslationTarget = (): string | null => {
-    if (preferences.language === 'en' || !preferences.language) {
-      return null; // No translation needed for English
+    const lang = preferences?.language;
+    if (!lang || lang === 'en' || lang === '') {
+      return null; // No translation needed
     }
-    return preferences.language;
+    return lang;
   };
 
   // Export preferences for backup
@@ -129,29 +152,21 @@ export function useUserPreferences() {
   // Import preferences from backup
   const importPreferences = (preferencesJson: string) => {
     try {
-      const imported = JSON.parse(preferencesJson);
+      const importedPreferences = JSON.parse(preferencesJson);
       
       // Validate imported preferences
-      const validatedPreferences = {
-        ...DEFAULT_PREFERENCES,
-        ...imported,
-        language: isValidLanguageCode(imported.language) ? imported.language : 'en',
-        countries: Array.isArray(imported.countries) 
-          ? imported.countries.filter(isValidCountryCode)
-          : ['worldwide'],
-        lastUpdated: new Date().toISOString()
-      };
-      
-      // Ensure at least one country is selected
-      if (validatedPreferences.countries.length === 0) {
-        validatedPreferences.countries = ['worldwide'];
+      if (importedPreferences.language && !isValidLanguageCode(importedPreferences.language)) {
+        importedPreferences.language = 'en';
       }
       
-      setPreferences(validatedPreferences);
-      return true;
+      setPreferences({
+        ...DEFAULT_PREFERENCES,
+        ...importedPreferences,
+        lastUpdated: new Date().toISOString()
+      });
     } catch (error) {
       console.error('Failed to import preferences:', error);
-      return false;
+      throw new Error('Invalid preferences format');
     }
   };
 
@@ -164,16 +179,22 @@ export function useUserPreferences() {
     const allCountries = getAvailableCountries();
     
     if (!preferences.countries || preferences.countries.length === 0) {
-      return allCountries.filter(c => c.code === 'worldwide');
+      return [allCountries.find(c => c.code === 'worldwide')!];
     }
     
-    return allCountries.filter(country => 
-      preferences.countries.includes(country.code)
-    );
+    return preferences.countries
+      .map(code => allCountries.find(c => c.code === code))
+      .filter(Boolean);
   };
 
+  // ✅ ENSURE: Always return a valid language (fallback to 'en')
+  const safeLanguage = preferences?.language || 'en';
+
   return {
-    preferences,
+    preferences: {
+      ...preferences,
+      language: safeLanguage // ✅ Always provide a fallback language
+    },
     setLanguage,
     setCountries,
     setCategories,
@@ -187,9 +208,11 @@ export function useUserPreferences() {
     getAvailableLanguages,
     getAvailableCountries,
     getUserCountries,
+    isFirstTimeUser: !preferences?.hasCompletedOnboarding,
+    needsTranslation: safeLanguage !== 'en' && safeLanguage !== '',
     
-    // Computed values
-    isFirstTimeUser: !preferences.hasCompletedOnboarding,
-    needsTranslation: preferences.language !== 'en' && preferences.language !== '',
+    // ✅ ADDED: Debug helpers
+    isPreferencesLoaded: !!preferences,
+    currentLanguage: safeLanguage,
   };
 }

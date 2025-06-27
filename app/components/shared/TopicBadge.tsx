@@ -1,13 +1,14 @@
 'use client';
 
-import { memo, useState, useMemo } from 'react';
+import React, { useState, useMemo, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GraduationCap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import { useTimelineStore } from '@/app/stores/useTimelineStore';
+import { useTimelineLoader } from '@/app/hooks/useTimelineLoader'; 
 import { ResearchResult } from '@/app/types/article';
 import { Video } from '@/app/types/video_api';
-import { TIMELINE_DATASETS, useTimelineStore } from '@/app/stores/useTimelineStore';
 
 interface Props {
   data?: ResearchResult | Video;
@@ -32,6 +33,7 @@ const TopicBadge = memo(function TopicBadge({
   const { colors, isDark, vintage } = useLayoutTheme();
   const router = useRouter();
   const { selectTimelineByTopicId } = useTimelineStore();
+  const { timelines: availableTimelines } = useTimelineLoader(); 
   
   const [isHovered, setIsHovered] = useState(false);
 
@@ -50,11 +52,11 @@ const TopicBadge = memo(function TopicBadge({
     return null;
   }, [data, manualTopicId]);
 
-  // Find the corresponding timeline dataset
+  // ✅ FIX: Find the corresponding timeline dataset from loaded timelines
   const timelineDataset = useMemo(() => {
     if (!topicId) return null;
-    return TIMELINE_DATASETS.find(dataset => dataset.topic_id === topicId);
-  }, [topicId]);
+    return availableTimelines.find(dataset => dataset.topic_id === topicId);
+  }, [topicId, availableTimelines]);
 
   // Don't render if no topic ID or no matching timeline found
   if (!topicId || !timelineDataset) {
@@ -62,10 +64,8 @@ const TopicBadge = memo(function TopicBadge({
   }
 
   const handleClick = () => {
-    // Set the timeline in the store
-    selectTimelineByTopicId(topicId);
-    
-    // Navigate to timeline page
+    // ✅ FIX: Pass available timelines to the store
+    selectTimelineByTopicId(topicId, availableTimelines);
     router.push('/timeline');
   };
 
@@ -125,46 +125,42 @@ const TopicBadge = memo(function TopicBadge({
           />
         </motion.div>
 
+        {/* Translation indicator */}
+        {timelineDataset.fallbackUsed && (
+          <div
+            className="absolute -top-1 -left-1 w-2 h-2 rounded-full"
+            style={{ backgroundColor: '#f59e0b' }}
+            title="Using English fallback"
+          />
+        )}
+
         {/* Expandable Text */}
         <AnimatePresence>
           {isHovered && (
             <motion.div
-              className="absolute top-1/2 right-10 -translate-y-1/2 whitespace-nowrap"
-              initial={{ opacity: 0, x: 10, scaleX: 0 }}
-              animate={{ 
-                opacity: 1, 
-                x: 0, 
-                scaleX: 1,
-                transition: { 
-                  duration: 0.2, 
-                  ease: "easeOut",
-                  scaleX: { duration: 0.15 }
-                }
-              }}
-              exit={{ 
-                opacity: 0, 
-                x: 10, 
-                scaleX: 0,
-                transition: { 
-                  duration: 0.15, 
-                  ease: "easeIn",
-                  scaleX: { duration: 0.1 }
-                }
-              }}
-              style={{ 
-                transformOrigin: 'left center',
-              }}
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 10 }}
+              className="absolute right-full mr-2 top-1/2 -translate-y-1/2 whitespace-nowrap"
             >
               <div
-                className="px-3 py-1 rounded-md shadow-lg border text-sm font-medium"
+                className="px-3 py-2 rounded-lg shadow-lg text-xs font-medium"
                 style={{
                   backgroundColor: topicColors.background,
-                  borderColor: topicColors.border,
                   color: topicColors.text,
+                  border: `1px solid ${topicColors.border}`,
                   boxShadow: `0 4px 12px ${topicColors.shadow}`,
                 }}
               >
-                {timelineDataset.title}
+                View {timelineDataset.title}
+                <div
+                  className="absolute left-full top-1/2 w-2 h-2 transform -translate-y-1/2 rotate-45"
+                  style={{
+                    backgroundColor: topicColors.background,
+                    borderRight: `1px solid ${topicColors.border}`,
+                    borderTop: `1px solid ${topicColors.border}`,
+                  }}
+                />
               </div>
             </motion.div>
           )}

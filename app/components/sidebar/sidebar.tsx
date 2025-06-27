@@ -27,8 +27,8 @@ export function Sidebar({ className }: SidebarProps) {
         backgroundColor: sidebarColors.background,
         borderColor: sidebarColors.border
       }}
-      initial={{ x: -20, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
+      initial={{ x: -20 }}
+      animate={{ x: 0 }}
       transition={{ duration: 0.3 }}
     >
       <div className="absolute inset-0">

@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useCallback, useMemo, useEffect } from 'react';
-import { useApiWithPreferences } from './use-api-with-preferences';
-import { useUserPreferences } from './use-user-preferences';
-import { useReadArticlesStore } from '@/app/stores/useReadArticlesStore';
-import { useFilterStore } from '@/app/stores/filterStore'; 
-import { useTranslationStore } from '@/app/stores/useTranslationStore';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { ResearchResult } from '@/app/types/article';
+import { useReadArticlesStore } from '@/app/stores/useReadArticlesStore';
+import { useFilterStore } from '@/app/stores/filterStore';
+import { useUserPreferences } from '@/app/hooks/use-user-preferences';
+import { useApiWithPreferences } from '@/app/hooks/use-api-with-preferences';
+import { useTranslationStore } from '../stores/useTranslationStore';
 
 export interface UseNewsFilters {
   limit?: number;
@@ -30,6 +30,7 @@ interface UseNewsWithExchangeReturn {
   dataSource: string;
   totalFetched: number;
   hasMoreArticles: boolean;
+  reservePoolSize: number;
 }
 
 function createNewsFilters(
@@ -52,10 +53,10 @@ function createNewsFilters(
   const searchText = filters.searchText || storeFilters.searchText;
   const topicId = filters.topicId || storeFilters.topicFilter;
 
-  if (statusFilter) params.status_filter = statusFilter;
-  if (countryFilter) params.country_filter = countryFilter;
-  if (sourceFilter) params.source_filter = sourceFilter;
-  if (searchText) params.search_text = searchText;
+  if (statusFilter && statusFilter !== 'all') params.status_filter = statusFilter;
+  if (countryFilter && countryFilter !== 'worldwide') params.country_filter = countryFilter;
+  if (sourceFilter && sourceFilter !== 'all') params.source_filter = sourceFilter;
+  if (searchText && searchText.trim()) params.search_text = searchText.trim();
   if (topicId) params.topic_id = topicId;
   if (excludeIds.length > 0) params.exclude_ids = excludeIds.join(',');
 
@@ -70,7 +71,23 @@ export function useNewsWithExchange(filters: UseNewsFilters = {}): UseNewsWithEx
   const [totalFetched, setTotalFetched] = useState(0);
   const [hasMoreArticles, setHasMoreArticles] = useState(true);
   
-  const { addReadArticle, getExcludeIds, clearReadArticles } = useReadArticlesStore();
+  // Refs to prevent multiple simultaneous fetches
+  const initialFetchDone = useRef(false);
+  const currentFetchAbortController = useRef<AbortController | null>(null);
+  const reserveFetchAbortController = useRef<AbortController | null>(null);
+  const lastFetchParams = useRef<string>('');
+  
+  const { 
+    addReadArticle, 
+    getExcludeIds, 
+    clearReadArticles,
+    setReservePool,
+    replaceArticleWithReserve,
+    shouldRefetchReserves,
+    setIsRefetchingReserves,
+    reservePool
+  } = useReadArticlesStore();
+  
   const { getNewsFilters } = useFilterStore();
   const { preferences } = useUserPreferences();
   const { 
@@ -82,47 +99,92 @@ export function useNewsWithExchange(filters: UseNewsFilters = {}): UseNewsWithEx
 
   const { startTranslation, completeTranslation, failTranslation } = useTranslationStore();
 
+  // ✅ FIX: Extract store values to stable variables ONLY when needed
+  const storeFilters = useMemo(() => getNewsFilters(), []);
+  const excludeIds = useMemo(() => getExcludeIds(), []);
+
+  // ✅ FIX: Create stable filter object with REDUCED dependencies to prevent loops
   const stableFilters = useMemo(() => {
-    const storeFilters = getNewsFilters();
-    const excludeIds = getExcludeIds();
+    const currentStoreFilters = getNewsFilters();
+    const currentExcludeIds = getExcludeIds();
     
-    return createNewsFilters(filters, storeFilters, preferences, excludeIds);
+    const filterObj = createNewsFilters(filters, currentStoreFilters, preferences, currentExcludeIds);
+    
+    console.log('🔧 Creating stable filters:', filterObj);
+    return filterObj;
   }, [
-    filters,
-    getNewsFilters().statusFilter,
-    getNewsFilters().categoryFilter,
-    getNewsFilters().countryFilter,
-    getNewsFilters().sourceFilter,
-    getNewsFilters().searchText,
-    getNewsFilters().topicFilter,
-    preferences?.categories?.[0],
+    // Core filter dependencies - reduced to prevent loops
+    filters.limit,
+    filters.autoRefresh,
+    filters.categoryFilter,
+    filters.countryFilter,
+    filters.searchText,
+    filters.statusFilter,
+    filters.sourceFilter,
+    filters.breaking,
+    filters.onlyFactChecked,
+    filters.topicId,
+    // Store dependencies - use string values directly
+    storeFilters.statusFilter,
+    storeFilters.categoryFilter,
+    storeFilters.countryFilter,
+    storeFilters.sourceFilter,
+    storeFilters.searchText,
+    storeFilters.topicFilter,
+    // User preferences - use stable strings
+    preferences?.language,
     preferences?.countries?.[0],
-    getExcludeIds().join(','),
+    // Translation target
     translationTarget
+    // NOTE: Removed excludeIds from dependencies to prevent loops
   ]);
 
-  const fetchNews = useCallback(async () => {
-    let translationTaskId: string | null = null;
+  // ✅ OPTIMIZED: Main fetch function
+  const fetchNews = useCallback(async (isRefresh = false, isReserveFetch = false) => {
+    const currentExcludeIds = getExcludeIds();
+    const filtersWithExcludes = { ...stableFilters };
+    
+    // Add current exclude IDs only at fetch time
+    if (currentExcludeIds.length > 0) {
+      filtersWithExcludes.exclude_ids = currentExcludeIds.join(',');
+    }
+    
+    const paramsString = JSON.stringify(filtersWithExcludes);
+    
+    // Prevent duplicate fetches
+    if (!isRefresh && !isReserveFetch && paramsString === lastFetchParams.current && initialFetchDone.current) {
+      console.log('🚫 Skipping duplicate fetch');
+      return;
+    }
+
+    // Abort any existing fetch
+    if (isReserveFetch) {
+      reserveFetchAbortController.current?.abort();
+      reserveFetchAbortController.current = new AbortController();
+    } else {
+      currentFetchAbortController.current?.abort();
+      currentFetchAbortController.current = new AbortController();
+    }
+
+    const abortController = isReserveFetch ? reserveFetchAbortController.current : currentFetchAbortController.current;
     
     try {
-      setLoading(true);
-      setError(null);
-      
-      const apiUrl = createUrlWithPreferences('/api/news', stableFilters, { includeTheme: false });
-      
-      // ✅ Start translation task if translation is needed
-      if (needsTranslation && translationTarget) {
-        translationTaskId = startTranslation({
-          text: `Loading ${stableFilters.limit || 10} news articles...`,
-          sourceLocale: 'en',
-          targetLocale: translationTarget,
-          context: 'news'
-        });
-        console.log(`🌐 Started translation task for news fetch: ${translationTaskId}`);
+      if (!isReserveFetch) {
+        setLoading(true);
+        setError(null);
+      } else {
+        setIsRefetchingReserves(true);
       }
 
-      const response = await fetchWithPreferences(apiUrl, {
-        cache: 'no-store'
+      const fetchParams = isReserveFetch 
+        ? { ...filtersWithExcludes, limit: '25', offset: String(totalFetched) }
+        : filtersWithExcludes;
+
+      console.log(`📰 ${isReserveFetch ? 'Reserve' : 'Main'} fetch starting:`, fetchParams);
+
+      const url = createUrlWithPreferences('/api/news', fetchParams);
+      const response = await fetchWithPreferences(url, {
+        signal: abortController?.signal
       });
 
       if (!response.ok) {
@@ -131,77 +193,104 @@ export function useNewsWithExchange(filters: UseNewsFilters = {}): UseNewsWithEx
 
       const data = await response.json();
       
-      if (data.error) {
-        throw new Error(data.details || data.error);
+      if (abortController?.signal.aborted) {
+        console.log(`🚫 ${isReserveFetch ? 'Reserve' : 'Main'} fetch aborted`);
+        return;
       }
 
-      const results = Array.isArray(data.results) ? data.results : data;
-      setArticles(results);
-      setTotalFetched(results.length);
-      setHasMoreArticles(results.length >= (filters.limit || 10));
+      const fetchedArticles = data.results || [];
+      console.log(`📰 Found ${fetchedArticles.length} articles from Supabase`);
       
-      // Determine data source from response metadata
-      if (data.__meta?.userPreferences) {
-        setDataSource(data.__meta.userPreferences.translationEnabled ? 'translated' : 'original');
+      if (currentExcludeIds.length > 0) {
+        console.log(`🚫 Excluding ${currentExcludeIds.length} read articles`);
+      }
+      
+      if (isReserveFetch) {
+        setReservePool(fetchedArticles);
+        setIsRefetchingReserves(false);
+        console.log(`🏊 Reserve fetch completed: ${fetchedArticles.length} articles`);
       } else {
-        setDataSource('unknown');
+        setArticles(fetchedArticles);
+        setTotalFetched(fetchedArticles.length);
+        setDataSource('supabase');
+        setHasMoreArticles(fetchedArticles.length >= (parseInt(filtersWithExcludes.limit) || 10));
+        
+        lastFetchParams.current = paramsString;
+        initialFetchDone.current = true;
+        console.log(`📰 Main fetch completed: ${fetchedArticles.length} articles`);
       }
 
-      // ✅ Complete translation task if it was started
-      if (translationTaskId) {
-        const wasTranslated = data.__meta?.userPreferences?.translationEnabled || false;
-        completeTranslation(translationTaskId, !wasTranslated); // cached = not translated
-        console.log(`✅ Completed translation task: ${translationTaskId} (translated: ${wasTranslated})`);
-      }
-
-    } catch (err) {
-      console.error('❌ Failed to fetch news:', err);
-      setError(err instanceof Error ? err.message : 'Unknown error occurred');
-      setArticles([]);
-      setDataSource('error');
-      
-      // ✅ Fail translation task if it was started
-      if (translationTaskId) {
-        failTranslation(translationTaskId, err instanceof Error ? err.message : 'Unknown error');
-        console.log(`❌ Failed translation task: ${translationTaskId}`);
+    } catch (fetchError) {
+      if (abortController?.signal.aborted) {
+        return;
       }
       
+      console.error(`❌ ${isReserveFetch ? 'Reserve' : 'Main'} fetch failed:`, fetchError);
+      
+      if (!isReserveFetch) {
+        setError(fetchError instanceof Error ? fetchError.message : 'Failed to fetch news');
+      }
+      
+      setIsRefetchingReserves(false);
     } finally {
-      setLoading(false);
+      if (!isReserveFetch) {
+        setLoading(false);
+      }
     }
-  }, [
-    stableFilters, 
-    fetchWithPreferences, 
-    createUrlWithPreferences, 
-    translationTarget, 
-    needsTranslation,
-    startTranslation,      
-    completeTranslation,   
-    failTranslation   
-  ]);
+  }, [stableFilters, totalFetched, fetchWithPreferences, createUrlWithPreferences, setReservePool, setIsRefetchingReserves, getExcludeIds]);
 
-  // Replace read article with a new one
+  // ✅ OPTIMIZED: Smart reserve refetch
+  const refetchReservesIfNeeded = useCallback(async () => {
+    if (shouldRefetchReserves()) {
+      console.log('🏊 Refetching reserves in background...');
+      await fetchNews(false, true);
+    }
+  }, [shouldRefetchReserves, fetchNews]);
+
+  // ✅ OPTIMIZED: Article replacement with reserve system
   const replaceReadArticle = useCallback(async (articleId: string) => {
-    try {
-      addReadArticle(articleId);
+    console.log(`🔄 Replacing article: ${articleId}`);
+    
+    const { replacementArticle, shouldRefetchReserves: shouldRefetch } = replaceArticleWithReserve(articleId);
+    
+    if (replacementArticle) {
+      setArticles(prev => prev.map(article => 
+        article.id === articleId ? replacementArticle : article
+      ));
+      console.log(`✅ Article replaced: ${articleId} -> ${replacementArticle.id}`);
+    } else {
       setArticles(prev => prev.filter(article => article.id !== articleId));
-      await fetchNews();
-    } catch (error) {
-      console.error('Failed to replace article:', error);
+      console.log(`❌ No replacement available for: ${articleId}`);
     }
-  }, [addReadArticle, fetchNews]);
+    
+    // Refetch reserves in background if needed
+    if (shouldRefetch) {
+      setTimeout(() => refetchReservesIfNeeded(), 1000); // Delay to prevent immediate refetch
+    }
+  }, [replaceArticleWithReserve, refetchReservesIfNeeded]);
 
-  // Refresh all news and clear read articles
+  // ✅ OPTIMIZED: Refresh function
   const refreshNews = useCallback(() => {
-    clearReadArticles();
-    fetchNews();
-  }, [fetchNews, clearReadArticles]);
-
-  // Effect to fetch initial news and react to changes
-  useEffect(() => {
-    fetchNews();
+    console.log('🔄 Refreshing news...');
+    initialFetchDone.current = false;
+    lastFetchParams.current = '';
+    fetchNews(true);
   }, [fetchNews]);
 
+  // ✅ OPTIMIZED: Initial fetch effect - only when stable filters change significantly
+  useEffect(() => {
+    if (!initialFetchDone.current) {
+      fetchNews();
+    }
+  }, [stableFilters]); // This now won't cause loops
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      currentFetchAbortController.current?.abort();
+      reserveFetchAbortController.current?.abort();
+    };
+  }, []);
 
   return {
     articles,
@@ -211,6 +300,7 @@ export function useNewsWithExchange(filters: UseNewsFilters = {}): UseNewsWithEx
     replaceReadArticle,
     dataSource,
     totalFetched,
-    hasMoreArticles
+    hasMoreArticles,
+    reservePoolSize: reservePool.length
   };
 }

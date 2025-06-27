@@ -3,7 +3,7 @@
 import React, { useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-import { 
+import {
   Tabs,
   TabsList,
 } from '@/app/components/ui/tabs';
@@ -15,7 +15,7 @@ import LikedProfilesTab from './LikedProfilesTab';
 import { containerVariants, itemVariants } from '@/app/components/animations/variants/votingVariants';
 
 const StatsBackground = memo(() => (
-  <div 
+  <div
     className="fixed inset-0 opacity-5 bg-cover bg-center bg-no-repeat"
     style={{
       backgroundImage: `url('/background/bg_stats_8.jpg')`,
@@ -46,7 +46,7 @@ const ProfilesExperimental: React.FC = () => {
   ];
 
   return (
-    <motion.div 
+    <motion.div
       className="relative min-h-screen overflow-hidden"
       variants={containerVariants}
       initial="hidden"
@@ -57,28 +57,26 @@ const ProfilesExperimental: React.FC = () => {
         <VintageBackButton />
       </div>
       {/* Main Content */}
-      <div className="relative z-10 p-6 pt-10 max-w-7xl mx-auto"> {/* Added pt-20 for back button space */}
-        {/* ✅ Enhanced Tabs Section */}
+      <div className="relative z-10 p-6 pt-10 max-w-7xl mx-auto"> 
         <motion.div
           variants={itemVariants}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <Tabs 
-            defaultValue="all" 
+          <Tabs
+            defaultValue="all"
             className="space-y-8"
             onValueChange={setActiveTab}
           >
-            {/* ✅ Enhanced Tabs List with Vintage Styling */}
             <div className="flex justify-center">
               <motion.div
                 className="relative p-2 rounded-2xl"
                 style={{
-                  background: isDark 
+                  background: isDark
                     ? 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04))'
                     : `linear-gradient(135deg, ${vintage.paper}f0, ${vintage.highlight}80)`,
-                  border: isDark 
+                  border: isDark
                     ? '1px solid rgba(255,255,255,0.1)'
                     : `2px solid ${vintage.aged}`,
                   boxShadow: isDark
@@ -92,7 +90,7 @@ const ProfilesExperimental: React.FC = () => {
               >
                 {/* Vintage paper texture for light mode */}
                 {!isDark && (
-                  <div 
+                  <div
                     className="absolute inset-0 opacity-30 pointer-events-none rounded-2xl"
                     style={{
                       backgroundImage: `
@@ -118,7 +116,7 @@ const ProfilesExperimental: React.FC = () => {
                 </TabsList>
               </motion.div>
             </div>
-            
+
             {/* ✅ Enhanced Tab Content with Animations */}
             <AnimatePresence mode="wait">
               <motion.div

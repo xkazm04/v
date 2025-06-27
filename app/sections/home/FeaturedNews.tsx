@@ -1,11 +1,11 @@
-import { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { useNewsFilters } from '@/app/stores/filterStore';
-import { useNewsWithExchange } from '@/app/hooks/useNews';
 import { useNewsTranslations, useCommonTranslations } from '@/app/hooks/useSmartTranslations';
-import { NewsGrid } from '../feed/NewsGrid';
+import { useNewsWithExchange } from '@/app/hooks/useNews';
+import { NewsGrid } from '@/app/sections/feed/NewsGrid';
 import FeaturedNewsHead from './FeaturedNewsHead';
 
 interface FeaturedNewsProps {
@@ -25,6 +25,7 @@ const FeaturedNews = memo(({
   const { t: tn } = useNewsTranslations();
   const { t: tc } = useCommonTranslations();
 
+  // ✅ FIXED: Stable filters to prevent unnecessary re-fetches
   const enhancedFilters = useMemo(() => {
     const filters = {
       limit,
@@ -56,15 +57,18 @@ const FeaturedNews = memo(({
     newsFilters.onlyFactChecked
   ]);
 
+  // ✅ FIXED: Use the enhanced hook with reserve pool support
   const { 
     articles: researchResults, 
     loading, 
     error, 
     refreshNews,
     replaceReadArticle,
-    hasMoreArticles
+    hasMoreArticles,
+    reservePoolSize
   } = useNewsWithExchange(enhancedFilters);
 
+  // ✅ OPTIMIZED: Memoized callbacks
   const handleArticleRead = useCallback((articleId: string) => {
     console.log(`📖 Article read: ${articleId}`);
     replaceReadArticle(articleId);
@@ -74,6 +78,7 @@ const FeaturedNews = memo(({
     refreshNews();
   }, [refreshNews]);
 
+  // ✅ OPTIMIZED: Stable article validation
   const validResearchResults = useMemo(() => {
     if (!Array.isArray(researchResults)) {
       console.warn('FeaturedNews: researchResults is not an array', researchResults);
@@ -94,14 +99,13 @@ const FeaturedNews = memo(({
     return filtered;
   }, [researchResults]);
 
-
-
   return (
     <div className="space-y-6 max-w-[1600px]">
       <FeaturedNewsHead
         loading={loading}
         validResearchResults={validResearchResults}
         handleRefresh={handleRefresh}
+        reservePoolSize={reservePoolSize}
       />
       <AnimatePresence mode="wait">
         {error ? (
