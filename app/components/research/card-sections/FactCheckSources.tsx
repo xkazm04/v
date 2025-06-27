@@ -1,58 +1,27 @@
 "use client";
 
-import { motion, Variants } from 'framer-motion';
-import { AlertTriangle, Globe, BookOpen, Building, Heart, ExternalLink, TrendingUp, TrendingDown } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { AlertTriangle, TrendingUp, TrendingDown } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
+import { useResearchTranslations } from '@/app/hooks/useSmartTranslations';
 import { LLMResearchResponse } from '@/app/types/research';
+import { sectionVariants } from '../../animations/variants/feedVariants';
 
 interface FactCheckSourcesProps {
   factCheck: LLMResearchResponse;
-  config: any;
 }
 
-const sectionVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" }
-  }
-};
-
-// ✅ REUSED: Category icon mapping from ResourceAnalysisCard
-const getCategoryIcon = (category: string) => {
-  switch (category.toLowerCase()) {
-    case 'mainstream': return Globe;
-    case 'academic': return BookOpen;
-    case 'governance': return Building;
-    case 'medical': return Heart;
-    default: return ExternalLink;
-  }
-};
-
-// ✅ REUSED: Credibility color mapping from ResourceAnalysisCard
-const getCredibilityColor = (credibility: string, isDark: boolean) => {
-  switch (credibility.toLowerCase()) {
-    case 'high': return isDark ? '#22c55e' : '#16a34a';
-    case 'medium': return isDark ? '#f59e0b' : '#d97706';
-    case 'low': return isDark ? '#ef4444' : '#dc2626';
-    default: return isDark ? '#6b7280' : '#9ca3af';
-  }
-};
-
-export function FactCheckSources({ factCheck, config }: FactCheckSourcesProps) {
+export function FactCheckSources({ factCheck }: FactCheckSourcesProps) {
   const { isDark } = useLayoutTheme();
-  
-  // ✅ FIXED: Use correct data mapping matching ResourceAnalysisCard
+  const { t: tr } = useResearchTranslations();
+
   const supportingData = factCheck.resources_agreed;
   const contradictingData = factCheck.resources_disagreed;
-  
-  // ✅ FIXED: Use count from the data structure, not total (matching ResourceAnalysisCard)
+
   const supportingCount = supportingData?.count || 0;
   const contradictingCount = contradictingData?.count || 0;
   const totalCount = supportingCount + contradictingCount;
   
-  // ✅ FIXED: Parse percentage from total field properly (matching ResourceAnalysisCard)
   const supportingPercentage = supportingData?.total 
     ? parseFloat(supportingData.total.replace('%', '')) 
     : 0;
@@ -60,22 +29,13 @@ export function FactCheckSources({ factCheck, config }: FactCheckSourcesProps) {
     ? parseFloat(contradictingData.total.replace('%', '')) 
     : 0;
 
-  // ✅ ENHANCED: Debug logging matching ResourceAnalysisCard
-  console.log('FactCheckSources data:', {
-    supportingData,
-    contradictingData,
-    supportingCount,
-    contradictingCount,
-    totalCount,
-    supportingPercentage,
-    contradictingPercentage
-  });
-
   if (!supportingData && !contradictingData) {
     return (
       <motion.div variants={sectionVariants} className="h-full flex flex-col items-center justify-center">
         <AlertTriangle className="w-8 h-8 text-muted-foreground mb-2 opacity-50" />
-        <p className="text-sm text-muted-foreground">No source analysis available</p>
+        <p className="text-sm text-muted-foreground">
+          {tr('no_source_analysis', 'No source analysis available')}
+        </p>
       </motion.div>
     );
   }
@@ -102,18 +62,16 @@ export function FactCheckSources({ factCheck, config }: FactCheckSourcesProps) {
 
   return (
     <motion.div variants={sectionVariants} className="h-full flex flex-col">
-      {/* ✅ ENHANCED: Header with Overall Stats matching ResourceAnalysisCard */}
       <div className="flex-shrink-0 mb-4">
         <div className="flex items-center justify-between mb-3">
           <h4 className="text-sm font-semibold" style={{ color: themeColors.neutral.text }}>
-            Source Analysis
+            {tr('source_analysis', 'Source Analysis')}
           </h4>
           <div className="text-xs text-muted-foreground">
-            {totalCount} total sources
+            {tr('total_sources', '{count} total sources', { count: totalCount })}
           </div>
         </div>
         
-        {/* ✅ ENHANCED: Progress bar matching ResourceAnalysisCard */}
         {totalCount > 0 && (
           <div className="relative h-2 rounded-full overflow-hidden" style={{ background: themeColors.neutral.bg }}>
             <motion.div
@@ -135,10 +93,10 @@ export function FactCheckSources({ factCheck, config }: FactCheckSourcesProps) {
         
         <div className="flex justify-between mt-2 text-xs">
           <span style={{ color: themeColors.supporting.text }}>
-            {supportingCount} supporting ({supportingPercentage.toFixed(1)}%)
+            {tr('supporting_sources', '{count} supporting ({percent}%)', { count: supportingCount, percent: supportingPercentage.toFixed(1) })}
           </span>
           <span style={{ color: themeColors.opposing.text }}>
-            {contradictingCount} opposing ({contradictingPercentage.toFixed(1)}%)
+            {tr('opposing_sources', '{count} opposing ({percent}%)', { count: contradictingCount, percent: contradictingPercentage.toFixed(1) })}
           </span>
         </div>
       </div>
@@ -154,26 +112,26 @@ export function FactCheckSources({ factCheck, config }: FactCheckSourcesProps) {
       >
         <div className="flex items-center justify-between">
           <span className="text-xs font-medium" style={{ color: themeColors.neutral.text }}>
-            Source Consensus
+            {tr('source_consensus', 'Source Consensus')}
           </span>
           <div className="flex items-center gap-2">
             {supportingPercentage > contradictingPercentage ? (
               <>
                 <TrendingUp className="w-3 h-3" style={{ color: themeColors.supporting.text }} />
                 <span className="text-xs font-medium" style={{ color: themeColors.supporting.text }}>
-                  Mostly Supporting
+                  {tr('mostly_supporting', 'Mostly Supporting')}
                 </span>
               </>
             ) : contradictingPercentage > supportingPercentage ? (
               <>
                 <TrendingDown className="w-3 h-3" style={{ color: themeColors.opposing.text }} />
                 <span className="text-xs font-medium" style={{ color: themeColors.opposing.text }}>
-                  Mostly Opposing
+                  {tr('mostly_opposing', 'Mostly Opposing')}
                 </span>
               </>
             ) : (
               <span className="text-xs font-medium" style={{ color: themeColors.neutral.text }}>
-                Balanced
+                {tr('balanced', 'Balanced')}
               </span>
             )}
           </div>

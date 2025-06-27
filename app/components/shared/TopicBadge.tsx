@@ -52,7 +52,6 @@ const TopicBadge = memo(function TopicBadge({
     return null;
   }, [data, manualTopicId]);
 
-  // ✅ FIX: Find the corresponding timeline dataset from loaded timelines
   const timelineDataset = useMemo(() => {
     if (!topicId) return null;
     return availableTimelines.find(dataset => dataset.topic_id === topicId);
@@ -64,7 +63,6 @@ const TopicBadge = memo(function TopicBadge({
   }
 
   const handleClick = () => {
-    // ✅ FIX: Pass available timelines to the store
     selectTimelineByTopicId(topicId, availableTimelines);
     router.push('/timeline');
   };

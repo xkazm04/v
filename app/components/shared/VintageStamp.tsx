@@ -9,7 +9,6 @@ import { Video } from '@/app/types/video_api';
 
 interface Props {
   data?: ResearchResult | Video;
-  // Allow manual override if status is passed directly
   status?: 'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE' | 'UNVERIFIABLE';
   className?: string;
   size?: 'sm' | 'md' | 'lg';

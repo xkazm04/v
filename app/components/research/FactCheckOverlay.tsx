@@ -1,5 +1,3 @@
-"use client";
-
 import { useMemo, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { VideoWithTimestamps, VideoTimestamp } from "@/app/types/video_api";
@@ -24,7 +22,6 @@ export function FactCheckOverlay({
   const { colors, isDark } = useLayoutTheme();
 
   const [showCard, setShowCard] = useState(false);
-  const [showSummary, setShowSummary] = useState(false);
   const [previousTimestamp, setPreviousTimestamp] = useState<VideoTimestamp | null>(null);
 
   // Find current active timestamp
@@ -46,17 +43,6 @@ export function FactCheckOverlay({
     }
   }, [currentTimestamp, previousTimestamp]);
 
-  // Show summary when video is paused and we have fact-checks
-  useEffect(() => {
-    const hasFactChecks = video.timestamps.some(ts => ts.factCheck);
-    if (!isVideoPlaying && hasFactChecks) {
-      setShowSummary(true);
-    } else {
-      setShowSummary(false);
-    }
-  }, [isVideoPlaying, video.timestamps]);
-
-  // Theme-aware colors
   const themeColors = {
     emptyBackground: isDark
       ? 'linear-gradient(135deg, rgba(15, 23, 42, 0.4) 0%, rgba(30, 41, 59, 0.6) 100%)'
@@ -82,7 +68,7 @@ export function FactCheckOverlay({
       verdict: timestamp.factCheck.verdict,
       category: timestamp.category || 'GENERAL',
       valid_sources: timestamp.factCheck.confidence,
-      country: 'us', // Default
+      country: 'us', 
       correction: timestamp.factCheck.correction,
       //@ts-expect-error Ignore
       resources_agreed: timestamp.factCheck.sources.agreed, resources_disagreed: timestamp.factCheck.sources.disagreed,
@@ -96,7 +82,6 @@ export function FactCheckOverlay({
     <div className={`relative ${className} max-h-[1000px] overflow-y-auto`}>
       {/* Content Container - Full size */}
       <div className="absolute inset-0 flex flex-col">
-        {/* Main Content Area - Full height, no position changes */}
         <div className="flex-1 relative">
           <AnimatePresence mode="wait">
             {currentTimestamp && showCard ? (
@@ -111,7 +96,7 @@ export function FactCheckOverlay({
                   stiffness: 300,
                   duration: 0.3
                 }}
-                className="absolute inset-4" // Small padding from edges
+                className="absolute inset-4" 
               >
                 {currentTimestamp.factCheck ? (
                   <FactCheckCard
@@ -122,7 +107,6 @@ export function FactCheckOverlay({
                     animationPhase="card"
                   />
                 ) : (
-                  // Pending statement card
                   <FactCheckOverlayPending
                     themeColors={themeColors}
                     currentTimestamp={currentTimestamp}

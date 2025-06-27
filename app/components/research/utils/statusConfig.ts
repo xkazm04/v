@@ -15,7 +15,8 @@ import {
   ShieldCheck,
   Globe,
   Zap,
-  BookOpen
+  BookOpen,
+  MessageSquare
 } from "lucide-react";
 
 export const getStatusConfig = (status: string) => {
@@ -26,7 +27,8 @@ export const getStatusConfig = (status: string) => {
         color: "#22c55e",
         bgColor: "rgba(34, 197, 94, 0.1)",
         borderColor: "rgba(34, 197, 94, 0.3)",
-        text: "Verified True"
+        text: "Verified True",
+        translationKey: "status_verified_true"
       };
     case "FALSE":
       return {
@@ -34,7 +36,8 @@ export const getStatusConfig = (status: string) => {
         color: "#ef4444",
         bgColor: "rgba(239, 68, 68, 0.1)",
         borderColor: "rgba(239, 68, 68, 0.3)",
-        text: "Confirmed False"
+        text: "Confirmed False",
+        translationKey: "status_confirmed_false"
       };
     case "MISLEADING":
       return {
@@ -42,7 +45,8 @@ export const getStatusConfig = (status: string) => {
         color: "#f59e0b",
         bgColor: "rgba(245, 158, 11, 0.1)",
         borderColor: "rgba(245, 158, 11, 0.3)",
-        text: "Misleading Content"
+        text: "Misleading Content",
+        translationKey: "status_misleading_content"
       };
     case "PARTIALLY_TRUE":
       return {
@@ -50,7 +54,8 @@ export const getStatusConfig = (status: string) => {
         color: "#3b82f6",
         bgColor: "rgba(59, 130, 246, 0.1)",
         borderColor: "rgba(59, 130, 246, 0.3)",
-        text: "Partially True"
+        text: "Partially True",
+        translationKey: "status_partially_true"
       };
     default:
       return {
@@ -58,8 +63,19 @@ export const getStatusConfig = (status: string) => {
         color: "#6b7280",
         bgColor: "rgba(107, 114, 128, 0.1)",
         borderColor: "rgba(107, 114, 128, 0.3)",
-        text: "Unverifiable"
+        text: "Unverifiable",
+        translationKey: "status_unverifiable"
       };
+  }
+};
+
+export const getVerdictIcon = (status: string) => {
+  switch (status) {
+    case 'TRUE': return CheckCircle;
+    case 'FALSE': return XCircle;
+    case 'MISLEADING': return AlertTriangle;
+    case 'PARTIALLY_TRUE': return HelpCircle;
+    default: return MessageSquare;
   }
 };
 
@@ -74,7 +90,6 @@ export const getCategoryIcon = (category: string) => {
   }
 };
 
-// ✅ NEW: Source type categories enum and utilities
 export const SOURCE_CATEGORIES = {
   MAINSTREAM: 'mainstream',
   GOVERNANCE: 'governance',
@@ -96,57 +111,68 @@ export const SOURCE_CATEGORY_CONFIG = {
   [SOURCE_CATEGORIES.MAINSTREAM]: {
     icon: Users,
     label: 'Mainstream',
-    description: 'Traditional media and news sources'
+    description: 'Traditional media and news sources',
+    translationKey: 'source_mainstream'
   },
   [SOURCE_CATEGORIES.GOVERNANCE]: {
     icon: Building,
     label: 'Government',
-    description: 'Government agencies and official sources'
+    description: 'Government agencies and official sources',
+    translationKey: 'source_government'
   },
   [SOURCE_CATEGORIES.ACADEMIC]: {
     icon: GraduationCap,
     label: 'Academic',
-    description: 'Research institutions and academic sources'
+    description: 'Research institutions and academic sources',
+    translationKey: 'source_academic'
   },
   [SOURCE_CATEGORIES.MEDICAL]: {
     icon: Heart,
     label: 'Medical',
-    description: 'Healthcare and medical organizations'
+    description: 'Healthcare and medical organizations',
+    translationKey: 'source_medical'
   },
   [SOURCE_CATEGORIES.LEGAL]: {
     icon: Scale,
     label: 'Legal',
-    description: 'Legal institutions and court documents'
+    description: 'Legal institutions and court documents',
+    translationKey: 'source_legal'
   },
   [SOURCE_CATEGORIES.POLICY]: {
     icon: FileText,
     label: 'Policy',
-    description: 'Policy documents and regulatory sources'
+    description: 'Policy documents and regulatory sources',
+    translationKey: 'source_policy'
   },
   [SOURCE_CATEGORIES.ECONOMIC]: {
     icon: DollarSign,
     label: 'Economic',
-    description: 'Financial and economic institutions'
+    description: 'Financial and economic institutions',
+    translationKey: 'source_economic'
   },
   [SOURCE_CATEGORIES.TECHNOLOGY]: {
     icon: Monitor,
     label: 'Technology',
-    description: 'Tech companies and digital platforms'
+    description: 'Tech companies and digital platforms',
+    translationKey: 'source_technology'
   },
   [SOURCE_CATEGORIES.FACT_CHECKING]: {
     icon: ShieldCheck,
     label: 'Fact Check',
-    description: 'Professional fact-checking organizations'
+    description: 'Professional fact-checking organizations',
+    translationKey: 'source_fact_check'
   },
   [SOURCE_CATEGORIES.INTERNATIONAL]: {
     icon: Globe,
     label: 'International',
-    description: 'International organizations and bodies'
+    description: 'International organizations and bodies',
+    translationKey: 'source_international'
   },
   [SOURCE_CATEGORIES.OTHER]: {
     icon: Users,
     label: 'Other',
-    description: 'Other verified sources'
+    description: 'Other verified sources',
+    translationKey: 'source_other'
   }
 } as const;
 
@@ -168,4 +194,14 @@ export const getAllSourceCategories = () => {
     key: key as SourceCategoryType,
     ...config
   }));
+};
+
+
+export const mapExpertToProfile = (expertName: string, expertiseArea?: string) => {
+  const name = expertName.toLowerCase();
+  if (name.includes('nerd') || name.includes('researcher') || name.includes('academic')) return 'nerd';
+  if (name.includes('devil') || name.includes('skeptic') || name.includes('critic')) return 'devil';
+  if (name.includes('critic') || name.includes('reviewer') || name.includes('media')) return 'critic';
+  if (name.includes('psychic') || name.includes('predictor') || name.includes('trend')) return 'psychic';
+  return 'nerd'; 
 };

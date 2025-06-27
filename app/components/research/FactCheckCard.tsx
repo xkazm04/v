@@ -58,7 +58,7 @@ export function FactCheckCard({ factCheck }: FactCheckCardProps) {
           <FactCheckHeader
             factCheck={factCheck}
             config={config}
-            onDismiss={() => {}} // Handled by absolute button
+            onDismiss={() => {}} 
           />
         </motion.div>
 
@@ -79,7 +79,7 @@ export function FactCheckCard({ factCheck }: FactCheckCardProps) {
             variants={sectionVariants}
             className="flex-1 min-h-0"
           >
-            <FactCheckSources factCheck={factCheck} config={config} />
+            <FactCheckSources factCheck={factCheck}/>
           </motion.div>
         </div>
       </motion.div>

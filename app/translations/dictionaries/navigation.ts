@@ -25,5 +25,14 @@ export const navigationTranslations = {
     education: "Vzdělání",
     settings: "Nastavení",
     timeline: "Časová osa"
+  },
+  ru: {
+    home: "Главная",
+    dashboard: "Панель",
+    reel: "Рил",
+    upload: "Загрузить",
+    education: "Образование",
+    settings: "Настройки",
+    timeline: "Временная шкала"
   }
 };

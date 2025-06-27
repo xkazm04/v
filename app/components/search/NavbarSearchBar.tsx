@@ -3,7 +3,7 @@
 import React, { useRef, useState } from 'react';
 import { Search } from 'lucide-react';
 import { cn } from '@/app/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useFilterStore } from '@/app/stores/filterStore';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { NavbarSearchInput, NavbarSearchInputHandle } from './NavbarSearchInput';
@@ -66,20 +66,6 @@ export function NavbarSearchBar({
           onFocusChange={handleFocusChange}
         />
       </motion.div>
-
-      {/* Search Status Messages */}
-      <AnimatePresence>
-        {hasQuery && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="absolute top-0 -left-[140px] mt-1 text-xs text-slate-500 dark:text-slate-400"
-          >
-            Searching for "{searchText}"...
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   );
 }

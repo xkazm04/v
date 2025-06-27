@@ -1,4 +1,5 @@
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
+import { useResearchTranslations, useCommonTranslations } from "@/app/hooks/useSmartTranslations";
 import { motion } from "framer-motion";
 import { GlassContainer } from "../ui/containers/GlassContainer";
 import { AlertCircle } from "lucide-react";
@@ -11,6 +12,9 @@ type Props = {
 
 const ProfilesError = ({fetchProfiles, error}: Props) => {
     const { colors, isDark, vintage } = useLayoutTheme();
+    const { t: tr } = useResearchTranslations();
+    const { t: tc } = useCommonTranslations();
+    
     return <motion.div
         variants={itemVariants}
         className="flex items-center justify-center py-16"
@@ -31,7 +35,7 @@ const ProfilesError = ({fetchProfiles, error}: Props) => {
                             fontFamily: '"Playfair Display", serif'
                         }}
                     >
-                        Error Loading Profiles
+                        {tr('error_loading_profiles', 'Error Loading Profiles')}
                     </h3>
                     <p
                         className="text-sm"
@@ -52,7 +56,7 @@ const ProfilesError = ({fetchProfiles, error}: Props) => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        Try Again
+                        {tc('tryAgain', 'Try Again')}
                     </motion.button>
                 </div>
             </div>
