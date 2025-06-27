@@ -8,7 +8,6 @@ import DesktopNavbarMain from './DesktopNavbarMain';
 import Image from 'next/image';
 import Link from 'next/link';
 import TitleLogo from '@/app/components/icons/logo_title';
-import { TranslationProgressIndicator } from '@/app/components/ui/TranslationProgressIndicator';
 
 const navbarVariants: Variants = {
   hidden: { y: -100, opacity: 0 },

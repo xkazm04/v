@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/app/components/ui/button';
 import { ThemeToggle } from '@/app/components/theme/theme-toggle';
-import { SearchBar } from '@/app/components/search/SearchBar';
 import { cn } from '@/app/lib/utils';
 import { Menu } from 'lucide-react';
 import { useNavigation } from '@/app/hooks/useNavigation';
@@ -20,8 +19,6 @@ import Image from 'next/image';
 export function Navbar() {
   const {
     isLoading,
-    isSearchOpen,
-    toggleSearch,
     isMobileMenuOpen,
     toggleMobileMenu,
     handleNavigation
@@ -44,16 +41,6 @@ export function Navbar() {
     }
     return pathname.startsWith(href);
   };
-
-
-  const handleSearchResultSelect = (result: any, type: 'news' | 'video') => {
-    if (type === 'news') {
-      router.push(`/research/${result.id}`);
-    } else if (type === 'video') {
-      router.push(`/watch?v=${result.id}`);
-    }
-  };
-
 
   const navbarColors = getColors('navbar');
 
@@ -151,56 +138,14 @@ export function Navbar() {
           </Button>
         </div>
 
-        {/* Branding */}
-        <div className="mr-8 hidden md:flex">
-          <Link
-            href="/"
-            onClick={handleNavigation}
-            className="flex items-center space-x-2 group"
-          >
-            <div 
-              className="font-bold pl-2 text-xl transition-colors"
-              style={{
-                color: navbarColors.foreground
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = colors.primary;
-              }}
-              onMouseLeave={(e) => {
-                 //@ts-expect-error Ignore
-                e.currentTarget.style.color = navbarColors.foreground;
-              }}
-            >
-              <Image
-                src="/logos/logo_brush_black.png"
-                alt="Logo"
-                width={32}
-                height={32}
-                className="inline-block h-8 w-8 rounded-full"
-                />
-            </div>
-          </Link>
-        </div>
-
         {/* Desktop Navigation */}
         <div className="flex-1 hidden md:flex items-center justify-between">
           <nav className="flex items-center space-x-8">
             {NAVIGATION_CONFIG.mainNav.map(item => renderNavLink(item))}
           </nav>
 
-          {/* Search Bar */}
-          <div className="flex-1 max-w-md mx-8">
-            {/* <SearchBar
-              onResultSelect={handleSearchResultSelect}
-              placeholder="Search news and videos..."
-            /> */}
-          </div>
-
           <div className="flex items-center space-x-2">
-            {/* Action Buttons */}
-            <div className="flex items-center space-x-1">
               <ThemeToggle />
-            </div>
           </div>
         </div>
 
@@ -208,28 +153,6 @@ export function Navbar() {
         <div className="flex-1 flex justify-end items-center space-x-2 md:hidden">
           <ThemeToggle />
         </div>
-
-        {/* Mobile Menu Search */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial="closed"
-              animate="open"
-              exit="closed"
-              variants={navAnim.search.mobile}
-              className="absolute top-full left-0 right-0 border-b p-4 md:hidden"
-              style={{
-                backgroundColor: navbarColors.background,
-                borderColor: navbarColors.border
-              }}
-            >
-              <SearchBar
-                onResultSelect={handleSearchResultSelect}
-                placeholder="Search news and videos..."
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
 
       {/* Mobile Menu Overlay */}

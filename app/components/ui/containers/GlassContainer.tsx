@@ -20,7 +20,7 @@ interface GlassContainerProps {
   theme?: 'light' | 'dark' | 'auto';
   overlay?: boolean;
   overlayOpacity?: number;
-  subtoneEnhanced?: boolean; // ✅ NEW: Enable subtone enhancements
+  subtoneEnhanced?: boolean; 
   [key: string]: any;
 }
 
@@ -35,7 +35,7 @@ const glassStyles = {
   },
   crystal: {
     light: 'bg-white/40 backdrop-blur-xl',
-    dark: 'bg-black/40 backdrop-blur-xl'
+    dark: 'bg-black/80 backdrop-blur-xl'
   },
   subtle: {
     light: 'bg-white/10 backdrop-blur-sm',

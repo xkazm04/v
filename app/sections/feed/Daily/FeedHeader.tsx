@@ -117,7 +117,7 @@ const FeedHeader = ({ className = "" }: StatementOfDayProps) => {
         className="h-full"
       >
         <GlassContainer
-          style="frosted"
+          style="crystal"
           border="glow"
           rounded="3xl"
           shadow="glow"
