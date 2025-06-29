@@ -1,9 +1,10 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { motion, AnimatePresence, LayoutGroup, Variants } from 'framer-motion';
 import { ResearchResult } from '@/app/types/article';
 import { NewsCard } from './NewsCard';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import LoaderComponent from '@/app/components/animations/LoaderComponent';
+import { FactCheckModal } from '@/app/components/modals/FactCheck/FactCheckModal';
 
 interface NewsGridProps {
   articles: ResearchResult[];
@@ -13,7 +14,6 @@ interface NewsGridProps {
   loading?: boolean; 
 }
 
-// ✅ OPTIMIZED: Enhanced animation variants for smooth transitions
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -52,35 +52,6 @@ const itemVariants: Variants = {
   }
 };
 
-// ✅ OPTIMIZED: Replacement animation variants
-const replacementVariants = {
-  hidden: { 
-    opacity: 0, 
-    scale: 0.8,
-    rotateY: -90
-  },
-  visible: { 
-    opacity: 1, 
-    scale: 1,
-    rotateY: 0,
-    transition: {
-      type: "spring",
-      stiffness: 120,
-      damping: 20,
-      delay: 0.2
-    }
-  },
-  exit: { 
-    opacity: 0, 
-    scale: 0.8,
-    rotateY: 90,
-    transition: {
-      duration: 0.3,
-      ease: "easeInOut"
-    }
-  }
-};
-
 const NewsGrid = memo(function NewsGrid({
   articles,
   onArticleRead,
@@ -109,6 +80,9 @@ const NewsGrid = memo(function NewsGrid({
   const handleArticleRead = useCallback((articleId: string) => {
     onArticleRead?.(articleId);
   }, [onArticleRead]);
+
+  // NEW: Modal state
+  const [modalResearch, setModalResearch] = useState<ResearchResult | null>(null);
 
   if (loading) {
     return (
@@ -160,11 +134,17 @@ const NewsGrid = memo(function NewsGrid({
                 layout={layout}
                 onRead={handleArticleRead}
                 className="w-full"
+                onOpenFactCheckModal={() => setModalResearch(research)}
               />
             </motion.div>
           ))}
         </AnimatePresence>
       </motion.div>
+      {modalResearch && <FactCheckModal
+        isOpen={!!modalResearch}
+        onClose={() => setModalResearch(null)}
+        research={modalResearch as ResearchResult}
+      />}
     </LayoutGroup>
   );
 });

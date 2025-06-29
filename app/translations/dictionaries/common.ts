@@ -28,5 +28,15 @@ export const commonTranslations = {
     error: "Chyba",
     tryAgain: "Zkusit znovu",
     refresh: "Obnovit"
+  },
+  ru: {
+    loading: "Загрузка...",
+    active: "Активный",
+    available: "Доступный",
+    enhanced: "Улучшенный",
+    live: "Прямой эфир",
+    error: "Ошибка",
+    tryAgain: "Попробовать снова",
+    refresh: "Обновить"
   }
 };

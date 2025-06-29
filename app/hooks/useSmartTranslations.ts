@@ -4,9 +4,11 @@ import { useUserPreferences } from './use-user-preferences';
 import { commonTranslations } from '../translations/dictionaries/common';
 import { newsTranslations } from '../translations/dictionaries/news';
 import { navigationTranslations } from '../translations/dictionaries/navigation';
+import { profileTranslations } from '../translations/dictionaries/profile';
+import { researchTranslations } from '../translations/dictionaries/research';
 
 type TranslationDictionary = Record<string, any>;
-type LocaleCode = 'en' | 'es' | 'cs';
+type LocaleCode = 'en' | 'es' | 'cs' | 'ru';
 type TranslationVariables = Record<string, string | number>;
 
 // Combine all translation dictionaries
@@ -15,16 +17,29 @@ const allTranslations: Record<string, TranslationDictionary> = {
     common: commonTranslations.en,
     news: newsTranslations.en,
     navigation: navigationTranslations.en,
+    profile: profileTranslations.en,
+    research: researchTranslations.en,
   },
   es: {
     common: commonTranslations.es,
     news: newsTranslations.es,
     navigation: navigationTranslations.es,
+    profile: profileTranslations.es,
+    research: researchTranslations.es,
   },
   cs: {
     common: commonTranslations.cs,
     news: newsTranslations.cs,
     navigation: navigationTranslations.cs,
+    profile: profileTranslations.cs,
+    research: researchTranslations.cs,
+  },
+  ru: {
+    common: commonTranslations.ru,
+    news: newsTranslations.ru,
+    navigation: navigationTranslations.ru,
+    profile: profileTranslations.ru,
+    research: researchTranslations.ru,
   }
 };
 
@@ -48,13 +63,13 @@ export function useSmartTranslations(forceLocale?: LocaleCode) {
     if (forceLocale) return forceLocale;
     
     // 2. User preferences (second priority)
-    if (preferences?.language && ['en', 'es', 'cs'].includes(preferences.language)) {
+    if (preferences?.language && ['en', 'es', 'cs', 'ru'].includes(preferences.language)) {
       return preferences.language as LocaleCode;
     }
     
     // 3. URL params (third priority)
     const urlLocale = params?.locale as LocaleCode;
-    if (urlLocale && ['es', 'cs'].includes(urlLocale)) {
+    if (urlLocale && ['es', 'cs', 'ru'].includes(urlLocale)) {
       return urlLocale;
     }
     
@@ -130,6 +145,36 @@ export function useNavigationTranslations(forceLocale?: LocaleCode) {
 
   return {
     t: navigationT,
+    locale,
+    isTranslationActive,
+    userPreferredLanguage
+  };
+}
+
+export function useProfileTranslations(forceLocale?: LocaleCode) {
+  const { t, locale, isTranslationActive, userPreferredLanguage } = useSmartTranslations(forceLocale);
+  
+  const profileT = useCallback((key: string, fallback?: string, variables?: TranslationVariables) => {
+    return t(`profile.${key}`, fallback, variables);
+  }, [t]);
+
+  return {
+    t: profileT,
+    locale,
+    isTranslationActive,
+    userPreferredLanguage
+  };
+}
+
+export function useResearchTranslations(forceLocale?: LocaleCode) {
+  const { t, locale, isTranslationActive, userPreferredLanguage } = useSmartTranslations(forceLocale);
+  
+  const researchT = useCallback((key: string, fallback?: string, variables?: TranslationVariables) => {
+    return t(`research.${key}`, fallback, variables);
+  }, [t]);
+
+  return {
+    t: researchT,
     locale,
     isTranslationActive,
     userPreferredLanguage

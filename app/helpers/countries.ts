@@ -111,6 +111,10 @@ export const AVAILABLE_COUNTRIES: CountryOption[] = [
   { code: 'ru', name: 'Russia', nativeName: 'Россия', flag: '🇷🇺', flagSvg: '/flags/ru.svg', region: 'Europe/Asia' },
   { code: 'cz', name: 'Czech Republic', nativeName: 'Česká republika', flag: '🇨🇿', flagSvg: '/flags/cz.svg', region: 'Europe' },
   { code: 'ua', name: 'Ukraine', nativeName: 'Україна', flag: '🇺🇦', flagSvg: '/flags/ua.svg', region: 'Europe' },
+  { code: 'ir', name: 'Iran', nativeName: 'ایران', flag: '🇮🇷', flagSvg: '/flags/ir.svg', region: 'Middle East' },
+  { code: 'il', name: 'Israel', nativeName: 'ישראל', flag: '🇮🇱', flagSvg: '/flags/il.svg', region: 'Middle East' },
+  { code: 'sd', name: 'Sudan', nativeName: 'السودان', flag: '🇸🇩', flagSvg: '/flags/sd.svg', region: 'Africa' },
+  { code: 'pk', name: 'Pakistan', nativeName: 'پاکستان', flag: '🇵🇰', flagSvg: '/flags/pk.svg', region: 'Asia' },
 ];
 
 export type AvailableCountryType = (typeof AVAILABLE_COUNTRIES)[number];

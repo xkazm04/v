@@ -1,7 +1,6 @@
 import { memo, useState, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ResearchResult } from '@/app/types/article';
-import { FactCheckModal } from '@/app/components/modals/FactCheck/FactCheckModal';
 import NewsCardContent from '@/app/components/news/NewsCardContent';
 import NewsTopic from '@/app/components/news/NewsTopic';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
@@ -15,13 +14,15 @@ interface NewsCardProps {
   layout?: 'grid' | 'compact';
   onRead?: (researchId: string) => void;
   className?: string;
+  onOpenFactCheckModal?: () => void; // NEW
 }
 
 const NewsCard = memo(function NewsCard({
   research,
   layout = 'grid',
   onRead,
-  className = ''
+  className = '',
+  onOpenFactCheckModal // NEW
 }: NewsCardProps) {
   const { colors, mounted, isDark } = useLayoutTheme();
   const { isMobile, isDesktop } = useViewport();
@@ -33,7 +34,6 @@ const NewsCard = memo(function NewsCard({
 
   const [isRead, setIsRead] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dismissType, setDismissType] = useState<'fade' | 'swipe-right' | null>(null);
 
@@ -52,38 +52,11 @@ const NewsCard = memo(function NewsCard({
   }, []);
 
   const handleQuoteClick = useCallback(() => {
-    if (!isMobile) {
-      setShowModal(true);
+    if (!isMobile && onOpenFactCheckModal) {
+      onOpenFactCheckModal();
     }
-  }, [isMobile]);
+  }, [isMobile, onOpenFactCheckModal]);
 
-  const handleTouchTap = useCallback(() => {
-    if (!isMobile) return;
-
-    if (isDragging || hasDraggedRef.current) return;
-
-    const now = Date.now();
-    const timeDiff = now - lastTapRef.current;
-
-    if (timeDiff < 300) {
-      tapCountRef.current++;
-      if (tapCountRef.current === 2) {
-        setShowModal(true);
-        tapCountRef.current = 0;
-        return;
-      }
-    } else {
-      tapCountRef.current = 1;
-    }
-
-    lastTapRef.current = now;
-
-    setTimeout(() => {
-      if (tapCountRef.current === 1 && (Date.now() - lastTapRef.current) >= 300) {
-        tapCountRef.current = 0;
-      }
-    }, 350);
-  }, [isDragging, isMobile]);
 
   const handleSwipeRight = useCallback(() => {
     setDismissType('swipe-right');
@@ -143,7 +116,6 @@ const NewsCard = memo(function NewsCard({
             onRead={onRead}
             handleMouseClick={handleMouseClick}
             handleRightClick={handleRightClick}
-            handleTouchTap={handleTouchTap}
             handleSwipeRight={handleSwipeRight}
             className={className}
             isDark={isDark}
@@ -186,11 +158,6 @@ const NewsCard = memo(function NewsCard({
           </NewsCardWrapper>
         )}
       </AnimatePresence>
-      <FactCheckModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        research={research}
-      />
     </>
   );
 });

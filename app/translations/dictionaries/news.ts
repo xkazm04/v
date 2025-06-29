@@ -79,5 +79,32 @@ export const newsTranslations = {
       breaking: "Nejnovější Zprávy",
       trending: "Trendy"
     }
+  },
+  ru: {
+    featured_news: "Рекомендуемые Новости",
+    articles_count: "{count} статей",
+    excluded_count: "{count} прочитано",
+    active_filters: "Активные фильтры",
+    loading_more: "Загрузка дополнительных статей",
+    no_more_articles: "Больше статей для загрузки нет",
+    no_articles_title: "Статьи Не Найдены",
+    no_articles_message: "Попробуйте изменить фильтры или вернитесь позже для нового контента.",
+    error_title: "Невозможно Загрузить Новости",
+    error_message: "Возникла проблема при загрузке последних новостей. Пожалуйста, попробуйте снова.",
+    categories: {
+      politics: "Политика",
+      environment: "Окружающая Среда",
+      technology: "Технологии",
+      health: "Здоровье"
+    },
+    countries: {
+      worldwide: "Весь Мир",
+      us: "Соединенные Штаты",
+      cz: "Чешская Республика"
+    },
+    topics: {
+      breaking: "Срочные Новости",
+      trending: "В Тренде"
+    }
   }
 };

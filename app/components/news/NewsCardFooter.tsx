@@ -36,7 +36,7 @@ export const NewsCardFooter = memo(function NewsCardFooter({
   layout,
 }: Props) {
   const { colors, isDark } = useLayoutTheme();
-  const dateInfo = useMemo(() => formatSafeDate(research.processed_at), [research.processed_at]);
+  const dateInfo = useMemo(() => formatSafeDate(research.statement_date ?? ''), [research.statement_date]);
   
   return (
     <AnimatePresence>

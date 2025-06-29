@@ -1,35 +1,19 @@
 "use client";
-
-import { motion, Variants } from "framer-motion";
-import { MessageSquare, AlertTriangle, CheckCircle, XCircle, HelpCircle } from "lucide-react";
+import { motion } from "framer-motion";
 import { LLMResearchResponse } from "@/app/types/research";
+import { normalizeAnalysisStatus, getVerdictIcon } from "../utils/statusConfig";
+import { sectionVariants } from "../../animations/variants/feedVariants";
+import { useResearchTranslations } from "@/app/hooks/useSmartTranslations";
 
 interface FactCheckAnalysisProps {
   factCheck: LLMResearchResponse;
   config: any;
 }
 
-const sectionVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" }
-  }
-};
-
-const getVerdictIcon = (status: string) => {
-  switch (status) {
-    case 'TRUE': return CheckCircle;
-    case 'FALSE': return XCircle;
-    case 'MISLEADING': return AlertTriangle;
-    case 'PARTIALLY_TRUE': return HelpCircle;
-    default: return MessageSquare;
-  }
-};
-
 export function FactCheckAnalysis({ factCheck, config }: FactCheckAnalysisProps) {
-  const VerdictIcon = getVerdictIcon(factCheck.status);
+  const { t: tr } = useResearchTranslations();
+  const verdictKey = normalizeAnalysisStatus(factCheck.status);
+  const VerdictIcon = getVerdictIcon(verdictKey);
 
   return (
     <motion.div variants={sectionVariants} className="space-y-3">
@@ -39,7 +23,9 @@ export function FactCheckAnalysis({ factCheck, config }: FactCheckAnalysisProps)
           className="w-4 h-4" 
           style={{ color: config.color }}
         />
-        <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300">Analysis</h4>
+        <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+          {tr('analysis', 'Analysis')}
+        </h4>
       </div>
 
       {/* Verdict with Better Typography */}
@@ -54,7 +40,9 @@ export function FactCheckAnalysis({ factCheck, config }: FactCheckAnalysisProps)
         <div className="space-y-2">
           {/* Verdict Label */}
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">VERDICT</span>
+            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+              {tr('verdict', 'VERDICT')}
+            </span>
             <div 
               className="px-2 py-0.5 rounded-full text-xs font-bold"
               style={{
@@ -63,7 +51,7 @@ export function FactCheckAnalysis({ factCheck, config }: FactCheckAnalysisProps)
                 border: `1px solid ${config.color}30`
               }}
             >
-              {factCheck.status}
+              {verdictKey}
             </div>
           </div>
           

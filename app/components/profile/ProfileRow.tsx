@@ -2,6 +2,7 @@ import { Profile } from '@/app/types/profile';
 import { FloatingVerdictIcon } from '@/app/components/ui/Decorative/FloatingVerdictIcon';
 import Image from 'next/image';
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
+import { useProfileTranslations } from '@/app/hooks/useSmartTranslations';
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -19,10 +20,10 @@ interface ProfileRowProps {
 
 const ProfileRow: React.FC<ProfileRowProps> = ({ profile, index }) => {
   const { colors, isDark, vintage, getCardColors } = useLayoutTheme();
+  const { t: tp } = useProfileTranslations();
   const [isHovered, setIsHovered] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
-  // Convert profile score to status for display
   const getProfileStatus = (score?: number): 'clean' | 'mixed' | 'liar' => {
     if (!score) return 'mixed';
     if (score >= 80) return 'clean';
@@ -48,14 +49,6 @@ const ProfileRow: React.FC<ProfileRowProps> = ({ profile, index }) => {
     if (actualScore >= 80) return isDark ? 'bg-green-500' : 'bg-green-600';
     if (actualScore >= 40) return isDark ? 'bg-yellow-500' : 'bg-yellow-600';
     return isDark ? 'bg-red-500' : 'bg-red-600';
-  };
-
-  const getVerdictStatus = (score?: number): 'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE' | 'UNVERIFIABLE' => {
-    if (!score) return 'UNVERIFIABLE';
-    if (score >= 80) return 'TRUE';
-    if (score >= 60) return 'PARTIALLY_TRUE';
-    if (score >= 40) return 'MISLEADING';
-    return 'FALSE';
   };
 
   const cardColors = getCardColors(false, isHovered);
@@ -165,7 +158,7 @@ const ProfileRow: React.FC<ProfileRowProps> = ({ profile, index }) => {
                   text-sm font-medium
                   ${isDark ? 'text-gray-300' : vintage.faded}
                 `} style={{ fontFamily: '"Crimson Text", serif' }}>
-                  {profile.position || profile.type || 'Public Figure'}
+                  {profile.position || profile.type || tp('public_figure', 'Public Figure')}
                 </p>
                 
                 <div className="flex items-center space-x-4 mt-2">
@@ -220,7 +213,7 @@ const ProfileRow: React.FC<ProfileRowProps> = ({ profile, index }) => {
                   text-xs mt-1
                   ${isDark ? 'text-gray-400' : vintage.faded}
                 `} style={{ fontFamily: '"Crimson Text", serif' }}>
-                  Credibility
+                  {tp('credibility', 'Credibility')}
                 </div>
               </div>
             </div>

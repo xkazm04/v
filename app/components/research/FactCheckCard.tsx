@@ -6,7 +6,7 @@ import { FactCheckHeader } from "./card-sections/FactCheckHeader";
 import { FactCheckCorrection } from "./card-sections/FactCheckCorrection";
 import { FactCheckSources } from "./card-sections/FactCheckSources";
 import { FactCheckExperts } from "./card-sections/FactCheckExperts";
-import { getStatusConfig } from "./utils/statusConfig";
+import { getStatusConfig, normalizeAnalysisStatus } from "./utils/statusConfig";
 import { useLayoutTheme } from "@/app/hooks/use-layout-theme";
 import { containerVariants } from "../animations/variants/votingVariants";
 import { sectionVariants } from "../animations/variants/feedVariants";
@@ -20,7 +20,7 @@ interface FactCheckCardProps {
 
 export function FactCheckCard({ factCheck }: FactCheckCardProps) {
   const { isDark } = useLayoutTheme();
-  const config = getStatusConfig(factCheck.status);
+  const config = getStatusConfig(normalizeAnalysisStatus(factCheck.status));
 
   // Theme-aware colors
   const themeColors = {
@@ -58,7 +58,7 @@ export function FactCheckCard({ factCheck }: FactCheckCardProps) {
           <FactCheckHeader
             factCheck={factCheck}
             config={config}
-            onDismiss={() => {}} // Handled by absolute button
+            onDismiss={() => {}} 
           />
         </motion.div>
 
@@ -79,7 +79,7 @@ export function FactCheckCard({ factCheck }: FactCheckCardProps) {
             variants={sectionVariants}
             className="flex-1 min-h-0"
           >
-            <FactCheckSources factCheck={factCheck} config={config} />
+            <FactCheckSources factCheck={factCheck}/>
           </motion.div>
         </div>
       </motion.div>

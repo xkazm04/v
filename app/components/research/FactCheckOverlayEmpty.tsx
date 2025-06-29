@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
 import { Clock } from "lucide-react"
+import { useResearchTranslations } from "@/app/hooks/useSmartTranslations"
 
 type Props = {
     themeColors: {
@@ -11,6 +12,7 @@ type Props = {
 }
 
 const FactCheckOverlayEmpty = ({themeColors}: Props) => {
+    const { t: tr } = useResearchTranslations();
     return <motion.div
         key="empty-state"
         initial={{ opacity: 0 }}
@@ -39,12 +41,11 @@ const FactCheckOverlayEmpty = ({themeColors}: Props) => {
                 <Clock className="w-16 h-16 mx-auto mb-4 opacity-40" style={{ color: themeColors.emptyText }} />
             </motion.div>
             <h3 className="text-lg font-semibold mb-2" style={{ color: themeColors.emptyText }}>
-                No Active Statement
+                {tr('no_active_statement', 'No Active Statement')}
             </h3>
             <p className="text-sm max-w-sm" style={{ color: themeColors.emptySubtext }}>
-                Fact-checks will appear here when statements are detected during video playback
+                {tr('fact_checks_will_appear', 'Fact-checks will appear here when statements are detected during video playback')}
             </p>
-
         </motion.div>
     </motion.div>
 }

@@ -124,40 +124,6 @@
   }
 }
 
-/* Hover reveal scrollbar effect */
-.scrollbar-hover-reveal {
-  scrollbar-width: none;
-}
-
-.scrollbar-hover-reveal::-webkit-scrollbar {
-  width: 0px;
-  transition: width 0.2s ease;
-}
-
-.scrollbar-hover-reveal:hover {
-  scrollbar-width: thin;
-}
-
-.scrollbar-hover-reveal:hover::-webkit-scrollbar {
-  width: 4px;
-}
-
-.scrollbar-hover-reveal:hover::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb);
-  border-radius: 2px;
-}
-
-/* Gradient fade effect for long content */
-.scroll-fade-top {
-  mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
-}
-
-.scroll-fade-bottom {
-  mask-image: linear-gradient(to bottom, black 0%, black 95%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 95%, transparent 100%);
-}
-
 .glass-morphism {
   backdrop-filter: blur(16px) saturate(1.5);
   -webkit-backdrop-filter: blur(16px) saturate(1.5);
@@ -192,4 +158,38 @@
   50% {
     transform: translateY(-10px) rotate(180deg);
   }
+}
+
+html, body, * {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--scrollbar-thumb) / 0.6) hsl(var(--scrollbar-track));
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+  background: hsl(var(--scrollbar-track));
+  border-radius: 3px;
+}
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+  background: hsl(var(--scrollbar-thumb) / 0.6);
+  border-radius: 3px;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--scrollbar-thumb-hover) / 0.8);
+}
+html::-webkit-scrollbar-corner,
+body::-webkit-scrollbar-corner,
+*::-webkit-scrollbar-corner {
+  background: hsl(var(--scrollbar-track));
 }

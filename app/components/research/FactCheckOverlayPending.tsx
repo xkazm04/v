@@ -2,6 +2,7 @@ import { CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
 import { Badge } from "@/app/components/ui/badge";
 import { Clock } from "lucide-react";
 import { motion } from "framer-motion";
+import { useResearchTranslations } from "@/app/hooks/useSmartTranslations";
 
 type Props ={ 
     themeColors: {
@@ -19,6 +20,7 @@ type Props ={
 }
 
 const FactCheckOverlayPending = ({themeColors, currentTimestamp}: Props) => {
+    const { t: tr } = useResearchTranslations();
     return <motion.div
         className="w-full h-full flex flex-col backdrop-blur-xl rounded-xl border"
         style={{
@@ -36,7 +38,7 @@ const FactCheckOverlayPending = ({themeColors, currentTimestamp}: Props) => {
                 </span>
             </div>
             <CardTitle className="text-lg" style={{ color: themeColors.emptyText }}>
-                Current Statement
+                {tr('current_statement', 'Current Statement')}
             </CardTitle>
         </CardHeader>
         <CardContent className="flex-1 space-y-4">
@@ -65,7 +67,7 @@ const FactCheckOverlayPending = ({themeColors, currentTimestamp}: Props) => {
                         ease: 'easeInOut'
                     }}
                 />
-                Fact-check in progress...
+                {tr('fact_check_in_progress', 'Fact-check in progress...')}
             </Badge>
         </CardContent>
     </motion.div>

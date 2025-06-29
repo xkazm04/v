@@ -115,7 +115,7 @@ const ProfilesToolbar = ({ searchTerm, setSearchTerm, fetchProfiles, refreshing,
                                     fontFamily: '"Playfair Display", serif'
                                 }}
                             >
-                                {profiles.length} Profiles
+                                {profiles.length}
                             </span>
                         </div>
 

@@ -1,28 +1,21 @@
-"use client";
-
-import { motion, Variants } from "framer-motion";
-import { AlertCircle, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { AlertCircle } from "lucide-react";
+import { sectionVariants } from "../../animations/variants/feedVariants";
+import { useResearchTranslations } from "@/app/hooks/useSmartTranslations";
 
 interface FactCheckCorrectionProps {
   correction: string;
 }
 
-const sectionVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" }
-  }
-};
 
 export function FactCheckCorrection({ correction }: FactCheckCorrectionProps) {
+  const { t: tr } = useResearchTranslations();
   return (
     <motion.div variants={sectionVariants} className="space-y-3">
       {/* Header */}
       <div className="flex items-center gap-2">
         <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-        <h4 className="text-sm font-semibold text-amber-700 dark:text-amber-300">Correction</h4>
+        <h4 className="text-sm font-semibold text-amber-700 dark:text-amber-300">{tr('correction', 'Correction')}</h4>
       </div>
 
       {/* Correction Content */}

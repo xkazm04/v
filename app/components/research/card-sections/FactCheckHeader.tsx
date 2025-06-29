@@ -1,7 +1,7 @@
 import { motion, Variants } from "framer-motion";
 import { X } from "lucide-react";
 import { LLMResearchResponse } from "@/app/types/research";
-import { getCategoryIcon } from "../utils/statusConfig";
+import { getCategoryIcon, normalizeAnalysisStatus } from "../utils/statusConfig";
 import { getStampText } from "../../ui/Decorative/StampText";
 
 interface FactCheckHeaderProps {
@@ -23,7 +23,9 @@ const sectionVariants: Variants = {
 export function FactCheckHeader({ factCheck, config, onDismiss }: FactCheckHeaderProps) {
   const IconComponent = config.icon;
   const CategoryIcon = getCategoryIcon(factCheck.category || "");
-  const stampText = getStampText(factCheck.status);
+  
+  const normalizedStatus = normalizeAnalysisStatus(factCheck.status);
+  const stampText = getStampText(normalizedStatus);
 
   return (
     <motion.div
