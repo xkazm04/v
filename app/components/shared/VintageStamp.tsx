@@ -6,16 +6,24 @@ import { cn } from '@/app/lib/utils';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { ResearchResult } from '@/app/types/article';
 import { Video } from '@/app/types/video_api';
+import { AnalysisStatus, ANALYSIS_STATUSES } from '@/app/components/research/utils/statusConfig';
 
 interface Props {
   data?: ResearchResult | Video;
-  status?: 'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE' | 'UNVERIFIABLE';
+  status?: AnalysisStatus;
   className?: string;
   size?: 'sm' | 'md' | 'lg';
   animated?: boolean;
 }
 
-const VERDICT_CONFIG = {
+const VERDICT_CONFIG: Record<AnalysisStatus, {
+  label: string;
+  shortLabel: string;
+  color: string;
+  darkColor: string;
+  rotation: number;
+  borderStyle: string;
+}> = {
   TRUE: {
     label: 'VERIFIED',
     shortLabel: '✓',
@@ -24,16 +32,24 @@ const VERDICT_CONFIG = {
     rotation: -12,
     borderStyle: 'solid'
   },
-  FALSE: {
-    label: 'FALSE',
-    shortLabel: '✗',
+  FACTUAL_ERROR: {
+    label: 'ERROR',
+    shortLabel: '!',
     color: '#ef4444',
     darkColor: '#dc2626',
     rotation: 8,
     borderStyle: 'dashed'
   },
-  MISLEADING: {
-    label: 'MISLEADING',
+  DECEPTIVE_LIE: {
+    label: 'LIE',
+    shortLabel: '✗',
+    color: '#b91c1c',
+    darkColor: '#7f1d1d',
+    rotation: 14,
+    borderStyle: 'double'
+  },
+  MANIPULATIVE: {
+    label: 'MANIPULATION',
     shortLabel: '⚠',
     color: '#f59e0b',
     darkColor: '#d97706',
@@ -48,6 +64,14 @@ const VERDICT_CONFIG = {
     rotation: 10,
     borderStyle: 'solid'
   },
+  OUT_OF_CONTEXT: {
+    label: 'OUT OF CONTEXT',
+    shortLabel: '⧗',
+    color: '#a21caf',
+    darkColor: '#7c3aed',
+    rotation: -8,
+    borderStyle: 'dashed'
+  },
   UNVERIFIABLE: {
     label: 'UNCLEAR',
     shortLabel: '?',
@@ -56,7 +80,7 @@ const VERDICT_CONFIG = {
     rotation: -8,
     borderStyle: 'double'
   }
-} as const;
+};
 
 // Default config for unknown status values
 const DEFAULT_CONFIG = {
@@ -84,38 +108,36 @@ export const VintageStamp = memo(function VintageStamp({
   size = 'md',
   animated = true
 }: Props) {
-  const { isDark, vintage } = useLayoutTheme();
-  
+  const { isDark } = useLayoutTheme();
+
   // Extract status from data or use manual override
-  let verdictStatus: 'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE' | 'UNVERIFIABLE' | undefined;
-  
+  let verdictStatus: AnalysisStatus | undefined;
+
   if (manualStatus) {
     verdictStatus = manualStatus;
   } else if (data) {
     if (isResearchResult(data)) {
-      verdictStatus = data.status;
+      verdictStatus = data.status as AnalysisStatus;
     } else if (isVideo(data)) {
-      // Convert video verdict string to status enum
       const verdict = data.verdict?.toUpperCase();
-      if (verdict && verdict in VERDICT_CONFIG) {
-        verdictStatus = verdict as keyof typeof VERDICT_CONFIG;
+      if (verdict && ANALYSIS_STATUSES.includes(verdict as AnalysisStatus)) {
+        verdictStatus = verdict as AnalysisStatus;
       }
     }
   }
-  
+
   // If no valid status found, don't render
   if (!verdictStatus) {
     return null;
   }
-  
+
   // Safe config lookup with fallback
   const config = VERDICT_CONFIG[verdictStatus] || DEFAULT_CONFIG;
-  
-  // Add debug logging to see what status values are being passed
+
   if (!VERDICT_CONFIG[verdictStatus]) {
-    console.warn('UniversalVintageVerdictStamp: Unknown status value:', verdictStatus);
+    console.warn('VintageStamp: Unknown status value:', verdictStatus);
   }
-  
+
   const sizeClasses = {
     sm: 'w-16 h-16 text-xs',
     md: 'w-20 h-20 text-sm',
@@ -123,7 +145,7 @@ export const VintageStamp = memo(function VintageStamp({
   };
 
   const stampColor = isDark ? config.darkColor : config.color;
-  
+
   return (
     <motion.div
       className={cn(
@@ -132,28 +154,28 @@ export const VintageStamp = memo(function VintageStamp({
         sizeClasses[size],
         className
       )}
-      initial={animated ? { 
-        scale: 0.8, 
-        opacity: 0, 
-        rotate: config.rotation + 20 
+      initial={animated ? {
+        scale: 0.8,
+        opacity: 0,
+        rotate: config.rotation + 20
       } : undefined}
-      animate={animated ? { 
-        scale: 1, 
-        opacity: 1, 
-        rotate: config.rotation 
+      animate={animated ? {
+        scale: 1,
+        opacity: 1,
+        rotate: config.rotation
       } : { rotate: config.rotation }}
-      transition={animated ? { 
-        type: "spring", 
-        stiffness: 300, 
-        damping: 20, 
-        delay: 0.4 
+      transition={animated ? {
+        type: "spring",
+        stiffness: 300,
+        damping: 20,
+        delay: 0.4
       } : undefined}
     >
       <div className="absolute inset-0 rounded-full">
         <div
           className="absolute inset-0 rounded-full"
           style={{
-            background: isDark 
+            background: isDark
               ? `radial-gradient(circle at 30% 30%, ${stampColor}40 0%, ${stampColor}20 50%, ${stampColor}10 100%)`
               : `radial-gradient(circle at 30% 30%, ${stampColor}30 0%, ${stampColor}15 50%, ${stampColor}08 100%)`,
             border: `3px ${config.borderStyle} ${stampColor}80`,
@@ -162,7 +184,7 @@ export const VintageStamp = memo(function VintageStamp({
               : `inset 0 2px 4px ${stampColor}40, 0 4px 12px ${stampColor}30`
           }}
         />
-        
+
         <div
           className="absolute inset-2 rounded-full"
           style={{
@@ -170,20 +192,20 @@ export const VintageStamp = memo(function VintageStamp({
             background: `conic-gradient(from 0deg, ${stampColor}20, transparent, ${stampColor}20)`
           }}
         />
-        
+
         <div className="absolute inset-0 rounded-full overflow-hidden">
           {/* Vintage wear marks */}
-          <div 
+          <div
             className="absolute top-1 right-2 w-2 h-1 rounded-full opacity-40"
             style={{ background: stampColor }}
           />
-          <div 
+          <div
             className="absolute bottom-2 left-1 w-1 h-2 rounded-full opacity-30"
             style={{ background: stampColor }}
           />
-          
+
           {/* Ink blot effect */}
-          <div 
+          <div
             className="absolute inset-0 rounded-full opacity-20"
             style={{
               background: `radial-gradient(ellipse 60% 40% at 70% 30%, ${stampColor}50 0%, transparent 50%)`
@@ -195,7 +217,7 @@ export const VintageStamp = memo(function VintageStamp({
       <div className="relative z-10 flex flex-col items-center justify-center">
         <motion.div
           className="font-bold tracking-wider"
-          style={{ 
+          style={{
             color: stampColor,
             fontFamily: "'Courier New', monospace",
             textShadow: `1px 1px 2px ${stampColor}60`,
@@ -207,9 +229,9 @@ export const VintageStamp = memo(function VintageStamp({
         >
           {size === 'sm' ? config.shortLabel : config.label}
         </motion.div>
-        
+
         {size !== 'sm' && (
-          <motion.div 
+          <motion.div
             className="flex gap-1 mt-1"
             initial={animated ? { opacity: 0 } : undefined}
             animate={animated ? { opacity: 1 } : undefined}
@@ -225,8 +247,7 @@ export const VintageStamp = memo(function VintageStamp({
           </motion.div>
         )}
       </div>
-
-      {(verdictStatus === 'FALSE' || verdictStatus === 'MISLEADING') && animated && (
+      {(verdictStatus === 'DECEPTIVE_LIE' || verdictStatus === 'MANIPULATIVE' || verdictStatus === 'FACTUAL_ERROR') && animated && (
         <motion.div
           className="absolute -bottom-2 left-1/2 transform -translate-x-1/2"
           initial={{ scaleY: 0, opacity: 0 }}
@@ -235,8 +256,8 @@ export const VintageStamp = memo(function VintageStamp({
         >
           <div
             className="w-1 h-3 rounded-b-full"
-            style={{ 
-              background: `linear-gradient(to bottom, ${stampColor}80, ${stampColor}20)` 
+            style={{
+              background: `linear-gradient(to bottom, ${stampColor}80, ${stampColor}20)`
             }}
           />
         </motion.div>

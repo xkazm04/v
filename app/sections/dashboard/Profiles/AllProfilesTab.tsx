@@ -58,7 +58,6 @@ const AllProfilesTab: React.FC = () => {
             console.log('🔍 Fetching profiles from Supabase...');
 
             const fetchedProfiles = await supabaseProfileService.searchProfiles({
-                type: 'person',
                 limit: 24,
                 sortBy: 'name',
                 sortOrder: 'asc',

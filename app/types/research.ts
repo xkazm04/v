@@ -61,7 +61,6 @@ export interface LLMResearchResponse {
   research_method?: string;
   profile_id?: string | null;
   
-  // ✅ UPDATED: Enhanced tri-factor fields with new expert perspectives
   expert_perspectives?: ExpertPerspective[];
   key_findings?: string[];
   research_summary?: string;
@@ -71,7 +70,7 @@ export interface LLMResearchResponse {
   web_findings?: string[];
   resource_findings?: string[];
   topic_id?: string | null;
-  
+  statement_date?: string | null;
   // Request metadata
   request_statement: string;
   request_source: string;

@@ -1,3 +1,4 @@
+import { AnalysisStatus } from "../components/research/utils/statusConfig";
 import { ExpertOpinion, ResourceAnalysis } from "./research";
 
 export type ResearchResult = {
@@ -10,7 +11,7 @@ export type ResearchResult = {
   country?: string; // Add country field
   valid_sources: string;
   verdict: string;
-  status: 'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE' | 'UNVERIFIABLE';
+  status: AnalysisStatus; 
   correction?: string;
   experts: ExpertOpinion;
   expert_perspectives?: ExpertPerspective[] | string; 
@@ -57,7 +58,7 @@ export type NewsArticle = {
   isBreaking: boolean;
   publishedAt: string;
   factCheck: {
-    evaluation: 'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE' | 'UNVERIFIABLE';
+    evaluation: AnalysisStatus
     confidence: number; // Percentage as a number (0-100)
     verdict: string;
     experts?: ExpertOpinion;
@@ -79,23 +80,6 @@ export type NewsArticle = {
 
 // Enhanced utility function with better error handling
 export function convertResearchToNews(research: ResearchResult): NewsArticle {
-  const statusToScore = {
-    'TRUE': 0.9,
-    'PARTIALLY_TRUE': 0.7,
-    'MISLEADING': 0.4,
-    'FALSE': 0.1,
-    'UNVERIFIABLE': 0.5
-  };
-
-  const statusToConfidence = {
-    'TRUE': 95,
-    'PARTIALLY_TRUE': 75,
-    'MISLEADING': 65,
-    'FALSE': 90,
-    'UNVERIFIABLE': 30
-  };
-
-  // Safe property access with fallbacks
   const safeStatement = research.statement || 'Untitled Research';
   const safeSource = research.source || 'Unknown Source';
   const safeStatus = research.status || 'UNVERIFIABLE';
@@ -111,12 +95,12 @@ export function convertResearchToNews(research: ResearchResult): NewsArticle {
     category: research.category || 'general',
     country: research.country,
     datePublished: research.request_datetime,
-    truthScore: statusToScore[safeStatus] || 0.5,
+    truthScore:  0.5,
     isBreaking: false,
     publishedAt: research.processed_at || research.created_at,
     factCheck: {
       evaluation: safeStatus,
-      confidence: statusToConfidence[safeStatus] || 50,
+      confidence: 50,
       verdict: safeVerdict,
       experts: research.experts,
       resources_agreed: research.resources_agreed,

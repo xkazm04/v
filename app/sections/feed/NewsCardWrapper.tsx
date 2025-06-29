@@ -27,7 +27,6 @@ interface NewsCardWrapperProps {
   onRead?: (researchId: string) => void;
   handleMouseClick: (e: React.MouseEvent) => void;
   handleRightClick: (e: React.MouseEvent) => void;
-  handleTouchTap: () => void;
   handleSwipeRight: () => void;
   className?: string;
   isDark: boolean;
@@ -96,7 +95,6 @@ const NewsCardWrapper = ({
   onRead,
   handleMouseClick,
   handleRightClick,
-  handleTouchTap,
   handleSwipeRight,
   className = '',
   isDark
@@ -203,7 +201,6 @@ const NewsCardWrapper = ({
       onMouseLeave={handleMouseLeave}
       onClick={isDesktop ? handleMouseClick : undefined}
       onContextMenu={isDesktop ? handleRightClick : undefined}
-      onTap={isMobile || isTablet ? handleTouchTap : undefined}
       onPanStart={handlePanStart}
       onPan={handlePan}
       onPanEnd={handlePanEnd}

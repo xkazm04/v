@@ -1,5 +1,3 @@
-import { CheckCircle2, XCircle, AlertTriangle, Target, Shield, AlertOctagon } from 'lucide-react';
-
 export const getVerdictStyling = (status: string, isDark: boolean) => {
     if (!status) {
         return {

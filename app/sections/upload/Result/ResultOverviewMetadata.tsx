@@ -28,7 +28,7 @@ const ResultOverviewMetadata = ({ displayResult }: Props) => {
             <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" style={{ color: colors.mutedForeground }} />
                 <span style={{ color: colors.mutedForeground }}>
-                    {new Date(displayResult.request_datetime).toLocaleDateString('en-US', {
+                    {new Date(displayResult.statement_date ?? "").toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
                         day: 'numeric'

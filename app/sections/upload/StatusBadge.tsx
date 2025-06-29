@@ -3,25 +3,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-import { CheckCircle, XCircle, AlertTriangle, HelpCircle, Clock, Badge } from 'lucide-react';
-import { STATUS_COLORS } from './types';
+import { AnalysisStatus, getStatusConfig } from '@/app/components/research/utils/statusConfig';
 
 interface StatusBadgeProps {
-  status: 'TRUE' | 'FALSE' | 'MISLEADING' | 'PARTIALLY_TRUE' | 'UNVERIFIABLE';
+  status: AnalysisStatus;
   className?: string;
 }
 
-const STATUS_ICONS = {
-  TRUE: CheckCircle,
-  FALSE: XCircle,
-  MISLEADING: AlertTriangle,
-  PARTIALLY_TRUE: Clock,
-  UNVERIFIABLE: HelpCircle
-};
-
 export function StatusBadge({ status, className }: StatusBadgeProps) {
-  const Icon = STATUS_ICONS[status];
-  
+  const config = getStatusConfig(status);
+  const Icon = config.icon;
+
   return (
     <motion.div
       initial={{ scale: 0 }}
@@ -29,14 +21,17 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
       transition={{ duration: 0.3, delay: 0.2 }}
       className={className}
     >
-      <Badge 
-      //@ts-expect-error Ignore
-        variant="outline" 
-        className={`${STATUS_COLORS[status]} px-4 py-2 text-sm font-semibold flex items-center gap-2`}
+      <span
+        className={`px-4 py-2 text-sm font-semibold flex items-center gap-2 rounded-full`}
+        style={{
+          background: config.bgColor,
+          color: config.color,
+          border: `1px solid ${config.borderColor}`
+        }}
       >
         <Icon className="h-4 w-4" />
-        {status.replace('_', ' ')}
-      </Badge>
+        {config.text}
+      </span>
     </motion.div>
   );
 }

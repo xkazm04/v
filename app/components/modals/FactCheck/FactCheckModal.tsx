@@ -3,12 +3,12 @@
 import { memo, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { ResearchResult } from '@/app/types/article';
-import { X } from 'lucide-react';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { LLMResearchResponse, type ExpertPerspective } from '@/app/types/research';
 import ResearchResultsOverview from '@/app/sections/upload/ResearchResultsOverview';
 import { ResourceAnalysisCard } from '@/app/sections/upload/ResourceAnalysisCard';
 import { ExpertPanel } from '@/app/sections/upload/ExpertPanel';
+import FactCheckHero from './FactCheckHero';
 
 interface FactCheckModalProps {
   isOpen: boolean;
@@ -23,7 +23,6 @@ const transformResearchToResponse = (research: ResearchResult): LLMResearchRespo
   const contradictingTotal = research.resources_disagreed?.count || 0;
   let totalSources = supportingTotal + contradictingTotal;
 
-  // ✅ NEW: Parse expert_perspectives if available
   let expertPerspectives: ExpertPerspective[] = [];
   if (research.expert_perspectives) {
     try {
@@ -56,7 +55,8 @@ const transformResearchToResponse = (research: ResearchResult): LLMResearchRespo
     resources_agreed: research.resources_agreed,
     resources_disagreed: research.resources_disagreed,
     experts: research.experts || {},
-    // ✅ NEW: Include parsed expert_perspectives
+    profile_id: research.profile_id || research.profileId || null,
+    statement_date: research.statement_date || null,
     expert_perspectives: expertPerspectives,
     metadata: {
       processing_time: Math.random() * 5 + 2,
@@ -75,17 +75,8 @@ export const FactCheckModal = memo(function FactCheckModal({
   onClose,
   research
 }: FactCheckModalProps) {
-  // ✅ FIXED: Ensure we get proper cardColors with explicit background
-  const { colors, cardColors, overlayColors, isDark, mounted } = useLayoutTheme();
+  const { cardColors, overlayColors, isDark, mounted } = useLayoutTheme();
 
-  // ✅ FIXED: Provide fallback background colors if cardColors.background is undefined
-  const modalBackground = mounted 
-    ? (cardColors.background || (isDark ? '#0f172a' : '#ffffff'))
-    : (isDark ? '#0f172a' : '#ffffff');
-
-  const modalBorder = mounted 
-    ? (cardColors.border || (isDark ? '#334155' : '#e5e7eb'))
-    : (isDark ? '#334155' : '#e5e7eb');
 
   const modalShadow = mounted 
     ? (cardColors.shadow || (isDark ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.1)'))
@@ -109,8 +100,7 @@ export const FactCheckModal = memo(function FactCheckModal({
     if (isOpen) {
       const originalOverflow = document.body.style.overflow;
       const originalPointerEvents = document.body.style.pointerEvents;
-      
-      // Apply modal styles
+    
       document.body.style.overflow = 'hidden';
       document.body.style.pointerEvents = 'none';
       
@@ -170,7 +160,6 @@ export const FactCheckModal = memo(function FactCheckModal({
             }}
           />
 
-          {/* ✅ FIXED: Modal with explicit background styling */}
           <motion.div 
             variants={modalVariants}
             initial="hidden"
@@ -179,46 +168,16 @@ export const FactCheckModal = memo(function FactCheckModal({
             className={`${!isDark && 'bg-yellow-50'}
               relative w-full max-w-6xl max-h-[95vh] overflow-hidden rounded-xl sm:rounded-2xl shadow-2xl z-10`}
             style={{
-              border: `1px solid ${modalBorder}`,
               boxShadow: `0 25px 50px -12px ${modalShadow}`,
               backgroundImage: 'none',
               backdropFilter: 'none'
             }}
-            onClick={(e) => e.stopPropagation()} // ✅ **FIX: Prevent event bubbling**
+            onClick={(e) => e.stopPropagation()} 
           >
-            {/* Header with Close Button */}
-            <div
-              className="flex items-center justify-end py-3 sm:p-4 lg:p-6 border-b bg-gradient-to-r"
-              style={{
-                borderColor: modalBorder,
-                background: isDark
-                  ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.95) 100%)'
-                  : 'linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(241, 245, 249, 0.95) 100%)'
-              }}
-            >
-              <motion.button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onClose();
-                }}
-                className="p-2 sm:p-3 rounded-lg sm:rounded-xl transition-all duration-200 group flex-shrink-0"
-                style={{
-                  color: colors.mutedForeground,
-                  backgroundColor: 'transparent',
-                  border: `1px solid ${modalBorder}`
-                }}
-                whileHover={{
-                  scale: 1.05,
-                  backgroundColor: colors.muted,
-                  color: colors.foreground
-                }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <X className="w-4 h-4 sm:w-5 sm:h-5 group-hover:rotate-90 transition-transform duration-200" />
-              </motion.button>
-            </div>
-
-            {/* ✅ **FIX: Improved scrollable content with proper event handling** */}
+            <FactCheckHero
+              onClose={onClose}
+              displayResult={displayResult}
+              />
             <div
               className="overflow-y-auto max-h-[calc(95vh-80px)] sm:max-h-[calc(95vh-100px)] lg:max-h-[calc(95vh-120px)]"
               style={{
@@ -228,8 +187,8 @@ export const FactCheckModal = memo(function FactCheckModal({
                 scrollbarWidth: 'thin',
                 scrollbarColor: isDark ? '#4a5568 #2d3748' : '#cbd5e0 #e2e8f0'
               }}
-              onWheel={(e) => e.stopPropagation()} // ✅ **FIX: Allow wheel scrolling**
-              onTouchMove={(e) => e.stopPropagation()} // ✅ **FIX: Allow touch scrolling**
+              onWheel={(e) => e.stopPropagation()} 
+              onTouchMove={(e) => e.stopPropagation()} 
             >
               <div className="p-3 sm:p-4 lg:p-6 space-y-6 sm:space-y-8">
                 {/* Research Results Overview Component */}

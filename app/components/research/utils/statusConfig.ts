@@ -16,10 +16,12 @@ import {
   Globe,
   Zap,
   BookOpen,
-  MessageSquare
+  MessageSquare,
+  AlertOctagon,
+  EyeOff
 } from "lucide-react";
 
-export const getStatusConfig = (status: string) => {
+export const getStatusConfig = (status: AnalysisStatus) => {
   switch (status) {
     case "TRUE":
       return {
@@ -30,23 +32,32 @@ export const getStatusConfig = (status: string) => {
         text: "Verified True",
         translationKey: "status_verified_true"
       };
-    case "FALSE":
+    case "FACTUAL_ERROR":
       return {
         icon: XCircle,
         color: "#ef4444",
         bgColor: "rgba(239, 68, 68, 0.1)",
         borderColor: "rgba(239, 68, 68, 0.3)",
-        text: "Confirmed False",
-        translationKey: "status_confirmed_false"
+        text: "Factual Error",
+        translationKey: "status_factual_error"
       };
-    case "MISLEADING":
+    case "DECEPTIVE_LIE":
+      return {
+        icon: AlertOctagon,
+        color: "#b91c1c",
+        bgColor: "rgba(185, 28, 28, 0.1)",
+        borderColor: "rgba(185, 28, 28, 0.3)",
+        text: "Deceptive Lie",
+        translationKey: "status_deceptive_lie"
+      };
+    case "MANIPULATIVE":
       return {
         icon: AlertTriangle,
         color: "#f59e0b",
         bgColor: "rgba(245, 158, 11, 0.1)",
         borderColor: "rgba(245, 158, 11, 0.3)",
-        text: "Misleading Content",
-        translationKey: "status_misleading_content"
+        text: "Manipulative",
+        translationKey: "status_manipulative"
       };
     case "PARTIALLY_TRUE":
       return {
@@ -57,6 +68,16 @@ export const getStatusConfig = (status: string) => {
         text: "Partially True",
         translationKey: "status_partially_true"
       };
+    case "OUT_OF_CONTEXT":
+      return {
+        icon: EyeOff,
+        color: "#a21caf",
+        bgColor: "rgba(162, 28, 175, 0.1)",
+        borderColor: "rgba(162, 28, 175, 0.3)",
+        text: "Out of Context",
+        translationKey: "status_out_of_context"
+      };
+    case "UNVERIFIABLE":
     default:
       return {
         icon: HelpCircle,
@@ -68,17 +89,17 @@ export const getStatusConfig = (status: string) => {
       };
   }
 };
-
-export const getVerdictIcon = (status: string) => {
+export const getVerdictIcon = (status: AnalysisStatus) => {
   switch (status) {
-    case 'TRUE': return CheckCircle;
-    case 'FALSE': return XCircle;
-    case 'MISLEADING': return AlertTriangle;
-    case 'PARTIALLY_TRUE': return HelpCircle;
-    default: return MessageSquare;
+    case "TRUE": return CheckCircle;
+    case "FACTUAL_ERROR": return XCircle;
+    case "DECEPTIVE_LIE": return AlertOctagon;
+    case "MANIPULATIVE": return AlertTriangle;
+    case "PARTIALLY_TRUE": return AlertCircle;
+    case "OUT_OF_CONTEXT": return EyeOff;
+    case "UNVERIFIABLE": default: return HelpCircle;
   }
 };
-
 export const getCategoryIcon = (category: string) => {
   switch (category) {
     case "HEALTHCARE": return Heart;
@@ -205,3 +226,44 @@ export const mapExpertToProfile = (expertName: string, expertiseArea?: string) =
   if (name.includes('psychic') || name.includes('predictor') || name.includes('trend')) return 'psychic';
   return 'nerd'; 
 };
+
+export const ANALYSIS_STATUSES = [
+  "TRUE",
+  "FACTUAL_ERROR",
+  "DECEPTIVE_LIE",
+  "MANIPULATIVE",
+  "PARTIALLY_TRUE",
+  "OUT_OF_CONTEXT",
+  "UNVERIFIABLE"
+] as const;
+
+export type AnalysisStatus = typeof ANALYSIS_STATUSES[number];
+
+/**
+ * Normalize any incoming status string to a canonical AnalysisStatus.
+ * Accepts legacy, API, or alternate status codes.
+ */
+export function normalizeAnalysisStatus(status: string | undefined | null): AnalysisStatus {
+  if (!status) return "UNVERIFIABLE";
+  const s = status.toUpperCase();
+  switch (s) {
+    case "TRUE":
+      return "TRUE";
+    case "FALSE":
+    case "FACTUAL_ERROR":
+      return "FACTUAL_ERROR";
+    case "MISLEADING":
+    case "DECEPTIVE_LIE":
+      return "DECEPTIVE_LIE";
+    case "MANIPULATIVE":
+      return "MANIPULATIVE";
+    case "PARTIALLY_TRUE":
+      return "PARTIALLY_TRUE";
+    case "OUT_OF_CONTEXT":
+      return "OUT_OF_CONTEXT";
+    case "UNVERIFIABLE":
+      return "UNVERIFIABLE";
+    default:
+      return "UNVERIFIABLE";
+  }
+}

@@ -1,14 +1,13 @@
-import { use } from 'react';
 import DashboardLayout from "@/app/sections/dashboard/DashboardLayout";
 
 interface ProfilePageProps {
-  params: Promise<{
+  params: {
     id: string;
-  }>;
+  };
 }
 
 const ProfilePage = ({ params }: ProfilePageProps) => {
-  const { id } = use(params);
+  const { id } = params;
 
   return (
     <div className="min-h-screen bg-background">
@@ -16,11 +15,12 @@ const ProfilePage = ({ params }: ProfilePageProps) => {
     </div>
   );
 };
+
 export default ProfilePage;
 
 export async function generateMetadata({ params }: ProfilePageProps) {
-  const { id } = await params;
-  
+  const { id } = params;
+
   return {
     title: `Profile Dashboard - ${id}`,
     description: `View profile information and fact-check statistics for profile ${id}`,

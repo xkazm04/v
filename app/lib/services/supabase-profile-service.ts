@@ -105,7 +105,7 @@ class SupabaseProfileService {
         avatar_url: item.avatar_url,
         country: item.country,
         party: item.party,
-        type: item.type || 'person',
+        type: item.type,
         position: item.position,
         bg_url: item.bg_url,
         score: item.score || 0,
@@ -130,7 +130,7 @@ class SupabaseProfileService {
         search,
         country,
         party,
-        type = 'person',
+        type,
         limit = 20,
         offset = 0,
         sortBy = 'name',
@@ -230,7 +230,7 @@ class SupabaseProfileService {
         avatar_url: data.avatar_url,
         country: data.country,
         party: data.party,
-        type: data.type || 'person',
+        type: data.type,
         position: data.position,
         bg_url: data.bg_url,
         score: data.score || 0,
@@ -268,7 +268,6 @@ class SupabaseProfileService {
           score
         `)
         .or(`name.ilike.%${searchTerm}%,name_normalized.ilike.%${searchTerm}%`)
-        .eq('type', 'person')
         .order('name', { ascending: true })
         .limit(limit);
 

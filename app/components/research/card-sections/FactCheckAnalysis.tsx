@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { LLMResearchResponse } from "@/app/types/research";
-import { getVerdictIcon } from "../utils/statusConfig";
+import { normalizeAnalysisStatus, getVerdictIcon } from "../utils/statusConfig";
 import { sectionVariants } from "../../animations/variants/feedVariants";
 import { useResearchTranslations } from "@/app/hooks/useSmartTranslations";
 
@@ -12,7 +12,8 @@ interface FactCheckAnalysisProps {
 
 export function FactCheckAnalysis({ factCheck, config }: FactCheckAnalysisProps) {
   const { t: tr } = useResearchTranslations();
-  const VerdictIcon = getVerdictIcon(factCheck.status);
+  const verdictKey = normalizeAnalysisStatus(factCheck.status);
+  const VerdictIcon = getVerdictIcon(verdictKey);
 
   return (
     <motion.div variants={sectionVariants} className="space-y-3">
@@ -50,7 +51,7 @@ export function FactCheckAnalysis({ factCheck, config }: FactCheckAnalysisProps)
                 border: `1px solid ${config.color}30`
               }}
             >
-              {factCheck.status}
+              {verdictKey}
             </div>
           </div>
           

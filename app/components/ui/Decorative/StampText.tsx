@@ -1,13 +1,17 @@
 import { motion } from "framer-motion"
 
-export const getStampText = (status: string) => {
+import { AnalysisStatus } from "@/app/components/research/utils/statusConfig";
+
+export const getStampText = (status: AnalysisStatus) => {
   switch (status) {
-    case 'FALSE': return 'LIE';
-    case 'MISLEADING': return 'MANIPULATION';
-    case 'PARTIALLY_TRUE': return 'PARTIAL';
-    case 'TRUE': return 'VERIFIED';
-    case 'UNVERIFIABLE': return 'UNCLEAR';
-    default: return 'CHECKED';
+    case "TRUE": return "VERIFIED";
+    case "FACTUAL_ERROR": return "ERROR";
+    case "DECEPTIVE_LIE": return "LIE";
+    case "MANIPULATIVE": return "MANIPULATION";
+    case "PARTIALLY_TRUE": return "PARTIAL";
+    case "OUT_OF_CONTEXT": return "OUT OF CONTEXT";
+    case "UNVERIFIABLE": return "UNCLEAR";
+    default: return "CHECKED";
   }
 };
 
