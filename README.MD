@@ -14,6 +14,23 @@
 - **Speaker Profiling**: Comprehensive analysis of political figures' statement history and credibility scores
 - **Transparency**: Full citation trails and expert perspective breakdowns for every fact-check
 
+## 🛠️ Technology Stack
+
+### **Frontend (Next.js 15)**
+- **Framework**: Next.js 15.3.3 with App Router
+- **Language**: TypeScript for type safety
+- **Styling**: Tailwind CSS
+- **Animation**: Framer Motion for smooth interactions
+- **State Management**: React Query + Zustand stores
+
+### **Backend Integration**
+- **Database**: Supabase (PostgreSQL) for quick caching and data access
+- **Research API**: Custom FastAPI server deployed in Google Cloud Run
+- **LLM Integration**: Multiple AI providers (Groq, Gemini) with fallback
+- **Audio Processing**: ElevenLabs for text-to-speech capabilities
+- **Translations**: Czech, Russian, Spanish - Lingo.dev
+
+
 ## ✨ Core Features
 ### 🔍 **Factcheck analysis**
 - **Text Statements**: Direct quote analysis from media articles with context and source attribution
@@ -37,26 +54,4 @@
 - **Interactive Timelines**: Historical fact-checking trends and pattern recognition
 - **Real-time Feed**: Live updates of breaking political statements and verifications
 - **Export Capabilities**: PDF reports and data exports for research purposes
-- **Mobile Responsive**: Full functionality across all device types
-
-## 🛠️ Technology Stack
-
-### **Frontend (Next.js 15)**
-- **Framework**: Next.js 15.3.3 with App Router
-- **Language**: TypeScript for type safety
-- **Styling**: Tailwind CSS
-- **Animation**: Framer Motion for smooth interactions
-- **State Management**: React Query + Zustand stores
-
-### **Backend Integration**
-- **Database**: Supabase (PostgreSQL) for quick caching and data access
-- **API**: FastAPI microservices for fact-checking processing
-- **LLM Integration**: Multiple AI providers (Groq, Gemini) with fallback
-- **Web Research**: Real-time web scraping and source verification
-- **Audio Processing**: ElevenLabs for text-to-speech capabilities
-
-### **AI & Data Processing**
-- **LLM Models**: LLama, Gemini, and Claude for multi-perspective analysis
-- **Web Grounding**: Real-time search and source verification
-- **Resource Analysis**: Academic paper and government source integration
-- **Profile Intelligence**: Automated speaker metadata extraction
+- **Mobile Responsive**: Full functionality across all device type
