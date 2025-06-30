@@ -1,4 +1,4 @@
-# V: The keeper of truth
+# Vaai: The keeper of truth
 
 ![V](https://img.shields.io/badge/Status-Hackathon_Project-orange) ![Next.js](https://img.shields.io/badge/Next.js-15.3.3-black) ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue) ![Supabase](https://img.shields.io/badge/Supabase-Backend-green)
 
@@ -16,7 +16,7 @@
 
 ## 🛠️ Technology Stack
 
-### **Frontend (Next.js 15)**
+### **Frontend**
 - **Framework**: Next.js 15.3.3 with App Router
 - **Language**: TypeScript for type safety
 - **Styling**: Tailwind CSS
