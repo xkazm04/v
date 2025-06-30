@@ -54,7 +54,7 @@ export const SHOWCASE_FEATURES: Feature[] = [
     description: 'Comprehensive analytics and historical tracking of public figures\' statement accuracy and credibility patterns.',
     icon: BarChart3,
     gradient: 'from-green-500 to-emerald-600',
-    imagePlaceholder: '/features/profile-analytics.jpg',
+    imagePlaceholder: '/gifs/gif_profile.gif',
     benefits: ['Credibility scoring', 'Historical patterns', 'Trend analysis']
   }
 ];
