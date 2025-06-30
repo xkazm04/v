@@ -158,3 +158,23 @@ export interface Daily {
   impactDescription: string;
   tags: string[];
 };
+
+export interface VideoDetail {
+  id: string;
+  video_url: string;
+  source: string;
+  researched: boolean;
+  title: string;
+  verdict: string | null;
+  duration_seconds: number;
+  speaker_name: string;
+  language_code: string | null;
+  audio_extracted: boolean;
+  transcribed: boolean;
+  analyzed: boolean;
+  created_at: string;
+  updated_at: string;
+  processed_at: string | null;
+  duration: string;
+}
+

@@ -1,11 +1,11 @@
 import { motion, Variants } from "framer-motion";
 import { X } from "lucide-react";
-import { LLMResearchResponse } from "@/app/types/research";
 import { getCategoryIcon, normalizeAnalysisStatus } from "../utils/statusConfig";
 import { getStampText } from "../../ui/Decorative/StampText";
+import { NormalizedFactCheck } from "../FactCheckOverlay";
 
 interface FactCheckHeaderProps {
-  factCheck: LLMResearchResponse;
+  factCheck: NormalizedFactCheck;
   config: any;
   onDismiss: () => void;
 }

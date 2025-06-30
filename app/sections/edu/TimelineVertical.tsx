@@ -7,7 +7,7 @@ import { useViewport } from '@/app/hooks/useViewport';
 import { useTimelineScroll } from '@/app/hooks/useTimelineScroll';
 import { useTimelineAudioStore } from '@/app/stores/useTimelineAudioStore';
 import { useTimelineStore } from '@/app/stores/useTimelineStore';
-import { useTimelineLoader } from '@/app/hooks/useTimelineLoader'; // ✅ ADD: Import timeline loader
+import { useTimelineLoader } from '@/app/hooks/useTimelineLoader'; 
 import TimelineMilestone from '../../components/timeline/TimelineMilestone/TimelineMilestone';
 import TimelineProgress from '../../components/timeline/TimelineProgress/TimelineProgress';
 import TimelineBackground from '../../components/timeline/TimelineVertical/TimelineBackground';
@@ -18,7 +18,6 @@ import TimelineHeader from '../../components/timeline/TimelineVertical/TimelineH
 import { useUserPreferences } from '@/app/hooks/use-user-preferences';
 import { getVoiceIdForLanguage } from '@/app/helpers/countries';
 import TimelineVerticalWrapper from './TimelineVerticalWrapper';
-import FloatingSummaryButton from '@/app/components/timeline/TimelineSummary/FloatingSummaryButton';
 import FloatingAudioButton from '@/app/components/timeline/FloatingAudioButton/FloatingAudioButton';
 import { VerifyWordsPattern } from '@/app/components/backgrounds/VerifyWordsPattern';
 
@@ -252,7 +251,7 @@ export default function TimelineVertical() {
         />
 
         {/* Floating Summary Button */}
-        <FloatingSummaryButton
+        {/* <FloatingSummaryButton
           key={`floating-summary-${timeline.id}`}
           onClick={() => stableSetSummaryOpen(true)}
           colors={colors}
@@ -260,7 +259,7 @@ export default function TimelineVertical() {
           vintage={vintage}
           isMobile={isMobile}
           scrollProgress={smoothScrollProgress}
-        />
+        /> */}
 
         <div
           ref={containerRef}
