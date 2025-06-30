@@ -1,181 +1,146 @@
 import { motion, Variants } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
-import { useResearchTranslations } from '@/app/hooks/useSmartTranslations';
-import { LLMResearchResponse } from '@/app/types/research';
-import { Badge } from '@/app/components/ui/badge';
 import { EXPERT_PROFILES } from '@/app/constants/experts';
 import { sectionVariants } from '../../animations/variants/feedVariants';
 import { mapExpertToProfile } from '../utils/statusConfig';
-import FactCheckExpertActive from './FactCheckExpertActive';
-
+import { NormalizedFactCheck } from '../FactCheckOverlay';
+import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 
 interface FactCheckExpertsProps {
-  factCheck: LLMResearchResponse;
+  factCheck: NormalizedFactCheck;
 }
 
 const expertCardVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.9, y: 20 },
+  hidden: { opacity: 0, scale: 0.95, y: 30 },
   visible: { 
     opacity: 1, 
     scale: 1, 
     y: 0,
-    transition: { duration: 0.3, ease: "easeOut" }
+    transition: { duration: 0.4, ease: "easeOut" }
   }
 };
 
+type ExpertPerspective = {
+  expert_name: string;
+  stance: 'NEUTRAL';
+  reasoning: string;
+  confidence_level: number;
+  summary: string;
+  source_type: 'llm';
+  expertise_area: string;
+  publication_date: null;
+};
+
+function mapExpertAnalysisToPerspectives(expertAnalysis: Record<string, string> | undefined): ExpertPerspective[] {
+  if (!expertAnalysis) return [];
+  return Object.entries(expertAnalysis).map(([role, summary]) => ({
+    expert_name: role,
+    stance: 'NEUTRAL',
+    reasoning: summary,
+    confidence_level: 80,
+    summary,
+    source_type: 'llm',
+    expertise_area: role,
+    publication_date: null,
+  }));
+}
+
 export function FactCheckExperts({ factCheck }: FactCheckExpertsProps) {
   const { colors, isDark } = useLayoutTheme();
-  const { t: tr } = useResearchTranslations();
-  const [activeExpert, setActiveExpert] = useState<string | null>(null);
+  const [activeExpert, setActiveExpert] = useState<number>(0);
   const [isAutoCycling, setIsAutoCycling] = useState(true);
 
-  const expertData = factCheck.expert_perspectives && factCheck.expert_perspectives.length > 0 
-    ? factCheck.expert_perspectives 
-    : null;
-
-  const getStanceColor = (stance: string) => {
-    switch (stance) {
-      case 'SUPPORTING':
-        return isDark ? '#22c55e' : '#16a34a';
-      case 'OPPOSING':
-        return isDark ? '#ef4444' : '#dc2626';
-      case 'NEUTRAL':
-        return isDark ? '#f59e0b' : '#d97706';
-      default:
-        return colors.mutedForeground;
-    }
-  };
-
-  const getStanceIcon = (stance: string) => {
-    switch (stance) {
-      case 'SUPPORTING': return '✅';
-      case 'OPPOSING': return '❌';
-      case 'NEUTRAL': return '⚖️';
-      default: return '❓';
-    }
-  };
-
-  const getTranslatedStance = (stance: string) => {
-    switch (stance) {
-      case 'SUPPORTING':
-        return tr('stance_supporting', 'SUPPORTING');
-      case 'OPPOSING':
-        return tr('stance_opposing', 'OPPOSING');
-      case 'NEUTRAL':
-        return tr('stance_neutral', 'NEUTRAL');
-      default:
-        return tr('stance_unknown', 'UNKNOWN');
-    }
-  };
+  const expertData = mapExpertAnalysisToPerspectives(factCheck.expertAnalysis);
 
   useEffect(() => {
-    if (!isAutoCycling) return;
-
-    let availableExperts: string[] = [];
-    
-    if (expertData) {
-      availableExperts = expertData.map((_, index) => index.toString());
-    } 
-
-    if (availableExperts.length === 0) return;
-
-    let currentIndex = 0;
-    
-    const startTimeout = setTimeout(() => {
-      setActiveExpert(availableExperts[0]);
-      currentIndex = 0;
-    }, 1000);
-
+    if (!isAutoCycling || !expertData || expertData.length < 2) return;
     const interval = setInterval(() => {
-      currentIndex = (currentIndex + 1) % availableExperts.length;
-      setActiveExpert(availableExperts[currentIndex]);
+      setActiveExpert(prev => (prev + 1) % expertData.length);
     }, 4000);
+    return () => clearInterval(interval);
+  }, [isAutoCycling, expertData?.length]);
 
-    return () => {
-      clearTimeout(startTimeout);
-      clearInterval(interval);
-    };
-  }, [isAutoCycling, expertData]);
-
-  const handleExpertClick = (expertKey: string) => {
+  const handleExpertClick = (index: number) => {
     setIsAutoCycling(false);
-    setActiveExpert(activeExpert === expertKey ? null : expertKey);
+    setActiveExpert(index);
   };
 
-  const themeColors = {
-    background: isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(248, 250, 252, 0.8)',
-    border: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(203, 213, 225, 0.5)',
-    cardBackground: isDark ? 'rgba(51, 65, 85, 0.6)' : 'rgba(255, 255, 255, 0.9)',
-    text: colors.foreground,
-    mutedText: isDark ? 'rgba(148, 163, 184, 0.9)' : 'rgba(100, 116, 139, 0.9)',
-  };
+  if (!expertData || expertData.length === 0) return null;
 
-  if (expertData && expertData.length > 0) {
-    return (
-      <motion.div variants={sectionVariants} className="">
-        <div className="flex-shrink-0 mb-3">
-          <h4 className="text-sm font-semibold" style={{ color: themeColors.text }}>
-            {tr('expert_panel_analysis', 'Expert Panel Analysis')} ({expertData.length} {tr('experts', 'experts')})
-          </h4>
+  const active = expertData[activeExpert];
+  const profileKey = mapExpertToProfile(active.expert_name, active.expertise_area);
+  const profile = EXPERT_PROFILES[profileKey];
+  const SvgComponent = profile.SvgComponent;
+
+  return (
+    <motion.div variants={sectionVariants} className="w-full">
+      <div className="flex flex-wrap justify-center gap-2 mb-6">
+        {expertData.map((perspective, idx) => {
+          const key = mapExpertToProfile(perspective.expert_name, perspective.expertise_area);
+          const prof = EXPERT_PROFILES[key];
+          return (
+            <button
+              key={idx}
+              onClick={() => handleExpertClick(idx)}
+              className={`px-3 py-1 rounded-full border text-xs font-semibold transition-all duration-200
+                ${activeExpert === idx
+                  ? 'bg-primary text-white border-primary'
+                  : 'bg-muted text-foreground border-muted-foreground hover:bg-primary/10'
+                }`}
+              style={{
+                borderColor: activeExpert === idx ? prof.color : colors.border,
+                color: activeExpert === idx ? prof.color : colors.foreground,
+                background: activeExpert === idx
+                  ? (isDark ? '#1e293b' : '#f8fafc')
+                  : (isDark ? colors.muted : colors.background)
+              }}
+            >
+              {prof.title}
+            </button>
+          );
+        })}
+      </div>
+      <motion.div
+        key={activeExpert}
+        variants={expertCardVariants}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        className="relative rounded-2xl border-2 shadow-lg p-6 overflow-hidden max-w-xl mx-auto"
+        style={{
+          borderColor: profile.color,
+          background: isDark
+            ? `linear-gradient(135deg, #1e293b 80%, ${profile.color}10 100%)`
+            : `linear-gradient(135deg, #fff 80%, ${profile.color}10 100%)`
+        }}
+      >
+        <div className="absolute inset-0 opacity-10 flex items-center justify-center pointer-events-none">
+          <SvgComponent width={180} height={180} />
         </div>
-        
-        <div className="flex-1 space-y-3 overflow-hidden">
-          {/* Expert Grid */}
-          <div className="grid grid-cols-2 gap-2">
-            {expertData.map((perspective, index) => {
-              const profileKey = mapExpertToProfile(perspective.expert_name, perspective.expertise_area);
-              const profile = EXPERT_PROFILES[profileKey];
-              const SvgComponent = profile.SvgComponent;
-              const isActive = activeExpert === index.toString();
-              
-              return (
-                <motion.button
-                  key={`${perspective.expert_name}-${index}`}
-                  variants={expertCardVariants}
-                  onClick={() => handleExpertClick(index.toString())}
-                  className={`p-3 rounded-lg border text-left transition-all duration-200 ${
-                    isActive ? 'ring-2 ring-opacity-50' : ''
-                  }`}
-                  style={{
-                    background: isActive ? `${profile.color}15` : themeColors.cardBackground,
-                    borderColor: isActive ? profile.color : themeColors.border,
-                  }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <SvgComponent/>
-                    <span className="text-xs font-medium" style={{ color: profile.color }}>
-                      {profile.title}
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs">{getStanceIcon(perspective.stance)}</span>
-                    <Badge 
-                      variant="outline" 
-                      className="text-xs"
-                      style={{ 
-                        color: getStanceColor(perspective.stance),
-                        borderColor: getStanceColor(perspective.stance)
-                      }}
-                    >
-                      {getTranslatedStance(perspective.stance)}
-                    </Badge>
-                  </div>
-                </motion.button>
-              );
-            })}
+        <div className="relative z-10">
+          <div className="rounded-lg p-4 border mb-3"
+            style={{
+              background: isDark ? 'rgba(71, 85, 105, 0.1)' : 'rgba(248, 250, 252, 0.8)',
+              border: `1px solid ${colors.border}`,
+              color: colors.foreground
+            }}>
+            <p className="leading-relaxed font-medium">{active.summary}</p>
           </div>
-
-          {/* Active Expert Display */}
-          <FactCheckExpertActive
-            activeExpert={activeExpert}
-            expertData={expertData}
-            />
+          <div className="mt-4 flex items-center gap-1">
+            {[1, 2, 3, 4, 5].map((level) => (
+              <div
+                key={level}
+                className="w-2 h-2 rounded-full"
+                style={{
+                  background: level <= Math.floor(active.confidence_level / 20)
+                    ? profile.color
+                    : (isDark ? '#334155' : '#e5e7eb')
+                }}
+              />
+            ))}
+          </div>
         </div>
       </motion.div>
-    );
-  }
+    </motion.div>
+  );
 }

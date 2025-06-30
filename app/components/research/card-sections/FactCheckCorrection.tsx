@@ -4,7 +4,7 @@ import { sectionVariants } from "../../animations/variants/feedVariants";
 import { useResearchTranslations } from "@/app/hooks/useSmartTranslations";
 
 interface FactCheckCorrectionProps {
-  correction: string;
+  correction?: string | null;
 }
 
 
@@ -13,12 +13,12 @@ export function FactCheckCorrection({ correction }: FactCheckCorrectionProps) {
   return (
     <motion.div variants={sectionVariants} className="space-y-3">
       {/* Header */}
+      {correction && correction !== 'null' && <>
       <div className="flex items-center gap-2">
         <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
         <h4 className="text-sm font-semibold text-amber-700 dark:text-amber-300">{tr('correction', 'Correction')}</h4>
       </div>
 
-      {/* Correction Content */}
       <motion.div
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
@@ -35,7 +35,7 @@ export function FactCheckCorrection({ correction }: FactCheckCorrectionProps) {
             {correction}
           </p>
         </div>
-      </motion.div>
+      </motion.div></>}
     </motion.div>
   );
 }

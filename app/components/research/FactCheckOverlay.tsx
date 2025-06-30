@@ -13,6 +13,21 @@ interface FactCheckOverlayProps {
   className?: string;
 }
 
+// Data type for normalized fact check (for card/sections)
+export interface NormalizedFactCheck {
+  statement: string;
+  status: string;
+  verdict: string | null;
+  category: string;
+  correction?: string | null;
+  sources?: {
+    agreed?: any;
+    disagreed?: any;
+  };
+  expertAnalysis?: Record<string, string>;
+  // Add more fields as needed for UI, but keep minimal for mapping
+}
+
 export function FactCheckOverlay({
   video,
   isVideoPlaying,
@@ -34,7 +49,6 @@ export function FactCheckOverlay({
   // Detect when we enter a new fact-checked statement
   useEffect(() => {
     if (currentTimestamp && currentTimestamp !== previousTimestamp && currentTimestamp.factCheck) {
-      // New fact-checked statement detected
       setShowCard(true);
       setPreviousTimestamp(currentTimestamp);
     } else if (!currentTimestamp) {
@@ -43,44 +57,22 @@ export function FactCheckOverlay({
     }
   }, [currentTimestamp, previousTimestamp]);
 
-  const themeColors = {
-    emptyBackground: isDark
-      ? 'linear-gradient(135deg, rgba(15, 23, 42, 0.4) 0%, rgba(30, 41, 59, 0.6) 100%)'
-      : 'linear-gradient(135deg, rgba(248, 250, 252, 0.4) 0%, rgba(241, 245, 249, 0.6) 100%)',
-    emptyBorder: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(203, 213, 225, 0.3)',
-    emptyText: colors.foreground,
-    emptySubtext: isDark ? 'rgba(148, 163, 184, 0.7)' : 'rgba(100, 116, 139, 0.7)',
-    pendingBackground: isDark
-      ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%)'
-      : 'linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%)',
-    pendingBorder: isDark ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.2)',
-    pendingAccent: isDark ? '#60a5fa' : '#2563eb'
-  };
-
-
-  // Convert to format expected by legacy components
-  const convertToLegacyFormat = (timestamp: VideoTimestamp) => {
+  // Normalize factCheck for FactCheckCard and children
+  const normalizeFactCheck = (timestamp: VideoTimestamp): NormalizedFactCheck | null => {
     if (!timestamp.factCheck) return null;
-
     return {
       statement: timestamp.statement,
-      status: timestamp.factCheck.status,
-      verdict: timestamp.factCheck.verdict,
+      status: timestamp.factCheck.status || 'PENDING',
+      verdict: timestamp.factCheck.verdict || null,
       category: timestamp.category || 'GENERAL',
-      valid_sources: timestamp.factCheck.confidence,
-      country: 'us', 
       correction: timestamp.factCheck.correction,
-      //@ts-expect-error Ignore
-      resources_agreed: timestamp.factCheck.sources.agreed, resources_disagreed: timestamp.factCheck.sources.disagreed,
-      experts: timestamp.factCheck.expertAnalysis,
-      research_method: 'comprehensive_analysis',
-      profile_id: 'current_user'
+      sources: timestamp.factCheck.sources,
+      expertAnalysis: timestamp.factCheck.expertAnalysis
     };
   };
 
   return (
     <div className={`relative ${className} max-h-[1000px] overflow-y-auto`}>
-      {/* Content Container - Full size */}
       <div className="absolute inset-0 flex flex-col">
         <div className="flex-1 relative">
           <AnimatePresence mode="wait">
@@ -96,25 +88,39 @@ export function FactCheckOverlay({
                   stiffness: 300,
                   duration: 0.3
                 }}
-                className="absolute inset-4" 
+                className="absolute inset-4"
               >
                 {currentTimestamp.factCheck ? (
                   <FactCheckCard
-                    //@ts-expect-error Ignore
-                    factCheck={convertToLegacyFormat(currentTimestamp)!}
+                    factCheck={normalizeFactCheck(currentTimestamp)!}
                     onDismiss={() => setShowCard(false)}
                     onExpertToggle={() => { }}
                     animationPhase="card"
                   />
                 ) : (
                   <FactCheckOverlayPending
-                    themeColors={themeColors}
+                    themeColors={{
+                      emptyText: colors.foreground,
+                      emptySubtext: isDark ? 'rgba(148, 163, 184, 0.7)' : 'rgba(100, 116, 139, 0.7)',
+                      pendingBackground: isDark
+                        ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%)'
+                        : 'linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%)',
+                      pendingBorder: isDark ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.2)',
+                      pendingAccent: isDark ? '#60a5fa' : '#2563eb'
+                    }}
                     currentTimestamp={currentTimestamp}
-                    />
+                  />
                 )}
-              </motion.div >
+              </motion.div>
             ) : (
-              <FactCheckOverlayEmpty themeColors={themeColors} />
+              <FactCheckOverlayEmpty themeColors={{
+                emptyBackground: isDark
+                  ? 'linear-gradient(135deg, rgba(15, 23, 42, 0.4) 0%, rgba(30, 41, 59, 0.6) 100%)'
+                  : 'linear-gradient(135deg, rgba(248, 250, 252, 0.4) 0%, rgba(241, 245, 249, 0.6) 100%)',
+                emptyBorder: isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(203, 213, 225, 0.3)',
+                emptyText: colors.foreground,
+                emptySubtext: isDark ? 'rgba(148, 163, 184, 0.7)' : 'rgba(100, 116, 139, 0.7)'
+              }} />
             )}
           </AnimatePresence>
         </div>
