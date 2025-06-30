@@ -1,11 +1,9 @@
-'use client';
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLayoutTheme } from '@/app/hooks/use-layout-theme';
 import { SHOWCASE_FEATURES } from '@/app/constants/showcase';
 import Image from 'next/image';
-import { Check, Sparkles } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 interface FeaturesShowcaseProps {
   className?: string;

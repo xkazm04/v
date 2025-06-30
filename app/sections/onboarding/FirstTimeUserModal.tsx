@@ -56,10 +56,6 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
     setTempPreferences(prev => ({ ...prev, language }));
   };
 
-  const handleCategoriesChange = (categories: string[]) => {
-    setTempPreferences(prev => ({ ...prev, categories }));
-  };
-
   const handleThemeSelect = (themeId: 'light' | 'dark') => {
     setTempPreferences(prev => ({ ...prev, theme: themeId }));
     setTheme(themeId);
@@ -208,7 +204,6 @@ export function FirstTimeUserModal({ isOpen, onComplete, onSkip }: FirstTimeUser
                 />
               </div>
 
-              {/* FIXED: Step Content - Properly scrollable with explicit dimensions */}
               <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
                 <div className="p-2 min-h-full">
                   <motion.div
